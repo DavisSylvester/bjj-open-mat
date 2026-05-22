@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/auth/auth_service.dart';
+import '../shared/widgets/om_widgets.dart';
 import '../features/onboarding/screens/splash_screen.dart';
 import '../features/onboarding/screens/login_screen.dart';
 import '../features/onboarding/screens/role_select_screen.dart';
@@ -209,23 +210,12 @@ class _ScaffoldWithNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: shell,
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: OMBottomNav(
         selectedIndex: shell.currentIndex,
-        onDestinationSelected: (index) => shell.goBranch(index),
-        destinations: isOwner
-            ? const [
-                NavigationDestination(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-                NavigationDestination(icon: Icon(Icons.store), label: 'Gyms'),
-                NavigationDestination(icon: Icon(Icons.event), label: 'Sessions'),
-                NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
-              ]
-            : const [
-                NavigationDestination(icon: Icon(Icons.explore), label: 'Discover'),
-                NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
-                NavigationDestination(icon: Icon(Icons.fitness_center), label: 'Training'),
-                NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
-              ],
+        isOwner: isOwner,
+        onTap: (index) => shell.goBranch(index),
       ),
     );
   }
