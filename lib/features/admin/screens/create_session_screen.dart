@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
 
 class CreateSessionScreen extends ConsumerStatefulWidget {
   const CreateSessionScreen({super.key});
@@ -14,101 +11,305 @@ class CreateSessionScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
-  final _titleCtrl = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _dateCtrl = TextEditingController();
+  final _startCtrl = TextEditingController();
+  final _endCtrl = TextEditingController();
+  final _feeCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
-  int _dayOfWeek = 1;
-  TimeOfDay _startTime = const TimeOfDay(hour: 10, minute: 0);
-  TimeOfDay _endTime = const TimeOfDay(hour: 12, minute: 0);
-  String _skillLevel = 'all';
-  bool _isGi = false;
-  bool _isRecurring = true;
-  int? _maxParticipants;
-  bool _isSaving = false;
+  final _maxCtrl = TextEditingController();
 
-  static const _days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  static const _levels = ['all', 'beginner', 'intermediate', 'advanced'];
+  String _giType = 'gi';
+  String _expLevel = 'all';
 
   @override
-  void dispose() { _titleCtrl.dispose(); _descCtrl.dispose(); super.dispose(); }
-
-  String _fmtTime(TimeOfDay t) => '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
-
-  Future<void> _submit() async {
-    if (_titleCtrl.text.trim().isEmpty) return;
-    setState(() => _isSaving = true);
-    try {
-      final api = ref.read(apiClientProvider);
-      await api.post(Endpoints.openMats, data: {
-        'title': _titleCtrl.text.trim(),
-        'description': _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
-        'dayOfWeek': _dayOfWeek,
-        'startTime': _fmtTime(_startTime),
-        'endTime': _fmtTime(_endTime),
-        'skillLevel': _skillLevel,
-        'isGiSession': _isGi,
-        'isRecurring': _isRecurring,
-        'maxParticipants': _maxParticipants ?? 0,
-      });
-      HapticFeedback.heavyImpact();
-      if (mounted) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Session created!'))); context.go('/owner/sessions'); }
-    } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
-    } finally { if (mounted) setState(() => _isSaving = false); }
+  void dispose() {
+    _nameCtrl.dispose();
+    _dateCtrl.dispose();
+    _startCtrl.dispose();
+    _endCtrl.dispose();
+    _feeCtrl.dispose();
+    _descCtrl.dispose();
+    _maxCtrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<AppTokens>()!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Open Mat')),
-      body: ListView(
-        padding: const EdgeInsets.all(StitchTokens.lg),
-        children: [
-          TextField(controller: _titleCtrl, decoration: const InputDecoration(labelText: 'Session Title *')),
-          const SizedBox(height: StitchTokens.md),
-          TextField(controller: _descCtrl, decoration: const InputDecoration(labelText: 'Description'), maxLines: 2),
-          const SizedBox(height: StitchTokens.lg),
-
-          // Day of week
-          Text('Day of Week', style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: StitchTokens.sm),
-          Wrap(spacing: 6, children: List.generate(7, (i) => ChoiceChip(
-            label: Text(_days[i]),
-            selected: _dayOfWeek == i,
-            onSelected: (_) { HapticFeedback.selectionClick(); setState(() => _dayOfWeek = i); },
-          ))),
-          const SizedBox(height: StitchTokens.md),
-
-          // Time
-          Row(children: [
-            Expanded(child: ListTile(title: const Text('Start'), subtitle: Text(_fmtTime(_startTime)), onTap: () async {
-              final t = await showTimePicker(context: context, initialTime: _startTime);
-              if (t != null) setState(() => _startTime = t);
-            })),
-            Expanded(child: ListTile(title: const Text('End'), subtitle: Text(_fmtTime(_endTime)), onTap: () async {
-              final t = await showTimePicker(context: context, initialTime: _endTime);
-              if (t != null) setState(() => _endTime = t);
-            })),
-          ]),
-          const SizedBox(height: StitchTokens.md),
-
-          // Skill level
-          Text('Skill Level', style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: StitchTokens.sm),
-          Wrap(spacing: 6, children: _levels.map((l) => ChoiceChip(
-            label: Text(l[0].toUpperCase() + l.substring(1)),
-            selected: _skillLevel == l,
-            onSelected: (_) { HapticFeedback.selectionClick(); setState(() => _skillLevel = l); },
-          )).toList()),
-          const SizedBox(height: StitchTokens.md),
-
-          // Toggles
-          SwitchListTile(title: const Text('Gi Session'), value: _isGi, onChanged: (v) => setState(() => _isGi = v)),
-          SwitchListTile(title: const Text('Recurring Weekly'), value: _isRecurring, onChanged: (v) => setState(() => _isRecurring = v)),
-          const SizedBox(height: StitchTokens.xl),
-
-          SizedBox(height: 52, child: ElevatedButton(onPressed: _isSaving ? null : _submit, child: _isSaving ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('Create Session'))),
-        ],
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          // Header
+          Container(
+            color: t.isSport ? t.bg2 : Colors.transparent,
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+            child: Row(children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
+              ),
+              const SizedBox(width: 12),
+              if (t.isSport)
+                Container(
+                  width: 4,
+                  height: 22,
+                  color: t.red,
+                  margin: const EdgeInsets.only(right: 8),
+                ),
+              Expanded(
+                child: Text(
+                  'Create Open Mat',
+                  style: t.h1Style.copyWith(fontSize: 20),
+                ),
+              ),
+            ]),
+          ),
+          if (t.isSport) Divider(height: 1, color: t.border),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Field(
+                    t: t,
+                    label: 'Session Name',
+                    ctrl: _nameCtrl,
+                    hint: 'e.g. Saturday Open Mat',
+                  ),
+                  const SizedBox(height: 16),
+                  // Gi type selector
+                  Text('Gi Type'.toUpperCase(), style: t.labelStyle),
+                  const SizedBox(height: 8),
+                  Row(children: [
+                    for (final opt in [
+                      ('gi', 'Gi'),
+                      ('nogi', 'No-Gi'),
+                      ('both', 'Both'),
+                    ])
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _giType = opt.$1),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 6),
+                            padding: const EdgeInsets.symmetric(vertical: 11),
+                            decoration: BoxDecoration(
+                              color: _giType == opt.$1
+                                  ? t.giColor(opt.$1).withValues(alpha: 0.15)
+                                  : t.surface,
+                              border: Border.all(
+                                color: _giType == opt.$1
+                                    ? t.giColor(opt.$1)
+                                    : t.border,
+                                width: _giType == opt.$1 ? 2 : 1,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(t.cardRadius),
+                            ),
+                            child: Text(
+                              opt.$2,
+                              textAlign: TextAlign.center,
+                              style: t.miniStyle.copyWith(
+                                color: _giType == opt.$1
+                                    ? t.giColor(opt.$1)
+                                    : t.muted,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ]),
+                  const SizedBox(height: 16),
+                  // Exp level selector
+                  Text('Experience Level'.toUpperCase(), style: t.labelStyle),
+                  const SizedBox(height: 8),
+                  Row(children: [
+                    for (final opt in [
+                      ('all', 'All'),
+                      ('beg', 'Beg'),
+                      ('int', 'Inter'),
+                      ('adv', 'Adv'),
+                    ])
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _expLevel = opt.$1),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 4),
+                            padding: const EdgeInsets.symmetric(vertical: 11),
+                            decoration: BoxDecoration(
+                              color: _expLevel == opt.$1
+                                  ? t.expColor(opt.$1).withValues(alpha: 0.15)
+                                  : t.surface,
+                              border: Border.all(
+                                color: _expLevel == opt.$1
+                                    ? t.expColor(opt.$1)
+                                    : t.border,
+                                width: _expLevel == opt.$1 ? 2 : 1,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(t.cardRadius),
+                            ),
+                            child: Text(
+                              opt.$2,
+                              textAlign: TextAlign.center,
+                              style: t.miniStyle.copyWith(
+                                color: _expLevel == opt.$1
+                                    ? t.expColor(opt.$1)
+                                    : t.muted,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ]),
+                  const SizedBox(height: 16),
+                  _Field(
+                    t: t,
+                    label: 'Date',
+                    ctrl: _dateCtrl,
+                    hint: 'YYYY-MM-DD',
+                  ),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    Expanded(
+                      child: _Field(
+                        t: t,
+                        label: 'Start Time',
+                        ctrl: _startCtrl,
+                        hint: '7:00 PM',
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _Field(
+                        t: t,
+                        label: 'End Time',
+                        ctrl: _endCtrl,
+                        hint: '9:00 PM',
+                      ),
+                    ),
+                  ]),
+                  const SizedBox(height: 12),
+                  _Field(
+                    t: t,
+                    label: r'Mat Fee ($)',
+                    ctrl: _feeCtrl,
+                    hint: '0 for free',
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 12),
+                  _Field(
+                    t: t,
+                    label: 'Description',
+                    ctrl: _descCtrl,
+                    hint: 'Details about the session…',
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 12),
+                  _Field(
+                    t: t,
+                    label: 'Max Participants',
+                    ctrl: _maxCtrl,
+                    hint: '20',
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+          // Submit
+          Container(
+            color: t.isSport ? t.bg2 : Colors.transparent,
+            padding: const EdgeInsets.all(16),
+            child: t.isSport
+                ? GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      width: double.infinity,
+                      height: 54,
+                      color: t.red,
+                      child: Center(
+                        child: Text(
+                          'Create Session',
+                          style: t.h2Style.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: t.red,
+                      minimumSize: const Size.fromHeight(54),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(t.cardRadius),
+                      ),
+                    ),
+                    child: Text(
+                      'Create Session',
+                      style: t.h2Style.copyWith(color: Colors.white),
+                    ),
+                  ),
+          ),
+        ]),
       ),
+    );
+  }
+}
+
+class _Field extends StatelessWidget {
+  final AppTokens t;
+  final String label;
+  final TextEditingController ctrl;
+  final String hint;
+  final int maxLines;
+  final TextInputType? keyboardType;
+
+  const _Field({
+    required this.t,
+    required this.label,
+    required this.ctrl,
+    required this.hint,
+    this.maxLines = 1,
+    this.keyboardType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label.toUpperCase(), style: t.labelStyle),
+        const SizedBox(height: 6),
+        Container(
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.border),
+          ),
+          child: TextField(
+            controller: ctrl,
+            style: t.bodyStyle,
+            maxLines: maxLines,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: t.miniStyle.copyWith(fontSize: 13),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
