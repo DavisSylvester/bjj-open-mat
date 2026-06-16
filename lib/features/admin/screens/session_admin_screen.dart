@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
-import '../../../shared/widgets/error_state.dart';
-import '../../open_mats/screens/open_mat_detail_screen.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
 
 class SessionAdminScreen extends ConsumerWidget {
   final String sessionId;
@@ -14,50 +10,68 @@ class SessionAdminScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final matAsync = ref.watch(openMatDetailProvider(sessionId));
-
+    final t = Theme.of(context).extension<AppTokens>()!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Session Detail'), actions: [
-        IconButton(icon: const Icon(Icons.people), onPressed: () => context.go('/owner/sessions/$sessionId/attendance')),
-        IconButton(
-          icon: const Icon(Icons.cancel, color: StitchTokens.error),
-          onPressed: () async {
-            final confirm = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-              title: const Text('Cancel Session?'),
-              actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('No')), TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Yes, Cancel', style: TextStyle(color: StitchTokens.error)))],
-            ));
-            if (confirm == true) {
-              HapticFeedback.heavyImpact();
-              final api = ref.read(apiClientProvider);
-              await api.delete(Endpoints.openMatById(sessionId));
-              if (context.mounted) context.go('/owner/sessions');
-            }
-          },
-        ),
-      ]),
-      body: matAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorState(message: e.toString()),
-        data: (mat) => ListView(
-          padding: const EdgeInsets.all(StitchTokens.md),
-          children: [
-            Card(child: Padding(padding: const EdgeInsets.all(StitchTokens.md), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(mat.title, style: Theme.of(context).textTheme.headlineLarge),
-              const SizedBox(height: 8),
-              Row(children: [
-                Chip(label: Text(mat.skillBadge), backgroundColor: StitchTokens.accent.withValues(alpha: 0.15)),
-                const SizedBox(width: 6),
-                Chip(label: Text(mat.giBadge), backgroundColor: StitchTokens.secondary.withValues(alpha: 0.15)),
-                if (mat.isCancelled) ...[const SizedBox(width: 6), const Chip(label: Text('Cancelled'), backgroundColor: Color(0x26EB3B5A))],
-              ]),
-              const SizedBox(height: 8),
-              Text('${mat.dayName} ${mat.startTime} – ${mat.endTime}', style: Theme.of(context).textTheme.bodyLarge),
-              if (mat.maxParticipants != null) Text('${mat.checkinCount ?? 0} / ${mat.maxParticipants} participants'),
-            ]))),
-            const SizedBox(height: StitchTokens.md),
-            ElevatedButton.icon(icon: const Icon(Icons.list), label: const Text('View Attendance'), onPressed: () => context.go('/owner/sessions/$sessionId/attendance')),
-          ],
-        ),
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          Container(
+            color: t.bg2,
+            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+            child: Row(children: [
+              GestureDetector(
+                onTap: () => context.go('/owner/sessions'),
+                child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Text('Session Admin', style: t.h1Style.copyWith(fontSize: 20))),
+              GestureDetector(
+                onTap: () => context.go('/owner/sessions/$sessionId/attendance'),
+                child: Icon(LucideIcons.users, size: 18, color: t.muted),
+              ),
+            ]),
+          ),
+          Divider(height: 1, color: t.border),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(t.cardRadius),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('Session ID', style: t.labelStyle),
+                    const SizedBox(height: 4),
+                    Text(sessionId, style: t.bodyStyle),
+                  ]),
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () => context.go('/owner/sessions/$sessionId/attendance'),
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: t.surface,
+                      borderRadius: BorderRadius.circular(t.cardRadius),
+                      border: Border.all(color: t.border),
+                    ),
+                    child: Row(children: [
+                      Icon(LucideIcons.users, size: 20, color: t.muted),
+                      const SizedBox(width: 12),
+                      Text('Attendance', style: t.bodyStyle),
+                      const Spacer(),
+                      Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+                    ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ]),
       ),
     );
   }

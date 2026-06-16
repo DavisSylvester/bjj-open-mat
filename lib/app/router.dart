@@ -70,7 +70,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
                 GoRoute(
                   path: 'open-mat/:id',
-                  builder: (context, state) => OpenMatDetailScreen(openMatId: state.pathParameters['id']!),
+                  builder: (context, state) => OpenMatDetailScreen(sessionId: state.pathParameters['id']!),
                   routes: [
                     GoRoute(
                       path: 'checkin-success',
@@ -78,7 +78,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     ),
                     GoRoute(
                       path: 'review',
-                      builder: (context, state) => ReviewScreen(checkinId: state.pathParameters['id']!),
+                      builder: (context, state) => ReviewScreen(sessionId: state.pathParameters['id']!),
                     ),
                   ],
                 ),
