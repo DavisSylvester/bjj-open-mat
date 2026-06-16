@@ -1,117 +1,195 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
-import '../../../shared/widgets/error_state.dart';
-import '../../../shared/widgets/shimmer_loader.dart';
-import '../../checkins/models/checkin.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
+import '../../../shared/widgets/session_row.dart';
+import '../../../shared/widgets/app_bottom_nav.dart';
+import '../../../shared/widgets/score_cell.dart';
 
-final myCheckinsProvider = FutureProvider<List<CheckIn>>((ref) async {
-  final api = ref.read(apiClientProvider);
-  final response = await api.get(Endpoints.myCheckins, queryParameters: {'page': 1, 'limit': 50});
-  final raw = response.data['data'];
-  final List data = raw is List ? raw : (raw is Map ? (raw['items'] as List? ?? []) : []);
-  return data.map((e) => CheckIn.fromJson(e as Map<String, dynamic>)).toList();
-});
+const _stubSessions = [
+  SessionRowData(
+    gymName: 'Atos HQ',
+    giType: 'gi',
+    expLevel: 'all',
+    time: '7:00 PM',
+    day: 'Mon',
+    distance: '1.2 mi',
+    fee: 0,
+  ),
+  SessionRowData(
+    gymName: 'Renzo Westwood',
+    giType: 'nogi',
+    expLevel: 'int',
+    time: '8:00 PM',
+    day: 'Sat',
+    distance: '2.4 mi',
+    fee: 15,
+  ),
+  SessionRowData(
+    gymName: 'Gracie Barra Pasadena',
+    giType: 'gi',
+    expLevel: 'beg',
+    time: '9:00 AM',
+    day: 'Sun',
+    distance: '4.5 mi',
+    fee: 0,
+  ),
+  SessionRowData(
+    gymName: 'Alliance Jiu-Jitsu',
+    giType: 'both',
+    expLevel: 'adv',
+    time: '6:30 PM',
+    day: 'Fri',
+    distance: '3.1 mi',
+    fee: 20,
+  ),
+];
 
 class MyTrainingScreen extends ConsumerWidget {
   const MyTrainingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final checkinsAsync = ref.watch(myCheckinsProvider);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('My Training')),
-      body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(myCheckinsProvider),
-        child: checkinsAsync.when(
-          loading: () => const ShimmerList(itemCount: 6),
-          error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(myCheckinsProvider)),
-          data: (checkins) {
-            if (checkins.isEmpty) {
-              return const EmptyState(title: 'No training yet', subtitle: 'Check in to your first open mat!', icon: Icons.fitness_center);
-            }
-            return Column(
-              children: [
-                // Stats header
-                Padding(
-                  padding: const EdgeInsets.all(StitchTokens.md),
-                  child: Row(
-                    children: [
-                      _StatCard(label: 'Sessions', value: '${checkins.length}', icon: Icons.check_circle, color: StitchTokens.accent),
-                      const SizedBox(width: StitchTokens.sm),
-                      _StatCard(label: 'Avg Rating', value: _avgRating(checkins), icon: Icons.star, color: StitchTokens.warning),
-                    ],
-                  ),
-                ),
-                // History list
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: StitchTokens.md),
-                    itemCount: checkins.length,
-                    itemBuilder: (context, i) {
-                      final c = checkins[i];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: StitchTokens.accent.withValues(alpha: 0.15),
-                          child: const Icon(Icons.sports_martial_arts, color: StitchTokens.accent, size: 20),
-                        ),
-                        title: Text(c.openMatTitle ?? 'Open Mat'),
-                        subtitle: Text('${c.gymName ?? ""} • ${c.sessionDate}'),
-                        trailing: c.rating != null
-                            ? Row(mainAxisSize: MainAxisSize.min, children: [
-                                Text('${c.rating}', style: const TextStyle(fontWeight: FontWeight.w600)),
-                                const Icon(Icons.star, size: 16, color: StitchTokens.warning),
-                              ])
-                            : c.canReview
-                                ? TextButton(onPressed: () { HapticFeedback.selectionClick(); }, child: const Text('Review'))
-                                : null,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  String _avgRating(List<CheckIn> checkins) {
-    final rated = checkins.where((c) => c.rating != null);
-    if (rated.isEmpty) return '--';
-    final avg = rated.map((c) => c.rating!).reduce((a, b) => a + b) / rated.length;
-    return avg.toStringAsFixed(1);
+    final t = Theme.of(context).extension<AppTokens>()!;
+    return t.isSport
+        ? _SportTraining(t: t)
+        : _GlassTraining(t: t);
   }
 }
 
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-  const _StatCard({required this.label, required this.value, required this.icon, required this.color});
+class _SportTraining extends StatelessWidget {
+  final AppTokens t;
+  const _SportTraining({required this.t});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(StitchTokens.md),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 28),
-              const SizedBox(height: 4),
-              Text(value, style: Theme.of(context).textTheme.headlineLarge),
-              Text(label, style: Theme.of(context).textTheme.bodySmall),
-            ],
+    return Scaffold(
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          // Masthead
+          Container(
+            color: t.bg2,
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            child: Row(children: [
+              Container(width: 4, height: 28, color: t.red),
+              const SizedBox(width: 10),
+              Text('My Training', style: t.h1Style.copyWith(fontSize: 22)),
+            ]),
           ),
-        ),
+          Divider(height: 1, color: t.border),
+          // 4-stat strip
+          Container(
+            color: t.surfaceHi,
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ScoreCell(label: 'TOTAL MATS', value: '47'),
+                Container(width: 1, height: 40, color: t.border),
+                ScoreCell(label: 'HRS', value: '94'),
+                Container(width: 1, height: 40, color: t.border),
+                ScoreCell(label: 'STREAK', value: '7', suffix: 'wk'),
+                Container(width: 1, height: 40, color: t.border),
+                ScoreCell(label: 'GYMS', value: '8'),
+              ],
+            ),
+          ),
+          Divider(height: 1, color: t.border),
+          // Section header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
+            child: Row(children: [
+              Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
+              Text('Session History', style: t.h2Style.copyWith(fontSize: 14)),
+            ]),
+          ),
+          Divider(height: 1, color: t.border),
+          Expanded(
+            child: ListView.separated(
+              itemCount: _stubSessions.length,
+              separatorBuilder: (context2, index) => Divider(height: 1, color: t.border),
+              itemBuilder: (_, i) => SessionRow(session: _stubSessions[i]),
+            ),
+          ),
+        ]),
       ),
+      bottomNavigationBar: AppBottomNav(active: 'schedule', onTap: (_) {}),
+    );
+  }
+}
+
+class _GlassTraining extends StatelessWidget {
+  final AppTokens t;
+  const _GlassTraining({required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(children: [
+              Icon(LucideIcons.calendar, color: t.muted, size: 20),
+              const SizedBox(width: 8),
+              Text('My Training', style: t.h1Style),
+            ]),
+          ),
+          // Stat pills
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Row(children: [
+              _GlassStatPill(label: '47 Mats', t: t),
+              const SizedBox(width: 8),
+              _GlassStatPill(label: '94 Hours', t: t),
+              const SizedBox(width: 8),
+              _GlassStatPill(label: '7 wk Streak', t: t),
+              const SizedBox(width: 8),
+              _GlassStatPill(label: '8 Gyms', t: t),
+            ]),
+          ),
+          // Section label
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Row(children: [
+              Text('My Sessions', style: t.h2Style),
+            ]),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              itemCount: _stubSessions.length,
+              itemBuilder: (_, i) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: SessionRow(session: _stubSessions[i]),
+              ),
+            ),
+          ),
+        ]),
+      ),
+      bottomNavigationBar: AppBottomNav(active: 'schedule', onTap: (_) {}),
+    );
+  }
+}
+
+class _GlassStatPill extends StatelessWidget {
+  final String label;
+  final AppTokens t;
+  const _GlassStatPill({required this.label, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: t.surfaceHi,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: t.border),
+      ),
+      child: Text(label, style: t.miniStyle.copyWith(fontSize: 11)),
     );
   }
 }

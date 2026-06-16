@@ -2,71 +2,222 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../app/theme.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
+import '../../../core/design/theme_provider.dart';
 import '../../../core/auth/auth_service.dart';
-
-class _ThemeModeNotifier extends Notifier<ThemeMode> {
-  @override
-  ThemeMode build() => ThemeMode.system;
-  void set(ThemeMode value) => state = value;
-}
-
-final themeModeProvider = NotifierProvider<_ThemeModeNotifier, ThemeMode>(_ThemeModeNotifier.new);
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
+    final t = Theme.of(context).extension<AppTokens>()!;
+    return t.isSport
+        ? _SportSettings(t: t, ref: ref)
+        : _GlassSettings(t: t, ref: ref);
+  }
+}
 
+class _SportSettings extends StatelessWidget {
+  final AppTokens t;
+  final WidgetRef ref;
+  const _SportSettings({required this.t, required this.ref});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
-        children: [
-          // Theme
-          ListTile(
-            leading: const Icon(Icons.palette),
-            title: const Text('Theme'),
-            trailing: SegmentedButton<ThemeMode>(
-              segments: const [
-                ButtonSegment(value: ThemeMode.system, label: Text('Auto')),
-                ButtonSegment(value: ThemeMode.light, label: Text('Light')),
-                ButtonSegment(value: ThemeMode.dark, label: Text('Dark')),
-              ],
-              selected: {themeMode},
-              onSelectionChanged: (v) { HapticFeedback.selectionClick(); ref.read(themeModeProvider.notifier).set(v.first); },
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          // Masthead
+          Container(
+            color: t.bg2,
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            child: Row(children: [
+              Container(width: 4, height: 28, color: t.red),
+              const SizedBox(width: 10),
+              Text('Settings', style: t.h1Style.copyWith(fontSize: 22)),
+            ]),
+          ),
+          Divider(height: 1, color: t.border),
+          Expanded(
+            child: ListView(children: [
+              // Theme toggle
+              Container(
+                color: t.surface,
+                child: ListTile(
+                  leading: Icon(LucideIcons.palette, color: t.muted, size: 18),
+                  title: Text(
+                    'Sports Ticker Theme',
+                    style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  trailing: Consumer(
+                    builder: (ctx, watchRef, child) => Switch(
+                      value: watchRef.watch(themeProvider) == ThemeVariant.sport,
+                      activeThumbColor: t.red,
+                      onChanged: (v) {
+                        HapticFeedback.selectionClick();
+                        watchRef.read(themeProvider.notifier).toggle();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              Divider(height: 1, color: t.border),
+              Container(
+                color: t.surface,
+                child: ListTile(
+                  leading: Icon(LucideIcons.bell, color: t.muted, size: 18),
+                  title: Text('Notifications', style: t.bodyStyle),
+                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.faint),
+                  onTap: () => context.go('/notifications'),
+                ),
+              ),
+              Divider(height: 1, color: t.border),
+              Container(
+                color: t.surface,
+                child: ListTile(
+                  leading: Icon(LucideIcons.shield, color: t.muted, size: 18),
+                  title: Text('Privacy', style: t.bodyStyle),
+                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.faint),
+                  onTap: () {},
+                ),
+              ),
+              Divider(height: 1, color: t.border),
+              Container(
+                color: t.surface,
+                child: ListTile(
+                  leading: Icon(LucideIcons.info, color: t.muted, size: 18),
+                  title: Text('About', style: t.bodyStyle),
+                  subtitle: Text(
+                    'BJJ Open Mat Finder v0.1.0',
+                    style: t.miniStyle.copyWith(fontSize: 10),
+                  ),
+                  onTap: () {},
+                ),
+              ),
+              Divider(height: 1, color: t.border),
+              Container(
+                color: t.surface,
+                child: ListTile(
+                  leading: Icon(LucideIcons.logOut, color: t.red, size: 18),
+                  title: Text(
+                    'Sign Out',
+                    style: t.bodyStyle.copyWith(color: t.red),
+                  ),
+                  onTap: () async {
+                    HapticFeedback.heavyImpact();
+                    await ref.read(authStateProvider.notifier).logout();
+                    if (context.mounted) context.go('/login');
+                  },
+                ),
+              ),
+              Divider(height: 1, color: t.border),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+class _GlassSettings extends StatelessWidget {
+  final AppTokens t;
+  final WidgetRef ref;
+  const _GlassSettings({required this.t, required this.ref});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+              child: Row(children: [
+                Icon(LucideIcons.settings, color: t.muted, size: 20),
+                const SizedBox(width: 8),
+                Text('Settings', style: t.h1Style),
+              ]),
             ),
-          ),
-          const Divider(),
-
-          // Location
-          ListTile(leading: const Icon(Icons.location_on), title: const Text('Location Precision'), subtitle: const Text('While using the app'), trailing: const Icon(Icons.chevron_right), onTap: () {}),
-
-          // Search radius
-          ListTile(leading: const Icon(Icons.radar), title: const Text('Default Search Radius'), subtitle: const Text('25 km'), trailing: const Icon(Icons.chevron_right), onTap: () {}),
-
-          const Divider(),
-
-          // Notifications
-          ListTile(leading: const Icon(Icons.notifications), title: const Text('Notification Preferences'), trailing: const Icon(Icons.chevron_right), onTap: () => context.go('/notifications')),
-
-          const Divider(),
-
-          // About
-          ListTile(leading: const Icon(Icons.info_outline), title: const Text('About'), subtitle: const Text('BJJ Open Mat Finder v0.1.0')),
-
-          // Logout
-          ListTile(
-            leading: const Icon(Icons.logout, color: StitchTokens.error),
-            title: const Text('Log Out', style: TextStyle(color: StitchTokens.error)),
-            onTap: () async {
-              HapticFeedback.heavyImpact();
-              await ref.read(authStateProvider.notifier).logout();
-              if (context.mounted) context.go('/login');
-            },
-          ),
-        ],
+            // Settings card
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: t.surface,
+                borderRadius: BorderRadius.circular(t.cardRadius),
+                border: Border.all(color: t.border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(children: [
+                // Theme toggle
+                ListTile(
+                  leading: Icon(LucideIcons.palette, color: t.muted),
+                  title: Text(
+                    'Sports Ticker Theme',
+                    style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  trailing: Consumer(
+                    builder: (ctx, watchRef, _) => Switch(
+                      value: watchRef.watch(themeProvider) == ThemeVariant.sport,
+                      activeThumbColor: t.red,
+                      onChanged: (_) {
+                        HapticFeedback.selectionClick();
+                        watchRef.read(themeProvider.notifier).toggle();
+                      },
+                    ),
+                  ),
+                ),
+                Divider(height: 1, color: t.border),
+                ListTile(
+                  leading: Icon(LucideIcons.bell, color: t.muted),
+                  title: Text('Notifications', style: t.bodyStyle),
+                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+                  onTap: () => context.go('/notifications'),
+                ),
+                Divider(height: 1, color: t.border),
+                ListTile(
+                  leading: Icon(LucideIcons.shield, color: t.muted),
+                  title: Text('Privacy', style: t.bodyStyle),
+                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+                  onTap: () {},
+                ),
+                Divider(height: 1, color: t.border),
+                ListTile(
+                  leading: Icon(LucideIcons.info, color: t.muted),
+                  title: Text('About', style: t.bodyStyle),
+                  subtitle: Text(
+                    'BJJ Open Mat Finder v0.1.0',
+                    style: t.miniStyle.copyWith(fontSize: 11),
+                  ),
+                ),
+                Divider(height: 1, color: t.border),
+                ListTile(
+                  leading: Icon(LucideIcons.logOut, color: t.red),
+                  title: Text(
+                    'Sign Out',
+                    style: t.bodyStyle.copyWith(color: t.red),
+                  ),
+                  onTap: () async {
+                    HapticFeedback.heavyImpact();
+                    await ref.read(authStateProvider.notifier).logout();
+                    if (context.mounted) context.go('/login');
+                  },
+                ),
+              ]),
+            ),
+            const SizedBox(height: 24),
+          ]),
+        ),
       ),
     );
   }
