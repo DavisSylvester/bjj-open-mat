@@ -20,14 +20,13 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport ? _SportProfile(t: t, ref: ref) : _GlassProfile(t: t, ref: ref);
+    return t.isSport ? _SportProfile(t: t) : _GlassProfile(t: t, ref: ref);
   }
 }
 
 class _SportProfile extends StatelessWidget {
   final AppTokens t;
-  final WidgetRef ref;
-  const _SportProfile({required this.t, required this.ref});
+  const _SportProfile({required this.t});
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +113,6 @@ class _GlassProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final variant = ref.watch(themeProvider);
 
     return Scaffold(
       backgroundColor: t.bg,
@@ -183,10 +181,12 @@ class _GlassProfile extends StatelessWidget {
                 ListTile(
                   leading: Icon(LucideIcons.palette, color: t.muted),
                   title: Text('Sports Ticker Theme', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600)),
-                  trailing: Switch(
-                    value: variant == ThemeVariant.sport,
-                    activeThumbColor: t.red,
-                    onChanged: (_) => ref.read(themeProvider.notifier).toggle(),
+                  trailing: Consumer(
+                    builder: (context, watchRef, _) => Switch(
+                      value: watchRef.watch(themeProvider) == ThemeVariant.sport,
+                      activeThumbColor: t.red,
+                      onChanged: (_) => watchRef.read(themeProvider.notifier).toggle(),
+                    ),
                   ),
                 ),
                 Divider(height: 1, color: t.border),
