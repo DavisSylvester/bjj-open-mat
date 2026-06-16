@@ -25,6 +25,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
   double get _composite => _ratings.values.reduce((a, b) => a + b) / _ratings.length;
 
   @override
+  void dispose() {
+    _reviewCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     return Scaffold(

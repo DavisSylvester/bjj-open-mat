@@ -20,6 +20,16 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
   final _cityCtrl = TextEditingController();
   String _gymType = 'gi';
 
+  @override
+  void dispose() {
+    _pageCtrl.dispose();
+    _nameCtrl.dispose();
+    _websiteCtrl.dispose();
+    _addressCtrl.dispose();
+    _cityCtrl.dispose();
+    super.dispose();
+  }
+
   void _next() {
     if (_step < 2) {
       setState(() => _step++);
