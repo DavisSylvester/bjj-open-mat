@@ -1,108 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
+import '../../../shared/widgets/stat_bar.dart';
+import '../../../shared/widgets/score_cell.dart';
 
-class ReviewScreen extends ConsumerStatefulWidget {
-  final String checkinId;
-  const ReviewScreen({super.key, required this.checkinId});
+class ReviewScreen extends StatefulWidget {
+  final String? sessionId;
+  const ReviewScreen({super.key, this.sessionId});
 
   @override
-  ConsumerState<ReviewScreen> createState() => _ReviewScreenState();
+  State<ReviewScreen> createState() => _ReviewScreenState();
 }
 
-class _ReviewScreenState extends ConsumerState<ReviewScreen> {
-  int _rating = 0;
-  final _reviewController = TextEditingController();
-  bool _isSubmitting = false;
+class _ReviewScreenState extends State<ReviewScreen> {
+  final Map<String, double> _ratings = {
+    'Instruction Quality': 4.0,
+    'Mat Cleanliness': 3.0,
+    'Skill Variety': 5.0,
+    'Worth Returning': 4.0,
+    'Overall': 4.0,
+  };
+  final _reviewCtrl = TextEditingController();
 
-  @override
-  void dispose() {
-    _reviewController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _submit() async {
-    if (_rating == 0) return;
-    setState(() => _isSubmitting = true);
-
-    try {
-      final api = ref.read(apiClientProvider);
-      await api.post(Endpoints.checkinReview(widget.checkinId), data: {
-        'rating': _rating,
-        'review': _reviewController.text.trim().isEmpty ? null : _reviewController.text.trim(),
-      });
-      HapticFeedback.heavyImpact();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Review submitted!')));
-        context.pop();
-      }
-    } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
-    } finally {
-      if (mounted) setState(() => _isSubmitting = false);
-    }
-  }
+  double get _composite => _ratings.values.reduce((a, b) => a + b) / _ratings.length;
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<AppTokens>()!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Rate Your Session')),
-      body: Padding(
-        padding: const EdgeInsets.all(StitchTokens.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('How was it?', style: Theme.of(context).textTheme.headlineLarge),
-            const SizedBox(height: StitchTokens.lg),
-
-            // Star rating
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (i) {
-                final starNum = i + 1;
-                return IconButton(
-                  iconSize: 48,
-                  icon: Icon(
-                    starNum <= _rating ? Icons.star : Icons.star_border,
-                    color: starNum <= _rating ? StitchTokens.warning : StitchTokens.textSecondary,
-                  ),
-                  onPressed: () {
-                    HapticFeedback.selectionClick();
-                    setState(() => _rating = starNum);
-                  },
-                );
-              }),
-            ),
-            const SizedBox(height: StitchTokens.lg),
-
-            // Review text
-            Text('Review (optional)', style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: StitchTokens.sm),
-            TextField(
-              controller: _reviewController,
-              maxLines: 4,
-              decoration: const InputDecoration(hintText: 'How was the vibe? Good rolls?'),
-            ),
-
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: _rating == 0 || _isSubmitting ? null : _submit,
-                child: _isSubmitting
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Submit Review'),
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          // Header
+          Container(
+            color: t.isSport ? t.bg2 : Colors.transparent,
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Row(children: [
+              if (t.isSport) Container(width: 4, height: 22, color: t.red, margin: const EdgeInsets.only(right: 10)),
+              Expanded(child: Text('Rate Session', style: t.h1Style.copyWith(fontSize: 20))),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Icon(LucideIcons.x, size: 20, color: t.muted),
               ),
+            ]),
+          ),
+          if (t.isSport) Divider(height: 1, color: t.border),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                if (t.isSport) ...[
+                  // Composite score
+                  Container(
+                    color: t.surface,
+                    padding: const EdgeInsets.all(14),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Row(children: [
+                      ScoreCell(
+                        label: 'Composite Score',
+                        value: _composite.toStringAsFixed(1),
+                        suffix: '/ 5',
+                        valueColor: _composite >= 4 ? t.green : _composite >= 3 ? t.amber : t.red,
+                      ),
+                    ]),
+                  ),
+                  // Stat bar ratings
+                  ..._ratings.entries.map((e) => Column(children: [
+                    Row(children: [
+                      Expanded(child: Text(e.key.toUpperCase(), style: t.miniStyle.copyWith(fontSize: 10))),
+                    ]),
+                    Slider(
+                      value: e.value,
+                      min: 0, max: 5, divisions: 10,
+                      activeColor: _barColor(e.value, t),
+                      inactiveColor: t.border,
+                      onChanged: (v) => setState(() => _ratings[e.key] = v),
+                    ),
+                    StatBar(label: e.key, value: e.value, color: _barColor(e.value, t)),
+                  ])),
+                ] else ...[
+                  // Glass star ratings
+                  ..._ratings.entries.map((e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: t.surface,
+                        borderRadius: BorderRadius.circular(t.cardRadius),
+                        border: Border.all(color: t.border),
+                      ),
+                      child: Row(children: [
+                        Expanded(child: Text(e.key, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600))),
+                        Row(children: List.generate(5, (i) => GestureDetector(
+                          onTap: () => setState(() => _ratings[e.key] = i + 1.0),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: Icon(
+                              LucideIcons.star,
+                              size: 22,
+                              color: i < e.value ? t.amber : t.muted,
+                            ),
+                          ),
+                        ))),
+                      ]),
+                    ),
+                  )),
+                ],
+                const SizedBox(height: 12),
+                // Written review
+                Container(
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(t.cardRadius),
+                    border: Border.all(color: t.border),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: TextField(
+                    controller: _reviewCtrl,
+                    style: t.bodyStyle,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      hintText: 'Write a review (optional)…',
+                      hintStyle: t.miniStyle.copyWith(fontSize: 13),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ]),
             ),
-            const SizedBox(height: StitchTokens.md),
-          ],
-        ),
+          ),
+          // Submit
+          Container(
+            color: t.isSport ? t.bg2 : Colors.transparent,
+            padding: const EdgeInsets.all(16),
+            child: t.isSport
+                ? GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      width: double.infinity,
+                      height: 54,
+                      color: t.red,
+                      child: Center(child: Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16))),
+                    ),
+                  )
+                : ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: t.red,
+                      minimumSize: const Size.fromHeight(54),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
+                    ),
+                    child: Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white)),
+                  ),
+          ),
+        ]),
       ),
     );
+  }
+
+  Color _barColor(double v, AppTokens t) {
+    if (v >= 4) return t.green;
+    if (v >= 3) return t.amber;
+    return t.red;
   }
 }
