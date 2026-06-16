@@ -9,8 +9,21 @@ import '../../open_mats/models/open_mat.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
 
-final searchQueryProvider = StateProvider<String>((ref) => '');
-final searchFiltersProvider = StateProvider<SearchFilters>((ref) => const SearchFilters());
+class _SearchQueryNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+  void set(String value) => state = value;
+}
+
+final searchQueryProvider = NotifierProvider<_SearchQueryNotifier, String>(_SearchQueryNotifier.new);
+
+class _SearchFiltersNotifier extends Notifier<SearchFilters> {
+  @override
+  SearchFilters build() => const SearchFilters();
+  void set(SearchFilters value) => state = value;
+}
+
+final searchFiltersProvider = NotifierProvider<_SearchFiltersNotifier, SearchFilters>(_SearchFiltersNotifier.new);
 
 final searchResultsProvider = FutureProvider<List<OpenMat>>((ref) async {
   final filters = ref.watch(searchFiltersProvider);
@@ -57,13 +70,13 @@ class SearchScreen extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _FilterChip(label: 'All Levels', selected: filters.skillLevel == null, onTap: () => ref.read(searchFiltersProvider.notifier).state = filters.copyWith(skillLevel: null)),
-                  _FilterChip(label: 'Beginner', selected: filters.skillLevel == 'beginner', onTap: () => ref.read(searchFiltersProvider.notifier).state = SearchFilters(skillLevel: 'beginner', isGi: filters.isGi)),
-                  _FilterChip(label: 'Intermediate', selected: filters.skillLevel == 'intermediate', onTap: () => ref.read(searchFiltersProvider.notifier).state = SearchFilters(skillLevel: 'intermediate', isGi: filters.isGi)),
-                  _FilterChip(label: 'Advanced', selected: filters.skillLevel == 'advanced', onTap: () => ref.read(searchFiltersProvider.notifier).state = SearchFilters(skillLevel: 'advanced', isGi: filters.isGi)),
+                  _FilterChip(label: 'All Levels', selected: filters.skillLevel == null, onTap: () => ref.read(searchFiltersProvider.notifier).set(filters.copyWith(skillLevel: null))),
+                  _FilterChip(label: 'Beginner', selected: filters.skillLevel == 'beginner', onTap: () => ref.read(searchFiltersProvider.notifier).set(SearchFilters(skillLevel: 'beginner', isGi: filters.isGi))),
+                  _FilterChip(label: 'Intermediate', selected: filters.skillLevel == 'intermediate', onTap: () => ref.read(searchFiltersProvider.notifier).set(SearchFilters(skillLevel: 'intermediate', isGi: filters.isGi))),
+                  _FilterChip(label: 'Advanced', selected: filters.skillLevel == 'advanced', onTap: () => ref.read(searchFiltersProvider.notifier).set(SearchFilters(skillLevel: 'advanced', isGi: filters.isGi))),
                   const SizedBox(width: 8),
-                  _FilterChip(label: 'Gi', selected: filters.isGi == true, onTap: () => ref.read(searchFiltersProvider.notifier).state = filters.copyWith(isGi: true)),
-                  _FilterChip(label: 'No-Gi', selected: filters.isGi == false, onTap: () => ref.read(searchFiltersProvider.notifier).state = filters.copyWith(isGi: false)),
+                  _FilterChip(label: 'Gi', selected: filters.isGi == true, onTap: () => ref.read(searchFiltersProvider.notifier).set(filters.copyWith(isGi: true))),
+                  _FilterChip(label: 'No-Gi', selected: filters.isGi == false, onTap: () => ref.read(searchFiltersProvider.notifier).set(filters.copyWith(isGi: false))),
                 ],
               ),
             ),

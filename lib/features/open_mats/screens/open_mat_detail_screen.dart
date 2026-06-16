@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../app/theme.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
@@ -344,7 +343,7 @@ class _OpenMatContent extends ConsumerWidget {
 
             gymAsync.when(
               loading: () => const Card(child: Padding(padding: EdgeInsets.all(StitchTokens.lg), child: Center(child: CircularProgressIndicator()))),
-              error: (_, __) => const Card(child: Padding(padding: EdgeInsets.all(StitchTokens.md), child: Text('Could not load gym details'))),
+              error: (e, _) => const Card(child: Padding(padding: EdgeInsets.all(StitchTokens.md), child: Text('Could not load gym details'))),
               data: (gym) {
                 if (gym == null) {
                   return Card(

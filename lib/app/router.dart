@@ -29,23 +29,13 @@ import '../features/admin/screens/create_session_screen.dart';
 import '../features/admin/screens/attendance_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
+  ref.watch(authStateProvider);
 
   return GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
-      // Auth guard disabled for testing — remove this comment and uncomment below for production
+      // Auth guard disabled for testing
       return null;
-      // final isAuth = authState.status == AuthStatus.authenticated;
-      // final isLoggingIn = state.matchedLocation == '/login';
-      final isSplash = state.matchedLocation == '/splash';
-      final isRoleSelect = state.matchedLocation == '/role-select';
-      final isProfileSetup = state.matchedLocation == '/profile-setup';
-
-      // if (isSplash) return null;
-      // if (!isAuth && !isLoggingIn) return '/login';
-      // if (isAuth && isLoggingIn) return '/';
-      // return null;
     },
     routes: [
       GoRoute(
@@ -227,19 +217,6 @@ class _ScaffoldWithNavBar extends StatelessWidget {
                 NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
               ],
       ),
-    );
-  }
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  final String name;
-  const _PlaceholderScreen({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(name)),
-      body: Center(child: Text('$name — placeholder')),
     );
   }
 }

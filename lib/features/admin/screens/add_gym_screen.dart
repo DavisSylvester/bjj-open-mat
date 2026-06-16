@@ -30,7 +30,12 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
   static const _amenityOptions = ['showers', 'parking', 'water', 'changing_rooms', 'wifi', 'pro_shop'];
 
   @override
-  void dispose() { for (final c in [_nameCtrl, _addressCtrl, _cityCtrl, _stateCtrl, _countryCtrl, _postalCtrl, _phoneCtrl, _websiteCtrl, _descCtrl]) c.dispose(); super.dispose(); }
+  void dispose() {
+    for (final c in [_nameCtrl, _addressCtrl, _cityCtrl, _stateCtrl, _countryCtrl, _postalCtrl, _phoneCtrl, _websiteCtrl, _descCtrl]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;

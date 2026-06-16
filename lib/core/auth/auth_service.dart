@@ -9,10 +9,7 @@ final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService(apiClient: apiClient);
 });
 
-final authStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>((ref) {
-  final authService = ref.read(authServiceProvider);
-  return AuthStateNotifier(authService);
-});
+final authStateProvider = NotifierProvider<AuthStateNotifier, AuthState>(AuthStateNotifier.new);
 
 enum AuthStatus { initial, authenticated, unauthenticated, loading }
 
@@ -89,9 +86,7 @@ class UserProfile {
   bool get isPractitioner => role == 'practitioner';
 }
 
-class AuthStateNotifier extends StateNotifier<AuthState> {
-  final AuthService _authService;
-
+class AuthStateNotifier extends Notifier<AuthState> {
   static const _devUser = UserProfile(
     id: 'test-user-001',
     email: 'davis@test.com',
@@ -101,10 +96,10 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     bio: 'Purple belt, 8 years training. Gym owner & practitioner.',
   );
 
-  // Start authenticated with dev user — screens render immediately with data
-  AuthStateNotifier(this._authService) : super(
-    const AuthState(status: AuthStatus.authenticated, user: _devUser),
-  );
+  @override
+  AuthState build() => const AuthState(status: AuthStatus.authenticated, user: _devUser);
+
+  AuthService get _authService => ref.read(authServiceProvider);
 
   Future<void> checkAuth() async {
     state = state.copyWith(status: AuthStatus.loading);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../app/theme.dart';
 import '../../../shared/widgets/error_state.dart';
 
 class NotificationsScreen extends StatelessWidget {

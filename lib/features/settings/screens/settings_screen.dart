@@ -5,7 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
 import '../../../core/auth/auth_service.dart';
 
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+class _ThemeModeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() => ThemeMode.system;
+  void set(ThemeMode value) => state = value;
+}
+
+final themeModeProvider = NotifierProvider<_ThemeModeNotifier, ThemeMode>(_ThemeModeNotifier.new);
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -29,7 +35,7 @@ class SettingsScreen extends ConsumerWidget {
                 ButtonSegment(value: ThemeMode.dark, label: Text('Dark')),
               ],
               selected: {themeMode},
-              onSelectionChanged: (v) { HapticFeedback.selectionClick(); ref.read(themeModeProvider.notifier).state = v.first; },
+              onSelectionChanged: (v) { HapticFeedback.selectionClick(); ref.read(themeModeProvider.notifier).set(v.first); },
             ),
           ),
           const Divider(),

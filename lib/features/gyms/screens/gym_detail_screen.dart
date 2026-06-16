@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app/theme.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 import '../../../shared/widgets/error_state.dart';
-import '../../../shared/widgets/shimmer_loader.dart';
-import '../../../shared/widgets/glass_card.dart';
 import '../models/gym.dart';
 
 final gymDetailProvider = FutureProvider.family<Gym, String>((ref, id) async {
@@ -17,7 +14,13 @@ final gymDetailProvider = FutureProvider.family<Gym, String>((ref, id) async {
   return Gym.fromJson(response.data['data'] as Map<String, dynamic>);
 });
 
-final gymFavoriteProvider = StateProvider.family<bool, String>((ref, id) => false);
+class _GymFavoritesNotifier extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() => {};
+  void set(String id, {required bool value}) => state = {...state, id: value};
+}
+
+final gymFavoritesProvider = NotifierProvider<_GymFavoritesNotifier, Map<String, bool>>(_GymFavoritesNotifier.new);
 
 class GymDetailScreen extends ConsumerWidget {
   final String gymId;
@@ -26,7 +29,7 @@ class GymDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gymAsync = ref.watch(gymDetailProvider(gymId));
-    final isFavorite = ref.watch(gymFavoriteProvider(gymId));
+    final isFavorite = ref.watch(gymFavoritesProvider.select((m) => m[gymId] ?? false));
 
     return Scaffold(
       body: gymAsync.when(
@@ -55,7 +58,7 @@ class GymDetailScreen extends ConsumerWidget {
                     } else {
                       await api.post(Endpoints.gymFavorite(gymId));
                     }
-                    ref.read(gymFavoriteProvider(gymId).notifier).state = !isFavorite;
+                    ref.read(gymFavoritesProvider.notifier).set(gymId, value: !isFavorite);
                   },
                 ),
               ],

@@ -6,7 +6,6 @@ import '../../../app/theme.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 import '../../../shared/widgets/error_state.dart';
-import '../../open_mats/models/open_mat.dart';
 import '../../open_mats/screens/open_mat_detail_screen.dart';
 
 class SessionAdminScreen extends ConsumerWidget {

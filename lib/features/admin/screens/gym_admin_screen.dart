@@ -6,7 +6,6 @@ import '../../../app/theme.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 import '../../../shared/widgets/error_state.dart';
-import '../../gyms/models/gym.dart';
 import '../../gyms/screens/gym_detail_screen.dart';
 
 class GymAdminScreen extends ConsumerWidget {
