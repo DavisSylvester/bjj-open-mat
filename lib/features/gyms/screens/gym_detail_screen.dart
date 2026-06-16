@@ -1,130 +1,221 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
-import '../../../shared/widgets/error_state.dart';
-import '../models/gym.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
+import '../../../shared/widgets/session_row.dart';
+import '../../../shared/widgets/score_cell.dart';
+import '../../../shared/widgets/stat_bar.dart';
+import '../../../shared/widgets/gi_badge.dart';
 
-final gymDetailProvider = FutureProvider.family<Gym, String>((ref, id) async {
-  final api = ref.read(apiClientProvider);
-  final response = await api.get(Endpoints.gymById(id));
-  return Gym.fromJson(response.data['data'] as Map<String, dynamic>);
-});
-
-class _GymFavoritesNotifier extends Notifier<Map<String, bool>> {
-  @override
-  Map<String, bool> build() => {};
-  void set(String id, {required bool value}) => state = {...state, id: value};
-}
-
-final gymFavoritesProvider = NotifierProvider<_GymFavoritesNotifier, Map<String, bool>>(_GymFavoritesNotifier.new);
+final _gymSessions = [
+  SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '0.0 mi', fee: 0, isLive: true),
+  SessionRowData(gymName: 'Atos HQ', giType: 'both', expLevel: 'int', time: '10:00 AM', day: 'Sat', distance: '0.0 mi', fee: 0),
+  SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'adv', time: '2:00 PM', day: 'Sun', distance: '0.0 mi', fee: 0),
+  SessionRowData(gymName: 'Atos HQ', giType: 'nogi', expLevel: 'all', time: '7:30 PM', day: 'Wed', distance: '0.0 mi', fee: 10),
+];
 
 class GymDetailScreen extends ConsumerWidget {
-  final String gymId;
-  const GymDetailScreen({super.key, required this.gymId});
+
+  final String? gymId;
+  const GymDetailScreen({super.key, this.gymId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gymAsync = ref.watch(gymDetailProvider(gymId));
-    final isFavorite = ref.watch(gymFavoritesProvider.select((m) => m[gymId] ?? false));
+    final t = Theme.of(context).extension<AppTokens>()!;
+    return t.isSport ? _SportGymDetail(t: t) : _GlassGymDetail(t: t);
+  }
+}
 
+class _SportGymDetail extends StatelessWidget {
+
+  final AppTokens t;
+  const _SportGymDetail({required this.t});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: gymAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(gymDetailProvider(gymId))),
-        data: (gym) => CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 200,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text(gym.name),
-                background: Container(
-                  color: StitchTokens.primary,
-                  child: const Center(child: Icon(Icons.store, size: 64, color: Colors.white24)),
-                ),
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          Container(
+            color: t.bg2,
+            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+            child: Row(children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
               ),
-              actions: [
-                IconButton(
-                  icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, color: StitchTokens.secondary),
-                  onPressed: () async {
-                    HapticFeedback.mediumImpact();
-                    final api = ref.read(apiClientProvider);
-                    if (isFavorite) {
-                      await api.delete(Endpoints.gymFavorite(gymId));
-                    } else {
-                      await api.post(Endpoints.gymFavorite(gymId));
-                    }
-                    ref.read(gymFavoritesProvider.notifier).set(gymId, value: !isFavorite);
-                  },
-                ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('ATOS HQ', style: t.h1Style.copyWith(fontSize: 24)),
+                  Text('Los Angeles, CA', style: t.miniStyle),
+                ],
+              )),
+              Icon(LucideIcons.share2, size: 18, color: t.muted),
+            ]),
+          ),
+          Divider(height: 1, color: t.border),
+          // Player card
+          Container(
+            color: t.surfaceHi,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ScoreCell(label: 'Rating', value: '4.8', suffix: '★', valueColor: t.amber),
+                Container(width: 1, height: 40, color: t.border),
+                ScoreCell(label: 'Reviews', value: '124'),
+                Container(width: 1, height: 40, color: t.border),
+                ScoreCell(label: 'Mats/Wk', value: '6'),
+                Container(width: 1, height: 40, color: t.border),
+                ScoreCell(label: 'Dist', value: '1.2', suffix: 'mi'),
               ],
             ),
-            SliverPadding(
-              padding: const EdgeInsets.all(StitchTokens.md),
-              sliver: SliverList(delegate: SliverChildListDelegate([
-                // Address
-                ListTile(
-                  leading: const Icon(Icons.location_on, color: StitchTokens.secondary),
-                  title: Text(gym.address),
-                  subtitle: Text([gym.city, gym.state, gym.country].where((s) => s != null).join(', ')),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
+                  child: Row(children: [
+                    Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
+                    Text('Upcoming Mats', style: t.h2Style.copyWith(fontSize: 14)),
+                  ]),
                 ),
-
-                // Contact
-                if (gym.phone != null) ListTile(leading: const Icon(Icons.phone), title: Text(gym.phone!), onTap: () => launchUrl(Uri.parse('tel:${gym.phone}'))),
-                if (gym.website != null) ListTile(leading: const Icon(Icons.language), title: Text(gym.website!), onTap: () => launchUrl(Uri.parse(gym.website!))),
-
-                // Amenities
-                if (gym.amenities.isNotEmpty) ...[
-                  const SizedBox(height: StitchTokens.md),
-                  Text('Amenities', style: Theme.of(context).textTheme.headlineMedium),
-                  const SizedBox(height: StitchTokens.sm),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: gym.amenities.map((a) => Chip(label: Text(a), visualDensity: VisualDensity.compact)).toList(),
-                  ),
-                ],
-
-                // Directions button
-                const SizedBox(height: StitchTokens.lg),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.directions),
-                        label: const Text('Google Maps'),
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          if (gym.location != null) {
-                            launchUrl(Uri.parse('https://www.google.com/maps/dir/?api=1&destination=${gym.location!.lat},${gym.location!.lng}'));
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: StitchTokens.sm),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.navigation),
-                        label: const Text('Waze'),
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          if (gym.location != null) {
-                            launchUrl(Uri.parse('https://waze.com/ul?ll=${gym.location!.lat},${gym.location!.lng}&navigate=yes'));
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                Divider(height: 1, color: t.border),
+                ..._gymSessions.map((s) => Column(children: [
+                  SessionRow(session: s),
+                  Divider(height: 1, color: t.border),
+                ])),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
+                  child: Row(children: [
+                    Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
+                    Text('Stat Sheet', style: t.h2Style.copyWith(fontSize: 14)),
+                  ]),
                 ),
-              ])),
+                Divider(height: 1, color: t.border),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Column(children: [
+                    StatBar(label: 'Facilities', value: 4.8, color: t.gi),
+                    StatBar(label: 'Instruction', value: 4.9, color: t.green),
+                    StatBar(label: 'Mat Space', value: 4.5, color: t.amber),
+                    StatBar(label: 'Community', value: 4.7, color: t.noGi),
+                  ]),
+                ),
+                const SizedBox(height: 20),
+              ]),
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
+    );
+  }
+}
+
+class _GlassGymDetail extends StatelessWidget {
+
+  final AppTokens t;
+  const _GlassGymDetail({required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: t.bg,
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          expandedHeight: 220,
+          pinned: true,
+          backgroundColor: t.bg2,
+          leading: GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Icon(LucideIcons.arrowLeft, color: t.text),
+          ),
+          flexibleSpace: FlexibleSpaceBar(
+            background: Stack(fit: StackFit.expand, children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft, end: Alignment.bottomRight,
+                    colors: [t.gi.withValues(alpha: 0.5), t.green.withValues(alpha: 0.3)],
+                  ),
+                ),
+              ),
+              Positioned(bottom: 16, left: 16, right: 16, child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('ATOS HQ', style: t.h1Style.copyWith(fontSize: 28, color: Colors.white)),
+                  const SizedBox(height: 4),
+                  Text('Los Angeles, CA', style: t.bodyStyle.copyWith(color: Colors.white70)),
+                  const SizedBox(height: 8),
+                  const GiBadge(type: 'both'),
+                ],
+              )),
+            ]),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(delegate: SliverChildListDelegate([
+            // Stat pills
+            Row(children: [
+              _Pill(label: '4.8 ★', color: t.amber, t: t),
+              const SizedBox(width: 8),
+              _Pill(label: '1.2 mi', color: t.gi, t: t),
+              const SizedBox(width: 8),
+              _Pill(label: '6 mats/wk', color: t.green, t: t),
+            ]),
+            const SizedBox(height: 20),
+            Text('Upcoming Sessions', style: t.h2Style),
+            const SizedBox(height: 8),
+            ..._gymSessions.map((s) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: SessionRow(session: s),
+            )),
+            const SizedBox(height: 20),
+            Text('About', style: t.h2Style),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: t.surface,
+                borderRadius: BorderRadius.circular(t.cardRadius),
+                border: Border.all(color: t.border),
+              ),
+              child: Text(
+                'World-class BJJ facility with 4 mat rooms, strength & conditioning area, and pro shop. Home to multiple world champions.',
+                style: t.bodyStyle,
+              ),
+            ),
+            const SizedBox(height: 80),
+          ])),
+        ),
+      ]),
+    );
+  }
+}
+
+class _Pill extends StatelessWidget {
+
+  final String label;
+  final Color color;
+  final AppTokens t;
+  const _Pill({required this.label, required this.color, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Text(label, style: t.miniStyle.copyWith(color: color, fontSize: 11)),
     );
   }
 }
