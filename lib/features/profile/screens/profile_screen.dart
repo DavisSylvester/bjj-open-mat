@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/design/theme_provider.dart';
 import '../../../shared/widgets/belt_badge.dart';
 import '../../../shared/widgets/score_cell.dart';
 import '../../../shared/widgets/session_row.dart';
-import '../../../shared/widgets/app_bottom_nav.dart';
 
 final _recentSessions = [
   SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0),
@@ -94,14 +94,30 @@ class _SportProfile extends StatelessWidget {
           Divider(height: 1, color: t.border),
           Expanded(
             child: ListView.separated(
-              itemCount: _recentSessions.length,
+              itemCount: _recentSessions.length + 1,
               separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
-              itemBuilder: (_, i) => SessionRow(session: _recentSessions[i]),
+              itemBuilder: (ctx, i) {
+                if (i < _recentSessions.length) return SessionRow(session: _recentSessions[i]);
+                return GestureDetector(
+                  onTap: () => ctx.go('/owner/dashboard'),
+                  child: Container(
+                    color: t.bg2,
+                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                    child: Row(children: [
+                      Container(width: 4, height: 18, color: t.amber, margin: const EdgeInsets.only(right: 8)),
+                      Icon(LucideIcons.store, size: 16, color: t.amber),
+                      const SizedBox(width: 8),
+                      Text('Gym Owner Panel', style: t.miniStyle.copyWith(color: t.amber, fontSize: 11)),
+                      const Spacer(),
+                      Icon(LucideIcons.chevronRight, size: 14, color: t.muted),
+                    ]),
+                  ),
+                );
+              },
             ),
           ),
         ]),
       ),
-      bottomNavigationBar: AppBottomNav(active: 'profile', onTap: (_) {}),
     );
   }
 }
@@ -203,6 +219,13 @@ class _GlassProfile extends StatelessWidget {
                 ),
                 Divider(height: 1, color: t.border),
                 ListTile(
+                  leading: Icon(LucideIcons.store, color: t.amber),
+                  title: Text('Gym Owner Panel', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600)),
+                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+                  onTap: () => context.go('/owner/dashboard'),
+                ),
+                Divider(height: 1, color: t.border),
+                ListTile(
                   leading: Icon(LucideIcons.logOut, color: t.red),
                   title: Text('Sign Out', style: t.bodyStyle.copyWith(color: t.red)),
                 ),
@@ -212,7 +235,6 @@ class _GlassProfile extends StatelessWidget {
           ]),
         ),
       ),
-      bottomNavigationBar: AppBottomNav(active: 'profile', onTap: (_) {}),
     );
   }
 }

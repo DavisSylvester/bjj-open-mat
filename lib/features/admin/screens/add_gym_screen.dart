@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 
@@ -11,42 +12,47 @@ class AddGymScreen extends ConsumerStatefulWidget {
 }
 
 class _AddGymScreenState extends ConsumerState<AddGymScreen> {
-  final _pageCtrl = PageController();
-  int _step = 0;
-
   final _nameCtrl = TextEditingController();
-  final _websiteCtrl = TextEditingController();
-  final _addressCtrl = TextEditingController();
-  final _cityCtrl = TextEditingController();
-  String _gymType = 'gi';
+  final _addrCtrl = TextEditingController();
+  final _teamCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _siteCtrl = TextEditingController();
+  final _descCtrl = TextEditingController();
+  Set<String> _amenities = {'parking', 'showers'};
+  bool _submitted = false;
+
+  static const _amenityOpts = [
+    ('parking', 'Parking', LucideIcons.parkingSquare),
+    ('showers', 'Showers', LucideIcons.droplets),
+    ('wifi', 'WiFi', LucideIcons.wifi),
+    ('changing', 'Changing', LucideIcons.doorOpen),
+    ('shop', 'Pro Shop', LucideIcons.shoppingBag),
+    ('water', 'Water', LucideIcons.glassWater),
+  ];
 
   @override
   void dispose() {
-    _pageCtrl.dispose();
     _nameCtrl.dispose();
-    _websiteCtrl.dispose();
-    _addressCtrl.dispose();
-    _cityCtrl.dispose();
+    _addrCtrl.dispose();
+    _teamCtrl.dispose();
+    _phoneCtrl.dispose();
+    _emailCtrl.dispose();
+    _siteCtrl.dispose();
+    _descCtrl.dispose();
     super.dispose();
   }
 
-  void _next() {
-    if (_step < 2) {
-      setState(() => _step++);
-      _pageCtrl.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-    } else {
-      Navigator.of(context).pop();
-    }
-  }
+  void _toggleAmenity(String id) => setState(() {
+        if (_amenities.contains(id)) {
+          _amenities = {..._amenities}..remove(id);
+        } else {
+          _amenities = {..._amenities, id};
+        }
+      });
 
-  void _back() {
-    if (_step > 0) {
-      setState(() => _step--);
-      _pageCtrl.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-    } else {
-      Navigator.of(context).pop();
-    }
-  }
+  bool get _valid =>
+      _nameCtrl.text.trim().isNotEmpty && _addrCtrl.text.trim().isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -54,208 +60,257 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
-        child: Column(children: [
-          // Header
-          Container(
-            color: t.isSport ? t.bg2 : Colors.transparent,
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-            child: Row(children: [
-              GestureDetector(onTap: _back, child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text)),
-              const SizedBox(width: 12),
-              Expanded(child: Text('Register Gym', style: t.h1Style.copyWith(fontSize: 20))),
-            ]),
-          ),
-          // Step indicator
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: t.isSport
-                ? Row(children: List.generate(3, (i) => Expanded(
-                    child: Container(
-                      height: 28,
-                      margin: EdgeInsets.only(right: i < 2 ? 4 : 0),
-                      color: i == _step ? t.amber : i < _step ? t.green : t.surface,
-                      child: Center(child: Text(
-                        i < _step ? '✓' : '${i + 1}',
-                        style: t.miniStyle.copyWith(color: i == _step ? t.bg : i < _step ? t.bg : t.muted),
-                      )),
-                    ),
-                  )))
-                : Row(children: List.generate(3, (i) {
-                    final labels = ['Basic Info', 'Location', 'Confirm'];
-                    return Expanded(child: Column(children: [
-                      Container(
-                        width: 28, height: 28,
-                        decoration: BoxDecoration(
-                          color: i <= _step ? t.red : t.surface,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: i == _step ? t.red : t.border),
-                        ),
-                        child: Center(child: Text(
-                          i < _step ? '✓' : '${i + 1}',
-                          style: t.miniStyle.copyWith(color: i <= _step ? Colors.white : t.muted),
-                        )),
+        child: Stack(children: [
+          Column(children: [
+            _Header(t: t, onClose: () => context.pop()),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _PhotoDropzone(t: t),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _GymFormField(t: t, label: 'Gym Name', isRequired: true, ctrl: _nameCtrl, hint: 'e.g. Atos Jiu-Jitsu HQ'),
+                          const SizedBox(height: 16),
+                          _AddressField(t: t, ctrl: _addrCtrl, onChanged: () => setState(() {})),
+                          const SizedBox(height: 16),
+                          _GymFormField(t: t, label: 'Affiliation / Team', hint: 'e.g. Atos · IBJJF affiliate', ctrl: _teamCtrl, icon: LucideIcons.medal, hintSuffix: 'optional'),
+                          const SizedBox(height: 16),
+                          _FormSection(t: t, title: 'Contact'),
+                          const SizedBox(height: 12),
+                          _GymFormField(t: t, label: 'Phone', ctrl: _phoneCtrl, icon: LucideIcons.phone, hint: '(555) 123-4567', keyboardType: TextInputType.phone),
+                          const SizedBox(height: 12),
+                          _GymFormField(t: t, label: 'Email', ctrl: _emailCtrl, icon: LucideIcons.mail, hint: 'hello@gym.com', keyboardType: TextInputType.emailAddress),
+                          const SizedBox(height: 12),
+                          _GymFormField(t: t, label: 'Website', ctrl: _siteCtrl, icon: LucideIcons.globe, hint: 'gym.com'),
+                          const SizedBox(height: 16),
+                          _FormSection(t: t, title: 'Facilities'),
+                          const SizedBox(height: 12),
+                          _buildAmenities(t),
+                          const SizedBox(height: 16),
+                          _buildDescription(t),
+                          const SizedBox(height: 80),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(labels[i], style: t.miniStyle.copyWith(fontSize: 9, color: i <= _step ? t.text : t.muted)),
-                    ]));
-                  })),
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageCtrl,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                _Step1(t: t, nameCtrl: _nameCtrl, websiteCtrl: _websiteCtrl, gymType: _gymType, onTypeChange: (v) => setState(() => _gymType = v)),
-                _Step2(t: t, addressCtrl: _addressCtrl, cityCtrl: _cityCtrl),
-                _Step3(t: t, name: _nameCtrl.text, address: _addressCtrl.text, gymType: _gymType),
-              ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ]),
+          Positioned(
+            left: 0, right: 0, bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [t.bg.withValues(alpha: 0), t.bg],
+                  stops: const [0, 0.35],
+                ),
+              ),
+              child: _buildSubmitButton(context, t),
             ),
           ),
-          // Next button
-          Container(
-            color: t.isSport ? t.bg2 : Colors.transparent,
-            padding: const EdgeInsets.all(16),
-            child: t.isSport
-                ? GestureDetector(
-                    onTap: _next,
-                    child: Container(
-                      width: double.infinity, height: 54,
-                      color: t.red,
-                      child: Center(child: Text(
-                        _step < 2 ? 'Next Step' : 'Register Gym',
-                        style: t.h2Style.copyWith(color: Colors.white, fontSize: 16),
-                      )),
-                    ),
-                  )
-                : ElevatedButton(
-                    onPressed: _next,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: t.red,
-                      minimumSize: const Size.fromHeight(54),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
-                    ),
-                    child: Text(_step < 2 ? 'Continue' : 'Register Gym',
-                        style: t.h2Style.copyWith(color: Colors.white)),
+          if (_submitted) _SuccessOverlay(t: t, title: 'Gym submitted!', subtitle: 'We\'ll verify the location and publish it within 24 hours.', onDone: () => context.pop()),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildAmenities(AppTokens t) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text('AMENITIES', style: t.labelStyle),
+          const Spacer(),
+          Text('${_amenities.length} selected', style: t.miniStyle.copyWith(fontSize: 10)),
+        ]),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: _amenityOpts.map((opt) {
+            final active = _amenities.contains(opt.$1);
+            return GestureDetector(
+              onTap: () => _toggleAmenity(opt.$1),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                decoration: BoxDecoration(
+                  color: active ? t.gi.withValues(alpha: 0.12) : t.bg,
+                  borderRadius: BorderRadius.circular(t.cardRadius + 4),
+                  border: Border.all(
+                    color: active ? t.gi.withValues(alpha: 0.5) : t.border,
+                    width: active ? 1.5 : 1,
                   ),
+                ),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Icon(opt.$3, size: 14, color: active ? t.gi : t.muted),
+                  const SizedBox(width: 6),
+                  Text(opt.$2, style: t.bodyStyle.copyWith(
+                    fontSize: 13,
+                    color: active ? t.gi : t.body,
+                    fontWeight: FontWeight.w700,
+                  )),
+                  if (active) ...[
+                    const SizedBox(width: 5),
+                    Icon(LucideIcons.check, size: 12, color: t.gi),
+                  ],
+                ]),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDescription(AppTokens t) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text('DESCRIPTION', style: t.labelStyle),
+          const Spacer(),
+          Text('optional', style: t.miniStyle.copyWith(fontSize: 10)),
+        ]),
+        const SizedBox(height: 6),
+        Container(
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.border),
           ),
+          child: TextField(
+            controller: _descCtrl,
+            style: t.bodyStyle,
+            maxLines: 4,
+            decoration: InputDecoration(
+              hintText: 'Tell practitioners what to expect — vibe, schedule, drop-in policy…',
+              hintStyle: t.miniStyle.copyWith(fontSize: 12),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.all(14),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context, AppTokens t) {
+    final enabled = _valid;
+    return GestureDetector(
+      onTap: enabled ? () => setState(() => _submitted = true) : null,
+      child: Container(
+        width: double.infinity, height: 54,
+        decoration: BoxDecoration(
+          color: enabled ? t.gi : t.border,
+          borderRadius: BorderRadius.circular(t.cardRadius + 2),
+          boxShadow: enabled
+              ? [BoxShadow(color: t.gi.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))]
+              : null,
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Icon(LucideIcons.check, size: 18, color: Colors.white),
+          const SizedBox(width: 9),
+          Text('Add Gym', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
         ]),
       ),
     );
   }
 }
 
-class _Step1 extends StatelessWidget {
+// ── Sticky header ─────────────────────────────────────────────
+class _Header extends StatelessWidget {
   final AppTokens t;
-  final TextEditingController nameCtrl;
-  final TextEditingController websiteCtrl;
-  final String gymType;
-  final void Function(String) onTypeChange;
+  final VoidCallback onClose;
 
-  const _Step1({required this.t, required this.nameCtrl, required this.websiteCtrl, required this.gymType, required this.onTypeChange});
+  const _Header({required this.t, required this.onClose});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Basic Info', style: t.h2Style),
-        const SizedBox(height: 16),
-        _Field(t: t, label: 'Gym Name', ctrl: nameCtrl, hint: 'e.g. Atos HQ'),
-        const SizedBox(height: 12),
-        _Field(t: t, label: 'Website', ctrl: websiteCtrl, hint: 'https://…'),
-        const SizedBox(height: 16),
-        Text('Gi Type', style: t.labelStyle),
-        const SizedBox(height: 8),
-        Row(children: [
-          for (final opt in [('gi', 'Gi'), ('nogi', 'No-Gi'), ('both', 'Both')])
-            Expanded(child: GestureDetector(
-              onTap: () => onTypeChange(opt.$1),
-              child: Container(
-                margin: const EdgeInsets.only(right: 6),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: gymType == opt.$1 ? t.giColor(opt.$1).withValues(alpha: 0.15) : t.surface,
-                  border: Border.all(color: gymType == opt.$1 ? t.giColor(opt.$1) : t.border, width: gymType == opt.$1 ? 2 : 1),
-                  borderRadius: BorderRadius.circular(t.cardRadius),
-                ),
-                child: Text(opt.$2, textAlign: TextAlign.center,
-                    style: t.miniStyle.copyWith(color: gymType == opt.$1 ? t.giColor(opt.$1) : t.muted)),
-              ),
-            )),
-        ]),
-      ]),
-    );
-  }
-}
-
-class _Step2 extends StatelessWidget {
-  final AppTokens t;
-  final TextEditingController addressCtrl;
-  final TextEditingController cityCtrl;
-
-  const _Step2({required this.t, required this.addressCtrl, required this.cityCtrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Location', style: t.h2Style),
-        const SizedBox(height: 16),
-        _Field(t: t, label: 'Street Address', ctrl: addressCtrl, hint: '123 Main St'),
-        const SizedBox(height: 12),
-        _Field(t: t, label: 'City / State', ctrl: cityCtrl, hint: 'Los Angeles, CA'),
-      ]),
-    );
-  }
-}
-
-class _Step3 extends StatelessWidget {
-  final AppTokens t;
-  final String name;
-  final String address;
-  final String gymType;
-
-  const _Step3({required this.t, required this.name, required this.address, required this.gymType});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Confirm', style: t.h2Style),
-        const SizedBox(height: 16),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: t.surface,
-            borderRadius: BorderRadius.circular(t.cardRadius),
-            border: Border.all(color: t.border),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+      decoration: BoxDecoration(
+        color: t.isSport ? t.bg2 : t.bg,
+        border: Border(bottom: BorderSide(color: t.border)),
+      ),
+      child: Row(children: [
+        GestureDetector(
+          onTap: onClose,
+          child: Container(
+            width: 36, height: 36,
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(t.badgeRadius + 6),
+              border: Border.all(color: t.border),
+            ),
+            child: Icon(LucideIcons.x, size: 18, color: t.text),
           ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(name.isEmpty ? 'Gym Name' : name, style: t.h1Style.copyWith(fontSize: 20)),
-            const SizedBox(height: 8),
-            Text(address.isEmpty ? 'Address' : address, style: t.bodyStyle),
-          ]),
         ),
+        Expanded(child: Center(child: Text('Add Your Gym', style: t.h2Style.copyWith(fontSize: 16)))),
+        const SizedBox(width: 36),
       ]),
     );
   }
 }
 
-class _Field extends StatelessWidget {
+// ── Photo drop zone ───────────────────────────────────────────
+class _PhotoDropzone extends StatelessWidget {
   final AppTokens t;
-  final String label;
-  final TextEditingController ctrl;
-  final String hint;
 
-  const _Field({required this.t, required this.label, required this.ctrl, required this.hint});
+  const _PhotoDropzone({required this.t});
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(18, 16, 18, 0),
+      height: 120,
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.cardRadius + 2),
+        border: Border.all(color: t.borderHi, width: 2),
+      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(
+          width: 44, height: 44,
+          decoration: BoxDecoration(
+            color: t.gi.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+          ),
+          child: Icon(LucideIcons.plus, size: 22, color: t.gi),
+        ),
+        const SizedBox(height: 8),
+        Text('Add gym photo', style: t.miniStyle.copyWith(fontSize: 12, color: t.muted)),
+      ]),
+    );
+  }
+}
+
+// ── Address field with verified badge ────────────────────────
+class _AddressField extends StatelessWidget {
+  final AppTokens t;
+  final TextEditingController ctrl;
+  final VoidCallback onChanged;
+
+  const _AddressField({required this.t, required this.ctrl, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final hasAddr = ctrl.text.trim().isNotEmpty;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label.toUpperCase(), style: t.labelStyle),
+      Row(children: [
+        Text('ADDRESS', style: t.labelStyle),
+        Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+        const Spacer(),
+        if (!hasAddr) Text('We geocode this', style: t.miniStyle.copyWith(fontSize: 10)),
+      ]),
       const SizedBox(height: 6),
       Container(
         decoration: BoxDecoration(
@@ -263,17 +318,190 @@ class _Field extends StatelessWidget {
           borderRadius: BorderRadius.circular(t.cardRadius),
           border: Border.all(color: t.border),
         ),
-        child: TextField(
-          controller: ctrl,
-          style: t.bodyStyle,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: t.miniStyle.copyWith(fontSize: 13),
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        child: Row(children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 14),
+            child: Icon(LucideIcons.search, size: 18, color: hasAddr ? t.gi : t.muted),
           ),
+          Expanded(
+            child: TextField(
+              controller: ctrl,
+              style: t.bodyStyle,
+              onChanged: (_) => onChanged(),
+              decoration: InputDecoration(
+                hintText: 'Start typing an address…',
+                hintStyle: t.miniStyle.copyWith(fontSize: 13),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+              ),
+            ),
+          ),
+        ]),
+      ),
+      if (hasAddr) ...[
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          decoration: BoxDecoration(
+            color: t.green.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.green.withValues(alpha: 0.3)),
+          ),
+          child: Row(children: [
+            Container(
+              width: 22, height: 22,
+              decoration: BoxDecoration(color: t.green, shape: BoxShape.circle),
+              child: const Icon(LucideIcons.check, size: 13, color: Colors.white),
+            ),
+            const SizedBox(width: 9),
+            Text(
+              'Location pinned · we\'ll verify on submit',
+              style: t.miniStyle.copyWith(fontSize: 11, color: t.green),
+            ),
+          ]),
         ),
+      ],
+    ]);
+  }
+}
+
+// ── Section divider ───────────────────────────────────────────
+class _FormSection extends StatelessWidget {
+  final AppTokens t;
+  final String title;
+
+  const _FormSection({required this.t, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Text(title.toUpperCase(), style: t.labelStyle.copyWith(color: t.gi)),
+      const SizedBox(width: 10),
+      Expanded(child: Container(height: 1, color: t.border)),
+    ]);
+  }
+}
+
+// ── Generic text field with optional icon ────────────────────
+class _GymFormField extends StatelessWidget {
+  final AppTokens t;
+  final String label;
+  final bool isRequired;
+  final String hint;
+  final String? hintSuffix;
+  final TextEditingController ctrl;
+  final IconData? icon;
+  final TextInputType? keyboardType;
+
+  const _GymFormField({
+    required this.t,
+    required this.label,
+    required this.ctrl,
+    required this.hint,
+    this.isRequired = false,
+    this.hintSuffix,
+    this.icon,
+    this.keyboardType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text(label.toUpperCase(), style: t.labelStyle),
+        if (isRequired) Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+        if (hintSuffix != null) ...[
+          const Spacer(),
+          Text(hintSuffix!, style: t.miniStyle.copyWith(fontSize: 10)),
+        ],
+      ]),
+      const SizedBox(height: 6),
+      Container(
+        decoration: BoxDecoration(
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.cardRadius),
+          border: Border.all(color: t.border),
+        ),
+        child: Row(children: [
+          if (icon != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 14),
+              child: Icon(icon, size: 18, color: t.muted),
+            ),
+          Expanded(
+            child: TextField(
+              controller: ctrl,
+              style: t.bodyStyle,
+              keyboardType: keyboardType,
+              decoration: InputDecoration(
+                hintText: hint,
+                hintStyle: t.miniStyle.copyWith(fontSize: 13),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.fromLTRB(icon != null ? 10 : 14, 14, 14, 14),
+              ),
+            ),
+          ),
+        ]),
       ),
     ]);
+  }
+}
+
+// ── Success overlay ───────────────────────────────────────────
+class _SuccessOverlay extends StatelessWidget {
+  final AppTokens t;
+  final String title;
+  final String subtitle;
+  final VoidCallback onDone;
+
+  const _SuccessOverlay({required this.t, required this.title, required this.subtitle, required this.onDone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: Container(
+        color: t.bg.withValues(alpha: 0.97),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            width: 84, height: 84,
+            decoration: BoxDecoration(color: t.green.withValues(alpha: 0.12), shape: BoxShape.circle),
+            child: Center(
+              child: Container(
+                width: 58, height: 58,
+                decoration: BoxDecoration(
+                  color: t.green, shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: t.green.withValues(alpha: 0.4), blurRadius: 22)],
+                ),
+                child: const Icon(LucideIcons.check, size: 30, color: Colors.white),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(title, style: t.h1Style.copyWith(fontSize: 24)),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(subtitle, textAlign: TextAlign.center, style: t.bodyStyle.copyWith(color: t.muted)),
+          ),
+          const SizedBox(height: 28),
+          GestureDetector(
+            onTap: onDone,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
+              decoration: BoxDecoration(
+                color: t.green,
+                borderRadius: BorderRadius.circular(t.cardRadius + 2),
+                boxShadow: [BoxShadow(color: t.green.withValues(alpha: 0.35), blurRadius: 14, offset: const Offset(0, 5))],
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(LucideIcons.check, size: 17, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Done', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
+              ]),
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }

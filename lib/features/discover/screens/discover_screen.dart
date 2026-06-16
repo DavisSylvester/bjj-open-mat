@@ -4,7 +4,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../../shared/widgets/ticker_strip.dart';
-import '../../../shared/widgets/app_bottom_nav.dart';
 
 final _stubSessions = [
   SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0, isLive: true),
@@ -105,7 +104,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
           ),
         ]),
       ),
-      bottomNavigationBar: AppBottomNav(active: 'home', onTap: (_) {}),
     );
   }
 
@@ -195,7 +193,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
           ]),
         ),
       ]),
-      bottomNavigationBar: AppBottomNav(active: 'home', onTap: (_) {}),
     );
   }
 }

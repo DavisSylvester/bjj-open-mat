@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/session_row.dart';
-import '../../../shared/widgets/app_bottom_nav.dart';
 import '../../../shared/widgets/score_cell.dart';
 
 const _stubSessions = [
@@ -114,7 +113,6 @@ class _SportTraining extends StatelessWidget {
           ),
         ]),
       ),
-      bottomNavigationBar: AppBottomNav(active: 'schedule', onTap: (_) {}),
     );
   }
 }
@@ -170,7 +168,6 @@ class _GlassTraining extends StatelessWidget {
           ),
         ]),
       ),
-      bottomNavigationBar: AppBottomNav(active: 'schedule', onTap: (_) {}),
     );
   }
 }

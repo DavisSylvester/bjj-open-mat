@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/auth/auth_service.dart';
+import '../shared/widgets/app_bottom_nav.dart';
 import '../shared/widgets/om_widgets.dart';
 import '../features/onboarding/screens/splash_screen.dart';
 import '../features/onboarding/screens/login_screen.dart';
@@ -197,16 +198,22 @@ class _ScaffoldWithNavBar extends StatelessWidget {
 
   const _ScaffoldWithNavBar({required this.shell, required this.isOwner});
 
+  static const _pracTabs = ['home', 'search', 'schedule', 'profile'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
       body: shell,
-      bottomNavigationBar: OMBottomNav(
-        selectedIndex: shell.currentIndex,
-        isOwner: isOwner,
-        onTap: (index) => shell.goBranch(index),
-      ),
+      bottomNavigationBar: isOwner
+          ? OMBottomNav(
+              selectedIndex: shell.currentIndex,
+              isOwner: true,
+              onTap: (i) => shell.goBranch(i),
+            )
+          : AppBottomNav(
+              active: _pracTabs[shell.currentIndex],
+              onTap: (tabId) => shell.goBranch(_pracTabs.indexOf(tabId)),
+            ),
     );
   }
 }

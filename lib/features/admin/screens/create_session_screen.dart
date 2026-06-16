@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 
@@ -12,134 +12,59 @@ class CreateSessionScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
-  final _nameCtrl = TextEditingController();
-  final _startCtrl = TextEditingController();
-  final _endCtrl = TextEditingController();
-  final _feeCtrl = TextEditingController();
-  final _descCtrl = TextEditingController();
-  final _maxCtrl = TextEditingController();
-
-  String _giType = 'gi';
+  String _giType = 'both';
   String _expLevel = 'all';
-  bool _isToday = true;
-  bool _isRecurring = false;
-  late int _selectedWeekDay;
-  late Set<int> _recurringDays;
-
-  static const _dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedWeekDay = DateTime.now().weekday;
-    _recurringDays = {DateTime.now().weekday};
-  }
+  DateTime _selectedDate = DateTime.now().add(const Duration(days: 5));
+  TimeOfDay _startTime = const TimeOfDay(hour: 19, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 21, minute: 0);
+  bool _isFree = true;
+  bool _isRecurring = true;
+  final _feeCtrl = TextEditingController(text: '15');
+  final _capCtrl = TextEditingController();
+  final _notesCtrl = TextEditingController(text: 'Visitors welcome. Bring both gi and rashguard.');
+  bool _submitted = false;
 
   @override
   void dispose() {
-    _nameCtrl.dispose();
-    _startCtrl.dispose();
-    _endCtrl.dispose();
     _feeCtrl.dispose();
-    _descCtrl.dispose();
-    _maxCtrl.dispose();
+    _capCtrl.dispose();
+    _notesCtrl.dispose();
     super.dispose();
   }
 
-  DateTime get _resolvedDate {
-    if (_isToday) return DateTime.now();
-    final today = DateTime.now();
-    return today.add(Duration(days: _selectedWeekDay - today.weekday));
+  String _formatDate(DateTime d) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${months[d.month - 1]} ${d.day}, ${d.year}';
   }
 
-  String get _dateLabel {
-    final d = _resolvedDate;
-    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    return '${months[d.month - 1]} ${d.day.toString().padLeft(2, '0')}';
+  String _formatTime(TimeOfDay t) {
+    final h = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
+    final m = t.minute.toString().padLeft(2, '0');
+    final period = t.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$h:$m $period';
   }
 
-  String get _dayLabel => _dayLabels[_resolvedDate.weekday - 1];
-
-  String get _recurringDaysSummary {
-    if (_recurringDays.isEmpty) return '—';
-    final sorted = _recurringDays.toList()..sort();
-    return sorted.map((d) => _dayLabels[d - 1]).join(' · ');
+  String get _recurringLabel {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return 'Every ${days[_selectedDate.weekday - 1]} at this time';
   }
 
-  Widget _buildCapsule(AppTokens t, {
-    required List<String> options,
-    required int activeIndex,
-    required Color accent,
-    required void Function(int) onTap,
-  }) {
-    return Row(
-      children: List.generate(options.length, (i) {
-        final active = i == activeIndex;
-        return Expanded(
-          child: GestureDetector(
-            onTap: () { HapticFeedback.selectionClick(); onTap(i); },
-            child: Container(
-              height: 32,
-              margin: EdgeInsets.only(right: i < options.length - 1 ? 1 : 0),
-              decoration: BoxDecoration(
-                color: active ? accent.withValues(alpha: 0.18) : t.surface,
-                border: Border(bottom: BorderSide(color: active ? accent : t.border, width: 2)),
-              ),
-              alignment: Alignment.center,
-              child: Text(options[i], style: t.miniStyle.copyWith(color: active ? accent : t.muted)),
-            ),
-          ),
-        );
-      }),
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
+    if (picked != null) setState(() => _selectedDate = picked);
   }
 
-  Widget _buildDayPicker(AppTokens t, {required bool multiSelect}) {
-    return Row(
-      children: List.generate(7, (i) {
-        final day = i + 1;
-        final active = multiSelect ? _recurringDays.contains(day) : _selectedWeekDay == day;
-        final isToday = DateTime.now().weekday == day;
-        return Expanded(
-          child: GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() {
-                if (multiSelect) {
-                  if (_recurringDays.contains(day)) {
-                    if (_recurringDays.length > 1) _recurringDays.remove(day);
-                  } else {
-                    _recurringDays.add(day);
-                  }
-                } else {
-                  _selectedWeekDay = day;
-                }
-              });
-            },
-            child: Container(
-              height: 40,
-              margin: EdgeInsets.only(right: i < 6 ? 1 : 0),
-              decoration: BoxDecoration(
-                color: active ? t.amber.withValues(alpha: 0.18) : t.surface,
-                border: Border(top: BorderSide(color: active ? t.amber : t.border, width: 2)),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(_dayLabels[i], style: t.miniStyle.copyWith(color: active ? t.amber : t.muted)),
-                  if (isToday)
-                    Container(
-                      width: 4, height: 4,
-                      margin: const EdgeInsets.only(top: 2),
-                      decoration: BoxDecoration(color: t.amber, shape: BoxShape.circle),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }),
+  Future<void> _pickTime(bool isStart) async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: isStart ? _startTime : _endTime,
     );
+    if (picked != null) setState(() => isStart ? _startTime = picked : _endTime = picked);
   }
 
   @override
@@ -148,197 +73,414 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
-        child: Column(children: [
-          Container(
-            color: t.isSport ? t.bg2 : Colors.transparent,
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-            child: Row(children: [
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
-              ),
-              const SizedBox(width: 12),
-              if (t.isSport)
-                Container(width: 4, height: 22, color: t.red, margin: const EdgeInsets.only(right: 8)),
-              Expanded(child: Text('Create Open Mat', style: t.h1Style.copyWith(fontSize: 20))),
-            ]),
-          ),
-          if (t.isSport) Divider(height: 1, color: t.border),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _Field(t: t, label: 'Session Name', ctrl: _nameCtrl, hint: 'e.g. Saturday Open Mat'),
-                  const SizedBox(height: 16),
-                  // Today/Week + Single/Recurring capsules
-                  Row(children: [
-                    Expanded(child: _buildCapsule(t,
-                      options: const ['TODAY', 'WEEK'],
-                      activeIndex: _isToday ? 0 : 1,
-                      accent: t.amber,
-                      onTap: (i) => setState(() => _isToday = i == 0),
-                    )),
-                    const SizedBox(width: 8),
-                    Expanded(child: _buildCapsule(t,
-                      options: const ['SINGLE', 'RECURRING'],
-                      activeIndex: _isRecurring ? 1 : 0,
-                      accent: t.red,
-                      onTap: (i) => setState(() => _isRecurring = i == 1),
-                    )),
-                  ]),
-                  if (!_isToday || _isRecurring) ...[
+        child: Stack(children: [
+          Column(children: [
+            _buildHeader(context, t),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildPostingAs(t),
                     const SizedBox(height: 12),
-                    _buildDayPicker(t, multiSelect: _isRecurring),
+                    _buildQuotaWarning(t),
+                    const SizedBox(height: 16),
+                    _SessionSection(t: t, title: 'When'),
+                    const SizedBox(height: 12),
+                    _buildDateField(t),
+                    const SizedBox(height: 12),
+                    _buildTimeRow(t),
+                    const SizedBox(height: 12),
+                    _buildRepeatCard(t),
+                    const SizedBox(height: 16),
+                    _SessionSection(t: t, title: 'Format'),
+                    const SizedBox(height: 12),
+                    _buildGiPills(t),
+                    const SizedBox(height: 12),
+                    _buildExpPills(t),
+                    const SizedBox(height: 16),
+                    _SessionSection(t: t, title: 'Access'),
+                    const SizedBox(height: 12),
+                    _buildFreeCard(t),
+                    const SizedBox(height: 12),
+                    _buildCapacityField(t),
+                    const SizedBox(height: 16),
+                    _buildNotesField(t),
+                    const SizedBox(height: 80),
                   ],
-                  if (_isRecurring) ...[
-                    const SizedBox(height: 8),
-                    Row(children: [
-                      Container(width: 3, height: 16, color: t.red),
-                      const SizedBox(width: 8),
-                      Text('REPEATS EVERY', style: t.miniStyle.copyWith(color: t.muted)),
-                      const SizedBox(width: 6),
-                      Text(_recurringDaysSummary, style: t.miniStyle.copyWith(color: t.red)),
-                      const Spacer(),
-                      Text('UNTIL CANCELLED', style: t.miniStyle.copyWith(color: t.faint)),
-                    ]),
-                  ],
-                  const SizedBox(height: 16),
-                  // Date strip + time fields
-                  Row(children: [
-                    Container(
-                      width: 80,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: t.surface,
-                        borderRadius: BorderRadius.circular(t.cardRadius),
-                        border: Border.all(color: t.border),
-                      ),
-                      child: Column(children: [
-                        Text(_dateLabel, style: t.miniStyle.copyWith(color: t.amber, fontSize: 11)),
-                        Text(_dayLabel, style: t.miniStyle),
-                      ]),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(child: _Field(t: t, label: 'Start', ctrl: _startCtrl, hint: '7:00 PM')),
-                    const SizedBox(width: 8),
-                    Expanded(child: _Field(t: t, label: 'End', ctrl: _endCtrl, hint: '9:00 PM')),
-                  ]),
-                  const SizedBox(height: 16),
-                  // Gi type
-                  Text('Gi Type'.toUpperCase(), style: t.labelStyle),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    for (final opt in [('gi', 'Gi'), ('nogi', 'No-Gi'), ('both', 'Both')])
-                      Expanded(child: GestureDetector(
-                        onTap: () => setState(() => _giType = opt.$1),
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 6),
-                          padding: const EdgeInsets.symmetric(vertical: 11),
-                          decoration: BoxDecoration(
-                            color: _giType == opt.$1 ? t.giColor(opt.$1).withValues(alpha: 0.15) : t.surface,
-                            border: Border.all(
-                              color: _giType == opt.$1 ? t.giColor(opt.$1) : t.border,
-                              width: _giType == opt.$1 ? 2 : 1,
-                            ),
-                            borderRadius: BorderRadius.circular(t.cardRadius),
-                          ),
-                          child: Text(opt.$2, textAlign: TextAlign.center,
-                              style: t.miniStyle.copyWith(color: _giType == opt.$1 ? t.giColor(opt.$1) : t.muted)),
-                        ),
-                      )),
-                  ]),
-                  const SizedBox(height: 16),
-                  // Exp level
-                  Text('Experience Level'.toUpperCase(), style: t.labelStyle),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    for (final opt in [('all', 'All'), ('beg', 'Beg'), ('int', 'Inter'), ('adv', 'Adv')])
-                      Expanded(child: GestureDetector(
-                        onTap: () => setState(() => _expLevel = opt.$1),
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 4),
-                          padding: const EdgeInsets.symmetric(vertical: 11),
-                          decoration: BoxDecoration(
-                            color: _expLevel == opt.$1 ? t.expColor(opt.$1).withValues(alpha: 0.15) : t.surface,
-                            border: Border.all(
-                              color: _expLevel == opt.$1 ? t.expColor(opt.$1) : t.border,
-                              width: _expLevel == opt.$1 ? 2 : 1,
-                            ),
-                            borderRadius: BorderRadius.circular(t.cardRadius),
-                          ),
-                          child: Text(opt.$2, textAlign: TextAlign.center,
-                              style: t.miniStyle.copyWith(color: _expLevel == opt.$1 ? t.expColor(opt.$1) : t.muted)),
-                        ),
-                      )),
-                  ]),
-                  const SizedBox(height: 16),
-                  _Field(t: t, label: r'Mat Fee ($)', ctrl: _feeCtrl, hint: '0 for free', keyboardType: TextInputType.number),
-                  const SizedBox(height: 12),
-                  _Field(t: t, label: 'Description', ctrl: _descCtrl, hint: 'Details about the session…', maxLines: 3),
-                  const SizedBox(height: 12),
-                  _Field(t: t, label: 'Max Participants', ctrl: _maxCtrl, hint: '20', keyboardType: TextInputType.number),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
             ),
+          ]),
+          Positioned(
+            left: 0, right: 0, bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [t.bg.withValues(alpha: 0), t.bg],
+                  stops: const [0, 0.35],
+                ),
+              ),
+              child: _buildSubmitButton(context, t),
+            ),
           ),
-          Container(
-            color: t.isSport ? t.bg2 : Colors.transparent,
-            padding: const EdgeInsets.all(16),
-            child: t.isSport
-                ? GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      width: double.infinity, height: 54,
-                      color: t.red,
-                      child: Center(child: Text(
-                        _isRecurring ? 'Schedule Recurring Mat' : 'Post Open Mat',
-                        style: t.h2Style.copyWith(color: Colors.white, fontSize: 16),
-                      )),
-                    ),
-                  )
-                : ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: t.red,
-                      minimumSize: const Size.fromHeight(54),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
-                    ),
-                    child: Text(
-                      _isRecurring ? 'Schedule Recurring Mat' : 'Post Open Mat',
-                      style: t.h2Style.copyWith(color: Colors.white),
-                    ),
-                  ),
-          ),
+          if (_submitted)
+            _SuccessOverlay(
+              t: t,
+              title: 'Session posted!',
+              subtitle: 'Your open mat is now live and discoverable nearby.',
+              onDone: () => context.pop(),
+            ),
         ]),
       ),
     );
   }
-}
 
-class _Field extends StatelessWidget {
-  final AppTokens t;
-  final String label;
-  final TextEditingController ctrl;
-  final String hint;
-  final int maxLines;
-  final TextInputType? keyboardType;
+  Widget _buildHeader(BuildContext context, AppTokens t) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+      decoration: BoxDecoration(
+        color: t.isSport ? t.bg2 : t.bg,
+        border: Border(bottom: BorderSide(color: t.border)),
+      ),
+      child: Row(children: [
+        GestureDetector(
+          onTap: () => context.pop(),
+          child: Container(
+            width: 36, height: 36,
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(t.badgeRadius + 6),
+              border: Border.all(color: t.border),
+            ),
+            child: Icon(LucideIcons.x, size: 18, color: t.text),
+          ),
+        ),
+        Expanded(child: Center(child: Text('New Open Mat', style: t.h2Style.copyWith(fontSize: 16)))),
+        const SizedBox(width: 36),
+      ]),
+    );
+  }
 
-  const _Field({
-    required this.t,
-    required this.label,
-    required this.ctrl,
-    required this.hint,
-    this.maxLines = 1,
-    this.keyboardType,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPostingAs(AppTokens t) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label.toUpperCase(), style: t.labelStyle),
+      Text('POSTING AS', style: t.labelStyle),
+      const SizedBox(height: 6),
+      Container(
+        padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
+        decoration: BoxDecoration(
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.cardRadius),
+          border: Border.all(color: t.border),
+        ),
+        child: Row(children: [
+          Container(
+            width: 38, height: 38,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [t.gi, t.both]),
+              borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+            ),
+            child: Center(child: Text('A', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16))),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Atos HQ — San Diego', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
+            Text('3 gyms managed · tap to switch', style: t.miniStyle.copyWith(fontSize: 11, color: t.muted)),
+          ])),
+          Icon(LucideIcons.chevronsUpDown, size: 16, color: t.muted),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget _buildQuotaWarning(AppTokens t) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 11, 14, 11),
+      decoration: BoxDecoration(
+        color: t.noGi.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.noGi.withValues(alpha: 0.3)),
+      ),
+      child: Row(children: [
+        Icon(LucideIcons.bell, size: 16, color: t.noGi),
+        const SizedBox(width: 10),
+        Expanded(child: RichText(text: TextSpan(
+          style: t.miniStyle.copyWith(fontSize: 12, color: t.body),
+          children: [
+            TextSpan(text: '1 of 2', style: t.miniStyle.copyWith(fontSize: 12, color: t.noGi, fontWeight: FontWeight.w800)),
+            const TextSpan(text: ' sessions used for this date.'),
+          ],
+        ))),
+      ]),
+    );
+  }
+
+  Widget _buildDateField(AppTokens t) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text('DATE', style: t.labelStyle),
+        Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+      ]),
+      const SizedBox(height: 6),
+      GestureDetector(
+        onTap: _pickDate,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.border),
+          ),
+          child: Row(children: [
+            Icon(LucideIcons.calendar, size: 18, color: t.muted),
+            const SizedBox(width: 10),
+            Text(_formatDate(_selectedDate), style: t.bodyStyle),
+            const Spacer(),
+            Icon(LucideIcons.chevronDown, size: 16, color: t.muted),
+          ]),
+        ),
+      ),
+    ]);
+  }
+
+  Widget _buildTimeRow(AppTokens t) {
+    return Row(children: [
+      Expanded(child: _buildTimePicker(t, label: 'Start', isStart: true)),
+      const SizedBox(width: 12),
+      Expanded(child: _buildTimePicker(t, label: 'End', isStart: false)),
+    ]);
+  }
+
+  Widget _buildTimePicker(AppTokens t, {required String label, required bool isStart}) {
+    final time = isStart ? _startTime : _endTime;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text(label.toUpperCase(), style: t.labelStyle),
+        Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+      ]),
+      const SizedBox(height: 6),
+      GestureDetector(
+        onTap: () => _pickTime(isStart),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.border),
+          ),
+          child: Row(children: [
+            Icon(LucideIcons.clock, size: 16, color: t.muted),
+            const SizedBox(width: 8),
+            Text(_formatTime(time), style: t.bodyStyle),
+          ]),
+        ),
+      ),
+    ]);
+  }
+
+  Widget _buildRepeatCard(AppTokens t) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.border),
+      ),
+      child: Row(children: [
+        Container(
+          width: 36, height: 36,
+          decoration: BoxDecoration(
+            color: t.gi.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+          ),
+          child: Icon(LucideIcons.calendar, size: 18, color: t.gi),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Repeat weekly', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
+          Text(
+            _isRecurring ? _recurringLabel : 'One-time session',
+            style: t.miniStyle.copyWith(fontSize: 11, color: t.muted),
+          ),
+        ])),
+        _Toggle(on: _isRecurring, onChanged: (v) => setState(() => _isRecurring = v), color: t.gi),
+      ]),
+    );
+  }
+
+  Widget _buildGiPills(AppTokens t) {
+    const opts = [
+      ('gi', 'Gi'),
+      ('nogi', 'No-Gi'),
+      ('both', 'Both'),
+    ];
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text('GI TYPE', style: t.labelStyle),
+        Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+      ]),
+      const SizedBox(height: 8),
+      Row(children: opts.map((opt) {
+        final active = _giType == opt.$1;
+        final accent = t.giColor(opt.$1);
+        return Expanded(child: GestureDetector(
+          onTap: () => setState(() => _giType = opt.$1),
+          child: Container(
+            margin: const EdgeInsets.only(right: 6),
+            padding: const EdgeInsets.symmetric(vertical: 13),
+            decoration: BoxDecoration(
+              color: active ? accent.withValues(alpha: 0.14) : t.bg,
+              borderRadius: BorderRadius.circular(t.cardRadius + 2),
+              border: Border.all(color: active ? accent : t.border, width: active ? 1.5 : 1),
+            ),
+            child: Text(opt.$2, textAlign: TextAlign.center,
+                style: t.bodyStyle.copyWith(color: active ? accent : t.body, fontWeight: FontWeight.w700, fontSize: 13)),
+          ),
+        ));
+      }).toList()),
+    ]);
+  }
+
+  Widget _buildExpPills(AppTokens t) {
+    const opts = [
+      ('all', 'All Levels'),
+      ('beg', 'Beginner'),
+      ('int', 'Intermediate'),
+      ('adv', 'Advanced'),
+    ];
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text('EXPERIENCE', style: t.labelStyle),
+        Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+      ]),
+      const SizedBox(height: 8),
+      Wrap(spacing: 6, runSpacing: 8, children: opts.map((opt) {
+        final active = _expLevel == opt.$1;
+        final accent = t.expColor(opt.$1);
+        return GestureDetector(
+          onTap: () => setState(() => _expLevel = opt.$1),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: active ? accent.withValues(alpha: 0.14) : t.bg,
+              borderRadius: BorderRadius.circular(t.cardRadius + 2),
+              border: Border.all(color: active ? accent : t.border, width: active ? 1.5 : 1),
+            ),
+            child: Text(opt.$2,
+                style: t.bodyStyle.copyWith(color: active ? accent : t.body, fontWeight: FontWeight.w700, fontSize: 13)),
+          ),
+        );
+      }).toList()),
+    ]);
+  }
+
+  Widget _buildFreeCard(AppTokens t) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.border),
+      ),
+      child: Column(children: [
+        Row(children: [
+          Container(
+            width: 36, height: 36,
+            decoration: BoxDecoration(
+              color: t.green.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+            ),
+            child: Icon(LucideIcons.gift, size: 18, color: t.green),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Free Mat', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
+            Text('Drop-in welcome, no charge', style: t.miniStyle.copyWith(fontSize: 11, color: t.muted)),
+          ])),
+          _Toggle(on: _isFree, onChanged: (v) => setState(() => _isFree = v), color: t.green),
+        ]),
+        if (!_isFree) ...[
+          Container(height: 1, margin: const EdgeInsets.symmetric(vertical: 12), color: t.border),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('MAT FEE (USD)', style: t.labelStyle),
+            const SizedBox(height: 6),
+            Container(
+              decoration: BoxDecoration(
+                color: t.surfaceHi,
+                borderRadius: BorderRadius.circular(t.cardRadius),
+                border: Border.all(color: t.border),
+              ),
+              child: Row(children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 14),
+                  child: Icon(LucideIcons.dollarSign, size: 16, color: t.muted),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _feeCtrl,
+                    style: t.bodyStyle,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: '15',
+                      hintStyle: t.miniStyle.copyWith(fontSize: 13),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ]),
+        ],
+      ]),
+    );
+  }
+
+  Widget _buildCapacityField(AppTokens t) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text('CAPACITY', style: t.labelStyle),
+        const Spacer(),
+        Text('optional', style: t.miniStyle.copyWith(fontSize: 10)),
+      ]),
+      const SizedBox(height: 6),
+      Container(
+        decoration: BoxDecoration(
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.cardRadius),
+          border: Border.all(color: t.border),
+        ),
+        child: Row(children: [
+          Padding(padding: const EdgeInsets.only(left: 14), child: Icon(LucideIcons.user, size: 18, color: t.muted)),
+          Expanded(
+            child: TextField(
+              controller: _capCtrl,
+              style: t.bodyStyle,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Leave blank for unlimited',
+                hintStyle: t.miniStyle.copyWith(fontSize: 13),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget _buildNotesField(AppTokens t) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text('NOTES', style: t.labelStyle),
+        const Spacer(),
+        Text('optional', style: t.miniStyle.copyWith(fontSize: 10)),
+      ]),
       const SizedBox(height: 6),
       Container(
         decoration: BoxDecoration(
@@ -347,18 +489,149 @@ class _Field extends StatelessWidget {
           border: Border.all(color: t.border),
         ),
         child: TextField(
-          controller: ctrl,
+          controller: _notesCtrl,
           style: t.bodyStyle,
-          maxLines: maxLines,
-          keyboardType: keyboardType,
+          maxLines: 3,
           decoration: InputDecoration(
-            hintText: hint,
+            hintText: 'Any notes for practitioners…',
             hintStyle: t.miniStyle.copyWith(fontSize: 13),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            contentPadding: const EdgeInsets.all(14),
           ),
         ),
       ),
     ]);
+  }
+
+  Widget _buildSubmitButton(BuildContext context, AppTokens t) {
+    return GestureDetector(
+      onTap: () => setState(() => _submitted = true),
+      child: Container(
+        width: double.infinity, height: 54,
+        decoration: BoxDecoration(
+          color: t.gi,
+          borderRadius: BorderRadius.circular(t.cardRadius + 2),
+          boxShadow: [BoxShadow(color: t.gi.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))],
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Icon(LucideIcons.plus, size: 18, color: Colors.white),
+          const SizedBox(width: 9),
+          Text('Post Session', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── Section divider ───────────────────────────────────────────
+class _SessionSection extends StatelessWidget {
+  final AppTokens t;
+  final String title;
+
+  const _SessionSection({required this.t, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Text(title.toUpperCase(), style: t.labelStyle.copyWith(color: t.gi)),
+      const SizedBox(width: 10),
+      Expanded(child: Container(height: 1, color: t.border)),
+    ]);
+  }
+}
+
+// ── Toggle switch ─────────────────────────────────────────────
+class _Toggle extends StatelessWidget {
+  final bool on;
+  final void Function(bool) onChanged;
+  final Color color;
+
+  const _Toggle({required this.on, required this.onChanged, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onChanged(!on),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        width: 50, height: 28,
+        decoration: BoxDecoration(
+          color: on ? color : const Color(0xFFD1D5DB),
+          borderRadius: BorderRadius.circular(99),
+        ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 180),
+          alignment: on ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            width: 24, height: 24,
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 3, offset: const Offset(0, 1))],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Success overlay ───────────────────────────────────────────
+class _SuccessOverlay extends StatelessWidget {
+  final AppTokens t;
+  final String title;
+  final String subtitle;
+  final VoidCallback onDone;
+
+  const _SuccessOverlay({required this.t, required this.title, required this.subtitle, required this.onDone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: Container(
+        color: t.bg.withValues(alpha: 0.97),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            width: 84, height: 84,
+            decoration: BoxDecoration(color: t.green.withValues(alpha: 0.12), shape: BoxShape.circle),
+            child: Center(
+              child: Container(
+                width: 58, height: 58,
+                decoration: BoxDecoration(
+                  color: t.green, shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: t.green.withValues(alpha: 0.4), blurRadius: 22)],
+                ),
+                child: const Icon(LucideIcons.check, size: 30, color: Colors.white),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(title, style: t.h1Style.copyWith(fontSize: 24)),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(subtitle, textAlign: TextAlign.center, style: t.bodyStyle.copyWith(color: t.muted)),
+          ),
+          const SizedBox(height: 28),
+          GestureDetector(
+            onTap: onDone,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
+              decoration: BoxDecoration(
+                color: t.green,
+                borderRadius: BorderRadius.circular(t.cardRadius + 2),
+                boxShadow: [BoxShadow(color: t.green.withValues(alpha: 0.35), blurRadius: 14, offset: const Offset(0, 5))],
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(LucideIcons.check, size: 17, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Done', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
+              ]),
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }
