@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../app/theme.dart';
-import '../../../shared/widgets/glass_card.dart';
-import '../../../shared/widgets/error_state.dart';
-import '../../../shared/widgets/shimmer_loader.dart';
-import '../../open_mats/models/open_mat.dart';
-import '../providers/discover_provider.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/design/tokens.dart';
+import '../../../shared/widgets/session_row.dart';
+import '../../../shared/widgets/ticker_strip.dart';
+import '../../../shared/widgets/app_bottom_nav.dart';
+
+final _stubSessions = [
+  SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0, isLive: true),
+  SessionRowData(gymName: 'Renzo Westwood', giType: 'nogi', expLevel: 'int', time: '8:00 PM', day: 'Mon', distance: '2.4 mi', fee: 15),
+  SessionRowData(gymName: '10th Planet Rosemead', giType: 'both', expLevel: 'adv', time: '8:30 PM', day: 'Mon', distance: '3.1 mi', fee: 20),
+  SessionRowData(gymName: 'Gracie Barra Pasadena', giType: 'gi', expLevel: 'beg', time: '9:00 AM', day: 'Tue', distance: '4.5 mi', fee: 0),
+  SessionRowData(gymName: 'CKM Jiu-Jitsu', giType: 'nogi', expLevel: 'all', time: '7:30 PM', day: 'Tue', distance: '5.0 mi', fee: 10),
+];
+
+final _tickerItems = [
+  TickerItem(time: '7:00 PM', gym: 'Atos HQ', giType: 'gi'),
+  TickerItem(time: '8:00 PM', gym: 'Renzo Westwood', giType: 'nogi'),
+  TickerItem(time: '8:30 PM', gym: '10P Rosemead', giType: 'both'),
+];
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -17,182 +28,253 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  // Default to NYC for demo — in production, use Geolocator
-  final double _lat = 40.7128;
-  final double _lng = -74.0060;
-  bool _showToday = true;
-
-  NearbyQuery get _query => NearbyQuery(
-    lat: _lat,
-    lng: _lng,
-    date: DateTime.now().toIso8601String().split('T').first,
-  );
+  String _filter = 'today';
 
   @override
   Widget build(BuildContext context) {
-    final openMatsAsync = ref.watch(nearbyOpenMatsProvider(_query));
+    final t = Theme.of(context).extension<AppTokens>()!;
+    return t.isSport ? _buildSport(t) : _buildGlass(t);
+  }
 
+  Widget _buildSport(AppTokens t) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Map placeholder
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
           Container(
-            color: StitchTokens.primary.withValues(alpha: 0.1),
-            child: const Center(
-              child: Icon(Icons.map, size: 120, color: StitchTokens.textSecondary),
-            ),
+            color: t.bg2,
+            padding: const EdgeInsets.fromLTRB(14, 4, 14, 10),
+            child: Row(children: [
+              Container(width: 4, height: 22, color: t.red),
+              const SizedBox(width: 8),
+              Text('Open Mat', style: t.displayStyle.copyWith(fontSize: 22)),
+              const SizedBox(width: 8),
+              Text('LA / Mon Jun 2', style: t.miniStyle),
+              const Spacer(),
+              Icon(LucideIcons.bell, size: 18, color: t.muted),
+              const SizedBox(width: 12),
+              Icon(LucideIcons.search, size: 18, color: t.muted),
+            ]),
           ),
-
-          // Bottom sheet with nearby open mats
-          DraggableScrollableSheet(
-            initialChildSize: 0.4,
-            minChildSize: 0.15,
-            maxChildSize: 0.85,
-            builder: (context, controller) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(StitchTokens.radiusXl)),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 16, offset: const Offset(0, -4))],
-                ),
-                child: Column(
-                  children: [
-                    // Handle
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(color: StitchTokens.textSecondary, borderRadius: BorderRadius.circular(2)),
-                    ),
-                    // Toggle
-                    Padding(
-                      padding: const EdgeInsets.all(StitchTokens.md),
-                      child: Row(
-                        children: [
-                          Text('Nearby Open Mats', style: Theme.of(context).textTheme.headlineMedium),
-                          const Spacer(),
-                          SegmentedButton<bool>(
-                            segments: const [
-                              ButtonSegment(value: true, label: Text('Today')),
-                              ButtonSegment(value: false, label: Text('Week')),
-                            ],
-                            selected: {_showToday},
-                            onSelectionChanged: (v) => setState(() => _showToday = v.first),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // List
-                    Expanded(
-                      child: openMatsAsync.when(
-                        loading: () => const ShimmerList(),
-                        error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(nearbyOpenMatsProvider(_query))),
-                        data: (mats) {
-                          if (mats.isEmpty) {
-                            return const EmptyState(
-                              title: 'No open mats nearby',
-                              subtitle: 'Try expanding your search radius',
-                              icon: Icons.sports_martial_arts,
-                            );
-                          }
-                          return ListView.builder(
-                            controller: controller,
-                            padding: const EdgeInsets.symmetric(horizontal: StitchTokens.md),
-                            itemCount: mats.length,
-                            itemBuilder: (context, index) => _OpenMatCard(mat: mats[index]),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: StitchTokens.secondary,
-        onPressed: () {
-          HapticFeedback.lightImpact();
-          // Re-center on current location
-        },
-        child: const Icon(Icons.my_location, color: Colors.white),
-      ),
-    );
-  }
-}
-
-class _OpenMatCard extends StatelessWidget {
-  final OpenMat mat;
-  const _OpenMatCard({required this.mat});
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      margin: const EdgeInsets.only(bottom: StitchTokens.sm),
-      onTap: () {
-        HapticFeedback.selectionClick();
-        context.go('/open-mat/${mat.id}');
-      },
-      child: Row(
-        children: [
+          TickerStrip(items: _tickerItems),
           Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: StitchTokens.accent.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(StitchTokens.radiusMd),
-            ),
-            child: const Icon(Icons.sports_martial_arts, color: StitchTokens.accent),
+            color: const Color(0xFF080F26),
+            child: Row(children: [
+              _StatCell(label: 'Open Now', value: '3', color: t.green, t: t),
+              _StatCell(label: 'Tonight', value: '12', color: t.amber, t: t),
+              _StatCell(label: 'This Wk', value: '47', color: t.text, t: t),
+              _StatCell(label: 'Nearest', value: '1.2mi', color: t.gi, t: t),
+            ]),
           ),
-          const SizedBox(width: StitchTokens.md),
+          Container(
+            height: 200,
+            color: const Color(0xFF080F26),
+            child: Stack(children: [
+              CustomPaint(painter: _GridPainter(t), size: Size.infinite),
+              ...[
+                (x: 0.24, y: 0.36, gi: 'gi',   label: 'ATOS'),
+                (x: 0.56, y: 0.28, gi: 'both', label: '10P'),
+                (x: 0.78, y: 0.52, gi: 'nogi', label: 'RNZ'),
+                (x: 0.38, y: 0.70, gi: 'gi',   label: 'GB'),
+              ].map((p) => Positioned(
+                left: MediaQuery.of(context).size.width * p.x - 20,
+                top: 200 * p.y - 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                  color: t.giColor(p.gi),
+                  child: Text(p.label, style: t.miniStyle.copyWith(color: Colors.white, fontSize: 11)),
+                ),
+              )),
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+            child: Row(children: [
+              Container(width: 4, height: 22, color: t.red, margin: const EdgeInsets.only(right: 10)),
+              Text('Live Feed', style: t.h2Style.copyWith(fontSize: 15)),
+              const Spacer(),
+              Text('All Sessions', style: t.miniStyle),
+            ]),
+          ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(mat.title, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 2),
-                Text(
-                  '${mat.gymName ?? "Unknown gym"} • ${mat.startTime}–${mat.endTime}',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    _Badge(label: mat.skillBadge, color: StitchTokens.accent),
-                    const SizedBox(width: 6),
-                    _Badge(label: mat.giBadge, color: StitchTokens.secondary),
-                    if (mat.distanceKm != null) ...[
-                      const SizedBox(width: 6),
-                      Text('${mat.distanceKm!.toStringAsFixed(1)} km', style: Theme.of(context).textTheme.bodySmall),
-                    ],
-                  ],
-                ),
-              ],
+            child: ListView.separated(
+              itemCount: _stubSessions.length,
+              separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
+              itemBuilder: (_, i) => SessionRow(session: _stubSessions[i]),
             ),
           ),
-          const Icon(Icons.chevron_right, color: StitchTokens.textSecondary),
-        ],
+        ]),
+      ),
+      bottomNavigationBar: AppBottomNav(active: 'home', onTap: (_) {}),
+    );
+  }
+
+  Widget _buildGlass(AppTokens t) {
+    return Scaffold(
+      backgroundColor: t.bg,
+      body: Stack(children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: RadialGradient(
+              center: Alignment(-0.64, -0.84),
+              radius: 1.0,
+              colors: [Color(0x38E94560), Colors.transparent],
+            ),
+          ),
+        ),
+        Positioned(
+          top: 0, left: 0, right: 0,
+          height: MediaQuery.of(context).size.height * 0.45,
+          child: Container(
+            color: const Color(0xFFDDE8F0),
+            child: CustomPaint(painter: _LightMapPainter(), size: Size.infinite),
+          ),
+        ),
+        SafeArea(
+          child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Row(children: [
+                Text('Open Mat', style: t.h1Style.copyWith(fontSize: 26)),
+                const Spacer(),
+                Icon(LucideIcons.bell, size: 20, color: t.muted),
+                const SizedBox(width: 12),
+                Icon(LucideIcons.search, size: 20, color: t.muted),
+              ]),
+            ),
+            Expanded(
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.56,
+                minChildSize: 0.3,
+                maxChildSize: 0.9,
+                snap: true,
+                builder: (context, ctrl) => Container(
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    border: Border.all(color: t.border),
+                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 24)],
+                  ),
+                  child: Column(children: [
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        width: 36, height: 4,
+                        decoration: BoxDecoration(
+                          color: t.muted.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      child: Row(children: [
+                        _FilterChip(label: 'Today', active: _filter == 'today', onTap: () => setState(() => _filter = 'today'), t: t),
+                        const SizedBox(width: 8),
+                        _FilterChip(label: 'This Week', active: _filter == 'week', onTap: () => setState(() => _filter = 'week'), t: t),
+                        const SizedBox(width: 8),
+                        _FilterChip(label: 'Gi', active: false, onTap: () {}, t: t),
+                        const SizedBox(width: 8),
+                        _FilterChip(label: 'No-Gi', active: false, onTap: () {}, t: t),
+                      ]),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        controller: ctrl,
+                        itemCount: _stubSessions.length,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        separatorBuilder: (context, index) => const SizedBox(height: 10),
+                        itemBuilder: (_, i) => SessionRow(session: _stubSessions[i]),
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+            ),
+          ]),
+        ),
+      ]),
+      bottomNavigationBar: AppBottomNav(active: 'home', onTap: (_) {}),
+    );
+  }
+}
+
+class _StatCell extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+  final AppTokens t;
+  const _StatCell({required this.label, required this.value, required this.color, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(border: Border(right: BorderSide(color: t.border, width: 1))),
+      child: Column(children: [
+        Text(value, style: t.numStyle.copyWith(fontSize: 20, color: color)),
+        const SizedBox(height: 2),
+        Text(label, style: t.miniStyle.copyWith(fontSize: 8)),
+      ]),
+    ));
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+  final AppTokens t;
+  const _FilterChip({required this.label, required this.active, required this.onTap, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: active ? t.red : t.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: active ? t.red : t.border),
+        ),
+        child: Text(label, style: t.miniStyle.copyWith(color: active ? Colors.white : t.text, fontSize: 12)),
       ),
     );
   }
 }
 
-class _Badge extends StatelessWidget {
-  final String label;
-  final Color color;
-  const _Badge({required this.label, required this.color});
+class _GridPainter extends CustomPainter {
+  final AppTokens t;
+  _GridPainter(this.t);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(StitchTokens.radiusPill),
-      ),
-      child: Text(label, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
-    );
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = t.border..strokeWidth = 1;
+    for (double x = 0; x < size.width; x += 40) { canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint); }
+    for (double y = 0; y < size.height; y += 40) { canvas.drawLine(Offset(0, y), Offset(size.width, y), paint); }
+    final road = Paint()..color = t.border..strokeWidth = 8;
+    canvas.drawLine(const Offset(-20, 70), Offset(size.width + 20, 110), road);
+    canvas.drawLine(const Offset(-20, 200), Offset(size.width + 20, 170), road);
   }
+
+  @override
+  bool shouldRepaint(_) => false;
+}
+
+class _LightMapPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bg = Paint()..color = const Color(0xFFE8EFF5);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bg);
+    final road = Paint()..color = Colors.white..strokeWidth = 8;
+    canvas.drawLine(Offset(-20, size.height * 0.3), Offset(size.width + 20, size.height * 0.45), road);
+    canvas.drawLine(Offset(-20, size.height * 0.7), Offset(size.width + 20, size.height * 0.6), road);
+    canvas.drawLine(Offset(size.width * 0.3, -20), Offset(size.width * 0.28, size.height + 20), road);
+    canvas.drawLine(Offset(size.width * 0.65, -20), Offset(size.width * 0.75, size.height + 20), road);
+  }
+
+  @override
+  bool shouldRepaint(_) => false;
 }
