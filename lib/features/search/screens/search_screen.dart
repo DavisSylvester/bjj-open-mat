@@ -29,7 +29,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   List<SessionRowData> get _filtered {
     return _sessions.where((s) {
-      if (_giFilter != 'all' && s.giType != _giFilter) return false;
+      if (_giFilter == 'free') {
+        if (s.fee != 0) return false;
+      } else if (_giFilter != 'all' && s.giType != _giFilter) {
+        return false;
+      }
       final dist = double.tryParse(s.distance.split(' ').first) ?? 0;
       if (dist > _distance) return false;
       if (_searchCtrl.text.isNotEmpty &&
