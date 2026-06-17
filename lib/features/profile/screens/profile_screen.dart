@@ -129,109 +129,199 @@ class _GlassProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: EdgeInsets.zero,
           child: Column(children: [
-            // Avatar card
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft, end: Alignment.bottomRight,
-                  colors: [t.gi.withValues(alpha: 0.3), t.both.withValues(alpha: 0.2)],
-                ),
-                borderRadius: BorderRadius.circular(t.cardRadius),
-                border: Border.all(color: t.border),
-              ),
-              child: Column(children: [
-                Container(
-                  width: 72, height: 72,
-                  decoration: BoxDecoration(
-                    color: t.surfaceHi,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: t.borderHi, width: 2),
-                  ),
-                  child: Center(child: Text('DS', style: t.h1Style.copyWith(fontSize: 26))),
-                ),
-                const SizedBox(height: 12),
-                Text('Davis S.', style: t.h1Style.copyWith(fontSize: 22)),
-                const SizedBox(height: 8),
-                const BeltBadge(belt: 'blue', stripes: 2),
-                const SizedBox(height: 16),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  _StatPill(label: '47 Mats', t: t),
-                  const SizedBox(width: 8),
-                  _StatPill(label: '94 Hours', t: t),
-                  const SizedBox(width: 8),
-                  _StatPill(label: '8 Gyms', t: t),
-                ]),
-              ]),
-            ),
+            // Header
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(children: [
-                Text('My Sessions', style: t.h2Style),
-              ]),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Profile', style: t.h1Style),
+                  Row(children: [
+                    Stack(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
+                          child: Icon(LucideIcons.bell, size: 17, color: t.text),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: t.red,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 1.5),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 9),
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
+                      child: Icon(LucideIcons.settings, size: 17, color: t.text),
+                    ),
+                  ]),
+                ],
+              ),
             ),
+            // Avatar card
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [t.primary, t.both],
+                  ),
+                  boxShadow: [BoxShadow(color: t.primary.withValues(alpha: 0.20), blurRadius: 30, offset: const Offset(0, 12))],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.20),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.60), width: 2.5),
+                      ),
+                      child: Center(child: Text('DS', style: t.h1Style.copyWith(color: Colors.white, fontSize: 26))),
+                    ),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Davis Sylvester', style: t.h1Style.copyWith(color: Colors.white, fontSize: 23)),
+                          const SizedBox(height: 7),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(8, 4, 10, 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.22),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Row(mainAxisSize: MainAxisSize.min, children: [
+                              Container(width: 14, height: 8, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(2))),
+                              const SizedBox(width: 6),
+                              Text('Blue · 2 stripes', style: t.miniStyle.copyWith(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
+                            ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            // Stat strip
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: t.border),
+                  boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+                ),
+                child: Row(
+                  children: [
+                    _MnStatCell(label: 'Mats', value: '27', t: t, borderRight: true),
+                    _MnStatCell(label: 'Hours', value: '48', t: t, borderRight: true),
+                    _MnStatCell(label: 'Reviews', value: '8', t: t, borderRight: false),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 22),
+            // My Sessions
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('My Sessions', style: t.h2Style),
+                  Text('See all', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 13)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
             ..._recentSessions.map((s) => Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
               child: SessionRow(session: s),
             )),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
+            // Settings
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Text('Settings', style: t.h2Style),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+              child: Align(alignment: Alignment.centerLeft, child: Text('Settings', style: t.h2Style)),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: t.surface,
-                borderRadius: BorderRadius.circular(t.cardRadius),
-                border: Border.all(color: t.border),
-              ),
-              child: Column(children: [
-                ListTile(
-                  leading: Icon(LucideIcons.palette, color: t.muted),
-                  title: Text('Sports Ticker Theme', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600)),
-                  trailing: Consumer(
-                    builder: (context, watchRef, _) => Switch(
-                      value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                      activeThumbColor: t.red,
-                      onChanged: (_) => watchRef.read(themeProvider.notifier).toggle(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: t.border),
+                  boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+                ),
+                child: Column(children: [
+                  ListTile(
+                    leading: Icon(LucideIcons.palette, color: t.muted),
+                    title: Text('Sports Ticker Theme', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600)),
+                    trailing: Consumer(
+                      builder: (context, watchRef, _) => Switch(
+                        value: watchRef.watch(themeProvider) == ThemeVariant.sport,
+                        activeThumbColor: t.primary,
+                        onChanged: (_) => watchRef.read(themeProvider.notifier).toggle(),
+                      ),
                     ),
                   ),
-                ),
-                Divider(height: 1, color: t.border),
-                ListTile(
-                  leading: Icon(LucideIcons.bell, color: t.muted),
-                  title: Text('Notifications', style: t.bodyStyle),
-                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
-                ),
-                Divider(height: 1, color: t.border),
-                ListTile(
-                  leading: Icon(LucideIcons.user, color: t.muted),
-                  title: Text('Account', style: t.bodyStyle),
-                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
-                ),
-                Divider(height: 1, color: t.border),
-                ListTile(
-                  leading: Icon(LucideIcons.store, color: t.amber),
-                  title: Text('Gym Owner Panel', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600)),
-                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
-                  onTap: () => context.go('/owner/dashboard'),
-                ),
-                Divider(height: 1, color: t.border),
-                ListTile(
-                  leading: Icon(LucideIcons.logOut, color: t.red),
-                  title: Text('Sign Out', style: t.bodyStyle.copyWith(color: t.red)),
-                ),
-              ]),
+                  Divider(height: 1, color: t.border),
+                  ListTile(
+                    leading: Icon(LucideIcons.bell, color: t.muted),
+                    title: Text('Notifications', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                  ),
+                  Divider(height: 1, color: t.border),
+                  ListTile(
+                    leading: Icon(LucideIcons.user, color: t.muted),
+                    title: Text('Account', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                  ),
+                  Divider(height: 1, color: t.border),
+                  ListTile(
+                    leading: Icon(LucideIcons.store, color: t.muted),
+                    title: Text('Gym Owner Panel', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () => context.go('/owner/dashboard'),
+                  ),
+                  Divider(height: 1, color: t.border),
+                  ListTile(
+                    leading: Icon(LucideIcons.logOut, color: t.red),
+                    title: Text('Sign out', style: t.bodyStyle.copyWith(color: t.red)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                  ),
+                ]),
+              ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
           ]),
         ),
       ),
@@ -239,21 +329,27 @@ class _GlassProfile extends StatelessWidget {
   }
 }
 
-class _StatPill extends StatelessWidget {
+class _MnStatCell extends StatelessWidget {
   final String label;
+  final String value;
   final AppTokens t;
-  const _StatPill({required this.label, required this.t});
+  final bool borderRight;
+  const _MnStatCell({required this.label, required this.value, required this.t, required this.borderRight});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: t.surfaceHi,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: t.border),
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          border: borderRight ? Border(right: BorderSide(color: t.border)) : null,
+        ),
+        child: Column(children: [
+          Text(value, style: t.numStyle.copyWith(fontSize: 20, color: t.text)),
+          const SizedBox(height: 3),
+          Text(label, style: t.miniStyle.copyWith(fontSize: 9, color: t.muted)),
+        ]),
       ),
-      child: Text(label, style: t.miniStyle.copyWith(fontSize: 11)),
     );
   }
 }
