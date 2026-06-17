@@ -4,7 +4,7 @@ enum ThemeVariant { sport, glass }
 
 class ThemeNotifier extends Notifier<ThemeVariant> {
   @override
-  ThemeVariant build() => ThemeVariant.sport;
+  ThemeVariant build() => ThemeVariant.glass;
 
   void toggle() {
     state = state == ThemeVariant.sport ? ThemeVariant.glass : ThemeVariant.sport;

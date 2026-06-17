@@ -129,13 +129,16 @@ class _GlassTraining extends StatelessWidget {
           // Header
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('YOUR PROGRESS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
-                const SizedBox(height: 3),
-                Text('My Training', style: t.h1Style),
-              ],
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('YOUR PROGRESS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
+                  const SizedBox(height: 3),
+                  Text('My Training', style: t.h1Style),
+                ],
+              ),
             ),
           ),
           // Stat strip card
