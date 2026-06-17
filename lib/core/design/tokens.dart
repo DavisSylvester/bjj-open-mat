@@ -12,6 +12,9 @@ class AppTokens extends ThemeExtension<AppTokens> {
   final Color body;
   final Color muted;
   final Color faint;
+  final Color primary;
+  final Color panel;
+  final Color gold;
   final Color red;
   final Color amber;
   final Color green;
@@ -46,6 +49,9 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.body,
     required this.muted,
     required this.faint,
+    required this.primary,
+    required this.panel,
+    required this.gold,
     required this.red,
     required this.amber,
     required this.green,
@@ -87,6 +93,9 @@ class AppTokens extends ThemeExtension<AppTokens> {
       body: const Color(0xFFC7D3F0),
       muted: const Color(0xFF7286B0),
       faint: const Color(0xFF3F5085),
+      primary: const Color(0xFFFF2244),
+      panel: const Color(0xFF101A3A),
+      gold: const Color(0xFFFFC107),
       red: const Color(0xFFFF2244),
       amber: const Color(0xFFFFC107),
       green: const Color(0xFF00E599),
@@ -149,77 +158,56 @@ class AppTokens extends ThemeExtension<AppTokens> {
   }
 
   factory AppTokens.glass() {
-    final display = GoogleFonts.barlow(fontWeight: FontWeight.w700);
+    final display = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800);
+    final body = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500);
     return AppTokens(
-      bg: const Color(0xFFF4F1EC),
-      bg2: const Color(0xFFF8F5EF),
-      surface: const Color(0x8CFFFFFF),
-      surfaceHi: const Color(0xC7FFFFFF),
-      border: const Color(0xA6FFFFFF),
-      borderHi: const Color(0xD9FFFFFF),
-      text: const Color(0xFF0F1430),
-      body: const Color(0xBF0F1430),
-      muted: const Color(0x8C0F1430),
-      faint: const Color(0x590F1430),
-      red: const Color(0xFFE94560),
-      amber: const Color(0xFFF7B731),
-      green: const Color(0xFF16C79A),
-      gi: const Color(0xFF2196F3),
-      noGi: const Color(0xFFFF9800),
-      both: const Color(0xFF9C27B0),
-      allLevels: const Color(0xFF16C79A),
-      beginner: const Color(0xFF3DDC84),
-      intermediate: const Color(0xFFFF9800),
-      advanced: const Color(0xFFE94560),
+      bg:        const Color(0xFFFFFFFF),
+      bg2:       const Color(0xFFF5F6FA),
+      surface:   const Color(0xFFFFFFFF),
+      surfaceHi: const Color(0xFFF5F6FA),
+      border:    const Color(0xFFECEDF2),
+      borderHi:  const Color(0xFFE0E2EA),
+      text:      const Color(0xFF14151A),
+      body:      const Color(0xFF3D4150),
+      muted:     const Color(0xFF878C9C),
+      faint:     const Color(0xFFB9BDC9),
+      primary:   const Color(0xFF5B53F2),
+      panel:     const Color(0xFFF5F6FA),
+      gold:      const Color(0xFFFFB020),
+      red:       const Color(0xFFFF5470),
+      amber:     const Color(0xFFFFB020),
+      green:     const Color(0xFF10B981),
+      gi:        const Color(0xFF2E7BFF),
+      noGi:      const Color(0xFFFF7A33),
+      both:      const Color(0xFF8B5CF6),
+      allLevels: const Color(0xFF10B981),
+      beginner:  const Color(0xFF34D399),
+      intermediate: const Color(0xFFFFB020),
+      advanced:  const Color(0xFFFF5470),
       beltBg: const {
-        'white': Color(0xFFF5F5F5),
-        'blue': Color(0xFF1E5BC9),
-        'purple': Color(0xFF6A2A9A),
-        'brown': Color(0xFF6B3A1A),
-        'black': Color(0xFF0A0A0A),
+        'white':  Color(0xFFD7D9E0),
+        'blue':   Color(0xFF2E7BFF),
+        'purple': Color(0xFF8B5CF6),
+        'brown':  Color(0xFF8B5A2B),
+        'black':  Color(0xFF1A1B22),
       },
       beltFg: const {
-        'white': Color(0xFF1A1A2E),
-        'blue': Color(0xFFFFFFFF),
+        'white':  Color(0xFF14151A),
+        'blue':   Color(0xFFFFFFFF),
         'purple': Color(0xFFFFFFFF),
-        'brown': Color(0xFFFFFFFF),
-        'black': Color(0xFFFFFFFF),
+        'brown':  Color(0xFFFFFFFF),
+        'black':  Color(0xFFFFFFFF),
       },
-      displayStyle: display.copyWith(fontSize: 22, color: const Color(0xFF0F1430)),
-      h1Style: display.copyWith(
-        fontSize: 28,
-        fontWeight: FontWeight.w800,
-        color: const Color(0xFF0F1430),
-      ),
-      h2Style: display.copyWith(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: const Color(0xFF0F1430),
-      ),
-      labelStyle: GoogleFonts.barlow(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.08,
-        color: const Color(0x8C0F1430),
-      ),
-      miniStyle: GoogleFonts.barlow(
-        fontSize: 10,
-        fontWeight: FontWeight.w600,
-        color: const Color(0x8C0F1430),
-      ),
-      numStyle: GoogleFonts.barlow(
-        fontSize: 22,
-        fontWeight: FontWeight.w800,
-        color: const Color(0xFF0F1430),
-      ),
-      bodyStyle: GoogleFonts.barlow(
-        fontWeight: FontWeight.w400,
-        fontSize: 14,
-        color: const Color(0xBF0F1430),
-      ),
-      isSport: false,
-      cardRadius: 16,
-      badgeRadius: 6,
+      displayStyle: display.copyWith(fontSize: 28, letterSpacing: -0.02, height: 1.1, color: const Color(0xFF14151A)),
+      h1Style:      display.copyWith(fontSize: 28, letterSpacing: -0.02, height: 1.1, color: const Color(0xFF14151A)),
+      h2Style:      GoogleFonts.plusJakartaSans(fontSize: 19, fontWeight: FontWeight.w700, letterSpacing: -0.015, height: 1.15, color: const Color(0xFF14151A)),
+      labelStyle:   GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.06, color: const Color(0xFF878C9C)),
+      miniStyle:    GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.06, color: const Color(0xFF878C9C)),
+      numStyle:     display.copyWith(fontSize: 22, letterSpacing: -0.01, color: const Color(0xFF14151A)),
+      bodyStyle:    body.copyWith(fontSize: 14, height: 1.5, color: const Color(0xFF3D4150)),
+      isSport:   false,
+      cardRadius: 20,
+      badgeRadius: 999,
     );
   }
 
@@ -255,7 +243,8 @@ class AppTokens extends ThemeExtension<AppTokens> {
   AppTokens copyWith({
     Color? bg, Color? bg2, Color? surface, Color? surfaceHi,
     Color? border, Color? borderHi, Color? text, Color? body,
-    Color? muted, Color? faint, Color? red, Color? amber, Color? green,
+    Color? muted, Color? faint, Color? primary, Color? panel, Color? gold,
+    Color? red, Color? amber, Color? green,
     Color? gi, Color? noGi, Color? both,
     Color? allLevels, Color? beginner, Color? intermediate, Color? advanced,
     Map<String, Color>? beltBg, Map<String, Color>? beltFg,
@@ -269,6 +258,9 @@ class AppTokens extends ThemeExtension<AppTokens> {
       border: border ?? this.border, borderHi: borderHi ?? this.borderHi,
       text: text ?? this.text, body: body ?? this.body,
       muted: muted ?? this.muted, faint: faint ?? this.faint,
+      primary: primary ?? this.primary,
+      panel: panel ?? this.panel,
+      gold: gold ?? this.gold,
       red: red ?? this.red, amber: amber ?? this.amber, green: green ?? this.green,
       gi: gi ?? this.gi, noGi: noGi ?? this.noGi, both: both ?? this.both,
       allLevels: allLevels ?? this.allLevels, beginner: beginner ?? this.beginner,
