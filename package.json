@@ -1,0 +1,29 @@
+{
+  "name": "bjj-open-mat",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.12",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "verify": "turbo run type-check lint test",
+    "api:dev": "bun run --filter @bjj/api dev",
+    "api:start": "bun run --filter @bjj/api start",
+    "mobile:run": "cd apps/mobile && flutter run",
+    "mobile:build": "cd apps/mobile && flutter build web"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  }
+}

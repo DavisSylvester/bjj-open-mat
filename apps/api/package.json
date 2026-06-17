@@ -1,0 +1,24 @@
+{
+  "name": "@bjj/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.mts",
+    "start": "bun src/index.mts",
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"(eslint not configured yet)\"",
+    "test": "bun test",
+    "verify": "bun run type-check && bun run test"
+  },
+  "dependencies": {
+    "@bjj/contract": "workspace:*",
+    "@sinclair/typebox": "^0.34.0",
+    "elysia": "^1.2.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "typescript": "^5.7.2"
+  }
+}
