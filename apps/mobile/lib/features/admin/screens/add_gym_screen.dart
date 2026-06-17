@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
+import '../../gyms/data/gym_repository.dart';
+import '../../gyms/data/gym_requests.dart';
+import 'my_gyms_screen.dart';
 
 class AddGymScreen extends ConsumerStatefulWidget {
   const AddGymScreen({super.key});
@@ -21,6 +25,8 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
   final _descCtrl = TextEditingController();
   Set<String> _amenities = {'parking', 'showers'};
   bool _submitted = false;
+  bool _saving = false;
+  String? _error;
 
   static const _amenityOpts = [
     ('parking', 'Parking', LucideIcons.parkingSquare),
@@ -53,6 +59,38 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
 
   bool get _valid =>
       _nameCtrl.text.trim().isNotEmpty && _addrCtrl.text.trim().isNotEmpty;
+
+  Future<void> _submit() async {
+    if (!_valid || _saving) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      await ref.read(gymRepositoryProvider).create(CreateGymRequest(
+            name: _nameCtrl.text.trim(),
+            address: _addrCtrl.text.trim(),
+            phone: _phoneCtrl.text.trim(),
+            website: _siteCtrl.text.trim(),
+            description: _descCtrl.text.trim(),
+            amenities: _amenities.toList(),
+          ));
+      ref.invalidate(myGymsProvider);
+      if (mounted) {
+        setState(() {
+          _saving = false;
+          _submitted = true;
+        });
+      }
+    } on ApiException catch (e) {
+      if (mounted) {
+        setState(() {
+          _saving = false;
+          _error = e.message;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +152,13 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
                   stops: const [0, 0.35],
                 ),
               ),
-              child: _buildSubmitButton(context, t),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                if (_error != null) ...[
+                  Text(_error!, style: t.miniStyle.copyWith(color: t.red, fontSize: 12)),
+                  const SizedBox(height: 8),
+                ],
+                _buildSubmitButton(context, t),
+              ]),
             ),
           ),
           if (_submitted) _SuccessOverlay(t: t, title: 'Gym submitted!', subtitle: 'We\'ll verify the location and publish it within 24 hours.', onDone: () => context.pop()),
@@ -204,9 +248,9 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
   }
 
   Widget _buildSubmitButton(BuildContext context, AppTokens t) {
-    final enabled = _valid;
+    final enabled = _valid && !_saving;
     return GestureDetector(
-      onTap: enabled ? () => setState(() => _submitted = true) : null,
+      onTap: enabled ? _submit : null,
       child: Container(
         width: double.infinity, height: 54,
         decoration: BoxDecoration(
@@ -217,9 +261,15 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
               : null,
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Icon(LucideIcons.check, size: 18, color: Colors.white),
+          if (_saving)
+            const SizedBox(
+              width: 18, height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(Colors.white)),
+            )
+          else
+            const Icon(LucideIcons.check, size: 18, color: Colors.white),
           const SizedBox(width: 9),
-          Text('Add Gym', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
+          Text(_saving ? 'Saving…' : 'Add Gym', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
         ]),
       ),
     );

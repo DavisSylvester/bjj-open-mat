@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../shared/widgets/glass_card.dart';
 
 class RoleSelectScreen extends ConsumerWidget {
@@ -35,9 +36,10 @@ class RoleSelectScreen extends ConsumerWidget {
                 title: 'Practitioner',
                 description: 'Find open mats, check in, track training, leave reviews',
                 color: StitchTokens.accent,
-                onTap: () {
+                onTap: () async {
                   HapticFeedback.mediumImpact();
-                  context.go('/profile-setup');
+                  await ref.read(authStateProvider.notifier).setRole('practitioner');
+                  if (context.mounted) context.go('/profile-setup');
                 },
               ),
               const SizedBox(height: StitchTokens.md),
@@ -46,9 +48,10 @@ class RoleSelectScreen extends ConsumerWidget {
                 title: 'Gym Owner',
                 description: 'Register gyms, post schedules, track attendance',
                 color: StitchTokens.secondary,
-                onTap: () {
+                onTap: () async {
                   HapticFeedback.mediumImpact();
-                  context.go('/profile-setup');
+                  await ref.read(authStateProvider.notifier).setRole('gym_owner');
+                  if (context.mounted) context.go('/owner/dashboard');
                 },
               ),
             ],

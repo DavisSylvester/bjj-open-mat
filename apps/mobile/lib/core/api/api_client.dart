@@ -1,3 +1,4 @@
+import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,10 +64,18 @@ class ApiClient {
   }
 
   Future<bool> _refreshToken() async {
-    // Auth0 silent refresh via refresh token
-    // Implementation depends on auth0_flutter SDK
-    // Returns true if token was refreshed successfully
-    return false;
+    try {
+      final auth0 = Auth0(
+        const String.fromEnvironment('AUTH0_DOMAIN'),
+        const String.fromEnvironment('AUTH0_CLIENT_ID'),
+      );
+      final creds = await auth0.credentialsManager.credentials();
+      await _storage.write(key: 'access_token', value: creds.accessToken);
+      await setToken(creds.accessToken);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   Future<void> setToken(String token) async {

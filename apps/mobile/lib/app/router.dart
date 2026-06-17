@@ -36,7 +36,25 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
-      // Auth guard disabled for testing
+      final auth = ref.read(authStateProvider);
+      final loc = state.matchedLocation;
+      const authRoutes = {'/login', '/role-select', '/profile-setup', '/splash'};
+      final loggingIn = authRoutes.contains(loc);
+
+      if (auth.status == AuthStatus.initial || auth.status == AuthStatus.loading) {
+        return loc == '/splash' ? null : '/splash';
+      }
+      if (auth.status == AuthStatus.unauthenticated) {
+        return loggingIn ? null : '/login';
+      }
+      // authenticated
+      final user = auth.user;
+      if (user != null && (user.role.isEmpty)) {
+        return loc == '/role-select' ? null : '/role-select';
+      }
+      final isOwner = user?.isGymOwner ?? false;
+      if (!isOwner && loc.startsWith('/owner')) return '/';
+      if (loggingIn) return isOwner ? '/owner/dashboard' : '/';
       return null;
     },
     routes: [

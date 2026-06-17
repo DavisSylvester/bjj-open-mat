@@ -3,18 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
+import '../../open_mats/data/session_repository.dart';
 import '../../open_mats/models/open_mat.dart';
 
-final ownerSessionsProvider = FutureProvider<List<OpenMat>>((ref) async {
-  final api = ref.read(apiClientProvider);
-  final response = await api.get(Endpoints.openMats);
-  final raw = response.data['data'];
-  final List data = raw is List ? raw : (raw is Map ? (raw['items'] as List? ?? []) : []);
-  return data.map((e) => OpenMat.fromJson(e as Map<String, dynamic>)).toList();
+final mySessionsProvider = FutureProvider<List<OpenMat>>((ref) async {
+  return ref.read(sessionRepositoryProvider).listMine();
 });
 
 class SessionMgmtScreen extends ConsumerWidget {
@@ -22,15 +17,15 @@ class SessionMgmtScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sessionsAsync = ref.watch(ownerSessionsProvider);
+    final sessionsAsync = ref.watch(mySessionsProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sessions')),
       body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(ownerSessionsProvider),
+        onRefresh: () async => ref.invalidate(mySessionsProvider),
         child: sessionsAsync.when(
           loading: () => const ShimmerList(),
-          error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(ownerSessionsProvider)),
+          error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(mySessionsProvider)),
           data: (sessions) {
             if (sessions.isEmpty) return const EmptyState(title: 'No sessions', subtitle: 'Create your first open mat', icon: Icons.event);
             return ListView.builder(

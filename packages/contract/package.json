@@ -8,7 +8,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "echo \"(no lint configured yet)\"",
+    "lint": "eslint src",
     "test": "echo \"(no contract tests yet)\""
   },
   "dependencies": {

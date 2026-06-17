@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
+import '../../gyms/models/gym.dart';
+import '../../open_mats/data/session_repository.dart';
+import '../../open_mats/data/session_requests.dart';
+import 'my_gyms_screen.dart';
+import 'session_mgmt_screen.dart';
 
 class CreateSessionScreen extends ConsumerStatefulWidget {
   const CreateSessionScreen({super.key});
@@ -23,6 +29,57 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   final _capCtrl = TextEditingController();
   final _notesCtrl = TextEditingController(text: 'Visitors welcome. Bring both gi and rashguard.');
   bool _submitted = false;
+  bool _saving = false;
+  String? _error;
+  String? _gymId;
+
+  static const _expToSkill = {'all': 'all', 'beg': 'beginner', 'int': 'intermediate', 'adv': 'advanced'};
+
+  String _hhmm(TimeOfDay t) => '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+  String _title() {
+    final gi = _giType == 'gi' ? 'Gi' : _giType == 'nogi' ? 'No-Gi' : 'Gi & No-Gi';
+    return '$gi Open Mat';
+  }
+
+  Future<void> _submit() async {
+    if (_gymId == null || _saving) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      final fee = _isFree ? 0 : ((int.tryParse(_feeCtrl.text.trim()) ?? 0) * 100);
+      await ref.read(sessionRepositoryProvider).create(CreateSessionRequest(
+            gymId: _gymId!,
+            title: _title(),
+            startTime: _hhmm(_startTime),
+            endTime: _hhmm(_endTime),
+            isRecurring: _isRecurring,
+            dayOfWeek: _isRecurring ? _selectedDate.weekday % 7 : null,
+            specificDate: _isRecurring ? null : _selectedDate.toIso8601String().split('T').first,
+            giType: _giType,
+            skillLevel: _expToSkill[_expLevel] ?? 'all',
+            feeCents: fee,
+            maxParticipants: int.tryParse(_capCtrl.text.trim()),
+            description: _notesCtrl.text.trim(),
+          ));
+      ref.invalidate(mySessionsProvider);
+      if (mounted) {
+        setState(() {
+          _saving = false;
+          _submitted = true;
+        });
+      }
+    } on ApiException catch (e) {
+      if (mounted) {
+        setState(() {
+          _saving = false;
+          _error = e.message;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -70,6 +127,11 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
+    final gymsAsync = ref.watch(myGymsProvider);
+    final gyms = gymsAsync.asData?.value ?? const <Gym>[];
+    if (_gymId == null && gyms.isNotEmpty) {
+      _gymId = gyms.first.id;
+    }
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -82,7 +144,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildPostingAs(t),
+                    _buildPostingAs(t, gyms),
                     const SizedBox(height: 12),
                     _buildQuotaWarning(t),
                     const SizedBox(height: 16),
@@ -125,7 +187,13 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
                   stops: const [0, 0.35],
                 ),
               ),
-              child: _buildSubmitButton(context, t),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                if (_error != null) ...[
+                  Text(_error!, style: t.miniStyle.copyWith(color: t.red, fontSize: 12)),
+                  const SizedBox(height: 8),
+                ],
+                _buildSubmitButton(context, t),
+              ]),
             ),
           ),
           if (_submitted)
@@ -166,35 +234,83 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
     );
   }
 
-  Widget _buildPostingAs(AppTokens t) {
+  Widget _buildPostingAs(AppTokens t, List<Gym> gyms) {
+    if (gyms.isEmpty) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('POSTING AS', style: t.labelStyle),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.border),
+          ),
+          child: Row(children: [
+            Icon(LucideIcons.store, size: 18, color: t.muted),
+            const SizedBox(width: 12),
+            Expanded(child: Text('Add a gym first', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14, color: t.muted))),
+          ]),
+        ),
+      ]);
+    }
+    final selected = gyms.firstWhere((g) => g.id == _gymId, orElse: () => gyms.first);
+    final initial = selected.name.trim().isNotEmpty ? selected.name.trim()[0].toUpperCase() : 'G';
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('POSTING AS', style: t.labelStyle),
       const SizedBox(height: 6),
-      Container(
-        padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
-        decoration: BoxDecoration(
-          color: t.surface,
-          borderRadius: BorderRadius.circular(t.cardRadius),
-          border: Border.all(color: t.border),
-        ),
-        child: Row(children: [
-          Container(
-            width: 38, height: 38,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [t.gi, t.both]),
-              borderRadius: BorderRadius.circular(t.badgeRadius + 4),
-            ),
-            child: Center(child: Text('A', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16))),
+      GestureDetector(
+        onTap: gyms.length > 1 ? () => _pickGym(t, gyms) : null,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.cardRadius),
+            border: Border.all(color: t.border),
           ),
-          const SizedBox(width: 12),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Atos HQ — San Diego', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
-            Text('3 gyms managed · tap to switch', style: t.miniStyle.copyWith(fontSize: 11, color: t.muted)),
-          ])),
-          Icon(LucideIcons.chevronsUpDown, size: 16, color: t.muted),
-        ]),
+          child: Row(children: [
+            Container(
+              width: 38, height: 38,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [t.gi, t.both]),
+                borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+              ),
+              child: Center(child: Text(initial, style: t.h2Style.copyWith(color: Colors.white, fontSize: 16))),
+            ),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(selected.name, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
+              Text(
+                gyms.length > 1 ? '${gyms.length} gyms managed · tap to switch' : selected.address,
+                style: t.miniStyle.copyWith(fontSize: 11, color: t.muted),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ])),
+            if (gyms.length > 1) Icon(LucideIcons.chevronsUpDown, size: 16, color: t.muted),
+          ]),
+        ),
       ),
     ]);
+  }
+
+  Future<void> _pickGym(AppTokens t, List<Gym> gyms) async {
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: t.surface,
+      builder: (ctx) => SafeArea(
+        child: Column(mainAxisSize: MainAxisSize.min, children: gyms.map((g) {
+          return ListTile(
+            leading: Icon(LucideIcons.store, size: 18, color: g.id == _gymId ? t.gi : t.muted),
+            title: Text(g.name, style: t.bodyStyle),
+            subtitle: Text(g.address, style: t.miniStyle.copyWith(fontSize: 11, color: t.muted)),
+            trailing: g.id == _gymId ? Icon(LucideIcons.check, size: 16, color: t.gi) : null,
+            onTap: () => Navigator.of(ctx).pop(g.id),
+          );
+        }).toList()),
+      ),
+    );
+    if (picked != null) setState(() => _gymId = picked);
   }
 
   Widget _buildQuotaWarning(AppTokens t) {
@@ -504,19 +620,28 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   }
 
   Widget _buildSubmitButton(BuildContext context, AppTokens t) {
+    final enabled = _gymId != null && !_saving;
     return GestureDetector(
-      onTap: () => setState(() => _submitted = true),
+      onTap: enabled ? _submit : null,
       child: Container(
         width: double.infinity, height: 54,
         decoration: BoxDecoration(
-          color: t.gi,
+          color: enabled ? t.gi : t.border,
           borderRadius: BorderRadius.circular(t.cardRadius + 2),
-          boxShadow: [BoxShadow(color: t.gi.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))],
+          boxShadow: enabled
+              ? [BoxShadow(color: t.gi.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))]
+              : null,
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Icon(LucideIcons.plus, size: 18, color: Colors.white),
+          if (_saving)
+            const SizedBox(
+              width: 18, height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(Colors.white)),
+            )
+          else
+            const Icon(LucideIcons.plus, size: 18, color: Colors.white),
           const SizedBox(width: 9),
-          Text('Post Session', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
+          Text(_saving ? 'Posting…' : 'Post Session', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
         ]),
       ),
     );

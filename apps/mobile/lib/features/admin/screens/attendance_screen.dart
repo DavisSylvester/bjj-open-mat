@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
+import '../../checkins/data/attendance_repository.dart';
 import '../../checkins/models/checkin.dart';
 
 final attendanceProvider = FutureProvider.family<List<CheckIn>, AttendanceQuery>((ref, query) async {
-  final api = ref.read(apiClientProvider);
-  final response = await api.get(Endpoints.openMatCheckins(query.sessionId), queryParameters: {'date': query.date});
-  final raw = response.data['data'];
-  final List data = raw is List ? raw : (raw is Map ? (raw['items'] as List? ?? []) : []);
-  return data.map((e) => CheckIn.fromJson(e as Map<String, dynamic>)).toList();
+  return ref.read(attendanceRepositoryProvider).forSession(query.sessionId, date: query.date);
 });
 
 class AttendanceQuery {

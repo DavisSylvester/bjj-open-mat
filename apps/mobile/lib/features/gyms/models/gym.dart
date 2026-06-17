@@ -14,6 +14,7 @@ class Gym {
   final String? website;
   final List<String> amenities;
   final bool isVerified;
+  final double? rating;
   final double? distanceKm;
   final String? createdAt;
 
@@ -33,15 +34,16 @@ class Gym {
     this.website,
     this.amenities = const [],
     this.isVerified = false,
+    this.rating,
     this.distanceKm,
     this.createdAt,
   });
 
   factory Gym.fromJson(Map<String, dynamic> json) {
     GeoLocation? loc;
-    if (json['location'] != null && json['location']['coordinates'] != null) {
-      final coords = json['location']['coordinates'] as List;
-      loc = GeoLocation(lng: (coords[0] as num).toDouble(), lat: (coords[1] as num).toDouble());
+    final rawLoc = json['location'];
+    if (rawLoc is Map && rawLoc['lat'] != null && rawLoc['lng'] != null) {
+      loc = GeoLocation(lat: (rawLoc['lat'] as num).toDouble(), lng: (rawLoc['lng'] as num).toDouble());
     }
 
     return Gym(
@@ -60,6 +62,7 @@ class Gym {
       website: json['website'] as String?,
       amenities: (json['amenities'] as List?)?.cast<String>() ?? [],
       isVerified: json['isVerified'] as bool? ?? false,
+      rating: (json['rating'] as num?)?.toDouble(),
       distanceKm: (json['distanceKm'] as num?)?.toDouble(),
       createdAt: json['createdAt'] as String?,
     );

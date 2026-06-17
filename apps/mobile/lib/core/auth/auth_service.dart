@@ -87,61 +87,37 @@ class UserProfile {
 }
 
 class AuthStateNotifier extends Notifier<AuthState> {
-  static const _devUser = UserProfile(
-    id: 'test-user-001',
-    email: 'davis@test.com',
-    displayName: 'Davis S',
-    role: 'gym_owner',
-    beltRank: 'purple',
-    bio: 'Purple belt, 8 years training. Gym owner & practitioner.',
-  );
-
   @override
-  AuthState build() => const AuthState(status: AuthStatus.authenticated, user: _devUser);
+  AuthState build() {
+    _bootstrap();
+    return const AuthState(status: AuthStatus.initial);
+  }
+
+  Future<void> _bootstrap() async => checkAuth();
 
   AuthService get _authService => ref.read(authServiceProvider);
 
   Future<void> checkAuth() async {
     state = state.copyWith(status: AuthStatus.loading);
-
-    // Dev mode: auto-authenticate with test user (no token needed)
-    const devMode = bool.fromEnvironment('DEV_MODE', defaultValue: true);
-    if (devMode) {
-      try {
-        final user = await _authService.getOrCreateProfile();
-        if (user != null) {
-          state = state.copyWith(status: AuthStatus.authenticated, user: user);
-          return;
-        }
-      } catch (_) {
-        // Fall through to dev user
-      }
-      // Fallback dev user if API is unreachable
-      state = state.copyWith(
-        status: AuthStatus.authenticated,
-        user: const UserProfile(
-          id: 'test-user-001',
-          email: 'davis@test.com',
-          displayName: 'Davis S',
-          role: 'gym_owner',
-          beltRank: 'purple',
-          bio: 'Purple belt, 8 years training. Gym owner.',
-        ),
-      );
+    final token = await _authService.getStoredToken();
+    if (token == null) {
+      state = const AuthState(status: AuthStatus.unauthenticated);
       return;
     }
-
-    final token = await _authService.getStoredToken();
-    if (token != null) {
-      try {
-        final user = await _authService.getOrCreateProfile();
-        state = state.copyWith(status: AuthStatus.authenticated, user: user);
-      } catch (_) {
-        state = state.copyWith(status: AuthStatus.unauthenticated);
-      }
-    } else {
-      state = state.copyWith(status: AuthStatus.unauthenticated);
+    try {
+      await _authService.applyStoredToken();
+      final user = await _authService.getOrCreateProfile();
+      state = user != null
+          ? AuthState(status: AuthStatus.authenticated, user: user)
+          : const AuthState(status: AuthStatus.unauthenticated);
+    } catch (_) {
+      state = const AuthState(status: AuthStatus.unauthenticated);
     }
+  }
+
+  Future<void> setRole(String role) async {
+    final updated = await _authService.updateProfile({'role': role});
+    if (updated != null) state = state.copyWith(user: updated);
   }
 
   Future<void> loginWithGoogle() async => _socialLogin('google-oauth2');
@@ -230,5 +206,10 @@ class AuthService {
 
   Future<String?> getStoredToken() async {
     return _storage.read(key: 'access_token');
+  }
+
+  Future<void> applyStoredToken() async {
+    final token = await _storage.read(key: 'access_token');
+    if (token != null) await apiClient.setToken(token);
   }
 }

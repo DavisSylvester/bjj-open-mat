@@ -11,9 +11,9 @@ class OpenMat {
   final String? specificDate;
   final int? maxParticipants;
   final String skillLevel;
-  final bool isGiSession;
+  final String giType; // gi | nogi | both
   final bool isCancelled;
-  final int? checkinCount;
+  final int? attendeeCount;
   final String? gymName;
   final double? distanceKm;
   final String? createdAt;
@@ -31,9 +31,9 @@ class OpenMat {
     this.specificDate,
     this.maxParticipants,
     this.skillLevel = 'all',
-    this.isGiSession = false,
+    this.giType = 'both',
     this.isCancelled = false,
-    this.checkinCount,
+    this.attendeeCount,
     this.gymName,
     this.distanceKm,
     this.createdAt,
@@ -53,9 +53,9 @@ class OpenMat {
       specificDate: json['specificDate'] as String?,
       maxParticipants: json['maxParticipants'] as int?,
       skillLevel: json['skillLevel'] as String? ?? 'all',
-      isGiSession: json['isGiSession'] as bool? ?? false,
+      giType: json['giType'] as String? ?? 'both',
       isCancelled: json['isCancelled'] as bool? ?? false,
-      checkinCount: json['checkinCount'] as int?,
+      attendeeCount: json['attendeeCount'] as int?,
       gymName: json['gymName'] as String?,
       distanceKm: (json['distanceKm'] as num?)?.toDouble(),
       createdAt: json['createdAt'] as String?,
@@ -71,7 +71,13 @@ class OpenMat {
     }
   }
 
-  String get giBadge => isGiSession ? 'Gi' : 'No-Gi';
+  String get giBadge {
+    switch (giType) {
+      case 'gi': return 'Gi';
+      case 'nogi': return 'No-Gi';
+      default: return 'Gi & No-Gi';
+    }
+  }
 
   String get dayName {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

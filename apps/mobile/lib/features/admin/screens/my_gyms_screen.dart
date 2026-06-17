@@ -3,18 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
-import '../../../core/api/api_client.dart';
-import '../../../core/api/endpoints.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
+import '../../gyms/data/gym_repository.dart';
 import '../../gyms/models/gym.dart';
 
 final myGymsProvider = FutureProvider<List<Gym>>((ref) async {
-  final api = ref.read(apiClientProvider);
-  final response = await api.get(Endpoints.gyms);
-  final raw = response.data['data'];
-  final List data = raw is List ? raw : (raw is Map ? (raw['items'] as List? ?? []) : []);
-  return data.map((e) => Gym.fromJson(e as Map<String, dynamic>)).toList();
+  return ref.read(gymRepositoryProvider).listMine();
 });
 
 class MyGymsScreen extends ConsumerWidget {

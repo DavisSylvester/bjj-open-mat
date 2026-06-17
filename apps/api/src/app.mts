@@ -1,17 +1,33 @@
 import { Elysia } from "elysia";
-import { createContainer } from "./container.mts";
+import type { Container } from "./container.mts";
+import { logger } from "./config/logger.mts";
+import { registerErrorHandler } from "./http/error-handler.mts";
 import { buildOpenApiDocument } from "./openapi.mts";
+import { checkInRoutes } from "./routes/check-in.routes.mts";
+import { favoriteRoutes } from "./routes/favorite.routes.mts";
+import { gymRoutes } from "./routes/gym.routes.mts";
 import { healthRoutes } from "./routes/health.routes.mts";
+import { notificationRoutes } from "./routes/notification.routes.mts";
 import { openMatRoutes } from "./routes/open-mat.routes.mts";
+import { userRoutes } from "./routes/user.routes.mts";
 
-// Builds the Elysia application graph. Pure (no .listen), so tests can boot it
-// on an ephemeral port. Return type is inferred — Elysia encodes the route map
-// in its generics, so a bare `: Elysia` annotation would discard it.
-export function buildApp() {
-  const container = createContainer();
+// The auth plugin (identity resolve + requireAuth/requireOwner macros) is applied
+// inside each route module. Elysia encapsulates a plugin's macros and resolve by
+// default, so a single top-level `.use(authPlugin())` would not propagate them to
+// the separately-constructed route-module instances. Applying it per module keeps
+// the macros and `identity` in scope where they are consumed (and the shared
+// `name: "auth"` lets Elysia dedupe the instance at runtime).
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function buildApp(container: Container) {
+  const base = registerErrorHandler(new Elysia(), logger);
 
-  return new Elysia()
+  return base
     .get("/openapi.json", () => buildOpenApiDocument())
-    .use(healthRoutes)
-    .use(openMatRoutes(container));
+    .use(healthRoutes(container.db))
+    .use(userRoutes(container))
+    .use(gymRoutes(container))
+    .use(openMatRoutes(container))
+    .use(checkInRoutes(container))
+    .use(favoriteRoutes(container))
+    .use(notificationRoutes(container));
 }

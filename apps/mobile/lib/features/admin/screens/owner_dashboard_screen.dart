@@ -3,6 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+import '../../gyms/data/gym_repository.dart';
+import '../../open_mats/data/session_repository.dart';
+
+final ownerStatsProvider = FutureProvider<({int gyms, int sessions})>((ref) async {
+  final gyms = await ref.read(gymRepositoryProvider).listMine();
+  final sessions = await ref.read(sessionRepositoryProvider).listMine();
+  return (gyms: gyms.length, sessions: sessions.length);
+});
 
 class OwnerDashboardScreen extends ConsumerWidget {
   const OwnerDashboardScreen({super.key});
@@ -10,6 +18,9 @@ class OwnerDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
+    final statsAsync = ref.watch(ownerStatsProvider);
+    final gymsValue = statsAsync.maybeWhen(data: (s) => '${s.gyms}', orElse: () => '--');
+    final sessionsValue = statsAsync.maybeWhen(data: (s) => '${s.sessions}', orElse: () => '--');
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -36,10 +47,10 @@ class OwnerDashboardScreen extends ConsumerWidget {
               children: [
                 // Stat row
                 Row(children: [
-                  _StatCard(t: t, icon: LucideIcons.store, label: 'My Gyms', value: '--', accent: t.gi,
+                  _StatCard(t: t, icon: LucideIcons.store, label: 'My Gyms', value: gymsValue, accent: t.gi,
                       onTap: () => context.go('/owner/gyms')),
                   const SizedBox(width: 10),
-                  _StatCard(t: t, icon: LucideIcons.calendar, label: 'Sessions', value: '--', accent: t.red,
+                  _StatCard(t: t, icon: LucideIcons.calendar, label: 'Sessions', value: sessionsValue, accent: t.red,
                       onTap: () => context.go('/owner/sessions')),
                 ]),
                 const SizedBox(height: 10),

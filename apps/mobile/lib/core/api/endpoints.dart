@@ -31,5 +31,5 @@ class Endpoints {
   static const String myFavorites = '/api/v1/users/me/favorites';
 
   // Health
-  static const String health = '/healthz';
+  static const String health = '/health';
 }
