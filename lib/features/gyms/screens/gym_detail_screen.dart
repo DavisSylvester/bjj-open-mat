@@ -140,7 +140,7 @@ class _GlassGymDetail extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft, end: Alignment.bottomRight,
-                    colors: [t.gi.withValues(alpha: 0.5), t.green.withValues(alpha: 0.3)],
+                    colors: [t.primary, t.both],
                   ),
                 ),
               ),
@@ -182,9 +182,10 @@ class _GlassGymDetail extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: t.surface,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(t.cardRadius),
                 border: Border.all(color: t.border),
+                boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
               ),
               child: Text(
                 'World-class BJJ facility with 4 mat rooms, strength & conditioning area, and pro shop. Home to multiple world champions.',
@@ -211,9 +212,9 @@ class _Pill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(t.cardRadius),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        color: color.withValues(alpha: 0.09),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: color.withValues(alpha: 0.33)),
       ),
       child: Text(label, style: t.miniStyle.copyWith(color: color, fontSize: 11)),
     );
