@@ -38,7 +38,7 @@ class UserProfile {
   final String? auth0Id;
   final String email;
   final String displayName;
-  final String role;
+  final String? role;
   final String? beltRank;
   final String? weight;
   final String? bio;
@@ -50,7 +50,7 @@ class UserProfile {
     this.auth0Id,
     required this.email,
     required this.displayName,
-    required this.role,
+    this.role,
     this.beltRank,
     this.weight,
     this.bio,
@@ -64,7 +64,7 @@ class UserProfile {
       auth0Id: json['auth0Id'] as String?,
       email: json['email'] as String? ?? '',
       displayName: json['displayName'] as String? ?? '',
-      role: json['role'] as String? ?? 'practitioner',
+      role: json['role'] as String?,
       beltRank: json['beltRank'] as String?,
       weight: json['weight'] as String?,
       bio: json['bio'] as String?,

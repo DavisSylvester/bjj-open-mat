@@ -15,11 +15,10 @@ class LoginScreen extends ConsumerWidget {
 
     ref.listen(authStateProvider, (prev, next) {
       if (next.status == AuthStatus.authenticated) {
-        final isOwner = next.user?.isGymOwner ?? false;
-        if (next.user?.displayName.isEmpty ?? true) {
+        if (next.user?.role == null || (next.user?.role?.isEmpty ?? true)) {
           context.go('/role-select');
         } else {
-          context.go(isOwner ? '/owner/dashboard' : '/');
+          context.go((next.user?.isGymOwner ?? false) ? '/owner/dashboard' : '/');
         }
       }
     });

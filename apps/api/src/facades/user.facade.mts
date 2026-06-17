@@ -16,7 +16,6 @@ export class UserFacade {
       id: identity.userId,
       email: identity.email,
       displayName: identity.email.split("@")[0] ?? identity.userId,
-      role: identity.role,
       settings: DEFAULT_SETTINGS,
       createdAt: new Date().toISOString(),
     });

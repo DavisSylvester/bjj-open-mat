@@ -48,7 +48,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     }),
     roleLookup: async (userId: string): Promise<UserRole | null> => {
       const user = await userRepo.findById(userId);
-      return user ? user.role : null;
+      return user?.role ?? null;
     },
     userFacade: new UserFacade(userRepo),
     gymFacade: new GymFacade(gymRepo, favoriteRepo, id),

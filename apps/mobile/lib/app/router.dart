@@ -49,7 +49,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
       // authenticated
       final user = auth.user;
-      if (user != null && (user.role.isEmpty)) {
+      if (user != null && (user.role == null || user.role!.isEmpty)) {
         return loc == '/role-select' ? null : '/role-select';
       }
       final isOwner = user?.isGymOwner ?? false;
