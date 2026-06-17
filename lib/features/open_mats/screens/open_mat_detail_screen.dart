@@ -161,7 +161,7 @@ class _GlassDetail extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft, end: Alignment.bottomRight,
-                    colors: [t.gi.withValues(alpha: 0.6), t.both.withValues(alpha: 0.4)],
+                    colors: [t.primary, t.both],
                   ),
                 ),
               ),
@@ -198,9 +198,10 @@ class _GlassDetail extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: t.surface,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(t.cardRadius),
                 border: Border.all(color: t.border),
+                boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
               ),
               child: Text(
                 'World-class facility with multiple mat rooms. Open mat runs Saturday & Sunday. All skill levels welcome.',
@@ -213,9 +214,10 @@ class _GlassDetail extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: t.surface,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(t.cardRadius),
                 border: Border.all(color: t.border),
+                boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
               ),
               child: Column(children: [
                 StatBar(label: 'Experience Mix', value: 4.2, color: t.gi),
@@ -233,7 +235,7 @@ class _GlassDetail extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: t.red,
+              backgroundColor: t.primary,
               minimumSize: const Size.fromHeight(54),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
             ),
@@ -258,9 +260,10 @@ class _InfoCard extends StatelessWidget {
     return Expanded(child: Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: t.surface,
-        borderRadius: BorderRadius.circular(t.cardRadius),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: t.border),
+        boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
       ),
       child: Column(children: [
         Icon(icon, size: 18, color: t.muted),
