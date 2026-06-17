@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../../shared/widgets/score_cell.dart';
@@ -129,39 +128,48 @@ class _GlassTraining extends StatelessWidget {
         child: Column(children: [
           // Header
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(children: [
-              Icon(LucideIcons.calendar, color: t.muted, size: 20),
-              const SizedBox(width: 8),
-              Text('My Training', style: t.h1Style),
-            ]),
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('YOUR PROGRESS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
+                const SizedBox(height: 3),
+                Text('My Training', style: t.h1Style),
+              ],
+            ),
           ),
-          // Stat pills
+          // Stat strip card
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: Row(children: [
-              _GlassStatPill(label: '47 Mats', t: t),
-              const SizedBox(width: 8),
-              _GlassStatPill(label: '94 Hours', t: t),
-              const SizedBox(width: 8),
-              _GlassStatPill(label: '7 wk Streak', t: t),
-              const SizedBox(width: 8),
-              _GlassStatPill(label: '8 Gyms', t: t),
-            ]),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: t.border),
+                boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+              ),
+              child: Row(children: [
+                _TrainingStatCell(label: 'Mats', value: '47', t: t, borderRight: true),
+                _TrainingStatCell(label: 'Hours', value: '94', t: t, borderRight: true),
+                _TrainingStatCell(label: 'Streak', value: '7', t: t, borderRight: true),
+                _TrainingStatCell(label: 'Gyms', value: '8', t: t, borderRight: false),
+              ]),
+            ),
           ),
-          // Section label
+          // Section header
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-            child: Row(children: [
-              Text('My Sessions', style: t.h2Style),
-            ]),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Session History', style: t.h2Style),
+            ),
           ),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
               itemCount: _stubSessions.length,
               itemBuilder: (_, i) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: SessionRow(session: _stubSessions[i]),
               ),
             ),
@@ -172,21 +180,27 @@ class _GlassTraining extends StatelessWidget {
   }
 }
 
-class _GlassStatPill extends StatelessWidget {
+class _TrainingStatCell extends StatelessWidget {
   final String label;
+  final String value;
   final AppTokens t;
-  const _GlassStatPill({required this.label, required this.t});
+  final bool borderRight;
+  const _TrainingStatCell({required this.label, required this.value, required this.t, required this.borderRight});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: t.surfaceHi,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: t.border),
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          border: borderRight ? Border(right: BorderSide(color: t.border)) : null,
+        ),
+        child: Column(children: [
+          Text(value, style: t.numStyle.copyWith(fontSize: 20, color: t.text)),
+          const SizedBox(height: 3),
+          Text(label, style: t.miniStyle.copyWith(fontSize: 9, color: t.muted)),
+        ]),
       ),
-      child: Text(label, style: t.miniStyle.copyWith(fontSize: 11)),
     );
   }
 }
