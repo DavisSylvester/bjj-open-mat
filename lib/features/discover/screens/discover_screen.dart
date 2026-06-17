@@ -110,89 +110,165 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   Widget _buildGlass(AppTokens t) {
     return Scaffold(
       backgroundColor: t.bg,
-      body: Stack(children: [
-        Container(
-          decoration: const BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment(-0.64, -0.84),
-              radius: 1.0,
-              colors: [Color(0x38E94560), Colors.transparent],
-            ),
-          ),
-        ),
-        Positioned(
-          top: 0, left: 0, right: 0,
-          height: MediaQuery.of(context).size.height * 0.45,
-          child: Container(
-            color: const Color(0xFFDDE8F0),
-            child: CustomPaint(painter: _LightMapPainter(), size: Size.infinite),
-          ),
-        ),
-        SafeArea(
-          child: Column(children: [
+      body: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Greeting header
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Row(children: [
-                Text('Open Mat', style: t.h1Style.copyWith(fontSize: 26)),
-                const Spacer(),
-                Icon(LucideIcons.bell, size: 20, color: t.muted),
-                const SizedBox(width: 12),
-                Icon(LucideIcons.search, size: 20, color: t.muted),
-              ]),
-            ),
-            Expanded(
-              child: DraggableScrollableSheet(
-                initialChildSize: 0.56,
-                minChildSize: 0.3,
-                maxChildSize: 0.9,
-                snap: true,
-                builder: (context, ctrl) => Container(
-                  decoration: BoxDecoration(
-                    color: t.surface,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                    border: Border.all(color: t.border),
-                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 24)],
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Good evening, Mateo', style: t.miniStyle.copyWith(color: t.muted, fontSize: 13)),
+                        const SizedBox(height: 2),
+                        Text('Find your roll', style: t.h1Style.copyWith(fontSize: 26)),
+                      ],
+                    ),
                   ),
-                  child: Column(children: [
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        width: 36, height: 4,
-                        decoration: BoxDecoration(
-                          color: t.muted.withValues(alpha: 0.4),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [t.primary, t.both],
                       ),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      child: Row(children: [
-                        _FilterChip(label: 'Today', active: _filter == 'today', onTap: () => setState(() => _filter = 'today'), t: t),
-                        const SizedBox(width: 8),
-                        _FilterChip(label: 'This Week', active: _filter == 'week', onTap: () => setState(() => _filter = 'week'), t: t),
-                        const SizedBox(width: 8),
-                        _FilterChip(label: 'Gi', active: false, onTap: () {}, t: t),
-                        const SizedBox(width: 8),
-                        _FilterChip(label: 'No-Gi', active: false, onTap: () {}, t: t),
-                      ]),
+                    child: Center(child: Text('MR', style: t.miniStyle.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800))),
+                  ),
+                ],
+              ),
+            ),
+            // Search bar row
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
+              child: Row(children: [
+                Expanded(
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: t.panel,
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    Expanded(
-                      child: ListView.separated(
-                        controller: ctrl,
-                        itemCount: _stubSessions.length,
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                        separatorBuilder: (context, index) => const SizedBox(height: 10),
-                        itemBuilder: (_, i) => SessionRow(session: _stubSessions[i]),
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: Row(children: [
+                      Icon(LucideIcons.search, size: 18, color: t.muted),
+                      const SizedBox(width: 10),
+                      Text('Search gyms or area', style: t.bodyStyle.copyWith(color: t.muted, fontSize: 14)),
+                    ]),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: t.primary,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(color: t.primary.withValues(alpha: 0.27), blurRadius: 16, offset: const Offset(0, 6)),
+                    ],
+                  ),
+                  child: const Icon(LucideIcons.sliders, size: 20, color: Colors.white),
+                ),
+              ]),
+            ),
+            // Map card
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: t.border),
+                  boxShadow: [
+                    BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.04), blurRadius: 2, offset: const Offset(0, 1)),
+                    BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4)),
+                  ],
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: SizedBox(
+                  height: 188,
+                  child: Stack(children: [
+                    Positioned.fill(child: CustomPaint(painter: _MnMapPainter())),
+                    Positioned(
+                      left: 14,
+                      bottom: 14,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.92),
+                          borderRadius: BorderRadius.circular(999),
+                          boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.08), blurRadius: 8)],
+                        ),
+                        child: Row(children: [
+                          Container(width: 8, height: 8, decoration: BoxDecoration(color: t.green, shape: BoxShape.circle)),
+                          const SizedBox(width: 7),
+                          Text('18 mats open near you', style: t.miniStyle.copyWith(color: t.text, fontSize: 13, fontWeight: FontWeight.w700)),
+                        ]),
+                      ),
+                    ),
+                    Positioned(
+                      right: 14,
+                      bottom: 14,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.95),
+                          borderRadius: BorderRadius.circular(13),
+                          boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.08), blurRadius: 8)],
+                        ),
+                        child: Icon(LucideIcons.locateFixed, size: 18, color: t.primary),
                       ),
                     ),
                   ]),
                 ),
               ),
             ),
-          ]),
+            // Section header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('TONIGHT & TOMORROW', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
+                        const SizedBox(height: 3),
+                        Text('Open Mats', style: t.h2Style),
+                      ],
+                    ),
+                  ),
+                  Text('See all', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 13)),
+                ],
+              ),
+            ),
+            // Horizontal session cards scroll
+            SizedBox(
+              height: 160,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                separatorBuilder: (_, __) => const SizedBox(width: 14),
+                itemCount: _stubSessions.length,
+                itemBuilder: (_, i) => SizedBox(
+                  width: 262,
+                  child: SessionRow(session: _stubSessions[i]),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
-      ]),
+      ),
     );
   }
 }
@@ -270,6 +346,26 @@ class _LightMapPainter extends CustomPainter {
     canvas.drawLine(Offset(-20, size.height * 0.7), Offset(size.width + 20, size.height * 0.6), road);
     canvas.drawLine(Offset(size.width * 0.3, -20), Offset(size.width * 0.28, size.height + 20), road);
     canvas.drawLine(Offset(size.width * 0.65, -20), Offset(size.width * 0.75, size.height + 20), road);
+  }
+
+  @override
+  bool shouldRepaint(_) => false;
+}
+
+class _MnMapPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = const Color(0xFFEEF1F7));
+    final road = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 10;
+    canvas.drawLine(Offset(-20, size.height * 0.27), Offset(size.width + 20, size.height * 0.4), road);
+    canvas.drawLine(Offset(-20, size.height * 0.7), Offset(size.width + 20, size.height * 0.6), road);
+    canvas.drawLine(Offset(size.width * 0.28, -20), Offset(size.width * 0.23, size.height + 20), road..strokeWidth = 8);
+    canvas.drawLine(Offset(size.width * 0.68, -20), Offset(size.width * 0.75, size.height + 20), road..strokeWidth = 10);
+    final block = Paint()..color = const Color(0xFFD7EBDD);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(size.width * 0.1, size.height * 0.45, 70, 60), const Radius.circular(8)), block);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(size.width * 0.75, size.height * 0.67, 70, 80), const Radius.circular(8)), block);
   }
 
   @override
