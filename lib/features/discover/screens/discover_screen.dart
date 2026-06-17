@@ -27,8 +27,6 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  String _filter = 'today';
-
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
@@ -257,7 +255,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                separatorBuilder: (_, __) => const SizedBox(width: 14),
+                separatorBuilder: (_, _) => const SizedBox(width: 14),
                 itemCount: _stubSessions.length,
                 itemBuilder: (_, i) => SizedBox(
                   width: 262,
@@ -294,30 +292,6 @@ class _StatCell extends StatelessWidget {
   }
 }
 
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-  final AppTokens t;
-  const _FilterChip({required this.label, required this.active, required this.onTap, required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: active ? t.red : t.surface,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: active ? t.red : t.border),
-        ),
-        child: Text(label, style: t.miniStyle.copyWith(color: active ? Colors.white : t.text, fontSize: 12)),
-      ),
-    );
-  }
-}
-
 class _GridPainter extends CustomPainter {
   final AppTokens t;
   _GridPainter(this.t);
@@ -330,22 +304,6 @@ class _GridPainter extends CustomPainter {
     final road = Paint()..color = t.border..strokeWidth = 8;
     canvas.drawLine(const Offset(-20, 70), Offset(size.width + 20, 110), road);
     canvas.drawLine(const Offset(-20, 200), Offset(size.width + 20, 170), road);
-  }
-
-  @override
-  bool shouldRepaint(_) => false;
-}
-
-class _LightMapPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bg = Paint()..color = const Color(0xFFE8EFF5);
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bg);
-    final road = Paint()..color = Colors.white..strokeWidth = 8;
-    canvas.drawLine(Offset(-20, size.height * 0.3), Offset(size.width + 20, size.height * 0.45), road);
-    canvas.drawLine(Offset(-20, size.height * 0.7), Offset(size.width + 20, size.height * 0.6), road);
-    canvas.drawLine(Offset(size.width * 0.3, -20), Offset(size.width * 0.28, size.height + 20), road);
-    canvas.drawLine(Offset(size.width * 0.65, -20), Offset(size.width * 0.75, size.height + 20), road);
   }
 
   @override
