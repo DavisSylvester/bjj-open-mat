@@ -36,15 +36,30 @@ class GiBadge extends StatelessWidget {
     }
 
     return Container(
-      padding: padding,
+      padding: EdgeInsets.symmetric(horizontal: small ? 9 : 11, vertical: small ? 3 : 5),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(t.badgeRadius),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        color: color.withValues(alpha: 0.09),
+        borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(
-        label,
-        style: t.miniStyle.copyWith(color: color, fontSize: fontSize),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: small ? 5 : 6,
+            height: small ? 5 : 6,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: t.miniStyle.copyWith(
+              color: color,
+              fontSize: small ? 11 : 12,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.01,
+            ),
+          ),
+        ],
       ),
     );
   }
