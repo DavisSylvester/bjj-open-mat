@@ -12,66 +12,71 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final tabs = [
-      (id: 'home',     icon: LucideIcons.home,     label: t.isSport ? 'Feed'  : 'Discover'),
-      (id: 'search',   icon: LucideIcons.search,   label: t.isSport ? 'Find'  : 'Search'),
-      (id: 'schedule', icon: LucideIcons.calendar, label: t.isSport ? 'Sched' : 'Training'),
+      (id: 'home',     icon: LucideIcons.home,     label: t.isSport ? 'Feed'  : 'Home'),
+      (id: 'search',   icon: LucideIcons.search,   label: t.isSport ? 'Find'  : 'Find'),
+      (id: 'schedule', icon: LucideIcons.calendar, label: t.isSport ? 'Sched' : 'Schedule'),
       (id: 'profile',  icon: LucideIcons.user,     label: t.isSport ? 'Me'    : 'Profile'),
     ];
 
     return Container(
       decoration: BoxDecoration(
-        color: t.bg2,
-        border: Border(top: BorderSide(color: t.borderHi, width: 1)),
+        color: t.bg,
+        border: Border(top: BorderSide(color: t.border, width: 1)),
       ),
       child: SafeArea(
         top: false,
-        child: Row(
-          children: tabs.map((tab) {
-            final on = tab.id == active;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => onTap(tab.id),
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: on && t.isSport ? t.surface : Colors.transparent,
-                    border: on && t.isSport
-                        ? Border(top: BorderSide(color: t.amber, width: 3))
-                        : null,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+          child: Row(
+            children: tabs.map((tab) {
+              final on = tab.id == active;
+              if (t.isSport) {
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => onTap(tab.id),
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: on ? t.surface : Colors.transparent,
+                        border: on ? Border(top: BorderSide(color: t.amber, width: 3)) : null,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(tab.icon, size: 20, color: on ? t.text : t.muted),
+                          const SizedBox(height: 3),
+                          Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.text : t.muted, fontSize: 10)),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (!t.isSport && on)
-                        Container(
-                          width: 4,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: t.red,
-                            shape: BoxShape.circle,
-                          ),
-                          margin: const EdgeInsets.only(bottom: 2),
-                        ),
-                      Icon(
-                        tab.icon,
-                        size: 20,
-                        color: on ? t.text : t.muted,
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        tab.label,
-                        style: t.miniStyle.copyWith(
-                          color: on ? t.text : t.muted,
-                          fontSize: t.isSport ? 10 : 11,
-                        ),
-                      ),
-                    ],
+                );
+              }
+              // Glass / Minimal Vibrant pill style
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => onTap(tab.id),
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: on ? t.primary.withValues(alpha: 0.10) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(tab.icon, size: 22, color: on ? t.primary : t.faint),
+                        const SizedBox(height: 3),
+                        Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.primary : t.faint, fontSize: 10)),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
