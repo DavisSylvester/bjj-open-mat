@@ -59,7 +59,7 @@ class AppTheme {
       brightness: Brightness.light,
       scaffoldBackgroundColor: t.bg,
       colorScheme: ColorScheme.light(
-        primary: t.red,
+        primary: t.primary,
         secondary: t.green,
         surface: t.bg,
         error: t.red,
@@ -67,10 +67,10 @@ class AppTheme {
         onSurface: t.text,
       ),
       extensions: [t],
-      fontFamily: GoogleFonts.barlow().fontFamily,
-      textTheme: GoogleFonts.barlowTextTheme(ThemeData.light().textTheme).copyWith(
-        bodyMedium: GoogleFonts.barlow(color: t.body),
-        bodySmall: GoogleFonts.barlow(color: t.muted),
+      fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
+      textTheme: GoogleFonts.plusJakartaSansTextTheme(ThemeData.light().textTheme).copyWith(
+        bodyMedium: GoogleFonts.plusJakartaSans(color: t.body),
+        bodySmall: GoogleFonts.plusJakartaSans(color: t.muted),
       ),
       cardTheme: CardThemeData(
         color: const Color(0x8CFFFFFF),
