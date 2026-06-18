@@ -89,7 +89,10 @@ class UserProfile {
 class AuthStateNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
-    _bootstrap();
+    // Defer to a microtask so checkAuth() runs AFTER build() returns and the
+    // provider is initialized — reading/setting `state` during build() throws
+    // "Tried to read the state of an uninitialized provider".
+    Future.microtask(_bootstrap);
     return const AuthState(status: AuthStatus.initial);
   }
 
@@ -99,18 +102,20 @@ class AuthStateNotifier extends Notifier<AuthState> {
 
   Future<void> checkAuth() async {
     state = state.copyWith(status: AuthStatus.loading);
-    final token = await _authService.getStoredToken();
-    if (token == null) {
-      state = const AuthState(status: AuthStatus.unauthenticated);
-      return;
-    }
     try {
+      final token = await _authService.getStoredToken();
+      if (token == null) {
+        state = const AuthState(status: AuthStatus.unauthenticated);
+        return;
+      }
       await _authService.applyStoredToken();
       final user = await _authService.getOrCreateProfile();
       state = user != null
           ? AuthState(status: AuthStatus.authenticated, user: user)
           : const AuthState(status: AuthStatus.unauthenticated);
     } catch (_) {
+      // Any failure (e.g. secure storage / Auth0 init on web) -> unauthenticated,
+      // so the app always leaves the splash and lands on /login.
       state = const AuthState(status: AuthStatus.unauthenticated);
     }
   }

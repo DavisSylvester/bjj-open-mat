@@ -1,4 +1,5 @@
 import { Elysia } from "elysia";
+import { cors } from "@elysiajs/cors";
 import type { Container } from "./container.mts";
 import { logger } from "./config/logger.mts";
 import { registerErrorHandler } from "./http/error-handler.mts";
@@ -19,7 +20,7 @@ import { userRoutes } from "./routes/user.routes.mts";
 // `name: "auth"` lets Elysia dedupe the instance at runtime).
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function buildApp(container: Container) {
-  const base = registerErrorHandler(new Elysia(), logger);
+  const base = registerErrorHandler(new Elysia(), logger).use(cors());
 
   return base
     .get("/openapi.json", () => buildOpenApiDocument())
