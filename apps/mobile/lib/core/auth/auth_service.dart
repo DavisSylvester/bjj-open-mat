@@ -1,8 +1,17 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:auth0_flutter/auth0_flutter_web.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../api/api_client.dart';
 import '../api/endpoints.dart';
+
+// Auth0 config (supplied via --dart-define). Domain/clientId/audience are
+// public client values; the audience must match the Auth0 API identifier.
+const String _auth0Domain = String.fromEnvironment('AUTH0_DOMAIN', defaultValue: 'your-tenant.auth0.com');
+const String _auth0ClientId = String.fromEnvironment('AUTH0_CLIENT_ID', defaultValue: 'your-client-id');
+const String _auth0Audience = String.fromEnvironment('AUTH0_AUDIENCE', defaultValue: '');
+const Set<String> _auth0Scopes = {'openid', 'profile', 'email', 'offline_access'};
 
 final authServiceProvider = Provider<AuthService>((ref) {
   final apiClient = ref.read(apiClientProvider);
@@ -103,6 +112,14 @@ class AuthStateNotifier extends Notifier<AuthState> {
   Future<void> checkAuth() async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
+      if (kIsWeb) {
+        // Completes a redirect callback or restores an existing SPA session.
+        final user = await _authService.webOnLoad();
+        state = user != null
+            ? AuthState(status: AuthStatus.authenticated, user: user)
+            : const AuthState(status: AuthStatus.unauthenticated);
+        return;
+      }
       final token = await _authService.getStoredToken();
       if (token == null) {
         state = const AuthState(status: AuthStatus.unauthenticated);
@@ -131,7 +148,10 @@ class AuthStateNotifier extends Notifier<AuthState> {
   Future<void> _socialLogin(String connection) async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
+      // On web this navigates to Auth0 and the page unloads; the session is
+      // completed by checkAuth()/webOnLoad() after the callback redirect.
       final credentials = await _authService.login(connection);
+      if (kIsWeb) return;
       if (credentials != null) {
         final user = await _authService.getOrCreateProfile();
         state = state.copyWith(status: AuthStatus.authenticated, user: user);
@@ -160,29 +180,55 @@ class AuthService {
   final ApiClient apiClient;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  // Replace with your Auth0 domain and client ID
   late final Auth0 _auth0;
+  // Web uses the redirect-based SPA flow (the native webAuthentication channel
+  // is not implemented on web). Null on non-web platforms.
+  Auth0Web? _auth0Web;
 
   AuthService({required this.apiClient}) {
-    _auth0 = Auth0(
-      const String.fromEnvironment('AUTH0_DOMAIN', defaultValue: 'your-tenant.auth0.com'),
-      const String.fromEnvironment('AUTH0_CLIENT_ID', defaultValue: 'your-client-id'),
+    _auth0 = Auth0(_auth0Domain, _auth0ClientId);
+    if (kIsWeb) {
+      _auth0Web = Auth0Web(
+        _auth0Domain,
+        _auth0ClientId,
+        redirectUrl: Uri.base.origin,
+        cacheLocation: CacheLocation.localStorage,
+      );
+    }
+  }
+
+  /// Web only: completes a redirect callback (or restores an existing session),
+  /// returning the profile if authenticated. Call during app load.
+  Future<UserProfile?> webOnLoad() async {
+    final creds = await _auth0Web!.onLoad(
+      audience: _auth0Audience.isEmpty ? null : _auth0Audience,
+      scopes: _auth0Scopes,
     );
+    if (creds == null) return null;
+    await apiClient.setToken(creds.accessToken);
+    return getOrCreateProfile();
   }
 
   Future<Credentials?> login(String connection) async {
-    try {
-      final credentials = await _auth0.webAuthentication().login(
+    if (kIsWeb) {
+      // Navigates the page to Auth0; the flow resumes via webOnLoad() after the
+      // callback redirect. Nothing after this runs (the page unloads).
+      await _auth0Web!.loginWithRedirect(
+        audience: _auth0Audience.isEmpty ? null : _auth0Audience,
+        redirectUrl: Uri.base.origin,
+        scopes: _auth0Scopes,
         parameters: {'connection': connection},
-        scopes: {'openid', 'profile', 'email', 'offline_access'},
       );
-      await _storage.write(key: 'access_token', value: credentials.accessToken);
-      await _storage.write(key: 'refresh_token', value: credentials.refreshToken);
-      await apiClient.setToken(credentials.accessToken);
-      return credentials;
-    } catch (_) {
       return null;
     }
+    final credentials = await _auth0.webAuthentication().login(
+      parameters: {'connection': connection},
+      scopes: _auth0Scopes,
+    );
+    await _storage.write(key: 'access_token', value: credentials.accessToken);
+    await _storage.write(key: 'refresh_token', value: credentials.refreshToken);
+    await apiClient.setToken(credentials.accessToken);
+    return credentials;
   }
 
   Future<UserProfile?> getOrCreateProfile() async {
@@ -204,8 +250,12 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    await _auth0.webAuthentication().logout();
-    await _storage.deleteAll();
+    if (kIsWeb) {
+      await _auth0Web!.logout(returnToUrl: Uri.base.origin);
+    } else {
+      await _auth0.webAuthentication().logout();
+      await _storage.deleteAll();
+    }
     await apiClient.clearToken();
   }
 

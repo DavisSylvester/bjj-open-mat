@@ -1,4 +1,6 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:auth0_flutter/auth0_flutter_web.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,14 +66,21 @@ class ApiClient {
   }
 
   Future<bool> _refreshToken() async {
+    const domain = String.fromEnvironment('AUTH0_DOMAIN');
+    const clientId = String.fromEnvironment('AUTH0_CLIENT_ID');
+    const audience = String.fromEnvironment('AUTH0_AUDIENCE');
     try {
-      final auth0 = Auth0(
-        const String.fromEnvironment('AUTH0_DOMAIN'),
-        const String.fromEnvironment('AUTH0_CLIENT_ID'),
-      );
-      final creds = await auth0.credentialsManager.credentials();
-      await _storage.write(key: 'access_token', value: creds.accessToken);
-      await setToken(creds.accessToken);
+      final String accessToken;
+      if (kIsWeb) {
+        final creds = await Auth0Web(domain, clientId).credentials(
+          audience: audience.isEmpty ? null : audience,
+        );
+        accessToken = creds.accessToken;
+      } else {
+        final creds = await Auth0(domain, clientId).credentialsManager.credentials();
+        accessToken = creds.accessToken;
+      }
+      await setToken(accessToken);
       return true;
     } catch (_) {
       return false;
