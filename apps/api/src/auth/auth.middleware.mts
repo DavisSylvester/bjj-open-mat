@@ -21,7 +21,15 @@ export function authPlugin(verifier: JwtVerifier, roleLookup: RoleLookup) {
   return new Elysia({ name: "auth" })
     .resolve(async ({ headers }): Promise<{ identity: AuthIdentity | null }> => {
       const token = bearer(headers["authorization"]);
-      const verified = await verifier.verify(token);
+      // An invalid/expired token throws in verify(); treat it as unauthenticated
+      // (identity null) so protected routes return 401 — which the client's
+      // refresh-on-401 interceptor relies on — rather than a 500.
+      let verified: AuthIdentity | null;
+      try {
+        verified = await verifier.verify(token);
+      } catch {
+        return { identity: null };
+      }
       if (!verified) return { identity: null };
       const dbRole = await roleLookup(verified.userId);
       return { identity: { ...verified, role: dbRole ?? verified.role } };

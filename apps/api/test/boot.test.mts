@@ -51,6 +51,13 @@ describe("API boot (MongoDB-backed)", () => {
     expect((await fetch(`${base}/api/v1/users/me`)).status).toBe(401);
   });
 
+  it("rejects an invalid/malformed token with 401 (not 500)", async () => {
+    const res = await fetch(`${base}/api/v1/users/me`, {
+      headers: { Authorization: "Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4In0.bad" },
+    });
+    expect(res.status).toBe(401);
+  });
+
   it("runs a full owner flow with the bypass token", async () => {
     // get-or-create the demo user
     const me = await fetch(`${base}/api/v1/auth/me`, { headers: auth });
