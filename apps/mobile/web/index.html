@@ -32,8 +32,9 @@
   <title>bjj_open_mat</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Required by auth0_flutter for web: the Auth0 SPA-JS SDK -->
-  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
+  <!-- Required by auth0_flutter for web: the Auth0 SPA-JS SDK.
+       Loaded synchronously (no defer/async) so window.auth0 exists before Flutter boots. -->
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 </head>
 <body>
   <!--

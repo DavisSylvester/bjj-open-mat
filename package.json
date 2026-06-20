@@ -16,8 +16,9 @@
     "verify": "turbo run type-check lint test",
     "api:dev": "bun run --filter @bjj/api dev",
     "api:start": "bun run --filter @bjj/api start",
-    "mobile:run": "cd apps/mobile && flutter run",
-    "mobile:build": "cd apps/mobile && flutter build web"
+    "mobile:run": "cd apps/mobile && flutter run --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100",
+    "mobile:web": "cd apps/mobile && flutter run -d chrome --web-port=8088 --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100",
+    "mobile:build": "cd apps/mobile && flutter build web --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100"
   },
   "devDependencies": {
     "turbo": "^2.3.3",

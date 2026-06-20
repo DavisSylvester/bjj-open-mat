@@ -20,7 +20,11 @@ import { userRoutes } from "./routes/user.routes.mts";
 // `name: "auth"` lets Elysia dedupe the instance at runtime).
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function buildApp(container: Container) {
-  const base = registerErrorHandler(new Elysia(), logger).use(cors());
+  const base = registerErrorHandler(new Elysia(), logger)
+    .use(cors())
+    .onAfterResponse(({ request, path, set }): void => {
+      logger.info(`${request.method} ${path} -> ${set.status ?? ""}`);
+    });
 
   return base
     .get("/openapi.json", () => buildOpenApiDocument())

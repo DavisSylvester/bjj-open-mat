@@ -31,15 +31,23 @@ class ApiClient {
         return handler.next(options);
       },
       onError: (error, handler) async {
-        if (error.response?.statusCode == 401) {
-          // Token expired — attempt silent refresh
+        final requestOptions = error.requestOptions;
+        // Attempt a single silent refresh + retry on 401. Guard against retrying
+        // more than once, and against retrying with an unchanged token — either
+        // would loop forever when the token is invalid (not merely expired).
+        if (error.response?.statusCode == 401 && requestOptions.extra['retried'] != true) {
+          final oldAuth = requestOptions.headers['Authorization'] as String?;
           final refreshed = await _refreshToken();
-          if (refreshed) {
-            // Retry the original request
-            final token = await _storage.read(key: 'access_token');
-            error.requestOptions.headers['Authorization'] = 'Bearer $token';
-            final response = await _dio.fetch(error.requestOptions);
-            return handler.resolve(response);
+          final newToken = await _storage.read(key: 'access_token');
+          if (refreshed && newToken != null && 'Bearer $newToken' != oldAuth) {
+            requestOptions.extra['retried'] = true;
+            requestOptions.headers['Authorization'] = 'Bearer $newToken';
+            try {
+              final response = await _dio.fetch(requestOptions);
+              return handler.resolve(response);
+            } on DioException catch (retryError) {
+              return handler.next(retryError);
+            }
           }
         }
         return handler.next(error);

@@ -1,6 +1,6 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:auth0_flutter/auth0_flutter_web.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../api/api_client.dart';
@@ -112,6 +112,24 @@ class AuthStateNotifier extends Notifier<AuthState> {
   Future<void> checkAuth() async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
+      // Dev-only bypass (off by default): authenticate as the demo owner using
+      // the API bypass token, skipping Auth0. Enable with
+      // --dart-define=DEV_BYPASS=true --dart-define=AUTH_BYPASS_TOKEN=<secret>.
+      const devBypass = bool.fromEnvironment('DEV_BYPASS');
+      const bypassToken = String.fromEnvironment('AUTH_BYPASS_TOKEN');
+      if (devBypass && bypassToken.isNotEmpty) {
+        await _authService.apiClient.setToken(bypassToken);
+        state = const AuthState(
+          status: AuthStatus.authenticated,
+          user: UserProfile(
+            id: 'u-me',
+            email: 'demo@bjj-open-mat.test',
+            displayName: 'Demo Owner',
+            role: 'gym_owner',
+          ),
+        );
+        return;
+      }
       if (kIsWeb) {
         // Completes a redirect callback or restores an existing SPA session.
         final user = await _authService.webOnLoad();
@@ -130,10 +148,12 @@ class AuthStateNotifier extends Notifier<AuthState> {
       state = user != null
           ? AuthState(status: AuthStatus.authenticated, user: user)
           : const AuthState(status: AuthStatus.unauthenticated);
-    } catch (_) {
-      // Any failure (e.g. secure storage / Auth0 init on web) -> unauthenticated,
-      // so the app always leaves the splash and lands on /login.
-      state = const AuthState(status: AuthStatus.unauthenticated);
+    } catch (e) {
+      // Any failure (e.g. token exchange / secure storage / Auth0 init on web) ->
+      // unauthenticated so the app always leaves the splash and lands on /login,
+      // but keep the reason so the login screen and console can show it.
+      debugPrint('checkAuth failed: $e');
+      state = AuthState(status: AuthStatus.unauthenticated, error: e.toString());
     }
   }
 
@@ -144,8 +164,10 @@ class AuthStateNotifier extends Notifier<AuthState> {
 
   Future<void> loginWithGoogle() async => _socialLogin('google-oauth2');
   Future<void> loginWithApple() async => _socialLogin('apple');
+  // Universal Login (shows the email/password Database form + any social).
+  Future<void> loginWithEmail() async => _socialLogin(null);
 
-  Future<void> _socialLogin(String connection) async {
+  Future<void> _socialLogin(String? connection) async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
       // On web this navigates to Auth0 and the page unloads; the session is
@@ -209,7 +231,11 @@ class AuthService {
     return getOrCreateProfile();
   }
 
-  Future<Credentials?> login(String connection) async {
+  /// [connection] selects a specific Auth0 connection (e.g. "google-oauth2").
+  /// Pass null to show Auth0 Universal Login with all enabled connections
+  /// (including the email/password Database form).
+  Future<Credentials?> login(String? connection) async {
+    final params = connection != null ? {'connection': connection} : const <String, String>{};
     if (kIsWeb) {
       // Navigates the page to Auth0; the flow resumes via webOnLoad() after the
       // callback redirect. Nothing after this runs (the page unloads).
@@ -217,12 +243,12 @@ class AuthService {
         audience: _auth0Audience.isEmpty ? null : _auth0Audience,
         redirectUrl: Uri.base.origin,
         scopes: _auth0Scopes,
-        parameters: {'connection': connection},
+        parameters: params,
       );
       return null;
     }
     final credentials = await _auth0.webAuthentication().login(
-      parameters: {'connection': connection},
+      parameters: params,
       scopes: _auth0Scopes,
     );
     await _storage.write(key: 'access_token', value: credentials.accessToken);

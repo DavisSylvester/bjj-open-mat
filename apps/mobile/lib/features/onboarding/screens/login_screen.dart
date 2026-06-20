@@ -70,6 +70,20 @@ class LoginScreen extends ConsumerWidget {
                   ref.read(authStateProvider.notifier).loginWithApple();
                 },
               ),
+              const SizedBox(height: StitchTokens.md),
+
+              // Email / password (Auth0 Universal Login)
+              _SocialLoginButton(
+                label: 'Continue with email',
+                icon: Icons.mail_outline,
+                backgroundColor: StitchTokens.secondary,
+                foregroundColor: Colors.white,
+                isLoading: isLoading,
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  ref.read(authStateProvider.notifier).loginWithEmail();
+                },
+              ),
 
               if (authState.error != null) ...[
                 const SizedBox(height: StitchTokens.md),
