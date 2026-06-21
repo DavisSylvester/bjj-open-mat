@@ -19,3 +19,6 @@ Thumbs.db
 
 # Playwright (audit artifacts)
 .playwright-mcp/
+
+# Debug/audit screenshots dropped in the repo root
+/*.png
