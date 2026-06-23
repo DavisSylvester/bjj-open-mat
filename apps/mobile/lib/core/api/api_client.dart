@@ -1,0 +1,109 @@
+import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:auth0_flutter/auth0_flutter_web.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'endpoints.dart';
+
+final apiClientProvider = Provider<ApiClient>((ref) {
+  return ApiClient();
+});
+
+class ApiClient {
+  late final Dio _dio;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  ApiClient() {
+    _dio = Dio(BaseOptions(
+      baseUrl: Endpoints.baseUrl,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: {'Content-Type': 'application/json'},
+    ));
+
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await _storage.read(key: 'access_token');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onError: (error, handler) async {
+        final requestOptions = error.requestOptions;
+        // Attempt a single silent refresh + retry on 401. Guard against retrying
+        // more than once, and against retrying with an unchanged token — either
+        // would loop forever when the token is invalid (not merely expired).
+        if (error.response?.statusCode == 401 && requestOptions.extra['retried'] != true) {
+          final oldAuth = requestOptions.headers['Authorization'] as String?;
+          final refreshed = await _refreshToken();
+          final newToken = await _storage.read(key: 'access_token');
+          if (refreshed && newToken != null && 'Bearer $newToken' != oldAuth) {
+            requestOptions.extra['retried'] = true;
+            requestOptions.headers['Authorization'] = 'Bearer $newToken';
+            try {
+              final response = await _dio.fetch(requestOptions);
+              return handler.resolve(response);
+            } on DioException catch (retryError) {
+              return handler.next(retryError);
+            }
+          }
+        }
+        return handler.next(error);
+      },
+    ));
+  }
+
+  Dio get dio => _dio;
+
+  Future<Response<T>> get<T>(String path, {Map<String, dynamic>? queryParameters}) {
+    return _dio.get<T>(path, queryParameters: queryParameters);
+  }
+
+  Future<Response<T>> post<T>(String path, {dynamic data}) {
+    return _dio.post<T>(path, data: data);
+  }
+
+  Future<Response<T>> put<T>(String path, {dynamic data}) {
+    return _dio.put<T>(path, data: data);
+  }
+
+  Future<Response<T>> delete<T>(String path) {
+    return _dio.delete<T>(path);
+  }
+
+  Future<bool> _refreshToken() async {
+    const domain = String.fromEnvironment('AUTH0_DOMAIN');
+    const clientId = String.fromEnvironment('AUTH0_CLIENT_ID');
+    const audience = String.fromEnvironment('AUTH0_AUDIENCE');
+    try {
+      final String accessToken;
+      if (kIsWeb) {
+        final creds = await Auth0Web(domain, clientId).credentials(
+          audience: audience.isEmpty ? null : audience,
+        );
+        accessToken = creds.accessToken;
+      } else {
+        final creds = await Auth0(domain, clientId).credentialsManager.credentials();
+        accessToken = creds.accessToken;
+      }
+      await setToken(accessToken);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> setToken(String token) async {
+    await _storage.write(key: 'access_token', value: token);
+  }
+
+  Future<void> clearToken() async {
+    await _storage.delete(key: 'access_token');
+  }
+
+  Future<String?> getToken() async {
+    return _storage.read(key: 'access_token');
+  }
+}
