@@ -29,6 +29,7 @@ import '../features/admin/screens/session_mgmt_screen.dart';
 import '../features/admin/screens/session_admin_screen.dart';
 import '../features/admin/screens/create_session_screen.dart';
 import '../features/admin/screens/attendance_screen.dart';
+import '../features/admin/screens/admin_review_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -54,6 +55,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
       final isOwner = user?.isGymOwner ?? false;
       if (!isOwner && loc.startsWith('/owner')) return '/';
+      if (loc == '/admin/review' && user?.role != 'admin') return '/';
       if (loggingIn) return isOwner ? '/owner/dashboard' : '/';
       return null;
     },
@@ -197,6 +199,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
+      // Add session (shared — any authenticated role)
+      GoRoute(
+        path: '/add-session',
+        builder: (context, state) => const CreateSessionScreen(),
+      ),
+
       // Settings (shared)
       GoRoute(
         path: '/settings',
@@ -205,6 +213,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationsScreen(),
+      ),
+
+      // Admin
+      GoRoute(
+        path: '/admin/review',
+        builder: (context, state) => const AdminReviewScreen(),
       ),
     ],
   );
@@ -227,10 +241,12 @@ class _ScaffoldWithNavBar extends StatelessWidget {
               selectedIndex: shell.currentIndex,
               isOwner: true,
               onTap: (i) => shell.goBranch(i),
+              onAdd: () => context.push('/add-session'),
             )
           : AppBottomNav(
               active: _pracTabs[shell.currentIndex],
               onTap: (tabId) => shell.goBranch(_pracTabs.indexOf(tabId)),
+              onAdd: () => context.push('/add-session'),
             ),
     );
   }

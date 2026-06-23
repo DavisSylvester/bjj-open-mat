@@ -18,6 +18,8 @@ export const OpenMat = t.Object(
     skillLevel: SkillLevel,
     giType: GiType,
     isCancelled: t.Boolean({ default: false }),
+    verified: t.Boolean({ default: false }),
+    status: t.Union([t.Literal("live"), t.Literal("hidden")], { default: "live" }),
     feeCents: t.Optional(t.Integer({ minimum: 0 })),
     attendeeCount: t.Optional(t.Integer({ minimum: 0 })),
     gymName: t.Optional(t.String()),

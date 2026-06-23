@@ -1,8 +1,10 @@
 import type {
   CreateOpenMatRequest,
+  Gym,
   OpenMat,
   OpenMatDetail,
   UpdateOpenMatRequest,
+  UserRole,
 } from "@bjj/contract";
 import { AppError } from "../http/errors.mts";
 import type { GymRepository } from "../repositories/gym.repository.mts";
@@ -21,20 +23,39 @@ export class OpenMatFacade {
 
   public constructor(
     private readonly mats: Pick<OpenMatRepository, "insert" | "findById" | "update" | "list" | "findNearby" | "setAttendeeCount">,
-    private readonly gyms: Pick<GymRepository, "findById">,
+    private readonly gyms: Pick<GymRepository, "findById" | "insert">,
     private readonly rsvps: Pick<RsvpRepository, "add" | "remove" | "count" | "userIds">,
     private readonly newId: IdFactory,
   ) {}
 
-  public async create(ownerId: string, req: CreateOpenMatRequest): Promise<OpenMatDetail> {
-    const gym = await this.gyms.findById(req.gymId);
-    if (!gym) throw new AppError("not_found", `Gym ${req.gymId} not found`);
-    if (gym.ownerId !== ownerId) throw new AppError("forbidden", "Not the gym owner");
+  public async create(submitterId: string, role: UserRole, req: CreateOpenMatRequest): Promise<OpenMatDetail> {
+    let gym: Gym;
+    if (req.gymId) {
+      const found = await this.gyms.findById(req.gymId);
+      if (!found) throw new AppError("not_found", `Gym ${req.gymId} not found`);
+      gym = found;
+    } else if (req.newGym) {
+      gym = await this.gyms.insert({
+        id: this.newId(),
+        name: req.newGym.name,
+        address: req.newGym.address,
+        city: req.newGym.city,
+        state: req.newGym.state,
+        postalCode: req.newGym.postalCode,
+        country: req.newGym.country,
+        amenities: [],
+        isVerified: false,
+        createdAt: new Date().toISOString(),
+      });
+    } else {
+      throw new AppError("bad_request", "Provide gymId or newGym");
+    }
 
+    const verified: boolean = role === "admin" || (gym.ownerId !== undefined && gym.ownerId === submitterId);
     const detail: OpenMatDetail = {
       id: this.newId(),
-      gymId: req.gymId,
-      hostId: req.hostId,
+      gymId: gym.id,
+      hostId: submitterId,
       title: req.title,
       description: req.description,
       dayOfWeek: req.dayOfWeek,
@@ -46,6 +67,8 @@ export class OpenMatFacade {
       skillLevel: req.skillLevel ?? "all",
       giType: req.giType ?? "both",
       isCancelled: false,
+      verified,
+      status: "live",
       feeCents: req.feeCents,
       attendeeCount: 0,
       gymName: gym.name,
@@ -74,10 +97,31 @@ export class OpenMatFacade {
     if (!gym || gym.ownerId !== ownerId) throw new AppError("forbidden", "Not the gym owner");
   }
 
-  public async update(ownerId: string, id: string, patch: UpdateOpenMatRequest): Promise<OpenMatDetail> {
+  public async assertOwnerOrAdmin(callerId: string, role: UserRole, openMatId: string): Promise<OpenMatDetail> {
+    const mat = await this.mats.findById(openMatId);
+    if (!mat) throw new AppError("not_found", `Open mat ${openMatId} not found`);
+    if (role === "admin") return mat;
+    const gym = await this.gyms.findById(mat.gymId);
+    if (!gym || gym.ownerId !== callerId) throw new AppError("forbidden", "Not the gym owner or an admin");
+    return mat;
+  }
+
+  public async verify(callerId: string, role: UserRole, id: string): Promise<OpenMatDetail> {
+    await this.assertOwnerOrAdmin(callerId, role, id);
+    return (await this.mats.update(id, { verified: true })) as OpenMatDetail;
+  }
+
+  public async setHidden(callerId: string, role: UserRole, id: string, hidden: boolean): Promise<OpenMatDetail> {
+    await this.assertOwnerOrAdmin(callerId, role, id);
+    return (await this.mats.update(id, { status: hidden ? "hidden" : "live" })) as OpenMatDetail;
+  }
+
+  public async update(callerId: string, role: UserRole, id: string, patch: UpdateOpenMatRequest): Promise<OpenMatDetail> {
     const current = await this.detail(id);
-    const gym = await this.gyms.findById(current.gymId);
-    if (!gym || gym.ownerId !== ownerId) throw new AppError("forbidden", "Not the gym owner");
+    if (role !== "admin") {
+      const gym = await this.gyms.findById(current.gymId);
+      if (!gym || gym.ownerId !== callerId) throw new AppError("forbidden", "Not the gym owner or an admin");
+    }
     return (await this.mats.update(id, patch)) as OpenMatDetail;
   }
 

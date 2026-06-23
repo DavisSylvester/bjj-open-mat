@@ -6,6 +6,7 @@ import 'exp_badge.dart';
 import 'live_dot.dart';
 
 class SessionRowData {
+  final String? id; // open-mat session id, used for navigation to the detail page
   final String gymName;
   final String giType; // 'gi', 'nogi', 'both'
   final String expLevel; // 'all', 'beg', 'int', 'adv'
@@ -14,8 +15,10 @@ class SessionRowData {
   final String distance; // '0.8 mi'
   final double fee;
   final bool isLive;
+  final bool unverified;
 
   const SessionRowData({
+    this.id,
     required this.gymName,
     required this.giType,
     required this.expLevel,
@@ -24,6 +27,7 @@ class SessionRowData {
     required this.distance,
     required this.fee,
     this.isLive = false,
+    this.unverified = false,
   });
 }
 
@@ -114,6 +118,24 @@ class _SportRow extends StatelessWidget {
                       ExpBadge(level: session.expLevel, small: true),
                     ],
                   ),
+                  if (session.unverified) ...[
+                    const SizedBox(height: 5),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: t.amber.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'Unverified',
+                        style: t.miniStyle.copyWith(
+                          fontSize: 9,
+                          color: t.amber,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -212,6 +234,24 @@ class _GlassCard extends StatelessWidget {
                 GiBadge(type: session.giType, small: true),
                 const SizedBox(width: 4),
                 ExpBadge(level: session.expLevel, small: true),
+                if (session.unverified) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: t.amber.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      'Unverified',
+                      style: t.miniStyle.copyWith(
+                        fontSize: 10,
+                        color: t.amber,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
                 const Spacer(),
                 Text(session.distance, style: t.miniStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600, color: t.muted)),
               ],

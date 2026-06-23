@@ -51,6 +51,15 @@ export function authPlugin(verifier: JwtVerifier, roleLookup: RoleLookup) {
           },
         };
       },
+      requireAdmin(enabled: boolean) {
+        return {
+          beforeHandle({ identity }): void {
+            if (!enabled) return;
+            if (!identity) throw new AppError("unauthorized", "Authentication required");
+            if (identity.role !== "admin") throw new AppError("forbidden", "Admin role required");
+          },
+        };
+      },
     })
     // Promote `resolve` (identity) and the macros from the plugin's encapsulated
     // scope up to the instance that `.use`s this plugin, so the route modules that

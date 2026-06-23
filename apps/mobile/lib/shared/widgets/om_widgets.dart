@@ -556,12 +556,14 @@ class OMBottomNav extends StatelessWidget {
   final int selectedIndex;
   final bool isOwner;
   final ValueChanged<int> onTap;
+  final VoidCallback? onAdd;
 
   const OMBottomNav({
     super.key,
     required this.selectedIndex,
     required this.onTap,
     this.isOwner = false,
+    this.onAdd,
   });
 
   @override
@@ -605,46 +607,111 @@ class OMBottomNav extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(tabs.length, (i) {
-                  final selected = i == selectedIndex;
-                  final tab = tabs[i];
-                  return GestureDetector(
-                    onTap: () => onTap(i),
-                    behavior: HitTestBehavior.opaque,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? OMColors.crimson.withValues(alpha: 0.094)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            tab.icon,
-                            size: 22,
-                            color: selected ? OMColors.crimson : OMColors.muted,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            tab.label,
-                            style: TextStyle(
-                              fontFamily: 'BarlowCondensed',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 10,
-                              letterSpacing: 0.12,
+                children: [
+                  // Left two tabs
+                  ...List.generate(2, (i) {
+                    final selected = i == selectedIndex;
+                    final tab = tabs[i];
+                    return GestureDetector(
+                      onTap: () => onTap(i),
+                      behavior: HitTestBehavior.opaque,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? OMColors.crimson.withValues(alpha: 0.094)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              tab.icon,
+                              size: 22,
                               color: selected ? OMColors.crimson : OMColors.muted,
-                              height: 1,
                             ),
+                            const SizedBox(height: 4),
+                            Text(
+                              tab.label,
+                              style: TextStyle(
+                                fontFamily: 'BarlowCondensed',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 10,
+                                letterSpacing: 0.12,
+                                color: selected ? OMColors.crimson : OMColors.muted,
+                                height: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                  // Center "+" action button — not a selectable tab
+                  GestureDetector(
+                    onTap: onAdd,
+                    child: Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: OMColors.crimson,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: OMColors.crimson.withValues(alpha: 0.4),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
+                      child: const Icon(Icons.add, color: Colors.white, size: 28),
                     ),
-                  );
-                }),
+                  ),
+                  // Right two tabs
+                  ...List.generate(2, (j) {
+                    final i = j + 2;
+                    final selected = i == selectedIndex;
+                    final tab = tabs[i];
+                    return GestureDetector(
+                      onTap: () => onTap(i),
+                      behavior: HitTestBehavior.opaque,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? OMColors.crimson.withValues(alpha: 0.094)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              tab.icon,
+                              size: 22,
+                              color: selected ? OMColors.crimson : OMColors.muted,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              tab.label,
+                              style: TextStyle(
+                                fontFamily: 'BarlowCondensed',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 10,
+                                letterSpacing: 0.12,
+                                color: selected ? OMColors.crimson : OMColors.muted,
+                                height: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ],
               ),
             ),
           ),

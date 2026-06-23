@@ -39,8 +39,22 @@ class SessionMgmtScreen extends ConsumerWidget {
                     child: Icon(s.isCancelled ? Icons.cancel : Icons.event, color: s.isCancelled ? StitchTokens.error : StitchTokens.accent),
                   ),
                   title: Text(s.title, style: TextStyle(decoration: s.isCancelled ? TextDecoration.lineThrough : null)),
-                  subtitle: Text('${s.dayName} ${s.startTime}–${s.endTime} • ${s.skillBadge}'),
-                  trailing: const Icon(Icons.chevron_right),
+                  subtitle: Text('${s.dayName} ${s.startTime}–${s.endTime} • ${s.skillBadge}${s.verified ? '' : ' • Unverified'}'),
+                  trailing: PopupMenuButton<String>(
+                    onSelected: (v) async {
+                      final repo = ref.read(sessionRepositoryProvider);
+                      if (v == 'verify') {
+                        await repo.verify(s.id);
+                      } else if (v == 'hide') {
+                        await repo.hide(s.id);
+                      }
+                      ref.invalidate(mySessionsProvider);
+                    },
+                    itemBuilder: (_) => [
+                      if (!s.verified) const PopupMenuItem(value: 'verify', child: Text('Verify')),
+                      const PopupMenuItem(value: 'hide', child: Text('Hide')),
+                    ],
+                  ),
                   onTap: () { HapticFeedback.selectionClick(); context.go('/owner/sessions/${s.id}'); },
                 ));
               },

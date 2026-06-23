@@ -8,9 +8,12 @@ import 'session_requests.dart';
 
 abstract class SessionRepository {
   Future<List<OpenMat>> listMine();
+  Future<List<OpenMat>> listUnverified();
   Future<OpenMat> getById(String id);
   Future<OpenMat> create(CreateSessionRequest req);
   Future<OpenMat> update(String id, UpdateSessionRequest req);
+  Future<void> verify(String id);
+  Future<void> hide(String id);
 }
 
 class ApiSessionRepository implements SessionRepository {
@@ -52,6 +55,34 @@ class ApiSessionRepository implements SessionRepository {
     try {
       final res = await _dio.put('/api/v1/open-mats/$id', data: req.toJson());
       return OpenMat.fromJson(unwrapData(res.data as Map<String, dynamic>));
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
+  }
+
+  @override
+  Future<List<OpenMat>> listUnverified() async {
+    try {
+      final res = await _dio.get('/api/v1/open-mats', queryParameters: {'verified': false});
+      return unwrapList(res.data as Map<String, dynamic>).items.map(OpenMat.fromJson).toList();
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
+  }
+
+  @override
+  Future<void> verify(String id) async {
+    try {
+      await _dio.post('/api/v1/open-mats/$id/verify');
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
+  }
+
+  @override
+  Future<void> hide(String id) async {
+    try {
+      await _dio.post('/api/v1/open-mats/$id/hide');
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }

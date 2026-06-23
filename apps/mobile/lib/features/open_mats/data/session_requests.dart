@@ -1,5 +1,20 @@
+class NewGymInput {
+  final String name;
+  final String address;
+  final String? city;
+  final String? state;
+  const NewGymInput({required this.name, required this.address, this.city, this.state});
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'address': address,
+        if (city != null && city!.isNotEmpty) 'city': city,
+        if (state != null && state!.isNotEmpty) 'state': state,
+      };
+}
+
 class CreateSessionRequest {
-  final String gymId;
+  final String? gymId;
+  final NewGymInput? newGym;
   final String title;
   final String startTime; // HH:mm 24h
   final String endTime;   // HH:mm 24h
@@ -13,7 +28,8 @@ class CreateSessionRequest {
   final String? description;
 
   const CreateSessionRequest({
-    required this.gymId,
+    this.gymId,
+    this.newGym,
     required this.title,
     required this.startTime,
     required this.endTime,
@@ -28,7 +44,8 @@ class CreateSessionRequest {
   });
 
   Map<String, dynamic> toJson() => {
-        'gymId': gymId,
+        if (gymId != null) 'gymId': gymId,
+        if (newGym != null) 'newGym': newGym!.toJson(),
         'title': title,
         'startTime': startTime,
         'endTime': endTime,

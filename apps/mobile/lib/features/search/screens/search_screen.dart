@@ -12,7 +12,10 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
-  String _giFilter = 'all';
+  // Active filter chips. Gi-type filters ('gi'/'nogi'/'both') OR among
+  // themselves; 'free' is an independent toggle that ANDs with them, so any
+  // combination (e.g. No-Gi + Free) is allowed. Empty = no filtering.
+  final Set<String> _filters = <String>{};
   double _distance = 10.0;
   final _searchCtrl = TextEditingController();
 
@@ -28,12 +31,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   ];
 
   List<SessionRowData> get _filtered {
+    final giTypes = _filters.where((f) => f != 'free').toSet();
     return _sessions.where((s) {
-      if (_giFilter == 'free') {
-        if (s.fee != 0) return false;
-      } else if (_giFilter != 'all' && s.giType != _giFilter) {
-        return false;
-      }
+      // Gi-type filters combine as OR; no gi-type selected = any gi type.
+      if (giTypes.isNotEmpty && !giTypes.contains(s.giType)) return false;
+      // Free is an independent AND filter.
+      if (_filters.contains('free') && s.fee != 0) return false;
       final dist = double.tryParse(s.distance.split(' ').first) ?? 0;
       if (dist > _distance) return false;
       if (_searchCtrl.text.isNotEmpty &&
@@ -94,9 +97,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               const SizedBox(height: 10),
               Row(children: ['All', 'Gi', 'No-Gi', 'Both'].map((label) {
                 final id = label == 'All' ? 'all' : label == 'No-Gi' ? 'nogi' : label.toLowerCase();
-                final active = _giFilter == id;
+                final active = id == 'all' ? !_filters.any((f) => f != 'free') : _filters.contains(id);
                 return Expanded(child: GestureDetector(
-                  onTap: () => setState(() => _giFilter = id),
+                  onTap: () => setState(() {
+                    if (id == 'all') {
+                      _filters.removeWhere((f) => f != 'free');
+                    } else if (_filters.contains(id)) {
+                      _filters.remove(id);
+                    } else {
+                      _filters.add(id);
+                    }
+                  }),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
@@ -235,9 +246,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               itemCount: filters.length,
               itemBuilder: (_, i) {
                 final f = filters[i];
-                final on = _giFilter == f.id;
+                final on = _filters.contains(f.id);
                 return GestureDetector(
-                  onTap: () => setState(() => _giFilter = f.id),
+                  onTap: () => setState(() => on ? _filters.remove(f.id) : _filters.add(f.id)),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                     decoration: BoxDecoration(

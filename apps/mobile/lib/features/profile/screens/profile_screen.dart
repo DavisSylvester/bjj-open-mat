@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/design/theme_provider.dart';
 import '../../../shared/widgets/belt_badge.dart';
@@ -20,13 +21,15 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport ? _SportProfile(t: t) : _GlassProfile(t: t, ref: ref);
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    return t.isSport ? _SportProfile(t: t, isAdmin: isAdmin) : _GlassProfile(t: t, ref: ref, isAdmin: isAdmin);
   }
 }
 
 class _SportProfile extends StatelessWidget {
   final AppTokens t;
-  const _SportProfile({required this.t});
+  final bool isAdmin;
+  const _SportProfile({required this.t, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -94,20 +97,38 @@ class _SportProfile extends StatelessWidget {
           Divider(height: 1, color: t.border),
           Expanded(
             child: ListView.separated(
-              itemCount: _recentSessions.length + 1,
+              itemCount: _recentSessions.length + 1 + (isAdmin ? 1 : 0),
               separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
               itemBuilder: (ctx, i) {
                 if (i < _recentSessions.length) return SessionRow(session: _recentSessions[i]);
+                if (i == _recentSessions.length) {
+                  return GestureDetector(
+                    onTap: () => ctx.go('/owner/dashboard'),
+                    child: Container(
+                      color: t.bg2,
+                      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                      child: Row(children: [
+                        Container(width: 4, height: 18, color: t.amber, margin: const EdgeInsets.only(right: 8)),
+                        Icon(LucideIcons.store, size: 16, color: t.amber),
+                        const SizedBox(width: 8),
+                        Text('Gym Owner Panel', style: t.miniStyle.copyWith(color: t.amber, fontSize: 11)),
+                        const Spacer(),
+                        Icon(LucideIcons.chevronRight, size: 14, color: t.muted),
+                      ]),
+                    ),
+                  );
+                }
+                // Admin-only: Review submissions
                 return GestureDetector(
-                  onTap: () => ctx.go('/owner/dashboard'),
+                  onTap: () => ctx.go('/admin/review'),
                   child: Container(
                     color: t.bg2,
                     padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
                     child: Row(children: [
-                      Container(width: 4, height: 18, color: t.amber, margin: const EdgeInsets.only(right: 8)),
-                      Icon(LucideIcons.store, size: 16, color: t.amber),
+                      Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
+                      Icon(LucideIcons.clipboardCheck, size: 16, color: t.red),
                       const SizedBox(width: 8),
-                      Text('Gym Owner Panel', style: t.miniStyle.copyWith(color: t.amber, fontSize: 11)),
+                      Text('Review submissions', style: t.miniStyle.copyWith(color: t.red, fontSize: 11)),
                       const Spacer(),
                       Icon(LucideIcons.chevronRight, size: 14, color: t.muted),
                     ]),
@@ -125,7 +146,8 @@ class _SportProfile extends StatelessWidget {
 class _GlassProfile extends StatelessWidget {
   final AppTokens t;
   final WidgetRef ref;
-  const _GlassProfile({required this.t, required this.ref});
+  final bool isAdmin;
+  const _GlassProfile({required this.t, required this.ref, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {
@@ -312,6 +334,15 @@ class _GlassProfile extends StatelessWidget {
                     trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
                     onTap: () => context.go('/owner/dashboard'),
                   ),
+                  if (isAdmin) ...[
+                    Divider(height: 1, color: t.border),
+                    ListTile(
+                      leading: Icon(LucideIcons.clipboardCheck, color: t.muted),
+                      title: Text('Review submissions', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                      trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                      onTap: () => context.go('/admin/review'),
+                    ),
+                  ],
                   Divider(height: 1, color: t.border),
                   ListTile(
                     leading: Icon(LucideIcons.logOut, color: t.red),

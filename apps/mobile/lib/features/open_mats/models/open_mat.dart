@@ -17,6 +17,8 @@ class OpenMat {
   final String? gymName;
   final double? distanceKm;
   final String? createdAt;
+  final bool verified;
+  final String status;
 
   const OpenMat({
     required this.id,
@@ -37,6 +39,8 @@ class OpenMat {
     this.gymName,
     this.distanceKm,
     this.createdAt,
+    this.verified = false,
+    this.status = 'live',
   });
 
   factory OpenMat.fromJson(Map<String, dynamic> json) {
@@ -59,6 +63,8 @@ class OpenMat {
       gymName: json['gymName'] as String?,
       distanceKm: (json['distanceKm'] as num?)?.toDouble(),
       createdAt: json['createdAt'] as String?,
+      verified: json['verified'] as bool? ?? false,
+      status: json['status'] as String? ?? 'live',
     );
   }
 

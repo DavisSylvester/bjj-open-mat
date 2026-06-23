@@ -5,7 +5,7 @@ import { BaseRepository } from "./base.repository.mts";
 
 interface OpenMatDoc extends OpenMatDetail {
   _id: string;
-  gymOwnerId: string;
+  gymOwnerId?: string;
   geo?: { type: "Point"; coordinates: [number, number] };
 }
 
@@ -14,6 +14,10 @@ export interface OpenMatFilter {
   giType?: GiType;
   skillLevel?: SkillLevel;
   gymOwnerId?: string;
+  gymId?: string;
+  hostId?: string;
+  verified?: boolean;
+  status?: "live" | "hidden";
 }
 
 function toListItem(doc: OpenMatDoc): OpenMat {
@@ -38,7 +42,7 @@ export class OpenMatRepository extends BaseRepository {
     await col.createIndex({ geo: "2dsphere" });
   }
 
-  public async insert(detail: OpenMatDetail, gymOwnerId: string): Promise<OpenMatDetail> {
+  public async insert(detail: OpenMatDetail, gymOwnerId: string | undefined): Promise<OpenMatDetail> {
     const doc: OpenMatDoc = { ...detail, _id: detail.id, gymOwnerId };
     if (detail.latitude !== undefined && detail.longitude !== undefined) {
       doc.geo = { type: "Point", coordinates: [detail.longitude, detail.latitude] };
@@ -58,6 +62,11 @@ export class OpenMatRepository extends BaseRepository {
     if (filter.giType === "gi") q.giType = { $in: ["gi", "both"] };
     else if (filter.giType === "nogi") q.giType = { $in: ["nogi", "both"] };
     if (filter.gymOwnerId) q.gymOwnerId = filter.gymOwnerId;
+    if (filter.gymId) q.gymId = filter.gymId;
+    if (filter.hostId) q.hostId = filter.hostId;
+    if (filter.verified !== undefined) q.verified = filter.verified;
+    if (filter.status) q.status = filter.status;
+    else q.status = { $ne: "hidden" } as Filter<OpenMatDoc>["status"];
 
     const col = this.collection<OpenMatDoc>(COLLECTIONS.openMats);
     const total = await col.countDocuments(q);
@@ -76,6 +85,7 @@ export class OpenMatRepository extends BaseRepository {
             spherical: true,
           },
         },
+        { $match: { status: { $ne: "hidden" } } },
       ])
       .toArray();
     return docs.map((d) => ({ ...toListItem(d), distanceKm: d.distanceMeters / 1000 }));

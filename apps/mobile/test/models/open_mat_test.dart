@@ -11,4 +11,13 @@ void main() {
     expect(om.attendeeCount, 3);
     expect(om.giBadge, 'No-Gi');
   });
+
+  test('parses verified and status with safe defaults', () {
+    final m = OpenMat.fromJson({'id': 'x', 'gymId': 'g', 'title': 'T', 'startTime': '19:00', 'endTime': '21:00', 'verified': true, 'status': 'hidden'});
+    expect(m.verified, isTrue);
+    expect(m.status, 'hidden');
+    final d = OpenMat.fromJson({'id': 'y', 'gymId': 'g', 'title': 'T', 'startTime': '19:00', 'endTime': '21:00'});
+    expect(d.verified, isFalse);
+    expect(d.status, 'live');
+  });
 }

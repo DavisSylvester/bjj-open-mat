@@ -31,21 +31,29 @@ export function openMatRoutes(container: Container) {
       async ({ identity, query }) => {
         const page = query.page ?? 1;
         const limit = query.limit ?? 20;
+        const isAdmin = identity?.role === "admin";
         const filter: OpenMatFilter = {
           dayOfWeek: query.dayOfWeek,
           giType: query.giType,
           skillLevel: query.skillLevel,
+          status: isAdmin ? query.status : "live",
+          verified: query.verified,
         };
         if (query.mine) filter.gymOwnerId = requireId(identity).userId;
+        if (query.submittedByMe) filter.hostId = requireId(identity).userId;
         const { items, total } = await openMatFacade.list(filter, (page - 1) * limit, limit);
         return list(items, { page, limit, total });
       },
       { query: OpenMatListQuery },
     )
-    .post("/", async ({ identity, body }) => data(await openMatFacade.create(requireId(identity).userId, body)), {
-      requireOwner: true,
-      body: CreateOpenMatRequest,
-    })
+    .post(
+      "/",
+      async ({ identity, body }) => {
+        const id = requireId(identity);
+        return data(await openMatFacade.create(id.userId, id.role, body));
+      },
+      { requireAuth: true, body: CreateOpenMatRequest },
+    )
     .get(
       "/nearby",
       async ({ query }) => {
@@ -55,11 +63,37 @@ export function openMatRoutes(container: Container) {
       { query: NearbyQuery },
     )
     .get("/:id", async ({ params }) => data(await openMatFacade.detail(params.id)))
+    .post(
+      "/:id/verify",
+      async ({ identity, params }) => {
+        const id = requireId(identity);
+        return data(await openMatFacade.verify(id.userId, id.role, params.id));
+      },
+      { requireAuth: true },
+    )
+    .post(
+      "/:id/hide",
+      async ({ identity, params }) => {
+        const id = requireId(identity);
+        return data(await openMatFacade.setHidden(id.userId, id.role, params.id, true));
+      },
+      { requireAuth: true },
+    )
+    .post(
+      "/:id/unhide",
+      async ({ identity, params }) => {
+        const id = requireId(identity);
+        return data(await openMatFacade.setHidden(id.userId, id.role, params.id, false));
+      },
+      { requireAuth: true },
+    )
     .put(
       "/:id",
-      async ({ identity, params, body }) =>
-        data(await openMatFacade.update(requireId(identity).userId, params.id, body)),
-      { requireOwner: true, body: UpdateOpenMatRequest },
+      async ({ identity, params, body }) => {
+        const id = requireId(identity);
+        return data(await openMatFacade.update(id.userId, id.role, params.id, body));
+      },
+      { requireAuth: true, body: UpdateOpenMatRequest },
     )
     .post(
       "/:id/rsvp",

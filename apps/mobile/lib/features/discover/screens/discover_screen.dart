@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../../shared/widgets/ticker_strip.dart';
 
 final _stubSessions = [
-  SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0, isLive: true),
-  SessionRowData(gymName: 'Renzo Westwood', giType: 'nogi', expLevel: 'int', time: '8:00 PM', day: 'Mon', distance: '2.4 mi', fee: 15),
-  SessionRowData(gymName: '10th Planet Rosemead', giType: 'both', expLevel: 'adv', time: '8:30 PM', day: 'Mon', distance: '3.1 mi', fee: 20),
-  SessionRowData(gymName: 'Gracie Barra Pasadena', giType: 'gi', expLevel: 'beg', time: '9:00 AM', day: 'Tue', distance: '4.5 mi', fee: 0),
-  SessionRowData(gymName: 'CKM Jiu-Jitsu', giType: 'nogi', expLevel: 'all', time: '7:30 PM', day: 'Tue', distance: '5.0 mi', fee: 10),
+  SessionRowData(id: 'om-atos-fri', gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0, isLive: true),
+  SessionRowData(id: 'om-renzo-fri', gymName: 'Renzo Westwood', giType: 'nogi', expLevel: 'int', time: '8:00 PM', day: 'Mon', distance: '2.4 mi', fee: 15),
+  SessionRowData(id: 'om-10p-sat', gymName: '10th Planet Rosemead', giType: 'both', expLevel: 'adv', time: '8:30 PM', day: 'Mon', distance: '3.1 mi', fee: 20),
+  SessionRowData(id: 'om-gb-pas', gymName: 'Gracie Barra Pasadena', giType: 'gi', expLevel: 'beg', time: '9:00 AM', day: 'Tue', distance: '4.5 mi', fee: 0),
+  SessionRowData(id: 'om-ckm', gymName: 'CKM Jiu-Jitsu', giType: 'nogi', expLevel: 'all', time: '7:30 PM', day: 'Tue', distance: '5.0 mi', fee: 10),
 ];
 
 final _tickerItems = [
@@ -63,27 +64,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
               _StatCell(label: 'Nearest', value: '1.2mi', color: t.gi, t: t),
             ]),
           ),
-          Container(
-            height: 200,
-            color: const Color(0xFF080F26),
-            child: Stack(children: [
-              CustomPaint(painter: _GridPainter(t), size: Size.infinite),
-              ...[
-                (x: 0.24, y: 0.36, gi: 'gi',   label: 'ATOS'),
-                (x: 0.56, y: 0.28, gi: 'both', label: '10P'),
-                (x: 0.78, y: 0.52, gi: 'nogi', label: 'RNZ'),
-                (x: 0.38, y: 0.70, gi: 'gi',   label: 'GB'),
-              ].map((p) => Positioned(
-                left: MediaQuery.of(context).size.width * p.x - 20,
-                top: 200 * p.y - 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-                  color: t.giColor(p.gi),
-                  child: Text(p.label, style: t.miniStyle.copyWith(color: Colors.white, fontSize: 11)),
-                ),
-              )),
-            ]),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
             child: Row(children: [
@@ -97,7 +77,10 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             child: ListView.separated(
               itemCount: _stubSessions.length,
               separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
-              itemBuilder: (_, i) => SessionRow(session: _stubSessions[i]),
+              itemBuilder: (_, i) => SessionRow(
+                session: _stubSessions[i],
+                onTap: () => context.go('/open-mat/${_stubSessions[i].id}'),
+              ),
             ),
           ),
         ]),
@@ -177,58 +160,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 ),
               ]),
             ),
-            // Map card
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: t.border),
-                  boxShadow: [
-                    BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.04), blurRadius: 2, offset: const Offset(0, 1)),
-                    BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4)),
-                  ],
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: SizedBox(
-                  height: 188,
-                  child: Stack(children: [
-                    Positioned.fill(child: CustomPaint(painter: _MnMapPainter())),
-                    Positioned(
-                      left: 14,
-                      bottom: 14,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(999),
-                          boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.08), blurRadius: 8)],
-                        ),
-                        child: Row(children: [
-                          Container(width: 8, height: 8, decoration: BoxDecoration(color: t.green, shape: BoxShape.circle)),
-                          const SizedBox(width: 7),
-                          Text('18 mats open near you', style: t.miniStyle.copyWith(color: t.text, fontSize: 13, fontWeight: FontWeight.w700)),
-                        ]),
-                      ),
-                    ),
-                    Positioned(
-                      right: 14,
-                      bottom: 14,
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.95),
-                          borderRadius: BorderRadius.circular(13),
-                          boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.08), blurRadius: 8)],
-                        ),
-                        child: Icon(LucideIcons.locateFixed, size: 18, color: t.primary),
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            ),
             // Section header
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
@@ -249,20 +180,17 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 ],
               ),
             ),
-            // Horizontal session cards scroll
-            SizedBox(
-              height: 160,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                separatorBuilder: (_, _) => const SizedBox(width: 14),
-                itemCount: _stubSessions.length,
-                itemBuilder: (_, i) => SizedBox(
-                  width: 262,
-                  child: SessionRow(session: _stubSessions[i]),
+            // Vertical session cards
+            ...List.generate(_stubSessions.length, (i) => Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+              child: SizedBox(
+                width: double.infinity,
+                child: SessionRow(
+                  session: _stubSessions[i],
+                  onTap: () => context.go('/open-mat/${_stubSessions[i].id}'),
                 ),
               ),
-            ),
+            )),
             const SizedBox(height: 24),
           ],
         ),
@@ -290,42 +218,4 @@ class _StatCell extends StatelessWidget {
       ]),
     ));
   }
-}
-
-class _GridPainter extends CustomPainter {
-  final AppTokens t;
-  _GridPainter(this.t);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = t.border..strokeWidth = 1;
-    for (double x = 0; x < size.width; x += 40) { canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint); }
-    for (double y = 0; y < size.height; y += 40) { canvas.drawLine(Offset(0, y), Offset(size.width, y), paint); }
-    final road = Paint()..color = t.border..strokeWidth = 8;
-    canvas.drawLine(const Offset(-20, 70), Offset(size.width + 20, 110), road);
-    canvas.drawLine(const Offset(-20, 200), Offset(size.width + 20, 170), road);
-  }
-
-  @override
-  bool shouldRepaint(_) => false;
-}
-
-class _MnMapPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = const Color(0xFFEEF1F7));
-    final road = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 10;
-    canvas.drawLine(Offset(-20, size.height * 0.27), Offset(size.width + 20, size.height * 0.4), road);
-    canvas.drawLine(Offset(-20, size.height * 0.7), Offset(size.width + 20, size.height * 0.6), road);
-    canvas.drawLine(Offset(size.width * 0.28, -20), Offset(size.width * 0.23, size.height + 20), road..strokeWidth = 8);
-    canvas.drawLine(Offset(size.width * 0.68, -20), Offset(size.width * 0.75, size.height + 20), road..strokeWidth = 10);
-    final block = Paint()..color = const Color(0xFFD7EBDD);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(size.width * 0.1, size.height * 0.45, 70, 60), const Radius.circular(8)), block);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(size.width * 0.75, size.height * 0.67, 70, 80), const Radius.circular(8)), block);
-  }
-
-  @override
-  bool shouldRepaint(_) => false;
 }

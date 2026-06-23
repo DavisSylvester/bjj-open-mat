@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
+import '../../gyms/data/gym_repository.dart';
 import '../../gyms/models/gym.dart';
 import '../../open_mats/data/session_repository.dart';
 import '../../open_mats/data/session_requests.dart';
-import 'my_gyms_screen.dart';
 import 'session_mgmt_screen.dart';
 
 class CreateSessionScreen extends ConsumerStatefulWidget {
@@ -32,6 +32,11 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   bool _saving = false;
   String? _error;
   String? _gymId;
+  bool _addingNewGym = false;
+  final _gymNameCtrl = TextEditingController();
+  final _gymAddrCtrl = TextEditingController();
+  final _gymCityCtrl = TextEditingController();
+  final _gymStateCtrl = TextEditingController();
 
   static const _expToSkill = {'all': 'all', 'beg': 'beginner', 'int': 'intermediate', 'adv': 'advanced'};
 
@@ -43,27 +48,48 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   }
 
   Future<void> _submit() async {
-    if (_gymId == null || _saving) return;
+    if (!_canSubmit || _saving) return;
     setState(() {
       _saving = true;
       _error = null;
     });
     try {
       final fee = _isFree ? 0 : ((int.tryParse(_feeCtrl.text.trim()) ?? 0) * 100);
-      await ref.read(sessionRepositoryProvider).create(CreateSessionRequest(
-            gymId: _gymId!,
-            title: _title(),
-            startTime: _hhmm(_startTime),
-            endTime: _hhmm(_endTime),
-            isRecurring: _isRecurring,
-            dayOfWeek: _isRecurring ? _selectedDate.weekday % 7 : null,
-            specificDate: _isRecurring ? null : _selectedDate.toIso8601String().split('T').first,
-            giType: _giType,
-            skillLevel: _expToSkill[_expLevel] ?? 'all',
-            feeCents: fee,
-            maxParticipants: int.tryParse(_capCtrl.text.trim()),
-            description: _notesCtrl.text.trim(),
-          ));
+      final req = _addingNewGym
+          ? CreateSessionRequest(
+              newGym: NewGymInput(
+                name: _gymNameCtrl.text.trim(),
+                address: _gymAddrCtrl.text.trim(),
+                city: _gymCityCtrl.text.trim(),
+                state: _gymStateCtrl.text.trim(),
+              ),
+              title: _title(),
+              startTime: _hhmm(_startTime),
+              endTime: _hhmm(_endTime),
+              isRecurring: _isRecurring,
+              dayOfWeek: _isRecurring ? _selectedDate.weekday % 7 : null,
+              specificDate: _isRecurring ? null : _selectedDate.toIso8601String().split('T').first,
+              giType: _giType,
+              skillLevel: _expToSkill[_expLevel] ?? 'all',
+              feeCents: fee,
+              maxParticipants: int.tryParse(_capCtrl.text.trim()),
+              description: _notesCtrl.text.trim(),
+            )
+          : CreateSessionRequest(
+              gymId: _gymId!,
+              title: _title(),
+              startTime: _hhmm(_startTime),
+              endTime: _hhmm(_endTime),
+              isRecurring: _isRecurring,
+              dayOfWeek: _isRecurring ? _selectedDate.weekday % 7 : null,
+              specificDate: _isRecurring ? null : _selectedDate.toIso8601String().split('T').first,
+              giType: _giType,
+              skillLevel: _expToSkill[_expLevel] ?? 'all',
+              feeCents: fee,
+              maxParticipants: int.tryParse(_capCtrl.text.trim()),
+              description: _notesCtrl.text.trim(),
+            );
+      await ref.read(sessionRepositoryProvider).create(req);
       ref.invalidate(mySessionsProvider);
       if (mounted) {
         setState(() {
@@ -86,6 +112,10 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
     _feeCtrl.dispose();
     _capCtrl.dispose();
     _notesCtrl.dispose();
+    _gymNameCtrl.dispose();
+    _gymAddrCtrl.dispose();
+    _gymCityCtrl.dispose();
+    _gymStateCtrl.dispose();
     super.dispose();
   }
 
@@ -100,6 +130,10 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
     final period = t.period == DayPeriod.am ? 'AM' : 'PM';
     return '$h:$m $period';
   }
+
+  bool get _canSubmit => _addingNewGym
+      ? (_gymNameCtrl.text.trim().isNotEmpty && _gymAddrCtrl.text.trim().isNotEmpty)
+      : (_gymId != null);
 
   String get _recurringLabel {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -127,9 +161,9 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    final gymsAsync = ref.watch(myGymsProvider);
+    final gymsAsync = ref.watch(allGymsProvider);
     final gyms = gymsAsync.asData?.value ?? const <Gym>[];
-    if (_gymId == null && gyms.isNotEmpty) {
+    if (_gymId == null && gyms.isNotEmpty && !_addingNewGym) {
       _gymId = gyms.first.id;
     }
     return Scaffold(
@@ -200,7 +234,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
             _SuccessOverlay(
               t: t,
               title: 'Session posted!',
-              subtitle: 'Your open mat is now live and discoverable nearby.',
+              subtitle: "It's live now, marked unverified until the gym or an admin confirms it.",
               onDone: () => context.pop(),
             ),
         ]),
@@ -235,60 +269,126 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   }
 
   Widget _buildPostingAs(AppTokens t, List<Gym> gyms) {
-    if (gyms.isEmpty) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('POSTING AS', style: t.labelStyle),
-        const SizedBox(height: 6),
-        Container(
-          padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
-          decoration: BoxDecoration(
-            color: t.surface,
-            borderRadius: BorderRadius.circular(t.cardRadius),
-            border: Border.all(color: t.border),
-          ),
-          child: Row(children: [
-            Icon(LucideIcons.store, size: 18, color: t.muted),
-            const SizedBox(width: 12),
-            Expanded(child: Text('Add a gym first', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14, color: t.muted))),
-          ]),
-        ),
-      ]);
-    }
-    final selected = gyms.firstWhere((g) => g.id == _gymId, orElse: () => gyms.first);
-    final initial = selected.name.trim().isNotEmpty ? selected.name.trim()[0].toUpperCase() : 'G';
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('POSTING AS', style: t.labelStyle),
       const SizedBox(height: 6),
-      GestureDetector(
-        onTap: gyms.length > 1 ? () => _pickGym(t, gyms) : null,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
-          decoration: BoxDecoration(
-            color: t.surface,
-            borderRadius: BorderRadius.circular(t.cardRadius),
-            border: Border.all(color: t.border),
+      if (_addingNewGym) ...[
+        _buildNewGymFields(t),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () => setState(() => _addingNewGym = false),
+          child: Text(
+            'Choose existing gym instead',
+            style: t.miniStyle.copyWith(fontSize: 12, color: t.gi, decoration: TextDecoration.underline),
           ),
-          child: Row(children: [
-            Container(
-              width: 38, height: 38,
+        ),
+      ] else ...[
+        if (gyms.isNotEmpty) ...[
+          GestureDetector(
+            onTap: gyms.length > 1 ? () => _pickGym(t, gyms) : null,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [t.gi, t.both]),
-                borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+                color: t.surface,
+                borderRadius: BorderRadius.circular(t.cardRadius),
+                border: Border.all(color: t.border),
               ),
-              child: Center(child: Text(initial, style: t.h2Style.copyWith(color: Colors.white, fontSize: 16))),
+              child: Row(children: [
+                Container(
+                  width: 38, height: 38,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [t.gi, t.both]),
+                    borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+                  ),
+                  child: Center(child: Text(
+                    () {
+                      final selected = gyms.firstWhere((g) => g.id == _gymId, orElse: () => gyms.first);
+                      return selected.name.trim().isNotEmpty ? selected.name.trim()[0].toUpperCase() : 'G';
+                    }(),
+                    style: t.h2Style.copyWith(color: Colors.white, fontSize: 16),
+                  )),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: () {
+                  final selected = gyms.firstWhere((g) => g.id == _gymId, orElse: () => gyms.first);
+                  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(selected.name, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
+                    Text(
+                      gyms.length > 1 ? '${gyms.length} gyms available · tap to switch' : selected.address,
+                      style: t.miniStyle.copyWith(fontSize: 11, color: t.muted),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ]);
+                }()),
+                if (gyms.length > 1) Icon(LucideIcons.chevronsUpDown, size: 16, color: t.muted),
+              ]),
             ),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(selected.name, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14)),
-              Text(
-                gyms.length > 1 ? '${gyms.length} gyms managed · tap to switch' : selected.address,
-                style: t.miniStyle.copyWith(fontSize: 11, color: t.muted),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ])),
-            if (gyms.length > 1) Icon(LucideIcons.chevronsUpDown, size: 16, color: t.muted),
-          ]),
+          ),
+        ] else ...[
+          Container(
+            padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(t.cardRadius),
+              border: Border.all(color: t.border),
+            ),
+            child: Row(children: [
+              Icon(LucideIcons.store, size: 18, color: t.muted),
+              const SizedBox(width: 12),
+              Expanded(child: Text('No gyms found', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, fontSize: 14, color: t.muted))),
+            ]),
+          ),
+        ],
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () => setState(() => _addingNewGym = true),
+          child: Text(
+            "Can't find your gym? Add it",
+            style: t.miniStyle.copyWith(fontSize: 12, color: t.gi, decoration: TextDecoration.underline),
+          ),
+        ),
+      ],
+    ]);
+  }
+
+  Widget _buildNewGymFields(AppTokens t) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _buildInlineTextField(t, label: 'GYM NAME', required: true, controller: _gymNameCtrl, hint: 'e.g. Atos HQ'),
+      const SizedBox(height: 10),
+      _buildInlineTextField(t, label: 'ADDRESS', required: true, controller: _gymAddrCtrl, hint: '123 Main St'),
+      const SizedBox(height: 10),
+      Row(children: [
+        Expanded(child: _buildInlineTextField(t, label: 'CITY', required: false, controller: _gymCityCtrl, hint: 'San Diego')),
+        const SizedBox(width: 10),
+        SizedBox(width: 100, child: _buildInlineTextField(t, label: 'STATE', required: false, controller: _gymStateCtrl, hint: 'CA')),
+      ]),
+    ]);
+  }
+
+  Widget _buildInlineTextField(AppTokens t, {required String label, required bool required, required TextEditingController controller, required String hint}) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text(label, style: t.labelStyle),
+        if (required) Text(' *', style: t.labelStyle.copyWith(color: t.red)),
+      ]),
+      const SizedBox(height: 6),
+      Container(
+        decoration: BoxDecoration(
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.cardRadius),
+          border: Border.all(color: t.border),
+        ),
+        child: TextField(
+          controller: controller,
+          style: t.bodyStyle,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: t.miniStyle.copyWith(fontSize: 13),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+          ),
         ),
       ),
     ]);
@@ -620,7 +720,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   }
 
   Widget _buildSubmitButton(BuildContext context, AppTokens t) {
-    final enabled = _gymId != null && !_saving;
+    final enabled = _canSubmit && !_saving;
     return GestureDetector(
       onTap: enabled ? _submit : null,
       child: Container(
