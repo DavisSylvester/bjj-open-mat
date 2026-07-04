@@ -46,3 +46,8 @@ app.*.map.json
 
 # Development screenshots
 *.png
+
+# Android signing (never commit)
+/android/key.properties
+**/*.jks
+**/*.keystore
