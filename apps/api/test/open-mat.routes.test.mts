@@ -67,6 +67,27 @@ describe("open-mat routes: search filters", () => {
     const json = await res.json();
     expect((json.data as { gymName?: string }[]).some((o) => o.gymName === "NT BJJ")).toBe(false);
   });
+
+  it("giType=both returns only sessions marked both", async () => {
+    const both = await (await fetch(`${base}/api/v1/open-mats`, {
+      method: "POST", headers: auth,
+      body: JSON.stringify({ newGym: { name: "Both Gym", address: "1 B St" }, title: "Both Session", startTime: "10:00", endTime: "12:00", giType: "both" }),
+    })).json();
+    const giOnly = await (await fetch(`${base}/api/v1/open-mats`, {
+      method: "POST", headers: auth,
+      body: JSON.stringify({ newGym: { name: "Gi Gym", address: "1 G St" }, title: "Gi Session", startTime: "10:00", endTime: "12:00", giType: "gi" }),
+    })).json();
+    expect(both.data.id).toBeTruthy();
+    expect(giOnly.data.id).toBeTruthy();
+
+    const res = await fetch(`${base}/api/v1/open-mats?giType=both`, { headers: auth });
+    const json = await res.json();
+    expect(res.status).toBe(200);
+    const items = json.data as { id: string; giType: string }[];
+    expect(items.every((o) => o.giType === "both")).toBe(true);
+    expect(items.some((o) => o.id === both.data.id)).toBe(true);
+    expect(items.some((o) => o.id === giOnly.data.id)).toBe(false);
+  });
 });
 
 describe("open-mat routes: security - status filter", () => {

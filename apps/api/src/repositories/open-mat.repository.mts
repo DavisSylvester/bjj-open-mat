@@ -27,6 +27,10 @@ export interface OpenMatFilter {
   radiusKm?: number;
 }
 
+export function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export function weekdaysInRange(startDate: string, endDate: string): number[] {
   const start = new Date(`${startDate}T00:00:00Z`);
   const end = new Date(`${endDate}T00:00:00Z`);
@@ -80,6 +84,7 @@ export class OpenMatRepository extends BaseRepository {
     if (filter.skillLevel) q.skillLevel = filter.skillLevel;
     if (filter.giType === "gi") q.giType = { $in: ["gi", "both"] };
     else if (filter.giType === "nogi") q.giType = { $in: ["nogi", "both"] };
+    else if (filter.giType === "both") q.giType = "both";
     if (filter.gymOwnerId) q.gymOwnerId = filter.gymOwnerId;
     if (filter.gymId) q.gymId = filter.gymId;
     if (filter.hostId) q.hostId = filter.hostId;
@@ -89,7 +94,7 @@ export class OpenMatRepository extends BaseRepository {
 
     const and: Filter<OpenMatDoc>[] = [];
     if (filter.q && filter.q.trim()) {
-      const rx = { $regex: filter.q.trim(), $options: "i" };
+      const rx = { $regex: escapeRegex(filter.q.trim()), $options: "i" };
       and.push({ $or: [{ title: rx }, { gymName: rx }] } as Filter<OpenMatDoc>);
     }
     if (filter.free === true) {
