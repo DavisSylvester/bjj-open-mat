@@ -11,6 +11,8 @@ export const NewGymInput = t.Object(
     state: t.Optional(t.String()),
     postalCode: t.Optional(t.String()),
     country: t.Optional(t.String()),
+    latitude: t.Optional(t.Number()),
+    longitude: t.Optional(t.Number()),
   },
   { $id: "NewGymInput" },
 );
@@ -51,6 +53,14 @@ export const OpenMatListQuery = t.Object(
     status: t.Optional(OpenMatStatus),
     verified: t.Optional(t.Boolean()),
     submittedByMe: t.Optional(t.Boolean({ description: "sessions the caller submitted (hostId)" })),
+    q: t.Optional(t.String({ description: "free-text: title + gymName" })),
+    free: t.Optional(t.Boolean({ description: "feeCents 0 or absent" })),
+    startDate: t.Optional(t.String({ description: "ISO date; When range start" })),
+    endDate: t.Optional(t.String({ description: "ISO date; When range end" })),
+    lat: t.Optional(t.Number()),
+    lng: t.Optional(t.Number()),
+    radiusKm: t.Optional(t.Number({ minimum: 1, maximum: 500 })),
+    zip: t.Optional(t.String({ description: "geocoded to a point server-side" })),
   },
   { $id: "OpenMatListQuery" },
 );
