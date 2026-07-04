@@ -1,0 +1,12 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: bjj-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - bjj-mongo-data:/data/db
+
+volumes:
+  bjj-mongo-data:
