@@ -19,4 +19,13 @@ describe("contract: search query", () => {
   it("NewGymInput accepts optional coordinates", () => {
     expect(Value.Check(NewGymInput, { name: "G", address: "1 A St", latitude: 33.1, longitude: -96.6, postalCode: "75495" })).toBe(true);
   });
+
+  it("lat/lng are bounded to valid coordinate ranges", () => {
+    expect(Value.Check(OpenMatListQuery, { lat: 91 })).toBe(false);
+    expect(Value.Check(OpenMatListQuery, { lat: -91 })).toBe(false);
+    expect(Value.Check(OpenMatListQuery, { lng: 181 })).toBe(false);
+    expect(Value.Check(OpenMatListQuery, { lng: -181 })).toBe(false);
+    expect(Value.Check(OpenMatListQuery, { lat: 33.1, lng: -96.6 })).toBe(true);
+    expect(Value.Check(NewGymInput, { name: "G", address: "1 A St", latitude: 91 })).toBe(false);
+  });
 });
