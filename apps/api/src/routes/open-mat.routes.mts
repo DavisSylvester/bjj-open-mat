@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import {
-  CheckinRequest,
+  CreateCheckInRequest,
   CreateOpenMatRequest,
   NearbyQuery,
   OpenMatListQuery,
@@ -135,8 +135,8 @@ export function openMatRoutes(container: Container) {
     .post(
       "/:id/checkin",
       async ({ identity, params, body }) =>
-        data(await checkInFacade.checkIn(params.id, requireId(identity).userId, body.sessionDate)),
-      { requireAuth: true, body: CheckinRequest },
+        data(await checkInFacade.checkIn(params.id, requireId(identity).userId, body)),
+      { requireAuth: true, body: CreateCheckInRequest },
     )
     .get(
       "/:id/checkins",

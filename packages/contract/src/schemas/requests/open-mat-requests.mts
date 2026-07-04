@@ -58,6 +58,3 @@ export type OpenMatListQuery = Static<typeof OpenMatListQuery>;
 
 export const RsvpRequest = t.Object({ sessionDate: t.String() }, { $id: "RsvpRequest" });
 export type RsvpRequest = Static<typeof RsvpRequest>;
-
-export const CheckinRequest = t.Object({ sessionDate: t.String() }, { $id: "CheckinRequest" });
-export type CheckinRequest = Static<typeof CheckinRequest>;

@@ -53,7 +53,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     userFacade: new UserFacade(userRepo),
     gymFacade: new GymFacade(gymRepo, favoriteRepo, id),
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id),
-    checkInFacade: new CheckInFacade(checkInRepo, id),
+    checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
     async ensureIndexes(): Promise<void> {
       await Promise.all([

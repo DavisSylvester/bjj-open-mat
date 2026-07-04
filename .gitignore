@@ -22,3 +22,6 @@ Thumbs.db
 
 # Debug/audit screenshots dropped in the repo root
 /*.png
+
+# AI working artifacts (screenshots, ui dumps)
+.docs/

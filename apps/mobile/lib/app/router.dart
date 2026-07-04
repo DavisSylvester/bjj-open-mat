@@ -17,6 +17,7 @@ import '../features/notifications/screens/notifications_screen.dart';
 import '../features/open_mats/screens/open_mat_detail_screen.dart';
 import '../features/gyms/screens/gym_detail_screen.dart';
 import '../features/checkins/screens/checkin_success_screen.dart';
+import '../features/checkins/screens/check_in_form_screen.dart';
 import '../features/checkins/screens/review_screen.dart';
 import '../features/profile/screens/edit_profile_screen.dart';
 import '../features/profile/screens/public_profile_screen.dart';
@@ -95,8 +96,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                   builder: (context, state) => OpenMatDetailScreen(sessionId: state.pathParameters['id']!),
                   routes: [
                     GoRoute(
+                      path: 'checkin',
+                      builder: (context, state) => CheckInFormScreen(openMatId: state.pathParameters['id']!),
+                    ),
+                    GoRoute(
                       path: 'checkin-success',
-                      builder: (context, state) => CheckinSuccessScreen(openMatId: state.pathParameters['id']!),
+                      builder: (context, state) => CheckinSuccessScreen(
+                        openMatId: state.pathParameters['id']!,
+                        locationStatus: state.uri.queryParameters['loc'],
+                      ),
                     ),
                     GoRoute(
                       path: 'review',

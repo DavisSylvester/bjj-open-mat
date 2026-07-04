@@ -31,6 +31,22 @@ describe("open-mat routes: community submissions", () => {
   });
 });
 
+describe("open-mat routes: check-in", () => {
+  it("check-in stores GPS, flag, and gym snapshot", async () => {
+    const created = await (await fetch(`${base}/api/v1/open-mats`, { method: "POST", headers: auth, body: JSON.stringify({ newGym: { name: "CheckinGym", address: "1 A St" }, title: "OM", startTime: "19:00", endTime: "21:00" }) })).json();
+    const id = created.data.id;
+    const res = await fetch(`${base}/api/v1/open-mats/${id}/checkin`, { method: "POST", headers: auth, body: JSON.stringify({ sessionDate: "2026-06-22", latitude: 32.9, longitude: -117.2, note: "rolled", rounds: 4, intensity: 3 }) });
+    const json = await res.json();
+    expect(res.status).toBe(200);
+    expect(json.data.gymName).toBe("CheckinGym");
+    expect(json.data.openMatTitle).toBe("OM");
+    expect(json.data.note).toBe("rolled");
+    expect(json.data.rounds).toBe(4);
+    expect(json.data.locationStatus).toBe("no_location"); // newGym has no coordinates
+    expect(json.data.latitude).toBe(32.9);
+  });
+});
+
 describe("open-mat routes: security - status filter", () => {
   it("non-admin passing ?status=hidden gets the same live results as the default call", async () => {
     // Create a live session as the demo user (gym_owner, non-admin)

@@ -5,3 +5,4 @@ export * from "./open-mat-status.mts";
 export * from "./user-role.mts";
 export * from "./notification-type.mts";
 export * from "./review-category.mts";
+export * from "./check-in-location-status.mts";

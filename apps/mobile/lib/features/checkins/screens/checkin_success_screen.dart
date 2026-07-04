@@ -5,7 +5,8 @@ import '../../../app/theme.dart';
 
 class CheckinSuccessScreen extends StatefulWidget {
   final String openMatId;
-  const CheckinSuccessScreen({super.key, required this.openMatId});
+  final String? locationStatus;
+  const CheckinSuccessScreen({super.key, required this.openMatId, this.locationStatus});
 
   @override
   State<CheckinSuccessScreen> createState() => _CheckinSuccessScreenState();
@@ -56,6 +57,17 @@ class _CheckinSuccessScreenState extends State<CheckinSuccessScreen> with Single
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white70),
                   textAlign: TextAlign.center,
                 ),
+                if (widget.locationStatus != null) ...[
+                  const SizedBox(height: StitchTokens.sm),
+                  Text(
+                    widget.locationStatus == 'verified'
+                        ? '📍 Location verified'
+                        : widget.locationStatus == 'far'
+                            ? '📍 Far from the gym'
+                            : '📍 Location off',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                  ),
+                ],
                 const SizedBox(height: StitchTokens.xxl),
                 SizedBox(
                   width: double.infinity,
