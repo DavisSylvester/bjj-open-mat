@@ -12,5 +12,5 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["bun"]
   },
-  "include": ["src/**/*.mts", "test/**/*.mts"]
+  "include": ["src/**/*.mts", "src/**/*.d.ts", "test/**/*.mts"]
 }
