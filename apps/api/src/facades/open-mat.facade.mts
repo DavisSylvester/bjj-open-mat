@@ -10,6 +10,7 @@ import { AppError } from "../http/errors.mts";
 import type { GymRepository } from "../repositories/gym.repository.mts";
 import type { OpenMatFilter, OpenMatRepository } from "../repositories/open-mat.repository.mts";
 import type { RsvpRepository } from "../repositories/rsvp.repository.mts";
+import type { Geocoder } from "../services/geocoder.mts";
 
 type IdFactory = () => string;
 
@@ -26,6 +27,7 @@ export class OpenMatFacade {
     private readonly gyms: Pick<GymRepository, "findById" | "insert">,
     private readonly rsvps: Pick<RsvpRepository, "add" | "remove" | "count" | "userIds">,
     private readonly newId: IdFactory,
+    private readonly geocoder: Pick<Geocoder, "lookupZip">,
   ) {}
 
   public async create(submitterId: string, role: UserRole, req: CreateOpenMatRequest): Promise<OpenMatDetail> {
@@ -35,6 +37,12 @@ export class OpenMatFacade {
       if (!found) throw new AppError("not_found", `Gym ${req.gymId} not found`);
       gym = found;
     } else if (req.newGym) {
+      const loc =
+        req.newGym.latitude !== undefined && req.newGym.longitude !== undefined
+          ? { lat: req.newGym.latitude, lng: req.newGym.longitude }
+          : req.newGym.postalCode
+            ? (this.geocoder.lookupZip(req.newGym.postalCode) ?? undefined)
+            : undefined;
       gym = await this.gyms.insert({
         id: this.newId(),
         name: req.newGym.name,
@@ -43,6 +51,7 @@ export class OpenMatFacade {
         state: req.newGym.state,
         postalCode: req.newGym.postalCode,
         country: req.newGym.country,
+        location: loc,
         amenities: [],
         isVerified: false,
         createdAt: new Date().toISOString(),

@@ -2,6 +2,7 @@ import type { CreateGymRequest, Gym, UpdateGymRequest } from "@bjj/contract";
 import { AppError } from "../http/errors.mts";
 import type { FavoriteRepository } from "../repositories/favorite.repository.mts";
 import type { GymRepository } from "../repositories/gym.repository.mts";
+import type { Geocoder } from "../services/geocoder.mts";
 
 type IdFactory = () => string;
 
@@ -18,9 +19,11 @@ export class GymFacade {
     private readonly gyms: Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "findNearby">,
     private readonly favorites: Pick<FavoriteRepository, "add" | "remove" | "listGymIds">,
     private readonly newId: IdFactory,
+    private readonly geocoder: Pick<Geocoder, "lookupZip">,
   ) {}
 
   public async create(ownerId: string, req: CreateGymRequest): Promise<Gym> {
+    const location = req.location ?? (req.postalCode ? (this.geocoder.lookupZip(req.postalCode) ?? undefined) : undefined);
     const gym: Gym = {
       id: this.newId(),
       ownerId,
@@ -31,7 +34,7 @@ export class GymFacade {
       state: req.state,
       country: req.country,
       postalCode: req.postalCode,
-      location: req.location,
+      location,
       googlePlaceId: req.googlePlaceId,
       phone: req.phone,
       website: req.website,
