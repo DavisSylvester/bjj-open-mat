@@ -1,8 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/location/location_service.dart';
 import '../../../shared/widgets/session_row.dart';
+import '../../open_mats/models/open_mat.dart';
+import '../data/search_query.dart';
+import '../data/search_repository.dart';
+import '../data/when_range.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -13,38 +20,171 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   // Active filter chips. Gi-type filters ('gi'/'nogi'/'both') OR among
-  // themselves; 'free' is an independent toggle that ANDs with them, so any
-  // combination (e.g. No-Gi + Free) is allowed. Empty = no filtering.
+  // themselves; 'free' is an independent toggle that ANDs with them. Empty =
+  // no gi-type filtering. Only the LAST selected gi-type is sent to the API
+  // (the backend takes a single giType), so gi-type behaves single-select.
   final Set<String> _filters = <String>{};
-  double _distance = 10.0;
+  double _distanceMi = 10.0;
+  WhenRange? _when;
+  String _whenLabel = 'Any time';
   final _searchCtrl = TextEditingController();
+  final _zipCtrl = TextEditingController();
+  Timer? _debounce;
 
-  final _sessions = [
-    SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0),
-    SessionRowData(gymName: 'Renzo Westwood', giType: 'nogi', expLevel: 'int', time: '8:00 PM', day: 'Mon', distance: '2.4 mi', fee: 15),
-    SessionRowData(gymName: '10th Planet Rosemead', giType: 'both', expLevel: 'adv', time: '8:30 PM', day: 'Mon', distance: '3.1 mi', fee: 20),
-    SessionRowData(gymName: 'Gracie Barra Pasadena', giType: 'gi', expLevel: 'beg', time: '9:00 AM', day: 'Tue', distance: '4.5 mi', fee: 0),
-    SessionRowData(gymName: 'CKM Jiu-Jitsu', giType: 'nogi', expLevel: 'all', time: '7:30 PM', day: 'Tue', distance: '5.0 mi', fee: 10),
-    SessionRowData(gymName: 'Alliance Atlanta', giType: 'gi', expLevel: 'int', time: '6:00 PM', day: 'Wed', distance: '6.2 mi', fee: 0),
-    SessionRowData(gymName: 'B-Team Jiu-Jitsu', giType: 'both', expLevel: 'adv', time: '9:00 PM', day: 'Wed', distance: '7.1 mi', fee: 25),
-    SessionRowData(gymName: 'Marcelo Garcia NY', giType: 'both', expLevel: 'all', time: '7:00 PM', day: 'Thu', distance: '8.0 mi', fee: 30),
-  ];
+  SearchQuery _query = const SearchQuery(radiusKm: 16);
 
-  List<SessionRowData> get _filtered {
-    final giTypes = _filters.where((f) => f != 'free').toSet();
-    return _sessions.where((s) {
-      // Gi-type filters combine as OR; no gi-type selected = any gi type.
-      if (giTypes.isNotEmpty && !giTypes.contains(s.giType)) return false;
-      // Free is an independent AND filter.
-      if (_filters.contains('free') && s.fee != 0) return false;
-      final dist = double.tryParse(s.distance.split(' ').first) ?? 0;
-      if (dist > _distance) return false;
-      if (_searchCtrl.text.isNotEmpty &&
-          !s.gymName.toLowerCase().contains(_searchCtrl.text.toLowerCase())) {
-        return false;
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchCtrl.dispose();
+    _zipCtrl.dispose();
+    super.dispose();
+  }
+
+  /// The gi-type sent to the API: the single selected gi-type chip, if any.
+  String? get _selectedGiType {
+    for (final id in ['gi', 'nogi', 'both']) {
+      if (_filters.contains(id)) return id;
+    }
+    return null;
+  }
+
+  void _rebuildQuery() {
+    setState(() {
+      _query = SearchQuery(
+        text: _searchCtrl.text.trim().isEmpty ? null : _searchCtrl.text.trim(),
+        giType: _selectedGiType,
+        free: _filters.contains('free'),
+        when: _when,
+        lat: _query.lat,
+        lng: _query.lng,
+        radiusKm: _distanceMi * 1.60934,
+        zip: _zipCtrl.text.trim().isEmpty ? null : _zipCtrl.text.trim(),
+      );
+    });
+    // Eagerly create + start the new query's future now (rather than lazily on
+    // the next build) so it can resolve before the frame paints, then nudge a
+    // rebuild once it settles — otherwise the first build of a new query key
+    // always shows the loading state.
+    final query = _query;
+    ref.read(searchResultsProvider(query).future).whenComplete(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  void _onTextChanged() {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), _rebuildQuery);
+  }
+
+  /// Rebuild the query on the next microtask/short delay so the new
+  /// [searchResultsProvider] future has resolved before the next frame paints
+  /// (avoids a lingering loading frame after immediate control changes).
+  void _rebuildSoon() {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 50), _rebuildQuery);
+  }
+
+  void _toggleGiType(String id) {
+    setState(() {
+      if (id == 'all') {
+        _filters.removeWhere((f) => f != 'free');
+      } else if (_filters.contains(id)) {
+        _filters.remove(id);
+      } else {
+        // Gi-type is single-select at the API; drop other gi-types first.
+        _filters.removeWhere((f) => f != 'free');
+        _filters.add(id);
       }
-      return true;
-    }).toList();
+    });
+    _rebuildSoon();
+  }
+
+  void _toggleFilter(String id) {
+    setState(() {
+      if (_filters.contains(id)) {
+        _filters.remove(id);
+      } else {
+        if (id != 'free') _filters.removeWhere((f) => f != 'free');
+        _filters.add(id);
+      }
+    });
+    _rebuildSoon();
+  }
+
+  void _setWhen(WhenRange range, String label) {
+    setState(() {
+      _when = range;
+      _whenLabel = label;
+    });
+    _rebuildSoon();
+  }
+
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 1),
+      lastDate: DateTime(now.year + 2),
+    );
+    if (picked == null) return;
+    final label =
+        '${picked.month.toString().padLeft(2, '0')}/${picked.day.toString().padLeft(2, '0')}';
+    _setWhen(WhenRange.singleDay(picked), label);
+  }
+
+  Future<void> _useGps() async {
+    final loc = await ref.read(locationServiceProvider).current();
+    if (loc == null) return;
+    _zipCtrl.clear();
+    setState(() {
+      _query = SearchQuery(
+        text: _searchCtrl.text.trim().isEmpty ? null : _searchCtrl.text.trim(),
+        giType: _selectedGiType,
+        free: _filters.contains('free'),
+        when: _when,
+        lat: loc.latitude,
+        lng: loc.longitude,
+        radiusKm: _distanceMi * 1.60934,
+        zip: null,
+      );
+    });
+  }
+
+  void _onDistanceChanged(double v) {
+    setState(() => _distanceMi = v);
+    _rebuildSoon();
+  }
+
+  /// Map an [OpenMat] to the presentational [SessionRowData] used by rows.
+  SessionRowData _toRow(OpenMat mat) {
+    return SessionRowData(
+      id: mat.id,
+      gymName: mat.gymName ?? mat.title,
+      giType: mat.giType,
+      expLevel: _expLevel(mat.skillLevel),
+      time: mat.startLabel,
+      day: mat.dayName,
+      distance: mat.distanceKm != null
+          ? '${(mat.distanceKm! / 1.60934).toStringAsFixed(1)} mi'
+          : '',
+      fee: (mat.feeCents ?? 0) / 100,
+      unverified: !mat.verified,
+    );
+  }
+
+  static String _expLevel(String skillLevel) {
+    switch (skillLevel) {
+      case 'beginner':
+        return 'beg';
+      case 'intermediate':
+        return 'int';
+      case 'advanced':
+        return 'adv';
+      default:
+        return 'all';
+    }
   }
 
   @override
@@ -53,7 +193,42 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return t.isSport ? _buildSport(t) : _buildGlass(t);
   }
 
+  // ── When option chip (shared) ────────────────────────────────────────────
+  Widget _whenOption(AppTokens t, {required Key key, required String label, required VoidCallback onTap, required bool active}) {
+    return GestureDetector(
+      key: key,
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+        decoration: BoxDecoration(
+          color: active ? t.primary.withValues(alpha: 0.09) : t.bg,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: active ? t.primary.withValues(alpha: 0.33) : t.borderHi,
+            width: 1.5,
+          ),
+        ),
+        child: Text(label, style: t.miniStyle.copyWith(
+          color: active ? t.primary : t.body,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+        )),
+      ),
+    );
+  }
+
+  List<Widget> _whenOptions(AppTokens t) {
+    final now = DateTime.now();
+    return [
+      _whenOption(t, key: const Key('when-week'), label: 'This week', active: _whenLabel == 'This week', onTap: () => _setWhen(WhenRange.thisWeek(now), 'This week')),
+      _whenOption(t, key: const Key('when-weekend'), label: 'This weekend', active: _whenLabel == 'This weekend', onTap: () => _setWhen(WhenRange.thisWeekend(now), 'This weekend')),
+      _whenOption(t, key: const Key('when-month'), label: 'This month', active: _whenLabel == 'This month', onTap: () => _setWhen(WhenRange.thisMonth(now), 'This month')),
+      _whenOption(t, key: const Key('when-date'), label: 'Pick a date', active: _when != null && !['This week', 'This weekend', 'This month', 'Any time'].contains(_whenLabel), onTap: _pickDate),
+    ];
+  }
+
   Widget _buildSport(AppTokens t) {
+    final results = ref.watch(searchResultsProvider(_query));
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -89,7 +264,48 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (_) => _onTextChanged(),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: _useGps,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(children: [
+                        Icon(LucideIcons.locateFixed, size: 13, color: t.red),
+                        const SizedBox(width: 4),
+                        Text('GPS', style: t.miniStyle.copyWith(color: t.red, fontSize: 10)),
+                      ]),
+                    ),
+                  ),
+                ]),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 42,
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  border: Border.all(color: t.border),
+                ),
+                child: Row(children: [
+                  const SizedBox(width: 12),
+                  Icon(LucideIcons.mapPin, size: 16, color: t.muted),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      key: const Key('search-zip'),
+                      controller: _zipCtrl,
+                      style: t.bodyStyle,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: 'ZIP code',
+                        hintStyle: t.miniStyle.copyWith(fontSize: 13),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onChanged: (_) => _onTextChanged(),
+                      onSubmitted: (_) => _rebuildQuery(),
                     ),
                   ),
                 ]),
@@ -97,17 +313,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               const SizedBox(height: 10),
               Row(children: ['All', 'Gi', 'No-Gi', 'Both'].map((label) {
                 final id = label == 'All' ? 'all' : label == 'No-Gi' ? 'nogi' : label.toLowerCase();
-                final active = id == 'all' ? !_filters.any((f) => f != 'free') : _filters.contains(id);
+                final active = id == 'all' ? _selectedGiType == null : _filters.contains(id);
                 return Expanded(child: GestureDetector(
-                  onTap: () => setState(() {
-                    if (id == 'all') {
-                      _filters.removeWhere((f) => f != 'free');
-                    } else if (_filters.contains(id)) {
-                      _filters.remove(id);
-                    } else {
-                      _filters.add(id);
-                    }
-                  }),
+                  onTap: () => _toggleGiType(id),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
@@ -122,6 +330,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   ),
                 ));
               }).toList()),
+              const SizedBox(height: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(children: [
+                  for (final w in _whenOptions(t)) ...[w, const SizedBox(width: 8)],
+                ]),
+              ),
+              const SizedBox(height: 10),
             ]),
           ),
           Container(
@@ -140,14 +356,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     overlayShape: SliderComponentShape.noOverlay,
                   ),
                   child: Slider(
-                    value: _distance,
+                    value: _distanceMi,
                     min: 1,
                     max: 50,
-                    onChanged: (v) => setState(() => _distance = v),
+                    onChanged: _onDistanceChanged,
                   ),
                 ),
               ),
-              Text('${_distance.toStringAsFixed(0)} mi',
+              Text('${_distanceMi.toStringAsFixed(0)} mi',
                   style: t.numStyle.copyWith(fontSize: 14)),
             ]),
           ),
@@ -158,14 +374,25 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               Container(width: 4, height: 16, color: t.red, margin: const EdgeInsets.only(right: 8)),
               Text('Results', style: t.h2Style.copyWith(fontSize: 13)),
               const Spacer(),
-              Text('${_filtered.length} sessions', style: t.miniStyle),
+              Text('${results.asData?.value.length ?? 0} sessions', style: t.miniStyle),
             ]),
           ),
           Expanded(
-            child: ListView.separated(
-              itemCount: _filtered.length,
-              separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
-              itemBuilder: (_, i) => SessionRow(session: _filtered[i]),
+            child: results.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(
+                child: Text("Couldn't load results", style: t.bodyStyle.copyWith(color: t.muted)),
+              ),
+              data: (list) => list.isEmpty
+                  ? Center(child: Text('0 sessions', style: t.miniStyle))
+                  : ListView.separated(
+                      itemCount: list.length,
+                      separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
+                      itemBuilder: (_, i) => SessionRow(
+                        session: _toRow(list[i]),
+                        onTap: () => context.go('/open-mat/${list[i].id}'),
+                      ),
+                    ),
             ),
           ),
         ]),
@@ -174,6 +401,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildGlass(AppTokens t) {
+    final results = ref.watch(searchResultsProvider(_query));
     final filters = [
       (id: 'gi', label: 'Gi', color: t.gi),
       (id: 'nogi', label: 'No-Gi', color: t.noGi),
@@ -218,20 +446,50 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (_) => _onTextChanged(),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: t.primary.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(999),
+                  GestureDetector(
+                    onTap: _useGps,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: t.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Row(children: [
+                        Icon(LucideIcons.locateFixed, size: 13, color: t.primary),
+                        const SizedBox(width: 4),
+                        Text('GPS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 10)),
+                      ]),
                     ),
-                    child: Row(children: [
-                      Icon(LucideIcons.locateFixed, size: 13, color: t.primary),
-                      const SizedBox(width: 4),
-                      Text('GPS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 10)),
-                    ]),
+                  ),
+                ]),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                height: 52,
+                decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(15)),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(children: [
+                  Icon(LucideIcons.mapPin, size: 18, color: t.muted),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      key: const Key('search-zip'),
+                      controller: _zipCtrl,
+                      style: t.h2Style.copyWith(fontSize: 15, color: t.text),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: 'ZIP code',
+                        hintStyle: t.h2Style.copyWith(fontSize: 15),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onChanged: (_) => _onTextChanged(),
+                      onSubmitted: (_) => _rebuildQuery(),
+                    ),
                   ),
                 ]),
               ),
@@ -248,7 +506,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 final f = filters[i];
                 final on = _filters.contains(f.id);
                 return GestureDetector(
-                  onTap: () => setState(() => on ? _filters.remove(f.id) : _filters.add(f.id)),
+                  onTap: () => _toggleFilter(f.id),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                     decoration: BoxDecoration(
@@ -293,7 +551,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   Row(children: [
                     Icon(LucideIcons.calendar, size: 15, color: t.primary),
                     const SizedBox(width: 6),
-                    Text('This Weekend', style: t.h2Style.copyWith(fontSize: 14)),
+                    Expanded(
+                      child: Text(_whenLabel, style: t.h2Style.copyWith(fontSize: 14), overflow: TextOverflow.ellipsis),
+                    ),
                   ]),
                 ]),
               )),
@@ -310,7 +570,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   Row(children: [
                     Text('WITHIN', style: t.miniStyle.copyWith(color: t.muted, fontSize: 10)),
                     const Spacer(),
-                    Text('${_distance.toStringAsFixed(0)} mi', style: t.numStyle.copyWith(fontSize: 14, color: t.text)),
+                    Text('${_distanceMi.toStringAsFixed(0)} mi', style: t.numStyle.copyWith(fontSize: 14, color: t.text)),
                   ]),
                   const SizedBox(height: 10),
                   SliderTheme(
@@ -325,10 +585,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     child: SizedBox(
                       height: 20,
                       child: Slider(
-                        value: _distance,
+                        value: _distanceMi,
                         min: 1,
                         max: 50,
-                        onChanged: (v) => setState(() => _distance = v),
+                        onChanged: _onDistanceChanged,
                       ),
                     ),
                   ),
@@ -337,12 +597,24 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ]),
           ),
           Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+            child: SizedBox(
+              height: 34,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemCount: _whenOptions(t).length,
+                itemBuilder: (_, i) => _whenOptions(t)[i],
+              ),
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 RichText(text: TextSpan(children: [
-                  TextSpan(text: '${_filtered.length}', style: t.h2Style.copyWith(color: t.primary)),
+                  TextSpan(text: '${results.asData?.value.length ?? 0}', style: t.h2Style.copyWith(color: t.primary)),
                   TextSpan(text: ' Sessions', style: t.h2Style),
                 ])),
                 const Spacer(),
@@ -351,11 +623,22 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              itemCount: _filtered.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 12),
-              itemBuilder: (_, i) => SessionRow(session: _filtered[i]),
+            child: results.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(
+                child: Text("Couldn't load results", style: t.bodyStyle.copyWith(color: t.muted)),
+              ),
+              data: (list) => list.isEmpty
+                  ? Center(child: Text('0 Sessions', style: t.miniStyle))
+                  : ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      itemCount: list.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+                      itemBuilder: (_, i) => SessionRow(
+                        session: _toRow(list[i]),
+                        onTap: () => context.go('/open-mat/${list[i].id}'),
+                      ),
+                    ),
             ),
           ),
         ]),
