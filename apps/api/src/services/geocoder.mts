@@ -1,17 +1,13 @@
+import type { GeoLocation } from '@bjj/contract';
 import { lookup } from 'zipcodes';
 
-export interface GeoPoint {
-  lat: number;
-  lng: number;
-}
-
 export interface Geocoder {
-  lookupZip(zip: string): GeoPoint | null;
+  lookupZip(zip: string): GeoLocation | null;
 }
 
 export class ZipcodesGeocoder implements Geocoder {
 
-  public lookupZip(zip: string): GeoPoint | null {
+  public lookupZip(zip: string): GeoLocation | null {
     const trimmed = zip.trim();
     if (!/^\d{5}$/.test(trimmed)) return null;
     const rec = lookup(trimmed);

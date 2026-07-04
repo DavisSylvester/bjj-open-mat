@@ -5,7 +5,7 @@ describe('ZipcodesGeocoder', () => {
   const geo = new ZipcodesGeocoder();
 
   it('resolves a known US zip to coordinates', () => {
-    const p = geo.lookupZip('75495');
+    const p = geo.lookupZip('75495'); // 75495 = Van Alstyne, TX
     expect(p).not.toBeNull();
     expect(p!.lat).toBeGreaterThan(32);
     expect(p!.lat).toBeLessThan(34);

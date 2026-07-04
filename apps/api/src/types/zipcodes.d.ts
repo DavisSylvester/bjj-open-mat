@@ -1,3 +1,4 @@
+// partial — only the symbols this project uses
 declare module 'zipcodes' {
   export interface ZipRecord {
     zip: string;
