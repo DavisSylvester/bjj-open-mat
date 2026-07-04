@@ -34,6 +34,24 @@ class SearchQuery {
         'limit': 50,
       };
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SearchQuery &&
+          runtimeType == other.runtimeType &&
+          text == other.text &&
+          giType == other.giType &&
+          free == other.free &&
+          when == other.when &&
+          lat == other.lat &&
+          lng == other.lng &&
+          radiusKm == other.radiusKm &&
+          zip == other.zip;
+
+  @override
+  int get hashCode =>
+      Object.hash(text, giType, free, when, lat, lng, radiusKm, zip);
+
   SearchQuery copyWith({
     String? text,
     String? giType,

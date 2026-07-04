@@ -33,4 +33,15 @@ class WhenRange {
     final e = DateTime(from.year, from.month + 1, 0);
     return WhenRange(s, e);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WhenRange &&
+          runtimeType == other.runtimeType &&
+          start == other.start &&
+          end == other.end;
+
+  @override
+  int get hashCode => Object.hash(start, end);
 }
