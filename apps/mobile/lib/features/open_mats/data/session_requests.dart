@@ -3,12 +3,26 @@ class NewGymInput {
   final String address;
   final String? city;
   final String? state;
-  const NewGymInput({required this.name, required this.address, this.city, this.state});
+  final String? postalCode;
+  final double? latitude;
+  final double? longitude;
+  const NewGymInput({
+    required this.name,
+    required this.address,
+    this.city,
+    this.state,
+    this.postalCode,
+    this.latitude,
+    this.longitude,
+  });
   Map<String, dynamic> toJson() => {
         'name': name,
         'address': address,
         if (city != null && city!.isNotEmpty) 'city': city,
         if (state != null && state!.isNotEmpty) 'state': state,
+        if (postalCode != null && postalCode!.isNotEmpty) 'postalCode': postalCode,
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
       };
 }
 
