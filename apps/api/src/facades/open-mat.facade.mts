@@ -134,8 +134,13 @@ export class OpenMatFacade {
     return (await this.mats.update(id, patch)) as OpenMatDetail;
   }
 
-  public async list(filter: OpenMatFilter, skip: number, limit: number): Promise<{ items: OpenMat[]; total: number }> {
-    return this.mats.list(filter, skip, limit);
+  public async list(filter: OpenMatFilter & { zip?: string }, skip: number, limit: number): Promise<{ items: OpenMat[]; total: number }> {
+    let { lat, lng } = filter;
+    if ((lat === undefined || lng === undefined) && filter.zip) {
+      const p = this.geocoder.lookupZip(filter.zip);
+      if (p) { lat = p.lat; lng = p.lng; }
+    }
+    return this.mats.list({ ...filter, lat, lng }, skip, limit);
   }
 
   public async nearby(lat: number, lng: number, radiusKm: number): Promise<OpenMat[]> {

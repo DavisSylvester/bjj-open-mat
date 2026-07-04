@@ -47,6 +47,27 @@ describe("open-mat routes: check-in", () => {
   });
 });
 
+describe("open-mat routes: search filters", () => {
+  it("search filters by zip (geocoded) and free", async () => {
+    const created = await (await fetch(`${base}/api/v1/open-mats`, {
+      method: "POST", headers: auth,
+      body: JSON.stringify({ newGym: { name: "NT BJJ", address: "1 Main St", postalCode: "75495" }, title: "Sat Rolls", startTime: "11:00", endTime: "13:00", dayOfWeek: 6, giType: "nogi", feeCents: 0 }),
+    })).json();
+    expect(created.data.id).toBeTruthy();
+    const res = await fetch(`${base}/api/v1/open-mats?zip=75495&radiusKm=25&free=true`, { headers: auth });
+    const json = await res.json();
+    expect(res.status).toBe(200);
+    const ids = (json.data as { id: string }[]).map((o) => o.id);
+    expect(ids).toContain(created.data.id);
+  });
+
+  it("search excludes far results by radius", async () => {
+    const res = await fetch(`${base}/api/v1/open-mats?lat=40.7&lng=-74.0&radiusKm=5`, { headers: auth });
+    const json = await res.json();
+    expect((json.data as { gymName?: string }[]).some((o) => o.gymName === "NT BJJ")).toBe(false);
+  });
+});
+
 describe("open-mat routes: security - status filter", () => {
   it("non-admin passing ?status=hidden gets the same live results as the default call", async () => {
     // Create a live session as the demo user (gym_owner, non-admin)

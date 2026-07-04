@@ -32,12 +32,20 @@ export function openMatRoutes(container: Container) {
         const page = query.page ?? 1;
         const limit = query.limit ?? 20;
         const isAdmin = identity?.role === "admin";
-        const filter: OpenMatFilter = {
+        const filter: OpenMatFilter & { zip?: string } = {
           dayOfWeek: query.dayOfWeek,
           giType: query.giType,
           skillLevel: query.skillLevel,
           status: isAdmin ? query.status : "live",
           verified: query.verified,
+          q: query.q,
+          free: query.free,
+          startDate: query.startDate,
+          endDate: query.endDate,
+          lat: query.lat,
+          lng: query.lng,
+          radiusKm: query.radiusKm,
+          zip: query.zip,
         };
         if (query.mine) filter.gymOwnerId = requireId(identity).userId;
         if (query.submittedByMe) filter.hostId = requireId(identity).userId;
