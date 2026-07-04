@@ -18,6 +18,25 @@ export interface OpenMatFilter {
   hostId?: string;
   verified?: boolean;
   status?: "live" | "hidden";
+  q?: string;
+  free?: boolean;
+  startDate?: string;
+  endDate?: string;
+  lat?: number;
+  lng?: number;
+  radiusKm?: number;
+}
+
+export function weekdaysInRange(startDate: string, endDate: string): number[] {
+  const start = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${endDate}T00:00:00Z`);
+  const days = new Set<number>();
+  const cur = new Date(start);
+  while (cur.getTime() <= end.getTime() && days.size < 7) {
+    days.add(cur.getUTCDay());
+    cur.setUTCDate(cur.getUTCDate() + 1);
+  }
+  return [...days];
 }
 
 function toListItem(doc: OpenMatDoc): OpenMat {
@@ -55,7 +74,7 @@ export class OpenMatRepository extends BaseRepository {
     return toDetail(await this.collection<OpenMatDoc>(COLLECTIONS.openMats).findOne({ _id: id }));
   }
 
-  public async list(filter: OpenMatFilter, skip: number, limit: number): Promise<{ items: OpenMat[]; total: number }> {
+  private buildMatch(filter: OpenMatFilter): Filter<OpenMatDoc> {
     const q: Filter<OpenMatDoc> = {};
     if (filter.dayOfWeek !== undefined) q.dayOfWeek = filter.dayOfWeek;
     if (filter.skillLevel) q.skillLevel = filter.skillLevel;
@@ -68,9 +87,61 @@ export class OpenMatRepository extends BaseRepository {
     if (filter.status) q.status = filter.status;
     else q.status = { $ne: "hidden" } as Filter<OpenMatDoc>["status"];
 
+    const and: Filter<OpenMatDoc>[] = [];
+    if (filter.q && filter.q.trim()) {
+      const rx = { $regex: filter.q.trim(), $options: "i" };
+      and.push({ $or: [{ title: rx }, { gymName: rx }] } as Filter<OpenMatDoc>);
+    }
+    if (filter.free) {
+      and.push({ $or: [{ feeCents: 0 }, { feeCents: { $exists: false } }, { feeCents: null }] } as Filter<OpenMatDoc>);
+    }
+    if (filter.startDate && filter.endDate) {
+      const weekdays = weekdaysInRange(filter.startDate, filter.endDate);
+      and.push({
+        $or: [
+          { isRecurring: true, dayOfWeek: { $in: weekdays } },
+          { specificDate: { $gte: filter.startDate, $lte: filter.endDate } },
+        ],
+      } as Filter<OpenMatDoc>);
+    }
+    if (and.length) q.$and = and;
+    return q;
+  }
+
+  public async list(filter: OpenMatFilter, skip: number, limit: number): Promise<{ items: OpenMat[]; total: number }> {
+    const match = this.buildMatch(filter);
     const col = this.collection<OpenMatDoc>(COLLECTIONS.openMats);
-    const total = await col.countDocuments(q);
-    const docs = await col.find(q).sort({ startTime: 1 }).skip(skip).limit(limit).toArray();
+
+    if (filter.lat !== undefined && filter.lng !== undefined) {
+      const radiusKm = filter.radiusKm ?? 25;
+      const res = await col
+        .aggregate<{ items: (OpenMatDoc & { distanceMeters: number })[]; total: { n: number }[] }>([
+          {
+            $geoNear: {
+              near: { type: "Point", coordinates: [filter.lng, filter.lat] },
+              distanceField: "distanceMeters",
+              maxDistance: radiusKm * 1000,
+              spherical: true,
+              query: match,
+            },
+          },
+          {
+            $facet: {
+              items: [{ $sort: { startTime: 1 } }, { $skip: skip }, { $limit: limit }],
+              total: [{ $count: "n" }],
+            },
+          },
+        ])
+        .toArray();
+      const first = res[0] ?? { items: [], total: [] };
+      return {
+        items: first.items.map((d) => ({ ...toListItem(d), distanceKm: d.distanceMeters / 1000 })),
+        total: first.total[0]?.n ?? 0,
+      };
+    }
+
+    const total = await col.countDocuments(match);
+    const docs = await col.find(match).sort({ startTime: 1 }).skip(skip).limit(limit).toArray();
     return { items: docs.map(toListItem), total };
   }
 
