@@ -1,17 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import { GymFacade } from "../src/facades/gym.facade.mts";
-import type { Geocoder } from "../src/services/geocoder.mts";
 import type { FavoriteRepository } from "../src/repositories/favorite.repository.mts";
 import type { GymRepository } from "../src/repositories/gym.repository.mts";
 import type { Gym } from "@bjj/contract";
-
-const fakeGeocoder: Pick<Geocoder, "lookupZip"> = {
-  lookupZip: (z: string) => (z === "75495" ? { lat: 33.42, lng: -96.58 } : null),
-};
-
-const nullGeocoder: Pick<Geocoder, "lookupZip"> = {
-  lookupZip: () => null,
-};
+import { fakeGeocoder, nullGeocoder } from "./fakes/geocoder.fake.mts";
 
 type FakeGymRepo = Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "findNearby" | "ensureIndexes">;
 type FakeFavRepo = Pick<FavoriteRepository, "add" | "remove" | "listGymIds" | "ensureIndexes">;

@@ -1,15 +1,10 @@
 import { describe, expect, it } from "bun:test";
 import { OpenMatFacade } from "../src/facades/open-mat.facade.mts";
-import type { Geocoder } from "../src/services/geocoder.mts";
 import type { GymRepository } from "../src/repositories/gym.repository.mts";
 import type { OpenMatRepository } from "../src/repositories/open-mat.repository.mts";
 import type { RsvpRepository } from "../src/repositories/rsvp.repository.mts";
 import type { Gym, OpenMatDetail } from "@bjj/contract";
-
-const nullGeocoder: Pick<Geocoder, "lookupZip"> = { lookupZip: () => null };
-const fakeGeocoder: Pick<Geocoder, "lookupZip"> = {
-  lookupZip: (z: string) => (z === "75495" ? { lat: 33.42, lng: -96.58 } : null),
-};
+import { fakeGeocoder, nullGeocoder } from "./fakes/geocoder.fake.mts";
 
 type FakeMatRepo = Pick<OpenMatRepository, "insert" | "findById" | "update" | "list" | "findNearby" | "setAttendeeCount" | "ensureIndexes">;
 type FakeGymRepo = Pick<GymRepository, "findById" | "insert">;
@@ -208,5 +203,19 @@ describe("OpenMatFacade", () => {
     expect(created.longitude).toBe(-96.58);
     expect(d.insertedGyms.length).toBe(1);
     expect(d.insertedGyms[0].location).toEqual({ lat: 33.42, lng: -96.58 });
+  });
+
+  it("newGym explicit lat/lng take precedence over postalCode geocoding", async () => {
+    const d = deps();
+    let n = 0;
+    const facade = new OpenMatFacade(d.matRepo, d.gymRepo, d.rsvpRepo, () => `id-${++n}`, fakeGeocoder);
+    const created = await facade.create("stranger", "practitioner", {
+      newGym: { name: "X", address: "1 A St", latitude: 99, longitude: -99, postalCode: "75495" },
+      title: "Sat Open Mat",
+      startTime: "10:00",
+      endTime: "12:00",
+    });
+    expect(created.latitude).toBe(99);
+    expect(created.longitude).toBe(-99);
   });
 });
