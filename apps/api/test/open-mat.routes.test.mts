@@ -54,6 +54,7 @@ describe("open-mat routes: search filters", () => {
       body: JSON.stringify({ newGym: { name: "NT BJJ", address: "1 Main St", postalCode: "75495" }, title: "Sat Rolls", startTime: "11:00", endTime: "13:00", dayOfWeek: 6, giType: "nogi", feeCents: 0 }),
     })).json();
     expect(created.data.id).toBeTruthy();
+    expect(created.data.latitude).toBeGreaterThan(30); // 75495 geocoded to TX coords
     const res = await fetch(`${base}/api/v1/open-mats?zip=75495&radiusKm=25&free=true`, { headers: auth });
     const json = await res.json();
     expect(res.status).toBe(200);

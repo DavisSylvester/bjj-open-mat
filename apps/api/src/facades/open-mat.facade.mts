@@ -140,7 +140,8 @@ export class OpenMatFacade {
       const p = this.geocoder.lookupZip(filter.zip);
       if (p) { lat = p.lat; lng = p.lng; }
     }
-    return this.mats.list({ ...filter, lat, lng }, skip, limit);
+    const { zip: _zip, ...rest } = filter;
+    return this.mats.list({ ...rest, lat, lng }, skip, limit);
   }
 
   public async nearby(lat: number, lng: number, radiusKm: number): Promise<OpenMat[]> {
