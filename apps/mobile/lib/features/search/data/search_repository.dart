@@ -37,5 +37,5 @@ final searchRepositoryProvider = Provider<SearchRepository>((ref) {
 
 final searchResultsProvider =
     FutureProvider.family<List<OpenMat>, SearchQuery>((ref, query) {
-  return ref.read(searchRepositoryProvider).search(query);
+  return ref.watch(searchRepositoryProvider).search(query);
 });

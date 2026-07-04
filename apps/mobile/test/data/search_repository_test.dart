@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:bjj_open_mat/features/search/data/search_repository.dart';
 import 'package:bjj_open_mat/features/search/data/search_query.dart';
+import 'package:bjj_open_mat/core/data/api_exception.dart';
 
 void main() {
   late Dio dio;
@@ -63,5 +64,15 @@ void main() {
 
     final res = await repo.search(const SearchQuery());
     expect(res, isEmpty);
+  });
+
+  test('maps API error to ApiException', () async {
+    adapter.onGet(
+      '/api/v1/open-mats',
+      (s) => s.reply(500, {'error': {'code': 'internal_error', 'message': 'server error'}}),
+      queryParameters: {'limit': 50},
+    );
+
+    expect(() => repo.search(const SearchQuery()), throwsA(isA<ApiException>()));
   });
 }
