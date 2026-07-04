@@ -21,4 +21,16 @@ void main() {
     expect(r.startIso, '2026-07-01');
     expect(r.endIso, '2026-07-07');
   });
+
+  test('thisWeekend on a Sunday uses the current weekend (Sat..Sun)', () {
+    final r = WhenRange.thisWeekend(DateTime(2026, 7, 5)); // Sunday
+    expect(r.startIso, '2026-07-04'); // Saturday of the same weekend
+    expect(r.endIso, '2026-07-05');
+  });
+
+  test('thisMonth spans the 1st..last of the month', () {
+    final r = WhenRange.thisMonth(DateTime(2026, 7, 15));
+    expect(r.startIso, '2026-07-01');
+    expect(r.endIso, '2026-07-31');
+  });
 }

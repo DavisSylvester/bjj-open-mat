@@ -12,16 +12,19 @@ class WhenRange {
   static WhenRange singleDay(DateTime d) =>
       WhenRange(DateTime(d.year, d.month, d.day), DateTime(d.year, d.month, d.day));
 
+  /// Rolling 7-day window starting from [from] — NOT a calendar Mon–Sun week.
   static WhenRange thisWeek(DateTime from) {
     final s = DateTime(from.year, from.month, from.day);
     return WhenRange(s, s.add(const Duration(days: 6)));
   }
 
-  /// Upcoming Saturday..Sunday (inclusive). If today is already the weekend, uses the current one.
+  /// The current weekend (Sat..Sun). On Sun it uses the current weekend; on other
+  /// days it advances to the upcoming Saturday.
   static WhenRange thisWeekend(DateTime from) {
     final base = DateTime(from.year, from.month, from.day);
-    final daysUntilSat = (DateTime.saturday - base.weekday) % 7;
-    final sat = base.add(Duration(days: daysUntilSat));
+    final sat = base.weekday == DateTime.sunday
+        ? base.subtract(const Duration(days: 1))
+        : base.add(Duration(days: (DateTime.saturday - base.weekday) % 7));
     return WhenRange(sat, sat.add(const Duration(days: 1)));
   }
 
