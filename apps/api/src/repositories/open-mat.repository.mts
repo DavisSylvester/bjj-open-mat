@@ -92,7 +92,7 @@ export class OpenMatRepository extends BaseRepository {
       const rx = { $regex: filter.q.trim(), $options: "i" };
       and.push({ $or: [{ title: rx }, { gymName: rx }] } as Filter<OpenMatDoc>);
     }
-    if (filter.free) {
+    if (filter.free === true) {
       and.push({ $or: [{ feeCents: 0 }, { feeCents: { $exists: false } }, { feeCents: null }] } as Filter<OpenMatDoc>);
     }
     if (filter.startDate && filter.endDate) {
@@ -127,6 +127,8 @@ export class OpenMatRepository extends BaseRepository {
           },
           {
             $facet: {
+              // Sort chronologically (consistent with the non-geo list); each card
+              // still shows its distance, so proximity remains visible without re-sorting.
               items: [{ $sort: { startTime: 1 } }, { $skip: skip }, { $limit: limit }],
               total: [{ $count: "n" }],
             },

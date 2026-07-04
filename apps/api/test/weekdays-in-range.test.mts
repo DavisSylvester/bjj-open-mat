@@ -14,4 +14,7 @@ describe("weekdaysInRange", () => {
   it("a single Wednesday excludes Saturday", () => {
     expect(weekdaysInRange("2026-07-08", "2026-07-08")).toEqual([3]); // Wed
   });
+  it("returns an empty array when endDate is before startDate", () => {
+    expect(weekdaysInRange("2026-07-05", "2026-07-04")).toEqual([]);
+  });
 });
