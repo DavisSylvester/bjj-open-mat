@@ -37,6 +37,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   final _gymAddrCtrl = TextEditingController();
   final _gymCityCtrl = TextEditingController();
   final _gymStateCtrl = TextEditingController();
+  final _gymZipCtrl = TextEditingController();
 
   static const _expToSkill = {'all': 'all', 'beg': 'beginner', 'int': 'intermediate', 'adv': 'advanced'};
 
@@ -62,6 +63,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
                 address: _gymAddrCtrl.text.trim(),
                 city: _gymCityCtrl.text.trim(),
                 state: _gymStateCtrl.text.trim(),
+                postalCode: _gymZipCtrl.text.trim(),
               ),
               title: _title(),
               startTime: _hhmm(_startTime),
@@ -116,6 +118,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
     _gymAddrCtrl.dispose();
     _gymCityCtrl.dispose();
     _gymStateCtrl.dispose();
+    _gymZipCtrl.dispose();
     super.dispose();
   }
 
@@ -363,6 +366,8 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
         const SizedBox(width: 10),
         SizedBox(width: 100, child: _buildInlineTextField(t, label: 'STATE', required: false, controller: _gymStateCtrl, hint: 'CA')),
       ]),
+      const SizedBox(height: 10),
+      _buildInlineTextField(t, label: 'ZIP / POSTAL', required: false, controller: _gymZipCtrl, hint: '75495'),
     ]);
   }
 
