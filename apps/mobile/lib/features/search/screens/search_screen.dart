@@ -31,6 +31,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _zipCtrl = TextEditingController();
   Timer? _debounce;
 
+  // Captured GPS coordinates. These are the ONLY source of lat/lng; they are
+  // suppressed whenever a zip is present (see _rebuildQuery).
+  double? _gpsLat;
+  double? _gpsLng;
+
   SearchQuery _query = const SearchQuery(radiusKm: 16);
 
   @override
@@ -50,22 +55,25 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   void _rebuildQuery() {
+    // Enforce a single geo source: ZIP takes precedence when present, and
+    // lat/lng derive ONLY from the captured GPS coords (suppressed when a zip
+    // is set) — so we never send both zip and lat/lng.
+    final zipText = _zipCtrl.text.trim();
+    final useZip = zipText.isNotEmpty;
     setState(() {
       _query = SearchQuery(
         text: _searchCtrl.text.trim().isEmpty ? null : _searchCtrl.text.trim(),
         giType: _selectedGiType,
         free: _filters.contains('free'),
         when: _when,
-        lat: _query.lat,
-        lng: _query.lng,
+        lat: useZip ? null : _gpsLat,
+        lng: useZip ? null : _gpsLng,
         radiusKm: _distanceMi * 1.60934,
-        zip: _zipCtrl.text.trim().isEmpty ? null : _zipCtrl.text.trim(),
+        zip: useZip ? zipText : null,
       );
     });
-    // Eagerly create + start the new query's future now (rather than lazily on
-    // the next build) so it can resolve before the frame paints, then nudge a
-    // rebuild once it settles — otherwise the first build of a new query key
-    // always shows the loading state.
+    // Cosmetic: warm the future so results paint without a loading flash;
+    // family caching dedupes with the ref.watch in build (no double fetch).
     final query = _query;
     ref.read(searchResultsProvider(query).future).whenComplete(() {
       if (mounted) setState(() {});
@@ -135,21 +143,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Future<void> _useGps() async {
+    // Cancel any pending text-debounce so it can't overwrite the GPS query
+    // ~300ms later with a stale (zip-cleared) rebuild.
+    _debounce?.cancel();
     final loc = await ref.read(locationServiceProvider).current();
     if (loc == null) return;
+    _gpsLat = loc.latitude;
+    _gpsLng = loc.longitude;
     _zipCtrl.clear();
-    setState(() {
-      _query = SearchQuery(
-        text: _searchCtrl.text.trim().isEmpty ? null : _searchCtrl.text.trim(),
-        giType: _selectedGiType,
-        free: _filters.contains('free'),
-        when: _when,
-        lat: loc.latitude,
-        lng: loc.longitude,
-        radiusKm: _distanceMi * 1.60934,
-        zip: null,
-      );
-    });
+    _rebuildQuery();
   }
 
   void _onDistanceChanged(double v) {
@@ -402,6 +404,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Widget _buildGlass(AppTokens t) {
     final results = ref.watch(searchResultsProvider(_query));
+    final whenOptions = _whenOptions(t);
     final filters = [
       (id: 'gi', label: 'Gi', color: t.gi),
       (id: 'nogi', label: 'No-Gi', color: t.noGi),
@@ -603,8 +606,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 separatorBuilder: (_, _) => const SizedBox(width: 8),
-                itemCount: _whenOptions(t).length,
-                itemBuilder: (_, i) => _whenOptions(t)[i],
+                itemCount: whenOptions.length,
+                itemBuilder: (_, i) => whenOptions[i],
               ),
             ),
           ),

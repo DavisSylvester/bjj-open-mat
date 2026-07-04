@@ -53,6 +53,9 @@ void main() {
 
     expect(fake.last, isNotNull);
     expect(fake.last!.zip, '75495');
+    // Mutual exclusion: with a zip present, GPS lat/lng must be suppressed.
+    expect(fake.last!.lat, isNull);
+    expect(fake.last!.lng, isNull);
     expect(fake.last!.when, isNotNull);
     expect(find.text('NT BJJ'), findsWidgets);
   });
