@@ -19,6 +19,9 @@ fun signingValue(propKey: String, envKey: String): String? =
     keystoreProperties.getProperty(propKey) ?: System.getenv(envKey)
 
 android {
+    // `namespace` is the internal R/BuildConfig package and must match the Kotlin
+    // source package (MainActivity.kt lives in com.example.bjj_open_mat). It is
+    // intentionally decoupled from `applicationId` below (the installed package id).
     namespace = "com.example.bjj_open_mat"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
