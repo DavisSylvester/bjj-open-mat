@@ -626,7 +626,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               children: [
                 RichText(text: TextSpan(children: [
                   TextSpan(text: '${results.asData?.value.length ?? 0}', style: t.h2Style.copyWith(color: t.primary)),
-                  TextSpan(text: ' Sessions', style: t.h2Style),
+                  TextSpan(text: (results.asData?.value.length ?? 0) == 1 ? ' Session' : ' Sessions', style: t.h2Style),
                 ])),
                 const Spacer(),
                 Text('Map view', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 13)),

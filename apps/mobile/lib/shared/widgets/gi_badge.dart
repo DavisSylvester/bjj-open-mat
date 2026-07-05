@@ -5,7 +5,10 @@ class GiBadge extends StatelessWidget {
   final String type; // 'gi', 'nogi', 'both'
   final bool small;
 
-  const GiBadge({super.key, required this.type, this.small = false});
+  /// Use a solid white pill (for colored/gradient backgrounds like the detail hero).
+  final bool onDark;
+
+  const GiBadge({super.key, required this.type, this.small = false, this.onDark = false});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class GiBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: small ? 9 : 11, vertical: small ? 3 : 5),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.09),
+        color: onDark ? Colors.white : color.withValues(alpha: 0.09),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
@@ -53,7 +56,8 @@ class GiBadge extends StatelessWidget {
           Text(
             label,
             style: t.miniStyle.copyWith(
-              color: color,
+              // Darkened for WCAG contrast on the pale tinted (or white) pill.
+              color: Color.lerp(color, const Color(0xFF14151A), 0.34),
               fontSize: small ? 11 : 12,
               fontWeight: FontWeight.w700,
               letterSpacing: -0.01,

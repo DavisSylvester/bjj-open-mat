@@ -202,7 +202,7 @@ class _GlassDetail extends StatelessWidget {
                   ],
                   const SizedBox(height: 8),
                   Row(children: [
-                    GiBadge(type: mat.giType),
+                    GiBadge(type: mat.giType, onDark: true),
                     const SizedBox(width: 6),
                     ExpBadge(level: mat.skillLevel),
                   ]),

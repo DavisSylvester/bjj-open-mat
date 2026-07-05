@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../app/theme.dart';
+import '../../../core/design/tokens.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../../shared/widgets/belt_pin.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -18,7 +19,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: StitchTokens.durationSlow);
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
 
@@ -42,28 +43,63 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<AppTokens>()!;
+
     return Scaffold(
-      backgroundColor: StitchTokens.primary,
-      body: Center(
-        child: FadeTransition(
-          opacity: _fadeIn,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.sports_martial_arts, size: 80, color: StitchTokens.secondary),
-              const SizedBox(height: StitchTokens.lg),
-              Text(
-                'BJJ Open Mat',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+      backgroundColor: t.bg,
+      body: Stack(
+        children: [
+          // Soft brand glow so the flat-white launch has a touch of life.
+          Align(
+            alignment: const Alignment(0, -0.18),
+            child: Container(
+              width: 320,
+              height: 320,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [t.primary.withValues(alpha: 0.10), t.primary.withValues(alpha: 0.0)],
+                ),
               ),
-              const SizedBox(height: StitchTokens.sm),
-              Text(
-                'Find your next roll',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: StitchTokens.textSecondary),
-              ),
-            ],
+            ),
           ),
-        ),
+          Center(
+            child: FadeTransition(
+              opacity: _fadeIn,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 104,
+                    height: 104,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(26),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [t.primary, t.both],
+                      ),
+                      boxShadow: [
+                        BoxShadow(color: t.primary.withValues(alpha: 0.28), blurRadius: 26, offset: const Offset(0, 12)),
+                      ],
+                    ),
+                    child: const Center(child: BeltPin.onColor(size: 66)),
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    'BJJ Open Mat',
+                    style: t.displayStyle.copyWith(fontSize: 40, letterSpacing: -0.5),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Find your next roll',
+                    style: t.bodyStyle.copyWith(color: t.muted, fontSize: 15),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

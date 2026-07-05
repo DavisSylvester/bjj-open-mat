@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
@@ -56,6 +57,17 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       isLive: mat.status == 'live',
       unverified: !mat.verified,
     );
+  }
+
+  /// Up-to-two-letter initials from the signed-in user's name (avatar chip).
+  static String _initials(String? name) {
+    final parts = (name ?? '').trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return 'ME';
+    if (parts.length == 1) {
+      final p = parts.first;
+      return (p.length >= 2 ? p.substring(0, 2) : p).toUpperCase();
+    }
+    return (parts.first[0] + parts.last[0]).toUpperCase();
   }
 
   static String _expLevel(String skillLevel) {
@@ -178,7 +190,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         colors: [t.primary, t.both],
                       ),
                     ),
-                    child: Center(child: Text('MR', style: t.miniStyle.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800))),
+                    child: Center(child: Text(_initials(ref.watch(authStateProvider).user?.displayName), style: t.miniStyle.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800))),
                   ),
                 ],
               ),
