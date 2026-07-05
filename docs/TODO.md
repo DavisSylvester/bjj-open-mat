@@ -13,5 +13,5 @@ Follow-ups deferred after shipping the mobile APK + AWS API deploy + custom doma
 - [ ] **(Optional) Switch mobile callback to a custom scheme.** Today it uses the `https` App Links scheme (`auth0Scheme=https`), which requires the release SHA-256 registered for App Links. Flipping `auth0Scheme` → `com.davissylvester.bjjopenmat` in `apps/mobile/android/app/build.gradle.kts` drops the fingerprint/App-Links requirement (callback becomes `com.davissylvester.bjjopenmat://…`). Simpler; needs an APK rebuild + Auth0 URL update.
 
 ## iOS (deferred until Apple Developer account)
-- [ ] **Enable installable iOS builds.** Requires an Apple Developer account ($99/yr): signing certs + provisioning, then wire release signing into CI (currently iOS is compile-check only via `mobile-ios.yml`).
+- [ ] **Enable installable iOS builds.** Requires an Apple Developer account ($99/yr): signing certs + provisioning, then wire release signing into CI (iOS builds a signed IPA to TestFlight via `.github/workflows/mobile-release.yml`; what remains is supplying the Apple secrets).
 - [ ] **Wire iOS Google Maps key.** Enable **Maps SDK for iOS**, create a separate key restricted by bundle id `com.davissylvester.bjjopenmat`, and add `GMSServices.provideAPIKey(...)` in `ios/Runner/AppDelegate.swift` with a build-time define (the API's `.env` already holds `MAPS_IOS_API_KEY`).

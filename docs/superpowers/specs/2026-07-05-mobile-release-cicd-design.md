@@ -95,7 +95,7 @@ Working directory: `apps/mobile`.
 9. Build the APK the same way (`flutter build apk --release ...`) for the Release artifact.
 10. Upload the `.aab` to Google Play with `r0adkll/upload-google-play@v1`:
     - `serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}`
-    - `packageName: com.davissylvester.bjjOpenMat` (confirm against `android/app/build.gradle` `applicationId` when implementing)
+    - `packageName: com.davissylvester.bjjopenmat` (confirm against `android/app/build.gradle` `applicationId` when implementing)
     - `releaseFiles: apps/mobile/build/app/outputs/bundle/release/app-release.aab`
     - `track: ${{ inputs.play_track || 'internal' }}`
     - `status: draft` (safe default; promotion to a live track is manual)
