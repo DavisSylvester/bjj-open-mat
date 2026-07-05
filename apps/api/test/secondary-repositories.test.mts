@@ -33,7 +33,7 @@ describe("secondary repositories", () => {
     const repo = new CheckInRepository(db);
     await repo.ensureIndexes();
     await repo.insert({ id: "c-1", openMatId: "om-1", userId: "u-1", sessionDate: "2026-06-20", checkedInAt: new Date().toISOString() });
-    await repo.setReview("c-1", { rating: 5, categoryRatings: { instruction: 5, cleanliness: 5, variety: 5, worth_returning: 5, overall: 5 } });
+    await repo.setReview("c-1", { rating: 5, categoryRatings: { instruction: 5, cleanliness: 5, variety: 5, worth_returning: 5, overall: 5 } , reviewedAt: new Date().toISOString() });
     const mine = await repo.listByUser("u-1", 0, 20);
     expect(mine.items[0]?.rating).toBe(5);
   });

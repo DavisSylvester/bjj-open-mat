@@ -4,6 +4,7 @@ import {
   CreateOpenMatRequest,
   NearbyQuery,
   OpenMatListQuery,
+  PageQuery,
   RsvpRequest,
   SessionDateQuery,
   UpdateOpenMatRequest,
@@ -157,5 +158,15 @@ export function openMatRoutes(container: Container) {
         return list(checkins, { page: 1, limit: checkins.length, total: checkins.length });
       },
       { requireOwner: true, query: SessionDateQuery },
+    )
+    .get(
+      "/:id/reviews",
+      async ({ params, query }) => {
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 20;
+        const { items, total } = await checkInFacade.reviewsForOpenMat(params.id, (page - 1) * limit, limit);
+        return list(items, { page, limit, total });
+      },
+      { query: PageQuery },
     );
 }

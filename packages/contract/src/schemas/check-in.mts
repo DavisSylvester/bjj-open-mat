@@ -13,6 +13,7 @@ export const CheckIn = t.Object(
     rating: t.Optional(t.Integer({ minimum: 1, maximum: 5 })),
     review: t.Optional(t.String()),
     categoryRatings: t.Optional(CategoryRatings),
+    reviewedAt: t.Optional(t.String()),
     latitude: t.Optional(t.Number()),
     longitude: t.Optional(t.Number()),
     gpsAccuracyM: t.Optional(t.Number()),
