@@ -1,0 +1,39 @@
+name: API Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'infra/**'
+      - '.github/workflows/api-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # required for OIDC role assumption
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::318205107378:role/bjj-github-deploy
+          aws-region: us-east-1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install CDK dependencies
+        working-directory: infra
+        run: npm ci
+
+      # Builds the Lambda container image (Docker on the runner), pushes to the
+      # CDK-managed ECR, and updates the Lambda + API Gateway.
+      - name: Deploy API stack
+        working-directory: infra
+        run: npx cdk deploy BjjApiStack --require-approval never
