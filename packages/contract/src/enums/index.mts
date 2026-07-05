@@ -6,3 +6,5 @@ export * from "./user-role.mts";
 export * from "./notification-type.mts";
 export * from "./review-category.mts";
 export * from "./check-in-location-status.mts";
+export * from "./gender.mjs";
+export * from "./weight-division.mjs";
