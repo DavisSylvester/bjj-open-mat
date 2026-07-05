@@ -1,6 +1,8 @@
 import { type Static, Type as t } from "@sinclair/typebox";
 import { BeltRank } from "../enums/belt-rank.mts";
 import { UserRole } from "../enums/user-role.mts";
+import { Gender } from "../enums/gender.mts";
+import { WeightDivision } from "../enums/weight-division.mts";
 
 export const UserSettings = t.Object(
   {
@@ -22,6 +24,13 @@ export const User = t.Object(
     beltRank: t.Optional(BeltRank),
     beltStripes: t.Optional(t.Integer({ minimum: 0, maximum: 4 })),
     weight: t.Optional(t.String()),
+    city: t.Optional(t.String()),
+    state: t.Optional(t.String()),
+    gender: t.Optional(Gender),
+    weightValue: t.Optional(t.Number()),
+    weightUnit: t.Optional(t.Union([t.Literal("lb"), t.Literal("kg")])),
+    weightDivision: t.Optional(WeightDivision),
+    weightDivisionContext: t.Optional(t.Union([t.Literal("gi"), t.Literal("nogi")])),
     bio: t.Optional(t.String()),
     avatarUrl: t.Optional(t.String()),
     homeGymId: t.Optional(t.String()),
