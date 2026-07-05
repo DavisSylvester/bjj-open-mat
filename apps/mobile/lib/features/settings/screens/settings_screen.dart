@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/design/theme_provider.dart';
 import '../../../core/auth/auth_service.dart';
+import '../role_toggle.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -97,6 +98,24 @@ class _SportSettings extends StatelessWidget {
                   onTap: () {},
                 ),
               ),
+              Divider(height: 1, color: t.border),
+              Builder(builder: (ctx) {
+                final role = ref.watch(authStateProvider).user?.role;
+                final toggle = roleToggle(role);
+                return Container(
+                  color: t.surface,
+                  child: ListTile(
+                    leading: Icon(LucideIcons.repeat, color: t.muted, size: 18),
+                    title: Text(toggle.label, style: t.bodyStyle),
+                    trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.faint),
+                    onTap: () async {
+                      HapticFeedback.selectionClick();
+                      await ref.read(authStateProvider.notifier).setRole(toggle.targetRole);
+                      if (ctx.mounted) ctx.go(toggle.destination);
+                    },
+                  ),
+                );
+              }),
               Divider(height: 1, color: t.border),
               Container(
                 color: t.surface,
@@ -200,6 +219,21 @@ class _GlassSettings extends StatelessWidget {
                     style: t.miniStyle.copyWith(fontSize: 11),
                   ),
                 ),
+                Divider(height: 1, color: t.border),
+                Builder(builder: (ctx) {
+                  final role = ref.watch(authStateProvider).user?.role;
+                  final toggle = roleToggle(role);
+                  return ListTile(
+                    leading: Icon(LucideIcons.repeat, color: t.muted),
+                    title: Text(toggle.label, style: t.bodyStyle),
+                    trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+                    onTap: () async {
+                      HapticFeedback.selectionClick();
+                      await ref.read(authStateProvider.notifier).setRole(toggle.targetRole);
+                      if (ctx.mounted) ctx.go(toggle.destination);
+                    },
+                  );
+                }),
                 Divider(height: 1, color: t.border),
                 ListTile(
                   leading: Icon(LucideIcons.logOut, color: t.red),

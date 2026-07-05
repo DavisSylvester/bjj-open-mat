@@ -9,6 +9,7 @@ import '../../../shared/widgets/gi_badge.dart';
 import '../../../shared/widgets/exp_badge.dart';
 import '../../../shared/widgets/stat_bar.dart';
 import '../../../shared/widgets/score_cell.dart';
+import '../widgets/going_section.dart';
 
 class OpenMatDetailScreen extends ConsumerWidget {
   final String? sessionId;
@@ -109,6 +110,8 @@ class _SportDetail extends StatelessWidget {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(14),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                GoingSection(t: t, mat: mat),
+                const SizedBox(height: 16),
                 if (mat.gymRating != null) ...[
                   Row(children: [
                     Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
@@ -219,6 +222,8 @@ class _GlassDetail extends StatelessWidget {
               const SizedBox(width: 10),
               _InfoCard(label: 'Fee', value: mat.feeLabel, icon: LucideIcons.dollarSign, t: t, valueColor: mat.feeLabel == 'Free' ? t.green : t.text),
             ]),
+            const SizedBox(height: 20),
+            GoingSection(t: t, mat: mat),
             if (mat.description != null && mat.description!.isNotEmpty) ...[
               const SizedBox(height: 20),
               Text('About', style: t.h2Style),

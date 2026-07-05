@@ -131,4 +131,26 @@ class OpenMat {
     final h12 = h % 12 == 0 ? 12 : h % 12;
     return '$h12:${m.toString().padLeft(2, '0')} $period';
   }
+
+  /// The concrete date this session's "going" list is keyed by:
+  /// one-off sessions use [specificDate]; recurring sessions use the next
+  /// occurrence of [dayOfWeek] (0=Sun..6=Sat) on/after [from] (defaults now).
+  String nextSessionDate({DateTime? from}) {
+    if (specificDate != null && specificDate!.isNotEmpty) {
+      return specificDate!.split('T').first;
+    }
+    final base = from ?? DateTime.now();
+    final today = DateTime(base.year, base.month, base.day);
+    if (dayOfWeek == null) return _fmtDate(today);
+    final targetDart = dayOfWeek == 0 ? 7 : dayOfWeek!; // Dart: Mon=1..Sun=7
+    var d = today;
+    for (var i = 0; i < 7; i++) {
+      if (d.weekday == targetDart) return _fmtDate(d);
+      d = d.add(const Duration(days: 1));
+    }
+    return _fmtDate(today);
+  }
+
+  static String _fmtDate(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 }

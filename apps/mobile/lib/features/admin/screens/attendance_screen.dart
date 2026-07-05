@@ -5,6 +5,7 @@ import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
 import '../../checkins/data/attendance_repository.dart';
 import '../../checkins/models/checkin.dart';
+import '../../open_mats/data/rsvp_repository.dart';
 
 final attendanceProvider = FutureProvider.family<List<CheckIn>, AttendanceQuery>((ref, query) async {
   return ref.read(attendanceRepositoryProvider).forSession(query.sessionId, date: query.date);
@@ -62,6 +63,36 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
               Text(_selectedDate, style: Theme.of(context).textTheme.titleLarge),
             ]),
           ),
+          Consumer(builder: (context, watchRef, _) {
+            final expected = watchRef.watch(attendeesProvider(GoingQuery(widget.sessionId, _selectedDate)));
+            final list = expected.asData?.value ?? const [];
+            if (list.isEmpty) return const SizedBox.shrink();
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(StitchTokens.md),
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('Expected · ${list.length} going', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: list
+                      .map((a) => Chip(
+                            avatar: CircleAvatar(
+                              backgroundColor: BeltColors.fromRank(a.beltRank),
+                              child: Text(
+                                a.name.isNotEmpty ? a.name[0].toUpperCase() : '?',
+                                style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            label: Text(a.name),
+                          ))
+                      .toList(),
+                ),
+              ]),
+            );
+          }),
           Expanded(
             child: checkinsAsync.when(
               loading: () => const ShimmerList(),

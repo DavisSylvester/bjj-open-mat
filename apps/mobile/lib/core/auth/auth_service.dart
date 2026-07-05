@@ -53,6 +53,13 @@ class UserProfile {
   final String? bio;
   final String? avatarUrl;
   final String? homeGymId;
+  final String? city;
+  final String? state;
+  final String? gender;
+  final double? weightValue;
+  final String? weightUnit;
+  final String? weightDivision;
+  final String? weightDivisionContext;
 
   const UserProfile({
     required this.id,
@@ -65,6 +72,13 @@ class UserProfile {
     this.bio,
     this.avatarUrl,
     this.homeGymId,
+    this.city,
+    this.state,
+    this.gender,
+    this.weightValue,
+    this.weightUnit,
+    this.weightDivision,
+    this.weightDivisionContext,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -79,6 +93,13 @@ class UserProfile {
       bio: json['bio'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
       homeGymId: json['homeGymId'] as String?,
+      city: json['city'] as String?,
+      state: json['state'] as String?,
+      gender: json['gender'] as String?,
+      weightValue: (json['weightValue'] as num?)?.toDouble(),
+      weightUnit: json['weightUnit'] as String?,
+      weightDivision: json['weightDivision'] as String?,
+      weightDivisionContext: json['weightDivisionContext'] as String?,
     );
   }
 
@@ -89,6 +110,13 @@ class UserProfile {
     'bio': bio,
     'avatarUrl': avatarUrl,
     'homeGymId': homeGymId,
+    'city': city,
+    'state': state,
+    'gender': gender,
+    'weightValue': weightValue,
+    'weightUnit': weightUnit,
+    'weightDivision': weightDivision,
+    'weightDivisionContext': weightDivisionContext,
   };
 
   bool get isGymOwner => role == 'gym_owner';

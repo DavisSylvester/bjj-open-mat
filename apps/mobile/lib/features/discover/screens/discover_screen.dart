@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../../shared/widgets/ticker_strip.dart';
@@ -21,6 +22,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   // upgraded to a geo query once the device location resolves. Never null so
   // the feed always shows something while GPS is being captured.
   NearbyQuery _query = const NearbyQuery();
+  String? _locationLabel;
 
   @override
   void initState() {
@@ -34,6 +36,8 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     setState(() {
       _query = NearbyQuery(lat: loc.latitude, lng: loc.longitude);
     });
+    final rg = await ref.read(geoRepositoryProvider).reverse(loc.latitude, loc.longitude);
+    if (mounted && rg != null) setState(() => _locationLabel = rg.label);
   }
 
   /// Map an [OpenMat] to the presentational [SessionRowData] used by rows.
@@ -96,6 +100,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
               Container(width: 4, height: 22, color: t.red),
               const SizedBox(width: 8),
               Text('Open Mat', style: t.displayStyle.copyWith(fontSize: 22)),
+              const SizedBox(width: 8),
+              if (_locationLabel != null)
+                Text(_locationLabel!, style: t.miniStyle.copyWith(color: t.muted, fontSize: 10)),
               const Spacer(),
               Icon(LucideIcons.bell, size: 18, color: t.muted),
               const SizedBox(width: 12),
@@ -154,7 +161,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Good evening', style: t.miniStyle.copyWith(color: t.muted, fontSize: 13)),
+                        Text(_locationLabel ?? 'Near you', style: t.miniStyle.copyWith(color: t.muted, fontSize: 13)),
                         const SizedBox(height: 2),
                         Text('Find your roll', style: t.h1Style.copyWith(fontSize: 26)),
                       ],

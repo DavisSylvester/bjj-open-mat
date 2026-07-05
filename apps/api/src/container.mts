@@ -8,7 +8,7 @@ import { GymFacade } from "./facades/gym.facade.mts";
 import { NotificationFacade } from "./facades/notification.facade.mts";
 import { OpenMatFacade } from "./facades/open-mat.facade.mts";
 import { UserFacade } from "./facades/user.facade.mts";
-import { ZipcodesGeocoder } from "./services/geocoder.mts";
+import { ZipcodesGeocoder, type Geocoder } from "./services/geocoder.mts";
 import { CheckInRepository } from "./repositories/check-in.repository.mts";
 import { FavoriteRepository } from "./repositories/favorite.repository.mts";
 import { GymRepository } from "./repositories/gym.repository.mts";
@@ -26,6 +26,7 @@ export interface Container {
   readonly openMatFacade: OpenMatFacade;
   readonly checkInFacade: CheckInFacade;
   readonly notificationFacade: NotificationFacade;
+  readonly geocoder: Geocoder;
   ensureIndexes(): Promise<void>;
 }
 
@@ -57,6 +58,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
+    geocoder,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),

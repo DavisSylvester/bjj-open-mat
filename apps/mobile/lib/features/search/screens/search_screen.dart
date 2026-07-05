@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../open_mats/models/open_mat.dart';
@@ -35,8 +36,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   // suppressed whenever a zip is present (see _rebuildQuery).
   double? _gpsLat;
   double? _gpsLng;
+  String? _locationLabel;
 
   SearchQuery _query = const SearchQuery(radiusKm: 16);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _useGps());
+  }
 
   @override
   void dispose() {
@@ -143,15 +151,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Future<void> _useGps() async {
-    // Cancel any pending text-debounce so it can't overwrite the GPS query
-    // ~300ms later with a stale (zip-cleared) rebuild.
     _debounce?.cancel();
     final loc = await ref.read(locationServiceProvider).current();
-    if (loc == null) return;
+    if (!mounted || loc == null) return;
     _gpsLat = loc.latitude;
     _gpsLng = loc.longitude;
     _zipCtrl.clear();
     _rebuildQuery();
+    final rg = await ref.read(geoRepositoryProvider).reverse(loc.latitude, loc.longitude);
+    if (mounted && rg != null) setState(() => _locationLabel = rg.label);
   }
 
   void _onDistanceChanged(double v) {
@@ -276,7 +284,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: Row(children: [
                         Icon(LucideIcons.locateFixed, size: 13, color: t.red),
                         const SizedBox(width: 4),
-                        Text('GPS', style: t.miniStyle.copyWith(color: t.red, fontSize: 10)),
+                        Text(_locationLabel ?? 'GPS', style: t.miniStyle.copyWith(color: t.red, fontSize: 10)),
                       ]),
                     ),
                   ),
@@ -360,7 +368,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   child: Slider(
                     value: _distanceMi,
                     min: 1,
-                    max: 50,
+                    max: 100,
                     onChanged: _onDistanceChanged,
                   ),
                 ),
@@ -463,7 +471,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: Row(children: [
                         Icon(LucideIcons.locateFixed, size: 13, color: t.primary),
                         const SizedBox(width: 4),
-                        Text('GPS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 10)),
+                        Text(_locationLabel ?? 'GPS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 10)),
                       ]),
                     ),
                   ),
@@ -590,7 +598,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: Slider(
                         value: _distanceMi,
                         min: 1,
-                        max: 50,
+                        max: 100,
                         onChanged: _onDistanceChanged,
                       ),
                     ),

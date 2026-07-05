@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../settings/role_toggle.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/design/theme_provider.dart';
 import '../../../shared/widgets/belt_badge.dart';
@@ -328,12 +330,20 @@ class _GlassProfile extends StatelessWidget {
                     trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
                   ),
                   Divider(height: 1, color: t.border),
-                  ListTile(
-                    leading: Icon(LucideIcons.store, color: t.muted),
-                    title: Text('Gym Owner Panel', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
-                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
-                    onTap: () => context.go('/owner/dashboard'),
-                  ),
+                  Builder(builder: (ctx) {
+                    final role = ref.watch(authStateProvider).user?.role;
+                    final toggle = roleToggle(role);
+                    return ListTile(
+                      leading: Icon(LucideIcons.repeat, color: t.muted),
+                      title: Text(toggle.label, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                      trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                      onTap: () async {
+                        HapticFeedback.selectionClick();
+                        await ref.read(authStateProvider.notifier).setRole(toggle.targetRole);
+                        if (ctx.mounted) ctx.go(toggle.destination);
+                      },
+                    );
+                  }),
                   if (isAdmin) ...[
                     Divider(height: 1, color: t.border),
                     ListTile(

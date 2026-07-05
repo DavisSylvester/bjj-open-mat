@@ -11,4 +11,5 @@ declare module 'zipcodes' {
 
   export function lookup(zip: string | number): ZipRecord | undefined;
   export function random(): ZipRecord;
+  export function lookupByCoords(lat: number, lon: number): ZipRecord | null;
 }

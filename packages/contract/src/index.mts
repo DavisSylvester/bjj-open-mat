@@ -2,3 +2,4 @@
 // Framework-agnostic TypeBox schemas + derived static types.
 export * from "./enums/index.mts";
 export * from "./schemas/index.mts";
+export * from "./reference/ibjjf-weight-classes.mts";
