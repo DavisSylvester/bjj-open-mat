@@ -1,5 +1,5 @@
-import type { Gender } from "../enums/gender.mjs";
-import type { WeightDivision } from "../enums/weight-division.mjs";
+import type { Gender } from "../enums/gender.mts";
+import type { WeightDivision } from "../enums/weight-division.mts";
 
 export type GiContext = "gi" | "nogi";
 

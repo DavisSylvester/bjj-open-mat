@@ -16,7 +16,6 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _bioController;
-  late TextEditingController _weightController;
   String _selectedBelt = 'white';
   late TextEditingController _cityController;
   late TextEditingController _stateController;
@@ -35,7 +34,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final user = ref.read(authStateProvider).user;
     _nameController = TextEditingController(text: user?.displayName ?? '');
     _bioController = TextEditingController(text: user?.bio ?? '');
-    _weightController = TextEditingController(text: user?.weight ?? '');
     _selectedBelt = user?.beltRank ?? 'white';
     _cityController = TextEditingController(text: user?.city ?? '');
     _stateController = TextEditingController(text: user?.state ?? '');
@@ -51,7 +49,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   void dispose() {
     _nameController.dispose();
     _bioController.dispose();
-    _weightController.dispose();
     _cityController.dispose();
     _stateController.dispose();
     _weightValueController.dispose();
@@ -60,6 +57,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Future<void> _save() async {
     setState(() => _isSaving = true);
+    final weightValue = double.tryParse(_weightValueController.text.trim());
     await ref.read(authStateProvider.notifier).updateProfile({
       'displayName': _nameController.text.trim(),
       'bio': _bioController.text.trim(),
@@ -67,15 +65,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       'city': _cityController.text.trim(),
       'state': _stateController.text.trim(),
       'gender': _gender,
-      if (double.tryParse(_weightValueController.text.trim()) != null)
-        'weightValue': double.parse(_weightValueController.text.trim()),
+      if (weightValue != null) 'weightValue': weightValue,
       'weightUnit': _weightUnit,
       'weightDivisionContext': _divisionContext,
       if (_weightDivision != null) 'weightDivision': _weightDivision,
     });
     HapticFeedback.heavyImpact();
-    if (mounted) context.pop();
+    if (!mounted) return;
     setState(() => _isSaving = false);
+    context.pop();
   }
 
   @override
@@ -90,8 +88,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           TextField(controller: _nameController, decoration: const InputDecoration(labelText: 'Display Name')),
           const SizedBox(height: StitchTokens.md),
           TextField(controller: _bioController, decoration: const InputDecoration(labelText: 'Bio'), maxLines: 3),
-          const SizedBox(height: StitchTokens.md),
-          TextField(controller: _weightController, decoration: const InputDecoration(labelText: 'Weight'), keyboardType: TextInputType.number),
           const SizedBox(height: StitchTokens.md),
           Row(children: [
             Expanded(
