@@ -61,6 +61,8 @@ export const OpenMatListQuery = t.Object(
     lng: t.Optional(t.Number({ minimum: -180, maximum: 180 })),
     radiusKm: t.Optional(t.Number({ minimum: 1, maximum: 500 })),
     zip: t.Optional(t.String({ description: "geocoded to a point server-side" })),
+    city: t.Optional(t.String({ description: "exact (case-insensitive) city match" })),
+    state: t.Optional(t.String({ description: "exact (case-insensitive) state match" })),
   },
   { $id: "OpenMatListQuery" },
 );

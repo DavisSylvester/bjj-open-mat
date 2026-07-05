@@ -46,6 +46,8 @@ export function openMatRoutes(container: Container) {
           lng: query.lng,
           radiusKm: query.radiusKm,
           zip: query.zip,
+          city: query.city,
+          state: query.state,
         };
         if (query.mine) filter.gymOwnerId = requireId(identity).userId;
         if (query.submittedByMe) filter.hostId = requireId(identity).userId;
