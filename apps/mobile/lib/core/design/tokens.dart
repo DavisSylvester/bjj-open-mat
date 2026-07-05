@@ -169,7 +169,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
       borderHi:  const Color(0xFFE0E2EA),
       text:      const Color(0xFF14151A),
       body:      const Color(0xFF3D4150),
-      muted:     const Color(0xFF878C9C),
+      muted:     const Color(0xFF6B7280),
       faint:     const Color(0xFFB9BDC9),
       primary:   const Color(0xFF5B53F2),
       panel:     const Color(0xFFF5F6FA),
