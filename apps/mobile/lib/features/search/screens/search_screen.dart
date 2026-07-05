@@ -153,7 +153,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Future<void> _useGps() async {
     _debounce?.cancel();
     final loc = await ref.read(locationServiceProvider).current();
-    if (loc == null) return;
+    if (!mounted || loc == null) return;
     _gpsLat = loc.latitude;
     _gpsLng = loc.longitude;
     _zipCtrl.clear();
