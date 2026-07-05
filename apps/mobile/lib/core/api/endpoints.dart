@@ -1,6 +1,7 @@
 /// All API endpoint constants matching the BJJ Open Mat Finder backend
 class Endpoints {
-  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:3100');
+  static const String baseUrl =
+      String.fromEnvironment('API_BASE_URL', defaultValue: 'https://api.bjj-open-mat.dsylvester.io');
 
   // Auth
   static const String authMe = '/api/v1/auth/me';

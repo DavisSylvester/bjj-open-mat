@@ -1,10 +1,11 @@
 import { loadEnv } from "./config/env.mts";
+import { resolveEnv } from "./config/secrets.mts";
 import { logger } from "./config/logger.mts";
 import { createMongoContext } from "./db/mongo.mts";
 import { createContainer } from "./container.mts";
 import { buildApp } from "./app.mts";
 
-const env = loadEnv();
+const env = loadEnv(await resolveEnv());
 const { client, db } = createMongoContext(env);
 await client.connect();
 

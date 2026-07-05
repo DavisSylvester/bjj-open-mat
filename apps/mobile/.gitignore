@@ -46,3 +46,13 @@ app.*.map.json
 
 # Development screenshots
 *.png
+
+# Android signing (never commit)
+/android/key.properties
+**/*.jks
+**/*.keystore
+
+# Local dart-define config (never commit) — also covered by the root .gitignore
+.env
+.env.*
+!.env.example

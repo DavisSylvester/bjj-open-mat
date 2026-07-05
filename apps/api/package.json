@@ -13,6 +13,7 @@
     "verify": "bun run type-check && bun run lint && bun run test"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.1079.0",
     "@bjj/contract": "workspace:*",
     "@elysiajs/cors": "^1.4.2",
     "@sinclair/typebox": "^0.34.0",

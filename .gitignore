@@ -25,3 +25,7 @@ Thumbs.db
 
 # AI working artifacts (screenshots, ui dumps)
 .docs/
+
+# Android keystore password (never commit)
+.android-password
+.android-keystore.b64
