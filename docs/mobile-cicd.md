@@ -27,9 +27,11 @@ The Android job builds a signed APK, uploads it as the `bjj-open-mat-apk` artifa
 ## Build an APK locally
 1. `cp apps/mobile/.env.example apps/mobile/.env` and fill in Auth0 values.
 2. `cp apps/mobile/android/key.properties.example apps/mobile/android/key.properties` and fill in.
-3. Set the build env vars:
-   - Git Bash: `export API_BASE_URL=https://your-api MAPS_API_KEY=... AUTH0_DOMAIN=...`
-   - PowerShell: `$env:API_BASE_URL="https://your-api"; $env:MAPS_API_KEY="..."; $env:AUTH0_DOMAIN="..."`
+3. Set the build env vars (`API_BASE_URL` now defaults to the deployed custom domain
+   `https://api.bjj-open-mat.dsylvester.io`, so you only need to override it for a
+   different backend):
+   - Git Bash: `export MAPS_API_KEY=... AUTH0_DOMAIN=...` (optionally `API_BASE_URL=...`)
+   - PowerShell: `$env:MAPS_API_KEY="..."; $env:AUTH0_DOMAIN="..."`
 4. `bun run mobile:apk` (runs via Bun's cross-platform shell, so the `${VAR:-default}` in the script works on Windows too)
 5. Install: `adb install -r apps/mobile/build/app/outputs/flutter-apk/app-release.apk`
 
