@@ -164,7 +164,7 @@ Bundle id `com.davissylvester.bjjOpenMat` is a constant, not a secret.
 5. App Store Connect API key (`.p8`) with the Issuer ID and Key ID.
 
 **Google Play:**
-1. App created in Play Console under `com.davissylvester.bjjOpenMat`.
+1. App created in Play Console under `com.davissylvester.bjjopenmat`.
 2. **First `.aab` uploaded manually** — Play rejects API uploads until an initial bundle exists.
 3. Service account created with release permissions; JSON key downloaded.
 
