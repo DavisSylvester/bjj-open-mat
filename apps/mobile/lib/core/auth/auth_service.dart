@@ -248,6 +248,7 @@ class AuthService {
       return null;
     }
     final credentials = await _auth0.webAuthentication().login(
+      audience: _auth0Audience.isEmpty ? null : _auth0Audience,
       parameters: params,
       scopes: _auth0Scopes,
     );
