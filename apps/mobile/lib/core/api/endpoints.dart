@@ -23,6 +23,8 @@ class Endpoints {
   static String openMatById(String id) => '/api/v1/open-mats/$id';
   static String openMatCheckin(String id) => '/api/v1/open-mats/$id/checkin';
   static String openMatCheckins(String id) => '/api/v1/open-mats/$id/checkins';
+  static String openMatRsvp(String id) => '/api/v1/open-mats/$id/rsvp';
+  static String openMatAttendees(String id) => '/api/v1/open-mats/$id/attendees';
 
   // Check-ins
   static String checkinReview(String id) => '/api/v1/checkins/$id/review';
