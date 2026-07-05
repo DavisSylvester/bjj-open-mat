@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bjj_open_mat/core/design/app_theme.dart';
 import 'package:bjj_open_mat/features/checkins/data/attendance_repository.dart';
+import 'package:bjj_open_mat/features/open_mats/data/rsvp_repository.dart';
 import 'package:bjj_open_mat/features/open_mats/models/open_mat.dart';
 import 'package:bjj_open_mat/features/open_mats/screens/open_mat_detail_screen.dart';
 
@@ -45,6 +46,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [
         sessionByIdProvider('om9').overrideWith((ref) async => mat),
+        attendeesProvider.overrideWith((ref, q) async => const []),
       ],
       child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
     ));
