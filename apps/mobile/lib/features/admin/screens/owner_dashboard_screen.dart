@@ -3,13 +3,46 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/api/api_client.dart';
+import '../../../core/data/api_envelope.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../open_mats/data/session_repository.dart';
 
-final ownerStatsProvider = FutureProvider<({int gyms, int sessions})>((ref) async {
+/// Check-ins metric window: false = all-time, true = last 30 days.
+class _CheckinWindowNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+  void toggle() => state = !state;
+}
+
+final ownerCheckinWindowProvider = NotifierProvider<_CheckinWindowNotifier, bool>(_CheckinWindowNotifier.new);
+
+typedef OwnerStats = ({int gyms, int sessions, int checkInsAll, int checkIns30d, double? avgRating});
+
+final ownerStatsProvider = FutureProvider<OwnerStats>((ref) async {
   final gyms = await ref.read(gymRepositoryProvider).listMine();
   final sessions = await ref.read(sessionRepositoryProvider).listMine();
-  return (gyms: gyms.length, sessions: sessions.length);
+  // Avg rating across the owner's gyms that have any rating.
+  final rated = gyms.where((g) => g.rating != null && g.rating! > 0).map((g) => g.rating!).toList();
+  final avgRating = rated.isEmpty ? null : rated.reduce((a, b) => a + b) / rated.length;
+  // Check-ins across the owner's sessions (all-time + last 30 days).
+  final dio = ref.read(apiClientProvider).dio;
+  final cutoff = DateTime.now().toUtc().subtract(const Duration(days: 30));
+  var all = 0, recent = 0;
+  for (final s in sessions) {
+    try {
+      final res = await dio.get('/api/v1/open-mats/${s.id}/checkins');
+      final items = unwrapList(res.data as Map<String, dynamic>).items;
+      all += items.length;
+      for (final it in items) {
+        final ts = DateTime.tryParse((it['checkedInAt'] as String?) ?? '');
+        if (ts != null && ts.toUtc().isAfter(cutoff)) recent++;
+      }
+    } catch (_) {
+      // A session whose check-ins can't be read shouldn't break the dashboard.
+    }
+  }
+  return (gyms: gyms.length, sessions: sessions.length, checkInsAll: all, checkIns30d: recent, avgRating: avgRating);
 });
 
 class OwnerDashboardScreen extends ConsumerWidget {
@@ -19,8 +52,12 @@ class OwnerDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final statsAsync = ref.watch(ownerStatsProvider);
+    final win30 = ref.watch(ownerCheckinWindowProvider);
     final gymsValue = statsAsync.maybeWhen(data: (s) => '${s.gyms}', orElse: () => '--');
     final sessionsValue = statsAsync.maybeWhen(data: (s) => '${s.sessions}', orElse: () => '--');
+    final checkInsValue = statsAsync.maybeWhen(data: (s) => '${win30 ? s.checkIns30d : s.checkInsAll}', orElse: () => '--');
+    final ratingValue = statsAsync.maybeWhen(
+        data: (s) => s.avgRating != null ? s.avgRating!.toStringAsFixed(1) : 'New', orElse: () => '--');
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -55,10 +92,10 @@ class OwnerDashboardScreen extends ConsumerWidget {
                 ]),
                 const SizedBox(height: 10),
                 Row(children: [
-                  _StatCard(t: t, icon: LucideIcons.users, label: 'Check-ins', value: '--', accent: t.green,
-                      onTap: () {}),
+                  _StatCard(t: t, icon: LucideIcons.users, label: win30 ? 'Check-ins · 30d' : 'Check-ins · All', value: checkInsValue, accent: t.green,
+                      onTap: () => ref.read(ownerCheckinWindowProvider.notifier).toggle()),
                   const SizedBox(width: 10),
-                  _StatCard(t: t, icon: LucideIcons.star, label: 'Avg Rating', value: '--', accent: t.amber,
+                  _StatCard(t: t, icon: LucideIcons.star, label: 'Avg Rating', value: ratingValue, accent: t.amber,
                       onTap: () {}),
                 ]),
                 const SizedBox(height: 20),

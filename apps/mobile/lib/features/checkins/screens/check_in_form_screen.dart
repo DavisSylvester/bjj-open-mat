@@ -79,7 +79,8 @@ class _CheckInFormScreenState extends ConsumerState<CheckInFormScreen> {
             ),
           );
       if (mounted) {
-        context.go('/open-mat/${widget.openMatId}/checkin-success?loc=${res.locationStatus}');
+        final checkInId = Uri.encodeComponent(res.id);
+        context.go('/open-mat/${widget.openMatId}/checkin-success?loc=${res.locationStatus}&checkInId=$checkInId');
       }
     } on ApiException catch (e) {
       if (mounted) {

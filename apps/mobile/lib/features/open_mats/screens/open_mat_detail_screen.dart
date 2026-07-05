@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../checkins/data/attendance_repository.dart';
+import '../../checkins/data/review_repository.dart';
+import '../../checkins/models/checkin.dart';
 import '../models/open_mat.dart';
 import '../../../shared/widgets/gi_badge.dart';
 import '../../../shared/widgets/exp_badge.dart';
@@ -254,6 +257,27 @@ class _GlassDetail extends StatelessWidget {
                 child: StatBar(label: 'Gym Rating', value: mat.gymRating!, color: t.green),
               ),
             ],
+            const SizedBox(height: 20),
+            Text('Reviews', style: t.h2Style),
+            const SizedBox(height: 8),
+            Consumer(builder: (context, ref, _) {
+              final reviewsAsync = ref.watch(openMatReviewsProvider(mat.id));
+              return reviewsAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (e, _) => Text("Couldn't load reviews", style: t.miniStyle),
+                data: (reviews) {
+                  if (reviews.isEmpty) {
+                    return Text('No reviews yet', style: t.miniStyle);
+                  }
+                  return Column(
+                    children: reviews.map((r) => _ReviewCard(t: t, checkIn: r)).toList(),
+                  );
+                },
+              );
+            }),
             const SizedBox(height: 80),
           ])),
         ),
@@ -302,4 +326,54 @@ class _InfoCard extends StatelessWidget {
       ]),
     ));
   }
+}
+
+class _ReviewCard extends StatelessWidget {
+  final AppTokens t;
+  final CheckIn checkIn;
+  const _ReviewCard({required this.t, required this.checkIn});
+
+  @override
+  Widget build(BuildContext context) {
+    final reviewerName = (checkIn.userName != null && checkIn.userName!.isNotEmpty) ? checkIn.userName! : 'Member';
+    final rating = checkIn.rating ?? 0;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.border),
+        boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(child: Text(reviewerName, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600))),
+          Text(_relativeDate(checkIn.reviewedAt ?? checkIn.createdAt), style: t.miniStyle),
+        ]),
+        const SizedBox(height: 4),
+        Row(children: List.generate(5, (i) => Icon(
+          LucideIcons.star,
+          size: 14,
+          color: i < rating ? t.amber : t.muted,
+        ))),
+        if (checkIn.review != null && checkIn.review!.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Text(checkIn.review!, style: t.bodyStyle.copyWith(fontSize: 13)),
+        ],
+      ]),
+    );
+  }
+}
+
+String _relativeDate(String? iso) {
+  if (iso == null || iso.isEmpty) return '';
+  final dt = DateTime.tryParse(iso);
+  if (dt == null) return '';
+  final diff = DateTime.now().difference(dt);
+  if (diff.inDays >= 7) return DateFormat.yMMMd().format(dt);
+  if (diff.inDays >= 1) return '${diff.inDays}d ago';
+  if (diff.inHours >= 1) return '${diff.inHours}h ago';
+  if (diff.inMinutes >= 1) return '${diff.inMinutes}m ago';
+  return 'Just now';
 }

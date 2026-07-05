@@ -31,8 +31,17 @@ class _CheckinSuccessScreenState extends State<CheckinSuccessScreen> with Single
     super.dispose();
   }
 
+  String? _checkInId(BuildContext context) {
+    try {
+      return GoRouterState.of(context).uri.queryParameters['checkInId'];
+    } catch (_) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final checkInId = _checkInId(context);
     return Scaffold(
       backgroundColor: StitchTokens.accent,
       body: SafeArea(
@@ -80,7 +89,11 @@ class _CheckinSuccessScreenState extends State<CheckinSuccessScreen> with Single
                 ),
                 const SizedBox(height: StitchTokens.md),
                 TextButton(
-                  onPressed: () => context.go('/open-mat/${widget.openMatId}/review'),
+                  onPressed: () => context.go(
+                    checkInId != null
+                        ? '/open-mat/${widget.openMatId}/review?checkInId=${Uri.encodeComponent(checkInId)}'
+                        : '/open-mat/${widget.openMatId}/review',
+                  ),
                   child: const Text('Leave a Review Now', style: TextStyle(color: Colors.white)),
                 ),
               ],
