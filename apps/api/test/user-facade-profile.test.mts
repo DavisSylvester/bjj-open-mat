@@ -1,8 +1,16 @@
 import { describe, expect, it } from "bun:test";
 import type { UpdateUserRequest, User } from "@bjj/contract";
 import { UserFacade } from "../src/facades/user.facade.mts";
+import type { UserRepository } from "../src/repositories/user.repository.mts";
 
-function stubUsers(stored: User) {
+type UsersStubRepo = Pick<UserRepository, "findById" | "upsertByAuth0Id" | "update" | "insert">;
+
+interface UsersStub {
+  repo: UsersStubRepo;
+  getPatch: () => Partial<User> | null;
+}
+
+function stubUsers(stored: User): UsersStub {
   let lastPatch: Partial<User> | null = null;
   const repo = {
     findById: async (_id: string): Promise<User | null> => ({ ...stored, ...lastPatch }),
