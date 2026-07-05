@@ -39,6 +39,7 @@ const Map<String, Map<String, List<WeightClassRow>>> ibjjfWeightClasses = {
       WeightClassRow('light', 'Light', 64, 141.1),
       WeightClassRow('middle', 'Middle', 69, 152.1),
       WeightClassRow('medium_heavy', 'Medium Heavy', 74, 163.1),
+      WeightClassRow('heavy', 'Heavy', 79.3, 174.8),
       WeightClassRow('super_heavy', 'Super Heavy', null, null),
     ],
     'nogi': [
@@ -48,6 +49,7 @@ const Map<String, Map<String, List<WeightClassRow>>> ibjjfWeightClasses = {
       WeightClassRow('light', 'Light', 61.5, 135.6),
       WeightClassRow('middle', 'Middle', 66.5, 146.6),
       WeightClassRow('medium_heavy', 'Medium Heavy', 71.5, 157.6),
+      WeightClassRow('heavy', 'Heavy', 76.5, 168.7),
       WeightClassRow('super_heavy', 'Super Heavy', null, null),
     ],
   },

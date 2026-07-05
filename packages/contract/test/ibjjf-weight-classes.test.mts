@@ -17,9 +17,10 @@ describe("IBJJF weight classes", () => {
     expect(row?.maxKg).toBeNull();
   });
 
-  it("divisionsFor(female, gi) excludes ultra_heavy (7 divisions, super_heavy is open)", () => {
+  it("divisionsFor(female, gi) excludes ultra_heavy (8 divisions, super_heavy is open)", () => {
     const list = divisionsFor("female", "gi");
     expect(list.map((r) => r.division)).not.toContain("ultra_heavy");
-    expect(list.length).toBe(7);
+    expect(list.map((r) => r.division)).toContain("heavy");
+    expect(list.length).toBe(8);
   });
 });

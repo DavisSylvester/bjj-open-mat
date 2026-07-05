@@ -7,9 +7,10 @@ void main() {
     expect(row.maxKg, 70);
   });
 
-  test('female gi list has 7 divisions and no ultra_heavy', () {
+  test('female gi list has 8 divisions incl. heavy and no ultra_heavy', () {
     final list = divisionsFor('female', 'gi');
-    expect(list.length, 7);
+    expect(list.length, 8);
+    expect(list.any((r) => r.division == 'heavy'), true);
     expect(list.any((r) => r.division == 'ultra_heavy'), false);
   });
 }

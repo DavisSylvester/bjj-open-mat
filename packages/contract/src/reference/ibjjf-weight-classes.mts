@@ -43,6 +43,7 @@ export const IBJJF_WEIGHT_CLASSES: Record<Gender, Record<GiContext, readonly Wei
       { division: "light", label: "Light", maxKg: 64, maxLb: 141.1 },
       { division: "middle", label: "Middle", maxKg: 69, maxLb: 152.1 },
       { division: "medium_heavy", label: "Medium Heavy", maxKg: 74, maxLb: 163.1 },
+      { division: "heavy", label: "Heavy", maxKg: 79.3, maxLb: 174.8 },
       { division: "super_heavy", label: "Super Heavy", maxKg: null, maxLb: null },
     ],
     nogi: [
@@ -52,6 +53,7 @@ export const IBJJF_WEIGHT_CLASSES: Record<Gender, Record<GiContext, readonly Wei
       { division: "light", label: "Light", maxKg: 61.5, maxLb: 135.6 },
       { division: "middle", label: "Middle", maxKg: 66.5, maxLb: 146.6 },
       { division: "medium_heavy", label: "Medium Heavy", maxKg: 71.5, maxLb: 157.6 },
+      { division: "heavy", label: "Heavy", maxKg: 76.5, maxLb: 168.7 },
       { division: "super_heavy", label: "Super Heavy", maxKg: null, maxLb: null },
     ],
   },
