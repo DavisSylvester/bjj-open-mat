@@ -24,7 +24,7 @@
     "mobile:web": "cd apps/mobile && flutter run -d chrome --web-port=8088 --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100",
     "mobile:build": "cd apps/mobile && flutter build web --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100",
     "mobile:apk": "cd apps/mobile && flutter build apk --release --dart-define-from-file=.env --dart-define=API_BASE_URL=https://api.bjj-open-mat.dsylvester.io -Pauth0Domain=dev-vhvwupdn45hk7gct.us.auth0.com -PmapsApiKey=$MAPS_API_KEY",
-    "mobile:ios": "cd apps/mobile && flutter build ios --release --dart-define-from-file=.env --dart-define=API_BASE_URL=https://api.bjj-open-mat.dsylvester.io -Pauth0Domain=dev-vhvwupdn45hk7gct.us.auth0.com"
+    "mobile:ios": "cd apps/mobile && flutter build ios --release --dart-define-from-file=.env --dart-define=API_BASE_URL=https://api.bjj-open-mat.dsylvester.io"
   },
   "devDependencies": {
     "turbo": "^2.3.3",
