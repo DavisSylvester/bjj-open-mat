@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
@@ -640,7 +641,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 child: Text("Couldn't load results", style: t.bodyStyle.copyWith(color: t.muted)),
               ),
               data: (list) => list.isEmpty
-                  ? Center(child: Text('0 Sessions', style: t.miniStyle))
+                  ? EmptyState(
+                      icon: LucideIcons.mapPin,
+                      title: _locationLabel != null ? 'No open mats found in $_locationLabel' : 'No open mats found',
+                      subtitle: 'Try a different area, widen the radius, or clear filters.',
+                    )
                   : ListView.separated(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       itemCount: list.length,

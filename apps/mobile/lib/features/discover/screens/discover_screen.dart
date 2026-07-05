@@ -6,6 +6,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../../shared/widgets/ticker_strip.dart';
 import '../../open_mats/models/open_mat.dart';
@@ -263,7 +264,13 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                   child: Text("Couldn't load open mats", style: t.bodyStyle.copyWith(color: t.muted)),
                 ),
                 data: (list) => list.isEmpty
-                    ? Center(child: Text('No open mats nearby', style: t.miniStyle))
+                    ? EmptyState(
+                        icon: LucideIcons.mapPin,
+                        title: _locationLabel != null ? 'No open mats found in $_locationLabel' : 'No open mats found nearby',
+                        subtitle: 'Try widening your search or check back soon.',
+                        actionLabel: 'Search',
+                        onAction: () => context.go('/search'),
+                      )
                     : ListView.separated(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                         itemCount: list.length,
