@@ -31,6 +31,9 @@ class Endpoints {
   // Favorites
   static const String myFavorites = '/api/v1/users/me/favorites';
 
+  // Geo
+  static const String geoReverse = '/api/v1/geo/reverse';
+
   // Health
   static const String health = '/health';
 }
