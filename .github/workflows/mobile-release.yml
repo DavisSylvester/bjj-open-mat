@@ -1,0 +1,44 @@
+name: Mobile Release
+
+on:
+  release:
+    types: [published]
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      build_name:
+        description: 'Version name (e.g. 1.2.3); required for manual runs'
+        required: false
+      play_track:
+        description: 'Google Play track'
+        default: internal
+        required: false
+
+permissions:
+  contents: write   # attach artifacts to the GitHub Release
+
+concurrency:
+  group: mobile-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      build_name: ${{ steps.v.outputs.build_name }}
+      build_number: ${{ steps.v.outputs.build_number }}
+    steps:
+      - name: Derive version
+        id: v
+        run: |
+          NAME="${{ github.event.inputs.build_name }}"
+          if [ -z "$NAME" ]; then
+            case "${GITHUB_REF}" in
+              refs/tags/v*) NAME="${GITHUB_REF_NAME#v}" ;;
+              *) echo "::error::No version. Push a v* tag or pass build_name."; exit 1 ;;
+            esac
+          fi
+          echo "build_name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "build_number=${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          echo "Resolved version $NAME (+${{ github.run_number }})"
