@@ -6,6 +6,7 @@ import { registerErrorHandler } from "./http/error-handler.mts";
 import { buildOpenApiDocument } from "./openapi.mts";
 import { checkInRoutes } from "./routes/check-in.routes.mts";
 import { favoriteRoutes } from "./routes/favorite.routes.mts";
+import { geoRoutes } from "./routes/geo.routes.mts";
 import { gymRoutes } from "./routes/gym.routes.mts";
 import { healthRoutes } from "./routes/health.routes.mts";
 import { notificationRoutes } from "./routes/notification.routes.mts";
@@ -34,5 +35,6 @@ export function buildApp(container: Container) {
     .use(openMatRoutes(container))
     .use(checkInRoutes(container))
     .use(favoriteRoutes(container))
+    .use(geoRoutes(container))
     .use(notificationRoutes(container));
 }
