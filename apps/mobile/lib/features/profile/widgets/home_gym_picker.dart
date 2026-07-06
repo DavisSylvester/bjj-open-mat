@@ -22,26 +22,36 @@ class _HomeGymPickerSheet extends ConsumerStatefulWidget {
 }
 
 class _HomeGymPickerSheetState extends ConsumerState<_HomeGymPickerSheet> {
+  List<Gym> _allGyms = const [];
   List<Gym> _results = const [];
   bool _loading = false;
 
-  Future<void> _search(String q) async {
+  Future<void> _loadGyms() async {
     setState(() {
       _loading = true;
     });
-    final gyms = await ref.read(gymRepositoryProvider).searchAll(q);
+    final gyms = await ref.read(gymRepositoryProvider).searchAll('');
     if (mounted) {
       setState(() {
+        _allGyms = gyms;
         _results = gyms;
         _loading = false;
       });
     }
   }
 
+  void _onQueryChanged(String q) {
+    setState(() {
+      _results = q.isEmpty
+          ? _allGyms
+          : _allGyms.where((g) => g.name.toLowerCase().contains(q.toLowerCase())).toList();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _search('');
+    _loadGyms();
   }
 
   @override
@@ -58,7 +68,7 @@ class _HomeGymPickerSheetState extends ConsumerState<_HomeGymPickerSheet> {
               padding: const EdgeInsets.all(16),
               child: TextField(
                 autofocus: true,
-                onChanged: _search,
+                onChanged: _onQueryChanged,
                 decoration: InputDecoration(
                   hintText: 'Search gyms',
                   filled: true,
