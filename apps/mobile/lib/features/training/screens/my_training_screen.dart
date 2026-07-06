@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/session_row.dart';
-import '../../../shared/widgets/score_cell.dart';
 
 const _stubSessions = [
   SessionRowData(
@@ -49,70 +48,7 @@ class MyTrainingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport
-        ? _SportTraining(t: t)
-        : _GlassTraining(t: t);
-  }
-}
-
-class _SportTraining extends StatelessWidget {
-  final AppTokens t;
-  const _SportTraining({required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: Column(children: [
-          // Masthead
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-            child: Row(children: [
-              Container(width: 4, height: 28, color: t.red),
-              const SizedBox(width: 10),
-              Text('My Training', style: t.h1Style.copyWith(fontSize: 22)),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          // 4-stat strip
-          Container(
-            color: t.surfaceHi,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ScoreCell(label: 'TOTAL MATS', value: '47'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'HRS', value: '94'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'STREAK', value: '7', suffix: 'wk'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'GYMS', value: '8'),
-              ],
-            ),
-          ),
-          Divider(height: 1, color: t.border),
-          // Section header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
-            child: Row(children: [
-              Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-              Text('Session History', style: t.h2Style.copyWith(fontSize: 14)),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          Expanded(
-            child: ListView.separated(
-              itemCount: _stubSessions.length,
-              separatorBuilder: (context2, index) => Divider(height: 1, color: t.border),
-              itemBuilder: (_, i) => SessionRow(session: _stubSessions[i]),
-            ),
-          ),
-        ]),
-      ),
-    );
+    return _GlassTraining(t: t);
   }
 }
 

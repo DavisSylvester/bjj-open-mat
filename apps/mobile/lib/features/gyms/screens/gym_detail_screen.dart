@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/session_row.dart';
-import '../../../shared/widgets/score_cell.dart';
-import '../../../shared/widgets/stat_bar.dart';
 import '../../../shared/widgets/gi_badge.dart';
 
 final _gymSessions = [
@@ -22,97 +20,7 @@ class GymDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport ? _SportGymDetail(t: t) : _GlassGymDetail(t: t);
-  }
-}
-
-class _SportGymDetail extends StatelessWidget {
-
-  final AppTokens t;
-  const _SportGymDetail({required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: Column(children: [
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-            child: Row(children: [
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('ATOS HQ', style: t.h1Style.copyWith(fontSize: 24)),
-                  Text('Los Angeles, CA', style: t.miniStyle),
-                ],
-              )),
-              Icon(LucideIcons.share2, size: 18, color: t.muted),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          // Player card
-          Container(
-            color: t.surfaceHi,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ScoreCell(label: 'Rating', value: '4.8', suffix: '★', valueColor: t.amber),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Reviews', value: '124'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Mats/Wk', value: '6'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Dist', value: '1.2', suffix: 'mi'),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
-                  child: Row(children: [
-                    Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-                    Text('Upcoming Mats', style: t.h2Style.copyWith(fontSize: 14)),
-                  ]),
-                ),
-                Divider(height: 1, color: t.border),
-                ..._gymSessions.map((s) => Column(children: [
-                  SessionRow(session: s),
-                  Divider(height: 1, color: t.border),
-                ])),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
-                  child: Row(children: [
-                    Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-                    Text('Stat Sheet', style: t.h2Style.copyWith(fontSize: 14)),
-                  ]),
-                ),
-                Divider(height: 1, color: t.border),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Column(children: [
-                    StatBar(label: 'Facilities', value: 4.8, color: t.gi),
-                    StatBar(label: 'Instruction', value: 4.9, color: t.green),
-                    StatBar(label: 'Mat Space', value: 4.5, color: t.amber),
-                    StatBar(label: 'Community', value: 4.7, color: t.noGi),
-                  ]),
-                ),
-                const SizedBox(height: 20),
-              ]),
-            ),
-          ),
-        ]),
-      ),
-    );
+    return _GlassGymDetail(t: t);
   }
 }
 

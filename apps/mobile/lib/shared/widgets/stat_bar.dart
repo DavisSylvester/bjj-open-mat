@@ -46,7 +46,7 @@ class StatBar extends StatelessWidget {
               child: Stack(
                 children: [
                   Container(
-                    color: t.isSport ? const Color(0xFF080F26) : Colors.black12,
+                    color: Colors.black12,
                   ),
                   FractionallySizedBox(
                     widthFactor: pct,

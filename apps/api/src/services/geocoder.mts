@@ -4,6 +4,7 @@ import { lookup, lookupByCoords } from 'zipcodes';
 export interface Geocoder {
   lookupZip(zip: string): GeoLocation | null;
   reverse(lat: number, lng: number): { city: string; state: string } | null;
+  lookupZipCity(zip: string): { city: string; state: string } | null;
 }
 
 export class ZipcodesGeocoder implements Geocoder {
@@ -18,6 +19,14 @@ export class ZipcodesGeocoder implements Geocoder {
 
   public reverse(lat: number, lng: number): { city: string; state: string } | null {
     const rec = lookupByCoords(lat, lng);
+    if (!rec || !rec.city || !rec.state) return null;
+    return { city: rec.city, state: rec.state };
+  }
+
+  public lookupZipCity(zip: string): { city: string; state: string } | null {
+    const trimmed = zip.trim();
+    if (!/^\d{5}$/.test(trimmed)) return null;
+    const rec = lookup(trimmed);
     if (!rec || !rec.city || !rec.state) return null;
     return { city: rec.city, state: rec.state };
   }

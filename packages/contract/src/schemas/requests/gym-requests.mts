@@ -14,6 +14,7 @@ export const CreateGymRequest = t.Object(
     googlePlaceId: t.Optional(t.String()),
     phone: t.Optional(t.String()),
     website: t.Optional(t.String()),
+    logoUrl: t.Optional(t.String()),
     amenities: t.Optional(t.Array(t.String())),
   },
   { $id: "CreateGymRequest" },
@@ -22,6 +23,32 @@ export type CreateGymRequest = Static<typeof CreateGymRequest>;
 
 export const UpdateGymRequest = t.Partial(CreateGymRequest, { $id: "UpdateGymRequest" });
 export type UpdateGymRequest = Static<typeof UpdateGymRequest>;
+
+// Request a presigned S3 PUT URL for a gym logo upload. The client uploads the
+// bytes directly to S3, then submits the returned publicUrl as the gym logoUrl.
+export const LogoContentType = t.Union(
+  [t.Literal("image/png"), t.Literal("image/jpeg"), t.Literal("image/webp")],
+  { $id: "LogoContentType" },
+);
+export type LogoContentType = Static<typeof LogoContentType>;
+
+export const LogoUploadUrlRequest = t.Object(
+  {
+    contentType: LogoContentType,
+  },
+  { $id: "LogoUploadUrlRequest" },
+);
+export type LogoUploadUrlRequest = Static<typeof LogoUploadUrlRequest>;
+
+export const LogoUploadUrlResponse = t.Object(
+  {
+    uploadUrl: t.String(),
+    publicUrl: t.String(),
+    key: t.String(),
+  },
+  { $id: "LogoUploadUrlResponse" },
+);
+export type LogoUploadUrlResponse = Static<typeof LogoUploadUrlResponse>;
 
 export const NearbyQuery = t.Object(
   {

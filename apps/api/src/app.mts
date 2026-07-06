@@ -11,6 +11,7 @@ import { gymRoutes } from "./routes/gym.routes.mts";
 import { healthRoutes } from "./routes/health.routes.mts";
 import { notificationRoutes } from "./routes/notification.routes.mts";
 import { openMatRoutes } from "./routes/open-mat.routes.mts";
+import { reportRoutes } from "./routes/report.routes.mts";
 import { userRoutes } from "./routes/user.routes.mts";
 
 // The auth plugin (identity resolve + requireAuth/requireOwner macros) is applied
@@ -36,5 +37,6 @@ export function buildApp(container: Container) {
     .use(checkInRoutes(container))
     .use(favoriteRoutes(container))
     .use(geoRoutes(container))
-    .use(notificationRoutes(container));
+    .use(notificationRoutes(container))
+    .use(reportRoutes(container));
 }

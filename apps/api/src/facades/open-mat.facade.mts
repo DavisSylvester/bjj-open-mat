@@ -25,7 +25,7 @@ export class OpenMatFacade {
   public constructor(
     private readonly mats: Pick<OpenMatRepository, "insert" | "findById" | "update" | "list" | "findNearby" | "setAttendeeCount">,
     private readonly gyms: Pick<GymRepository, "findById" | "insert">,
-    private readonly rsvps: Pick<RsvpRepository, "add" | "remove" | "count" | "userIds">,
+    private readonly rsvps: Pick<RsvpRepository, "add" | "remove" | "count" | "userIds" | "countAttendees">,
     private readonly newId: IdFactory,
     private readonly geocoder: Pick<Geocoder, "lookupZip">,
   ) {}
@@ -163,7 +163,15 @@ export class OpenMatFacade {
     return { ok: true, attendeeCount: count, attending: false };
   }
 
-  public async attendeeUserIds(id: string, sessionDate: string): Promise<string[]> {
-    return this.rsvps.userIds(id, sessionDate);
+  public async attendeeUserIds(
+    id: string,
+    sessionDate: string,
+    { skip, limit }: { skip: number; limit: number },
+  ): Promise<{ ids: string[]; total: number }> {
+    const [ids, total] = await Promise.all([
+      this.rsvps.userIds(id, sessionDate, skip, limit),
+      this.rsvps.countAttendees(id, sessionDate),
+    ]);
+    return { ids, total };
   }
 }

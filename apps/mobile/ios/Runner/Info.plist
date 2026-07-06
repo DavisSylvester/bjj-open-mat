@@ -68,6 +68,8 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>BJJ Open Mat uses your location to find open mats near you.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>BJJ Open Mat needs access to your photos so you can choose a logo for your gym.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

@@ -65,14 +65,16 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
           ),
           Consumer(builder: (context, watchRef, _) {
             final expected = watchRef.watch(attendeesProvider(GoingQuery(widget.sessionId, _selectedDate)));
-            final list = expected.asData?.value ?? const [];
+            final page = expected.asData?.value;
+            final list = page?.items ?? const [];
+            final total = page?.total ?? list.length;
             if (list.isEmpty) return const SizedBox.shrink();
             return Container(
               width: double.infinity,
               padding: const EdgeInsets.all(StitchTokens.md),
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Expected · ${list.length} going', style: Theme.of(context).textTheme.titleMedium),
+                Text('Expected · $total going', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,

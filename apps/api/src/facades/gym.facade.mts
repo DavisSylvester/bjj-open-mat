@@ -38,6 +38,7 @@ export class GymFacade {
       googlePlaceId: req.googlePlaceId,
       phone: req.phone,
       website: req.website,
+      logoUrl: req.logoUrl,
       amenities: req.amenities ?? [],
       isVerified: false,
       createdAt: new Date().toISOString(),

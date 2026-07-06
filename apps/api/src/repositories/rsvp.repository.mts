@@ -37,8 +37,17 @@ export class RsvpRepository extends BaseRepository {
     return this.collection<RsvpDoc>(COLLECTIONS.rsvps).countDocuments({ openMatId, sessionDate });
   }
 
-  public async userIds(openMatId: string, sessionDate: string): Promise<string[]> {
-    const docs = await this.collection<RsvpDoc>(COLLECTIONS.rsvps).find({ openMatId, sessionDate }).toArray();
+  public async countAttendees(openMatId: string, sessionDate: string): Promise<number> {
+    return this.collection<RsvpDoc>(COLLECTIONS.rsvps).countDocuments({ openMatId, sessionDate });
+  }
+
+  public async userIds(openMatId: string, sessionDate: string, skip = 0, limit?: number): Promise<string[]> {
+    let cursor = this.collection<RsvpDoc>(COLLECTIONS.rsvps)
+      .find({ openMatId, sessionDate })
+      .sort({ rsvpAt: 1, userId: 1 })
+      .skip(skip);
+    if (limit !== undefined) cursor = cursor.limit(limit);
+    const docs = await cursor.toArray();
     return docs.map((d) => d.userId);
   }
 }

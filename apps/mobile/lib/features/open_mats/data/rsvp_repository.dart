@@ -9,15 +9,26 @@ import '../models/attendee.dart';
 class GoingQuery {
   final String openMatId;
   final String sessionDate;
-  const GoingQuery(this.openMatId, this.sessionDate);
+  final int page;
+  const GoingQuery(this.openMatId, this.sessionDate, [this.page = 1]);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is GoingQuery && openMatId == other.openMatId && sessionDate == other.sessionDate;
+      other is GoingQuery &&
+          openMatId == other.openMatId &&
+          sessionDate == other.sessionDate &&
+          page == other.page;
 
   @override
-  int get hashCode => Object.hash(openMatId, sessionDate);
+  int get hashCode => Object.hash(openMatId, sessionDate, page);
+}
+
+/// One page of attendees plus the total count across all pages.
+class AttendeePage {
+  final List<Attendee> items;
+  final int total;
+  const AttendeePage({required this.items, required this.total});
 }
 
 class RsvpRepository {
@@ -42,10 +53,17 @@ class RsvpRepository {
     }
   }
 
-  Future<List<Attendee>> attendees(String id, String sessionDate) async {
+  Future<AttendeePage> attendees(String id, String sessionDate, {int page = 1, int limit = 12}) async {
     try {
-      final res = await _dio.get(Endpoints.openMatAttendees(id), queryParameters: {'sessionDate': sessionDate});
-      return unwrapList(res.data as Map<String, dynamic>).items.map(Attendee.fromJson).toList();
+      final res = await _dio.get(
+        Endpoints.openMatAttendees(id),
+        queryParameters: {'sessionDate': sessionDate, 'page': page, 'limit': limit},
+      );
+      final result = unwrapList(res.data as Map<String, dynamic>);
+      return AttendeePage(
+        items: result.items.map(Attendee.fromJson).toList(),
+        total: result.total,
+      );
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
@@ -56,6 +74,6 @@ final rsvpRepositoryProvider = Provider<RsvpRepository>((ref) {
   return RsvpRepository(ref.read(apiClientProvider).dio);
 });
 
-final attendeesProvider = FutureProvider.family<List<Attendee>, GoingQuery>((ref, q) {
-  return ref.read(rsvpRepositoryProvider).attendees(q.openMatId, q.sessionDate);
+final attendeesProvider = FutureProvider.family<AttendeePage, GoingQuery>((ref, q) {
+  return ref.read(rsvpRepositoryProvider).attendees(q.openMatId, q.sessionDate, page: q.page);
 });

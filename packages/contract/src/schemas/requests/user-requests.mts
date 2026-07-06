@@ -1,7 +1,7 @@
 import { type Static, Type as t } from "@sinclair/typebox";
 import { BeltRank } from "../../enums/belt-rank.mts";
 import { UserRole } from "../../enums/user-role.mts";
-import { UserSettings } from "../user.mts";
+import { UserSettings, UserPreferences } from "../user.mts";
 import { Gender } from "../../enums/gender.mts";
 import { WeightDivision } from "../../enums/weight-division.mts";
 
@@ -22,6 +22,7 @@ export const UpdateUserRequest = t.Partial(
     bio: t.String(),
     avatarUrl: t.String(),
     homeGymId: t.String(),
+    preferences: UserPreferences,
   }),
   { $id: "UpdateUserRequest" },
 );

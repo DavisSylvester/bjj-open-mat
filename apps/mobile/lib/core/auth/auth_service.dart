@@ -42,6 +42,32 @@ class AuthState {
   }
 }
 
+class UserPreferences {
+  final String? defaultWhen;
+  final double? defaultWithinMi;
+  final String? defaultGiType;
+
+  const UserPreferences({
+    this.defaultWhen,
+    this.defaultWithinMi,
+    this.defaultGiType,
+  });
+
+  factory UserPreferences.fromJson(Map<String, dynamic> json) {
+    return UserPreferences(
+      defaultWhen: json['defaultWhen'] as String?,
+      defaultWithinMi: (json['defaultWithinMi'] as num?)?.toDouble(),
+      defaultGiType: json['defaultGiType'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    if (defaultWhen != null) 'defaultWhen': defaultWhen,
+    if (defaultWithinMi != null) 'defaultWithinMi': defaultWithinMi,
+    if (defaultGiType != null) 'defaultGiType': defaultGiType,
+  };
+}
+
 class UserProfile {
   final String id;
   final String? auth0Id;
@@ -60,6 +86,7 @@ class UserProfile {
   final String? weightUnit;
   final String? weightDivision;
   final String? weightDivisionContext;
+  final UserPreferences? preferences;
 
   const UserProfile({
     required this.id,
@@ -79,6 +106,7 @@ class UserProfile {
     this.weightUnit,
     this.weightDivision,
     this.weightDivisionContext,
+    this.preferences,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -100,6 +128,9 @@ class UserProfile {
       weightUnit: json['weightUnit'] as String?,
       weightDivision: json['weightDivision'] as String?,
       weightDivisionContext: json['weightDivisionContext'] as String?,
+      preferences: json['preferences'] != null
+          ? UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -117,6 +148,7 @@ class UserProfile {
     'weightUnit': weightUnit,
     'weightDivision': weightDivision,
     'weightDivisionContext': weightDivisionContext,
+    if (preferences != null) 'preferences': preferences!.toJson(),
   };
 
   bool get isGymOwner => role == 'gym_owner';
@@ -150,7 +182,9 @@ class AuthStateNotifier extends Notifier<AuthState> {
         state = const AuthState(
           status: AuthStatus.authenticated,
           user: UserProfile(
-            id: 'u-me',
+            // Must match the API's DEMO_USER_ID so the client user id lines up
+            // with the server identity RSVPs/check-ins are saved under.
+            id: 'test-user@local.priv',
             email: 'demo@bjj-open-mat.test',
             displayName: 'Demo Owner',
             role: 'gym_owner',

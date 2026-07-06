@@ -11,6 +11,7 @@ class CreateGymRequest {
   final GeoLocation? location;
   final String? phone;
   final String? website;
+  final String? logoUrl;
   final List<String> amenities;
 
   const CreateGymRequest({
@@ -24,6 +25,7 @@ class CreateGymRequest {
     this.location,
     this.phone,
     this.website,
+    this.logoUrl,
     this.amenities = const [],
   });
 
@@ -38,6 +40,7 @@ class CreateGymRequest {
         if (location != null) 'location': {'lat': location!.lat, 'lng': location!.lng},
         if (phone != null && phone!.isNotEmpty) 'phone': phone,
         if (website != null && website!.isNotEmpty) 'website': website,
+        if (logoUrl != null && logoUrl!.isNotEmpty) 'logoUrl': logoUrl,
         if (amenities.isNotEmpty) 'amenities': amenities,
       };
 }

@@ -574,6 +574,7 @@ class OMBottomNav extends StatelessWidget {
             _NavTab(icon: Icons.store_rounded, label: 'Gyms'),
             _NavTab(icon: Icons.event_rounded, label: 'Sessions'),
             _NavTab(icon: Icons.person_rounded, label: 'Profile'),
+            _NavTab(icon: Icons.flag_rounded, label: 'Report'),
           ]
         : const [
             _NavTab(icon: Icons.explore_rounded, label: 'Home'),
@@ -669,8 +670,8 @@ class OMBottomNav extends StatelessWidget {
                       child: const Icon(Icons.add, color: Colors.white, size: 28),
                     ),
                   ),
-                  // Right two tabs
-                  ...List.generate(2, (j) {
+                  // Right tabs (remaining after the left two)
+                  ...List.generate(tabs.length - 2, (j) {
                     final i = j + 2;
                     final selected = i == selectedIndex;
                     final tab = tabs[i];

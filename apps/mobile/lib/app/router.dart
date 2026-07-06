@@ -11,6 +11,7 @@ import '../features/onboarding/screens/profile_setup_screen.dart';
 import '../features/discover/screens/discover_screen.dart';
 import '../features/search/screens/search_screen.dart';
 import '../features/training/screens/my_training_screen.dart';
+import '../features/report/screens/report_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
 import '../features/notifications/screens/notifications_screen.dart';
@@ -123,12 +124,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-              path: '/training',
-              builder: (context, state) => const MyTrainingScreen(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
               path: '/profile',
               builder: (context, state) => const ProfileScreen(),
               routes: [
@@ -140,11 +135,21 @@ final routerProvider = Provider<GoRouter>((ref) {
                   path: 'favorites',
                   builder: (context, state) => const FavoritesScreen(),
                 ),
+                GoRoute(
+                  path: 'training',
+                  builder: (context, state) => const MyTrainingScreen(),
+                ),
               ],
             ),
             GoRoute(
               path: '/user/:id',
               builder: (context, state) => PublicProfileScreen(userId: state.pathParameters['id']!),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/report',
+              builder: (context, state) => const ReportScreen(),
             ),
           ]),
         ],
@@ -204,6 +209,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               builder: (context, state) => const ProfileScreen(),
             ),
           ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/owner/report',
+              builder: (context, state) => const ReportScreen(),
+            ),
+          ]),
         ],
       ),
 
@@ -238,8 +249,6 @@ class _ScaffoldWithNavBar extends StatelessWidget {
 
   const _ScaffoldWithNavBar({required this.shell, required this.isOwner});
 
-  static const _pracTabs = ['home', 'search', 'schedule', 'profile'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -252,8 +261,8 @@ class _ScaffoldWithNavBar extends StatelessWidget {
               onAdd: () => context.push('/add-session'),
             )
           : AppBottomNav(
-              active: _pracTabs[shell.currentIndex],
-              onTap: (tabId) => shell.goBranch(_pracTabs.indexOf(tabId)),
+              active: kPracTabs[shell.currentIndex],
+              onTap: (tabId) => shell.goBranch(kPracTabs.indexOf(tabId)),
               onAdd: () => context.push('/add-session'),
             ),
     );

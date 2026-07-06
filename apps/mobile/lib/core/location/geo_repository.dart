@@ -31,6 +31,19 @@ class GeoRepository {
       return null;
     }
   }
+
+  /// Returns a "City, ST" label for a 5-digit ZIP code, or null on failure.
+  Future<ReverseGeocode?> zip(String zip) async {
+    try {
+      final res = await _api.get(Endpoints.geoZip, queryParameters: {'zip': zip});
+      final data = res.data?['data'] as Map<String, dynamic>?;
+      if (data == null) return null;
+      final rg = ReverseGeocode.fromJson(data);
+      return rg.label.isEmpty ? null : rg;
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 final geoRepositoryProvider = Provider<GeoRepository>((ref) => GeoRepository(ref.read(apiClientProvider)));

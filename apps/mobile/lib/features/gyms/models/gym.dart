@@ -12,6 +12,7 @@ class Gym {
   final String? googlePlaceId;
   final String? phone;
   final String? website;
+  final String? logoUrl;
   final List<String> amenities;
   final bool isVerified;
   final double? rating;
@@ -32,6 +33,7 @@ class Gym {
     this.googlePlaceId,
     this.phone,
     this.website,
+    this.logoUrl,
     this.amenities = const [],
     this.isVerified = false,
     this.rating,
@@ -60,6 +62,7 @@ class Gym {
       googlePlaceId: json['googlePlaceId'] as String?,
       phone: json['phone'] as String?,
       website: json['website'] as String?,
+      logoUrl: json['logoUrl'] as String?,
       amenities: (json['amenities'] as List?)?.cast<String>() ?? [],
       isVerified: json['isVerified'] as bool? ?? false,
       rating: (json['rating'] as num?)?.toDouble(),

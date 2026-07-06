@@ -16,6 +16,7 @@ export const Gym = t.Object(
     googlePlaceId: t.Optional(t.String()),
     phone: t.Optional(t.String()),
     website: t.Optional(t.String()),
+    logoUrl: t.Optional(t.String()),
     amenities: t.Array(t.String(), { default: [] }),
     isVerified: t.Boolean({ default: false }),
     rating: t.Optional(t.Number({ minimum: 0, maximum: 5 })),
