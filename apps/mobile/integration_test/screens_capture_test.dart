@@ -89,31 +89,43 @@ void main() {
       await shot('cap-05-profile');
     } catch (_) {}
 
-    // 6) Settings (gear icon on Profile)
-    try {
-      if (await tapIf(find.byIcon(LucideIcons.settings))) {
-        await shot('cap-06-settings');
-        await tester.pageBack();
-        await settle();
+    // Return from a pushed route: prefer the custom arrow (Settings /
+    // Notifications), else the Material AppBar back button (Edit Profile).
+    Future<void> goBack() async {
+      final arrow = find.byIcon(LucideIcons.arrowLeft);
+      if (arrow.evaluate().isNotEmpty) {
+        await tester.tap(arrow.first);
+      } else {
+        try {
+          await tester.pageBack();
+        } catch (_) {}
       }
-    } catch (_) {}
+      await settle();
+    }
 
-    // 7) Notifications (bell icon on Profile)
-    try {
-      if (await tapIf(find.byIcon(LucideIcons.bell))) {
-        await shot('cap-07-notifications');
-        await tester.pageBack();
-        await settle();
-      }
-    } catch (_) {}
-
-    // 8) Edit Profile (Account row on Profile → /profile/edit)
+    // 6) Edit Profile (Account row on Profile → /profile/edit). Do this before
+    // the custom-back screens since it relies on the profile hub being visible.
     try {
       if (await tapIf(find.text('Account'))) {
         await pumpUntilFound(tester, find.text('Edit Profile'), timeout: const Duration(seconds: 6));
-        await shot('cap-08-edit-profile');
-        await tester.pageBack();
-        await settle();
+        await shot('cap-06-edit-profile');
+        await goBack();
+      }
+    } catch (_) {}
+
+    // 7) Settings (gear icon on Profile)
+    try {
+      if (await tapIf(find.byIcon(LucideIcons.settings))) {
+        await shot('cap-07-settings');
+        await goBack();
+      }
+    } catch (_) {}
+
+    // 8) Notifications (bell icon on Profile)
+    try {
+      if (await tapIf(find.byIcon(LucideIcons.bell).first)) {
+        await shot('cap-08-notifications');
+        await goBack();
       }
     } catch (_) {}
   });
