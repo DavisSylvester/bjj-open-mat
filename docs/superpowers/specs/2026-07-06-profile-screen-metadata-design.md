@@ -9,7 +9,7 @@ Turn the Profile screen into an accurate, all-metadata view of the signed-in use
 
 ## Decisions (from brainstorming)
 
-1. **Home nav:** tapping Home navigates to the Find/search page as the default landing and resets that branch to its root.
+1. **Home nav:** tapping the Home icon resets its own discover branch to the top — it pops any nested route (open-mat detail, gym detail, etc.) and returns to the discover feed landing. It does not switch to the Find tab.
 2. **Edit rules:** all social/SSO users get the restricted edit set (birthday, belt, home gym). Email-password users keep full editing. The dev-bypass user counts as full-edit.
 3. **Birthday:** stored as an ISO `YYYY-MM-DD` date via a date picker; the profile displays the **computed age**, never a stored age.
 4. **Stats:** real stats only — Check-ins, Reviews written, Gyms visited (distinct) — computed from `myCheckins`. Drop "Hours" (untracked).
@@ -62,7 +62,7 @@ A searchable picker backed by `GET /api/v1/gyms`; selection sets `homeGymId`. Th
 
 ## Bottom-nav Home behavior
 
-Tapping the Home tab navigates to the Find/search branch root as the default landing, resetting any nested route in that branch. Implemented in the bottom nav's home-tab `onTap`.
+Tapping the Home tab resets its own discover branch to its root — popping any nested route (open-mat detail, gym detail) so the user returns to the discover feed landing. It stays on the discover branch (does not switch to Find). Implemented via `StatefulNavigationShell.goBranch(index, initialLocation: index == shell.currentIndex)` so re-tapping the active Home tab resets it to its initial location.
 
 ## Testing
 
