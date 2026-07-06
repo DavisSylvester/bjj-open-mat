@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../core/design/tokens.dart';
 
+/// Practitioner bottom-nav tab ids, in branch/index order.
+const List<String> kPracTabs = ['home', 'search', 'profile', 'report'];
+
 class AppBottomNav extends StatelessWidget {
-  final String active; // 'home', 'search', 'schedule', 'profile'
+  final String active; // 'home', 'search', 'profile', 'report'
   final void Function(String tab) onTap;
   final VoidCallback? onAdd;
 
@@ -13,10 +16,10 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final tabs = [
-      (id: 'home',     icon: LucideIcons.home,     label: 'Home'),
-      (id: 'search',   icon: LucideIcons.search,   label: 'Find'),
-      (id: 'schedule', icon: LucideIcons.calendar, label: 'Schedule'),
-      (id: 'profile',  icon: LucideIcons.user,     label: 'Profile'),
+      (id: 'home',    icon: LucideIcons.home,   label: 'Home'),
+      (id: 'search',  icon: LucideIcons.search, label: 'Find'),
+      (id: 'profile', icon: LucideIcons.user,   label: 'Profile'),
+      (id: 'report',  icon: LucideIcons.flag,   label: 'Report'),
     ];
 
     return Container(

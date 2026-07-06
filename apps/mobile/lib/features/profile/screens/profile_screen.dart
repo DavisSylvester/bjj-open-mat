@@ -193,6 +193,13 @@ class _GlassProfile extends StatelessWidget {
                 ),
                 child: Column(children: [
                   ListTile(
+                    leading: Icon(LucideIcons.dumbbell, color: t.muted),
+                    title: Text('My Training', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () => context.push('/profile/training'),
+                  ),
+                  Divider(height: 1, color: t.border),
+                  ListTile(
                     leading: Icon(LucideIcons.bell, color: t.muted),
                     title: Text('Notifications', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
                     trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
