@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bjj_open_mat/core/design/app_theme.dart';
 import 'package:bjj_open_mat/features/checkins/data/attendance_repository.dart';
+import 'package:bjj_open_mat/features/checkins/data/review_repository.dart';
 import 'package:bjj_open_mat/features/open_mats/data/rsvp_repository.dart';
 import 'package:bjj_open_mat/features/open_mats/models/open_mat.dart';
 import 'package:bjj_open_mat/features/open_mats/screens/open_mat_detail_screen.dart';
@@ -47,6 +48,8 @@ void main() {
       overrides: [
         sessionByIdProvider('om9').overrideWith((ref) async => mat),
         attendeesProvider.overrideWith((ref, q) async => const AttendeePage(items: [], total: 0)),
+        // Avoid the unmocked reviews HTTP call leaving a pending timer after teardown.
+        openMatReviewsProvider.overrideWith((ref, id) async => const []),
       ],
       child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
     ));
