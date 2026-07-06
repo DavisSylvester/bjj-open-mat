@@ -18,6 +18,17 @@ export const SessionDateQuery = t.Object(
 );
 export type SessionDateQuery = Static<typeof SessionDateQuery>;
 
+export const AttendeesQuery = t.Object(
+  {
+    sessionDate: t.Optional(t.String()),
+    date: t.Optional(t.String()),
+    page: t.Optional(t.Number({ minimum: 1, default: 1 })),
+    limit: t.Optional(t.Number({ minimum: 1, maximum: 100, default: 12 })),
+  },
+  { $id: "AttendeesQuery" },
+);
+export type AttendeesQuery = Static<typeof AttendeesQuery>;
+
 export const PageQuery = t.Object(
   {
     page: t.Optional(t.Number({ minimum: 1, default: 1 })),

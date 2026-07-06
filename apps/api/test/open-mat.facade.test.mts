@@ -8,7 +8,7 @@ import { fakeGeocoder, nullGeocoder } from "./fakes/geocoder.fake.mts";
 
 type FakeMatRepo = Pick<OpenMatRepository, "insert" | "findById" | "update" | "list" | "findNearby" | "setAttendeeCount" | "ensureIndexes">;
 type FakeGymRepo = Pick<GymRepository, "findById" | "insert">;
-type FakeRsvpRepo = Pick<RsvpRepository, "add" | "remove" | "count" | "userIds">;
+type FakeRsvpRepo = Pick<RsvpRepository, "add" | "remove" | "count" | "userIds" | "countAttendees">;
 
 function deps(): { matRepo: FakeMatRepo; gymRepo: FakeGymRepo; rsvpRepo: FakeRsvpRepo; counts: Map<string, number>; insertedGyms: Gym[] } {
   const mats = new Map<string, OpenMatDetail>();
@@ -41,6 +41,7 @@ function deps(): { matRepo: FakeMatRepo; gymRepo: FakeGymRepo; rsvpRepo: FakeRsv
         const i = rsvps.findIndex((r) => r.k === `${omId}:${date}` && r.userId === userId); if (i >= 0) rsvps.splice(i, 1);
       },
       count: async (omId: string, date: string): Promise<number> => rsvps.filter((r) => r.k === `${omId}:${date}`).length,
+      countAttendees: async (omId: string, date: string): Promise<number> => rsvps.filter((r) => r.k === `${omId}:${date}`).length,
       userIds: async (omId: string, date: string): Promise<string[]> => rsvps.filter((r) => r.k === `${omId}:${date}`).map((r) => r.userId),
     },
     counts,

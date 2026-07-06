@@ -46,7 +46,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [
         sessionByIdProvider('om9').overrideWith((ref) async => mat),
-        attendeesProvider.overrideWith((ref, q) async => const []),
+        attendeesProvider.overrideWith((ref, q) async => const AttendeePage(items: [], total: 0)),
       ],
       child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
     ));

@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import {
+  AttendeesQuery,
   CreateCheckInRequest,
   CreateOpenMatRequest,
   NearbyQuery,
@@ -126,12 +127,17 @@ export function openMatRoutes(container: Container) {
       async ({ params, query }) => {
         const sessionDate = query.sessionDate ?? query.date;
         if (!sessionDate) throw new AppError("bad_request", "sessionDate query param required");
-        const userIds = await openMatFacade.attendeeUserIds(params.id, sessionDate);
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 12;
+        const { ids, total } = await openMatFacade.attendeeUserIds(params.id, sessionDate, {
+          skip: (page - 1) * limit,
+          limit,
+        });
         // Hydrate each RSVP to a profile, but never DROP one whose profile is
         // missing — otherwise the "going" count under-reports. Fall back to a
         // minimal attendee keyed by the userId.
         const attendees = await Promise.all(
-          userIds.map(async (uid) => {
+          ids.map(async (uid) => {
             const u = await userFacade.getById(uid).catch(() => null);
             return {
               userId: uid,
@@ -144,9 +150,9 @@ export function openMatRoutes(container: Container) {
             };
           }),
         );
-        return list(attendees, { page: 1, limit: attendees.length, total: attendees.length });
+        return list(attendees, { page, limit, total });
       },
-      { query: SessionDateQuery },
+      { query: AttendeesQuery },
     )
     .post(
       "/:id/checkin",
