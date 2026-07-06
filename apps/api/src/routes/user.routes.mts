@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { UpdateSettingsRequest, UpdateUserRequest } from "@bjj/contract";
+import { AuthSyncRequest, UpdateSettingsRequest, UpdateUserRequest } from "@bjj/contract";
 import type { AuthIdentity } from "../auth/auth.types.mts";
 import { authPlugin } from "../auth/auth.middleware.mts";
 import type { Container } from "../container.mts";
@@ -31,6 +31,11 @@ export function userRoutes(container: Container) {
         return data(await userFacade.updateProfile(id, body, isSocial(id)));
       },
       { requireAuth: true, body: UpdateUserRequest },
+    )
+    .post(
+      "/api/v1/auth/sync",
+      async ({ identity, body }) => data(await userFacade.syncFromProvider(requireId(identity), body)),
+      { requireAuth: true, body: AuthSyncRequest },
     )
     .get(
       "/api/v1/users/me/settings",

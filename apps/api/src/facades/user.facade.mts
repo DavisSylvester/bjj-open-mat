@@ -1,5 +1,6 @@
-import type { UpdateSettingsRequest, UpdateUserRequest, User, UserSettings } from "@bjj/contract";
+import type { AuthSyncRequest, UpdateSettingsRequest, UpdateUserRequest, User, UserSettings } from "@bjj/contract";
 import type { AuthIdentity } from "../auth/auth.types.mts";
+import { isSocial } from "../auth/is-social.mts";
 import { AppError } from "../http/errors.mts";
 import type { UserRepository } from "../repositories/user.repository.mts";
 
@@ -19,6 +20,18 @@ export class UserFacade {
       settings: DEFAULT_SETTINGS,
       createdAt: new Date().toISOString(),
     });
+  }
+
+  public async syncFromProvider(identity: AuthIdentity, claims: AuthSyncRequest): Promise<User> {
+    const user = await this.getOrCreate(identity);
+    if (!isSocial(identity.userId)) return user; // db/bypass users manage their own identity
+    const patch: Partial<User> = {};
+    if (claims.displayName) patch.displayName = claims.displayName;
+    if (claims.email) patch.email = claims.email;
+    if (claims.avatarUrl) patch.avatarUrl = claims.avatarUrl;
+    if (Object.keys(patch).length === 0) return user;
+    const updated = await this.users.update(identity.userId, patch);
+    return updated ?? user;
   }
 
   public async getById(id: string): Promise<User> {
