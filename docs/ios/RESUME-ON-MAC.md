@@ -12,9 +12,9 @@ REPO: the `bjj-open-mat` Bun monorepo; the Flutter app is in `apps/mobile`. Work
 GOAL: Run the app in an iOS Simulator and capture REAL App Store screenshots, saving them to `docs/ios/images/` (this folder exists). Then commit them.
 
 SETUP
-1. `git checkout feature/monorepo-restructure && git pull`
+1. `git checkout main && git pull` (PR #5 is merged)
 2. At repo root: `bun install`
-3. `cd apps/mobile && flutter pub get && (cd ios && pod install)`
+3. One-shot toolchain setup (idempotent): `bash scripts/mac-bootstrap.sh` — accepts the Xcode license, runs first-launch, ensures Flutter has Dart >= 3.7 (upgrades if not), (re)installs CocoaPods via Homebrew, and runs `flutter pub get` + `pod install`. (Or do those manually: `cd apps/mobile && flutter pub get && (cd ios && pod install)`.)
 4. Open `ios/Runner.xcworkspace` in Xcode → Runner target → Signing & Capabilities → set your Team; also enable "Sign in with Apple" (the app offers Apple login). See `docs/apple-app-registration.md`.
 
 AUTH — pick ONE way to reach seeded, logged-in screens:
