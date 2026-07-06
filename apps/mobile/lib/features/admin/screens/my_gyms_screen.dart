@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +36,7 @@ class MyGymsScreen extends ConsumerWidget {
                 final gym = gyms[i];
                 return Card(
                   child: ListTile(
-                    leading: CircleAvatar(backgroundColor: StitchTokens.secondary.withValues(alpha: 0.15), child: const Icon(Icons.store, color: StitchTokens.secondary)),
+                    leading: _GymLogo(logoUrl: gym.logoUrl),
                     title: Text(gym.name),
                     subtitle: Text(gym.address),
                     trailing: const Icon(Icons.chevron_right),
@@ -51,6 +52,32 @@ class MyGymsScreen extends ConsumerWidget {
         backgroundColor: StitchTokens.secondary,
         onPressed: () => context.go('/owner/gyms/add'),
         child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
+}
+
+/// Gym logo thumbnail for list rows: shows the uploaded logo when present,
+/// otherwise a neutral store placeholder.
+class _GymLogo extends StatelessWidget {
+  final String? logoUrl;
+  const _GymLogo({this.logoUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholder = CircleAvatar(
+      backgroundColor: StitchTokens.secondary.withValues(alpha: 0.15),
+      child: const Icon(Icons.store, color: StitchTokens.secondary),
+    );
+    if (logoUrl == null || logoUrl!.isEmpty) return placeholder;
+    return ClipOval(
+      child: CachedNetworkImage(
+        imageUrl: logoUrl!,
+        width: 40,
+        height: 40,
+        fit: BoxFit.cover,
+        placeholder: (_, _) => placeholder,
+        errorWidget: (_, _, _) => placeholder,
       ),
     );
   }

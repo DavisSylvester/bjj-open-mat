@@ -9,6 +9,11 @@ import { NotificationFacade } from "./facades/notification.facade.mts";
 import { OpenMatFacade } from "./facades/open-mat.facade.mts";
 import { UserFacade } from "./facades/user.facade.mts";
 import { ZipcodesGeocoder, type Geocoder } from "./services/geocoder.mts";
+import {
+  S3AssetStorage,
+  UnconfiguredAssetStorage,
+  type AssetStorage,
+} from "./services/asset-storage.mts";
 import { CheckInRepository } from "./repositories/check-in.repository.mts";
 import { FavoriteRepository } from "./repositories/favorite.repository.mts";
 import { GymRepository } from "./repositories/gym.repository.mts";
@@ -27,6 +32,7 @@ export interface Container {
   readonly checkInFacade: CheckInFacade;
   readonly notificationFacade: NotificationFacade;
   readonly geocoder: Geocoder;
+  readonly assetStorage: AssetStorage;
   ensureIndexes(): Promise<void>;
 }
 
@@ -40,6 +46,9 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const notificationRepo = new NotificationRepository(db);
   const id = (): string => randomUUID();
   const geocoder = new ZipcodesGeocoder();
+  const assetStorage: AssetStorage = env.assetsBucket
+    ? new S3AssetStorage(env.assetsBucket, env.assetsRegion)
+    : new UnconfiguredAssetStorage();
 
   return {
     db,
@@ -59,6 +68,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
     geocoder,
+    assetStorage,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),

@@ -1,5 +1,11 @@
 import { Elysia } from "elysia";
-import { CreateGymRequest, GymListQuery, NearbyQuery, UpdateGymRequest } from "@bjj/contract";
+import {
+  CreateGymRequest,
+  GymListQuery,
+  LogoUploadUrlRequest,
+  NearbyQuery,
+  UpdateGymRequest,
+} from "@bjj/contract";
 import type { AuthIdentity } from "../auth/auth.types.mts";
 import { authPlugin } from "../auth/auth.middleware.mts";
 import type { Container } from "../container.mts";
@@ -13,7 +19,7 @@ function requireId(identity: AuthIdentity | null): AuthIdentity {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function gymRoutes(container: Container) {
-  const { gymFacade } = container;
+  const { gymFacade, assetStorage } = container;
 
   return new Elysia({ prefix: "/api/v1/gyms" })
     .use(authPlugin(container.verifier, container.roleLookup))
@@ -32,6 +38,12 @@ export function gymRoutes(container: Container) {
       requireOwner: true,
       body: CreateGymRequest,
     })
+    .post(
+      "/logo-upload-url",
+      async ({ identity, body }) =>
+        data(await assetStorage.presignLogoUpload(requireId(identity).userId, body.contentType)),
+      { requireOwner: true, body: LogoUploadUrlRequest },
+    )
     .get(
       "/nearby",
       async ({ query }) => {

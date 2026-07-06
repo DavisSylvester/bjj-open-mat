@@ -2,6 +2,8 @@ import * as path from "node:path";
 import { CfnOutput, Duration, Stack, type StackProps } from "aws-cdk-lib";
 import type { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
@@ -31,6 +33,36 @@ export class ApiStack extends Stack {
       description: "BJJ Open Mat API runtime secrets (MONGODB_URI, AUTH_BYPASS_SECRET)",
     });
 
+    // Public asset bucket for gym logos. Objects live under logos/* and are
+    // served public-read via a bucket policy (ACLs disabled). The API presigns
+    // PUT uploads; the app displays the stable object URL directly.
+    const assetsBucket = new s3.Bucket(this, "AssetsBucket", {
+      objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
+      blockPublicAccess: new s3.BlockPublicAccess({
+        blockPublicAcls: true,
+        ignorePublicAcls: true,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false,
+      }),
+      cors: [
+        {
+          allowedMethods: [s3.HttpMethods.PUT, s3.HttpMethods.GET, s3.HttpMethods.HEAD],
+          allowedOrigins: ["*"],
+          allowedHeaders: ["*"],
+          maxAge: 3000,
+        },
+      ],
+    });
+
+    // Anyone may read logo objects (public gym logos); nothing else is public.
+    assetsBucket.addToResourcePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:GetObject"],
+        resources: [assetsBucket.arnForObjects("logos/*")],
+        principals: [new iam.AnyPrincipal()],
+      }),
+    );
+
     const fn = new lambda.DockerImageFunction(this, "ApiFunction", {
       functionName: "bjj-open-mat-api",
       code: lambda.DockerImageCode.fromImageAsset(repoRoot, {
@@ -47,10 +79,14 @@ export class ApiStack extends Stack {
         AUTH0_AUDIENCE: "https://www.bjj-open-mat",
         APP_SECRET_ARN: appSecret.secretArn,
         AWS_LWA_READINESS_CHECK_PATH: "/health",
+        ASSETS_BUCKET: assetsBucket.bucketName,
+        ASSETS_REGION: this.region,
       },
     });
 
     appSecret.grantRead(fn);
+    // The API only ever writes logo objects; scope the grant to that prefix.
+    assetsBucket.grantPut(fn, "logos/*");
 
     // Existing Route53 hosted zone for dsylvester.io (same AWS account).
     const zone = route53.HostedZone.fromHostedZoneAttributes(this, "Zone", {
@@ -90,5 +126,6 @@ export class ApiStack extends Stack {
     new CfnOutput(this, "CustomUrl", { value: `https://${DOMAIN_NAME}` });
     new CfnOutput(this, "ApiUrl", { value: api.apiEndpoint });
     new CfnOutput(this, "AppSecretArn", { value: appSecret.secretArn });
+    new CfnOutput(this, "AssetsBucketName", { value: assetsBucket.bucketName });
   }
 }

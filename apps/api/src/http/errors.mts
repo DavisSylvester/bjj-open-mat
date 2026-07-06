@@ -3,7 +3,8 @@ export type AppErrorCode =
   | "forbidden"
   | "unauthorized"
   | "conflict"
-  | "bad_request";
+  | "bad_request"
+  | "service_unavailable";
 
 export class AppError extends Error {
 
@@ -29,5 +30,7 @@ export function httpStatusFor(code: AppErrorCode): number {
       return 409;
     case "bad_request":
       return 400;
+    case "service_unavailable":
+      return 503;
   }
 }

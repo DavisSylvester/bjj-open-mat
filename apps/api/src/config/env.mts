@@ -11,6 +11,9 @@ const EnvSchema = t.Object({
   DEMO_USER_ID: t.String({ minLength: 1 }),
   DEMO_USER_ROLE: t.Union([t.Literal("practitioner"), t.Literal("gym_owner")]),
   DEMO_USER_EMAIL: t.String({ minLength: 1 }),
+  // Optional: S3 bucket for gym logo uploads. Absent in local dev without AWS.
+  ASSETS_BUCKET: t.Optional(t.String()),
+  ASSETS_REGION: t.Optional(t.String()),
 });
 
 type RawEnv = Static<typeof EnvSchema>;
@@ -23,6 +26,8 @@ export interface AppEnv {
   readonly auth0Audience: string | undefined;
   readonly bypassSecret: string;
   readonly demoUser: { readonly id: string; readonly role: "practitioner" | "gym_owner"; readonly email: string };
+  readonly assetsBucket: string | undefined;
+  readonly assetsRegion: string;
 }
 
 export function loadEnv(source: Record<string, string | undefined> = process.env): AppEnv {
@@ -35,5 +40,7 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     auth0Audience: raw.AUTH0_AUDIENCE,
     bypassSecret: raw.AUTH_BYPASS_SECRET,
     demoUser: { id: raw.DEMO_USER_ID, role: raw.DEMO_USER_ROLE, email: raw.DEMO_USER_EMAIL },
+    assetsBucket: raw.ASSETS_BUCKET,
+    assetsRegion: raw.ASSETS_REGION ?? "us-east-1",
   };
 }
