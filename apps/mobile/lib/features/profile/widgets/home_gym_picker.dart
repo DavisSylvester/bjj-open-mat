@@ -5,7 +5,7 @@ import '../../gyms/data/gym_repository.dart';
 import '../../gyms/models/gym.dart';
 
 /// Modal searchable gym list. Returns the picked Gym, or null if dismissed.
-Future<Gym?> showHomeGymPicker(BuildContext context, WidgetRef ref) {
+Future<Gym?> showHomeGymPicker(BuildContext context) {
   return showModalBottomSheet<Gym>(
     context: context,
     isScrollControlled: true,

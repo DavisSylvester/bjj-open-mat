@@ -80,7 +80,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       : '${_birthday!.year.toString().padLeft(4, '0')}-${_birthday!.month.toString().padLeft(2, '0')}-${_birthday!.day.toString().padLeft(2, '0')}';
 
   Future<void> _pickHomeGym() async {
-    final gym = await showHomeGymPicker(context, ref);
+    final gym = await showHomeGymPicker(context);
     if (gym != null) setState(() => _homeGymId = gym.id);
   }
 

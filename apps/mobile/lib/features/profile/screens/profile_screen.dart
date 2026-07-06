@@ -7,15 +7,8 @@ import '../../../core/auth/auth_service.dart';
 import '../../settings/role_toggle.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
-import '../../../shared/widgets/session_row.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../data/profile_stats.dart';
-
-final _recentSessions = [
-  SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0),
-  SessionRowData(gymName: 'Renzo Westwood', giType: 'nogi', expLevel: 'int', time: '8:00 PM', day: 'Sat', distance: '2.4 mi', fee: 15),
-  SessionRowData(gymName: 'Gracie Barra Pasadena', giType: 'gi', expLevel: 'beg', time: '9:00 AM', day: 'Sun', distance: '4.5 mi', fee: 0),
-];
 
 String _memberSince(String? iso) {
   final d = iso == null ? null : DateTime.tryParse(iso);
@@ -140,20 +133,12 @@ class _GlassProfile extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: avatarUrl == null || avatarUrl.isEmpty ? beltBg : Colors.white.withValues(alpha: 0.20),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.60), width: 2.5),
-                        image: (avatarUrl != null && avatarUrl.isNotEmpty)
-                            ? DecorationImage(image: NetworkImage(avatarUrl), fit: BoxFit.cover)
-                            : null,
-                      ),
-                      child: (avatarUrl == null || avatarUrl.isEmpty)
-                          ? Center(child: Text(initial, style: t.h1Style.copyWith(color: beltFg, fontSize: 26)))
-                          : null,
+                    _ProfileAvatar(
+                      avatarUrl: avatarUrl,
+                      initial: initial,
+                      beltBg: beltBg,
+                      beltFg: beltFg,
+                      style: t.h1Style.copyWith(fontSize: 26),
                     ),
                     const SizedBox(width: 15),
                     Expanded(
@@ -226,23 +211,6 @@ class _GlassProfile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 22),
-            // My Sessions
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('My Sessions', style: t.h2Style),
-                  Text('See all', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 13)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            ..._recentSessions.map((s) => Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-              child: SessionRow(session: s),
-            )),
-            const SizedBox(height: 10),
             // Settings
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
@@ -319,6 +287,62 @@ class _GlassProfile extends StatelessWidget {
           ]),
         ),
       ),
+    );
+  }
+}
+
+class _ProfileAvatar extends StatefulWidget {
+  final String? avatarUrl;
+  final String initial;
+  final Color beltBg;
+  final Color beltFg;
+  final TextStyle style;
+  const _ProfileAvatar({
+    required this.avatarUrl,
+    required this.initial,
+    required this.beltBg,
+    required this.beltFg,
+    required this.style,
+  });
+
+  @override
+  State<_ProfileAvatar> createState() => _ProfileAvatarState();
+}
+
+class _ProfileAvatarState extends State<_ProfileAvatar> {
+  bool _failed = false;
+
+  @override
+  void didUpdateWidget(covariant _ProfileAvatar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.avatarUrl != widget.avatarUrl) {
+      _failed = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = widget.avatarUrl != null && widget.avatarUrl!.isNotEmpty && !_failed;
+    return Container(
+      width: 70,
+      height: 70,
+      decoration: BoxDecoration(
+        color: hasImage ? Colors.white.withValues(alpha: 0.20) : widget.beltBg,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.60), width: 2.5),
+        image: hasImage
+            ? DecorationImage(
+                image: NetworkImage(widget.avatarUrl!),
+                fit: BoxFit.cover,
+                onError: (_, _) {
+                  if (mounted) setState(() => _failed = true);
+                },
+              )
+            : null,
+      ),
+      child: hasImage
+          ? null
+          : Center(child: Text(widget.initial, style: widget.style.copyWith(color: widget.beltFg))),
     );
   }
 }
