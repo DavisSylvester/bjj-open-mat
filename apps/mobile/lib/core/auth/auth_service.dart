@@ -247,7 +247,11 @@ class AuthStateNotifier extends Notifier<AuthState> {
       if (kIsWeb) return;
       if (credentials != null) {
         final pu = credentials.user; // auth0_flutter UserProfile
-        await _authService.syncProfile(displayName: pu.name, email: pu.email, avatarUrl: pu.pictureUrl?.toString());
+        try {
+          await _authService.syncProfile(displayName: pu.name, email: pu.email, avatarUrl: pu.pictureUrl?.toString());
+        } catch (_) {
+          // best-effort provider-metadata sync; login proceeds even if it fails
+        }
         final user = await _authService.getOrCreateProfile();
         state = state.copyWith(status: AuthStatus.authenticated, user: user);
       } else {
