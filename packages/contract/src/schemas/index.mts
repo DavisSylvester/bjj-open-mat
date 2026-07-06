@@ -8,5 +8,6 @@ export * from "./review.mts";
 export * from "./check-in.mts";
 export * from "./favorite.mts";
 export * from "./notification.mts";
+export * from "./report.mts";
 export * from "./requests/index.mts";
 export * from "./responses/index.mts";

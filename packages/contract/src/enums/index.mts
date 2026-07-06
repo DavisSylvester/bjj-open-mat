@@ -8,3 +8,4 @@ export * from "./review-category.mts";
 export * from "./check-in-location-status.mts";
 export * from "./gender.mts";
 export * from "./weight-division.mts";
+export * from "./report-type.mts";
