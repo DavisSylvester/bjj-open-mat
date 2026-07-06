@@ -82,7 +82,7 @@ class PublicProfileScreen extends ConsumerWidget {
                   children: [
                     profileGlassHero(context, t, user),
                     const SizedBox(height: 14),
-                    profileMetaCard(context, ref, t, user),
+                    profileMetaCard(context, ref, t, user, editable: false),
                   ],
                 ),
               ),

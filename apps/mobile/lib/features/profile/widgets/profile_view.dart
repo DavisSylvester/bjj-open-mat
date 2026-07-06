@@ -94,14 +94,17 @@ Widget profileGlassHero(BuildContext context, AppTokens t, UserProfile user) {
 /// The white rounded metadata card: birthday/age, home gym, location, weight,
 /// division, gender, member-since. Shared between the main Profile screen
 /// and the public attendee profile.
-Widget profileMetaCard(BuildContext context, WidgetRef ref, AppTokens t, UserProfile user) {
+/// [editable] true = the signed-in user's own profile (unset fields show
+/// action prompts like "Add birthday"). false = a read-only public profile
+/// (unset required fields show "—", never an action prompt).
+Widget profileMetaCard(BuildContext context, WidgetRef ref, AppTokens t, UserProfile user, {bool editable = true}) {
   final birthday = user.birthday;
   final age = (birthday != null && birthday.isNotEmpty) ? ageFromBirthday(birthday) : null;
 
   final homeGymId = user.homeGymId;
   final homeGymValue = (homeGymId != null && homeGymId.isNotEmpty)
       ? ref.watch(gymByIdProvider(homeGymId)).maybeWhen(data: (g) => g.name, orElse: () => '—')
-      : 'Set home gym';
+      : (editable ? 'Set home gym' : '—');
 
   // Build the metadata rows dynamically so optional fields only appear when set.
   final birthdayLabel = _formatBirthday(birthday);
@@ -118,7 +121,7 @@ Widget profileMetaCard(BuildContext context, WidgetRef ref, AppTokens t, UserPro
   if (birthdayLabel != null) {
     meta(LucideIcons.cake, 'Birthday', birthdayLabel);
     if (age != null) meta(LucideIcons.gift, 'Age', '$age yrs');
-  } else {
+  } else if (editable) {
     meta(LucideIcons.cake, 'Age', 'Add birthday');
   }
   meta(LucideIcons.mapPin, 'Home gym', homeGymValue);
