@@ -35,6 +35,7 @@ class Endpoints {
 
   // Geo
   static const String geoReverse = '/api/v1/geo/reverse';
+  static const String geoZip = '/api/v1/geo/zip';
 
   // Health
   static const String health = '/health';

@@ -164,6 +164,28 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     if (mounted && rg != null) setState(() => _locationLabel = rg.label);
   }
 
+  /// ZIP field changes: debounce, refresh results, and resolve the ZIP to a
+  /// "City, ST" label shown in the location field.
+  void _onZipChanged() {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 350), () {
+      _rebuildQuery();
+      _resolveZipLabel();
+    });
+  }
+
+  Future<void> _resolveZipLabel() async {
+    final zip = _zipCtrl.text.trim();
+    if (zip.isEmpty) {
+      if (mounted) setState(() => _locationLabel = null);
+      return;
+    }
+    if (zip.length != 5) return; // wait for a full 5-digit ZIP
+    final rg = await ref.read(geoRepositoryProvider).zip(zip);
+    if (!mounted) return;
+    setState(() => _locationLabel = rg?.label);
+  }
+
   void _onDistanceChanged(double v) {
     setState(() => _distanceMi = v);
     _rebuildSoon();
@@ -316,8 +338,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                       ),
-                      onChanged: (_) => _onTextChanged(),
-                      onSubmitted: (_) => _rebuildQuery(),
+                      onChanged: (_) => _onZipChanged(),
+                      onSubmitted: (_) {
+                        _rebuildQuery();
+                        _resolveZipLabel();
+                      },
                     ),
                   ),
                 ]),
@@ -453,7 +478,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       controller: _searchCtrl,
                       style: t.h2Style.copyWith(fontSize: 15, color: t.text),
                       decoration: InputDecoration(
-                        hintText: 'Los Angeles, CA',
+                        hintText: _locationLabel ?? 'Los Angeles, CA',
                         hintStyle: t.h2Style.copyWith(fontSize: 15),
                         border: InputBorder.none,
                         isDense: true,
@@ -500,8 +525,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                       ),
-                      onChanged: (_) => _onTextChanged(),
-                      onSubmitted: (_) => _rebuildQuery(),
+                      onChanged: (_) => _onZipChanged(),
+                      onSubmitted: (_) {
+                        _rebuildQuery();
+                        _resolveZipLabel();
+                      },
                     ),
                   ),
                 ]),
