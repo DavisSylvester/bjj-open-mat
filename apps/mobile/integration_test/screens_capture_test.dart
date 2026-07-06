@@ -33,8 +33,15 @@ void main() {
     app.main();
 
     Future<void> settle([int ms = 700]) async => tester.pump(Duration(milliseconds: ms));
+    // Before a screenshot, let any route-push transition finish so we don't
+    // capture a mid-transition (blank) frame; bounded so a perpetual
+    // animation can't hang the sweep.
     Future<void> shot(String name) async {
-      await settle();
+      try {
+        await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 5));
+      } catch (_) {
+        await settle();
+      }
       await binding.takeScreenshot(name);
     }
 
@@ -100,19 +107,11 @@ void main() {
       }
     } catch (_) {}
 
-    // 8) Edit Profile (best-effort text link)
+    // 8) Edit Profile (Account row on Profile → /profile/edit)
     try {
-      if (await tapIf(find.text('Edit Profile'))) {
+      if (await tapIf(find.text('Account'))) {
+        await pumpUntilFound(tester, find.text('Edit Profile'), timeout: const Duration(seconds: 6));
         await shot('cap-08-edit-profile');
-        await tester.pageBack();
-        await settle();
-      }
-    } catch (_) {}
-
-    // 9) Favorites (best-effort)
-    try {
-      if (await tapIf(find.text('Favorites'))) {
-        await shot('cap-09-favorites');
         await tester.pageBack();
         await settle();
       }

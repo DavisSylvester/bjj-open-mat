@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+
+/// Back affordance for full-screen routes reached via push (falls back to
+/// /profile if there is nothing to pop).
+Widget _backButton(BuildContext context, AppTokens t) => GestureDetector(
+      onTap: () => context.canPop() ? context.pop() : context.go('/profile'),
+      child: Icon(LucideIcons.arrowLeft, color: t.text, size: 22),
+    );
 
 class _NotificationItem {
   final IconData icon;
@@ -76,6 +84,8 @@ class _SportNotifications extends StatelessWidget {
             color: t.bg2,
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
             child: Row(children: [
+              _backButton(context, t),
+              const SizedBox(width: 12),
               Container(width: 4, height: 28, color: t.red),
               const SizedBox(width: 10),
               Text('Notifications', style: t.h1Style.copyWith(fontSize: 22)),
@@ -153,6 +163,8 @@ class _GlassNotifications extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
             child: Row(children: [
+              _backButton(context, t),
+              const SizedBox(width: 12),
               Icon(LucideIcons.bell, color: t.muted, size: 20),
               const SizedBox(width: 8),
               Text('Notifications', style: t.h1Style),
