@@ -196,6 +196,17 @@ class AuthStateNotifier extends Notifier<AuthState> {
       const bypassToken = String.fromEnvironment('AUTH_BYPASS_TOKEN');
       if (devBypass && bypassToken.isNotEmpty) {
         await _authService.apiClient.setToken(bypassToken);
+        // Load the real demo profile from the API so server-side metadata
+        // (birthday, home gym, weight, etc.) and in-app edits are reflected.
+        try {
+          final user = await _authService.getOrCreateProfile();
+          if (user != null) {
+            state = AuthState(status: AuthStatus.authenticated, user: user);
+            return;
+          }
+        } catch (_) {
+          // API unreachable — fall back to the offline stub below.
+        }
         state = const AuthState(
           status: AuthStatus.authenticated,
           user: UserProfile(
