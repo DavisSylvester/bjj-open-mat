@@ -128,5 +128,11 @@ void main() {
         await goBack();
       }
     } catch (_) {}
+
+    // 9) Report tab (bottom nav)
+    try {
+      await tapIf(find.text('Report'));
+      await shot('cap-09-report');
+    } catch (_) {}
   });
 }
