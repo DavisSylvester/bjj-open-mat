@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../shared/widgets/empty_state.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
@@ -45,7 +46,74 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _seedFromPreferences();
     WidgetsBinding.instance.addPostFrameCallback((_) => _useGps());
+  }
+
+  /// Seed the initial "When", "Within", and gi-type from the user's saved
+  /// default search preferences, when present. Falls back to current defaults.
+  void _seedFromPreferences() {
+    final prefs = ref.read(authStateProvider).user?.preferences;
+    if (prefs == null) return;
+
+    final within = prefs.defaultWithinMi;
+    if (within != null) _distanceMi = within.clamp(1.0, 100.0);
+
+    final gi = prefs.defaultGiType;
+    if (gi != null && ['gi', 'nogi', 'both'].contains(gi)) {
+      _filters
+        ..removeWhere((f) => f != 'free')
+        ..add(gi);
+    }
+
+    final when = prefs.defaultWhen;
+    if (when != null) {
+      final now = DateTime.now();
+      switch (when) {
+        case 'this_week':
+          _when = WhenRange.thisWeek(now);
+          _whenLabel = 'This week';
+        case 'this_weekend':
+          _when = WhenRange.thisWeekend(now);
+          _whenLabel = 'This weekend';
+        case 'this_month':
+          _when = WhenRange.thisMonth(now);
+          _whenLabel = 'This month';
+      }
+    }
+  }
+
+  /// The token persisted for the current "When" selection, mirroring the
+  /// labels used by [_whenOptions]. Null when no range is active.
+  String? get _whenToken {
+    switch (_whenLabel) {
+      case 'This week':
+        return 'this_week';
+      case 'This weekend':
+        return 'this_weekend';
+      case 'This month':
+        return 'this_month';
+      default:
+        return null;
+    }
+  }
+
+  /// Persist the current When/Within/gi-type as the user's default search
+  /// preferences and confirm with a SnackBar.
+  Future<void> _saveAsDefault() async {
+    final giType = _selectedGiType;
+    final whenToken = _whenToken;
+    await ref.read(authStateProvider.notifier).updateProfile({
+      'preferences': {
+        if (whenToken != null) 'defaultWhen': whenToken,
+        'defaultWithinMi': _distanceMi,
+        if (giType != null) 'defaultGiType': giType,
+      },
+    });
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Saved as your default')),
+    );
   }
 
   @override
@@ -468,6 +536,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   TextSpan(text: (results.asData?.value.length ?? 0) == 1 ? ' Session' : ' Sessions', style: t.h2Style),
                 ])),
                 const Spacer(),
+                GestureDetector(
+                  key: const Key('save-default-filters'),
+                  onTap: _saveAsDefault,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: t.primary.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Row(children: [
+                      Icon(LucideIcons.bookmark, size: 13, color: t.primary),
+                      const SizedBox(width: 4),
+                      Text('Save', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 11)),
+                    ]),
+                  ),
+                ),
+                const SizedBox(width: 12),
                 Text('Map view', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 13)),
               ],
             ),

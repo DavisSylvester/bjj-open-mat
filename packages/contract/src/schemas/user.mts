@@ -14,6 +14,16 @@ export const UserSettings = t.Object(
 );
 export type UserSettings = Static<typeof UserSettings>;
 
+export const UserPreferences = t.Object(
+  {
+    defaultWhen: t.Optional(t.String()),
+    defaultWithinMi: t.Optional(t.Number({ minimum: 1, maximum: 100 })),
+    defaultGiType: t.Optional(t.String()),
+  },
+  { $id: "UserPreferences" },
+);
+export type UserPreferences = Static<typeof UserPreferences>;
+
 export const User = t.Object(
   {
     id: t.String(),
@@ -35,6 +45,7 @@ export const User = t.Object(
     avatarUrl: t.Optional(t.String()),
     homeGymId: t.Optional(t.String()),
     settings: t.Optional(UserSettings),
+    preferences: t.Optional(UserPreferences),
     createdAt: t.Optional(t.String()),
   },
   { $id: "User" },
