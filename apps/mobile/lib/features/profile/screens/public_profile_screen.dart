@@ -1,10 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../app/theme.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 import '../../../core/auth/auth_service.dart';
-import '../../../shared/widgets/error_state.dart';
+import '../../../core/design/tokens.dart';
+import '../widgets/profile_view.dart';
 
 final publicProfileProvider = FutureProvider.family<UserProfile, String>((ref, userId) async {
   final api = ref.read(apiClientProvider);
@@ -18,34 +20,74 @@ class PublicProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = Theme.of(context).extension<AppTokens>()!;
     final profileAsync = ref.watch(publicProfileProvider(userId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: profileAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorState(message: e.toString()),
-        data: (user) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(StitchTokens.xl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircleAvatar(
-                  radius: 48,
-                  backgroundColor: BeltColors.fromRank(user.beltRank ?? 'white'),
-                  child: Text(user.displayName.isNotEmpty ? user.displayName[0].toUpperCase() : '?', style: const TextStyle(fontSize: 36, fontWeight: FontWeight.w700, color: Colors.white)),
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).maybePop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(LucideIcons.arrowLeft, color: t.text),
+                  ),
                 ),
-                const SizedBox(height: StitchTokens.md),
-                Text(user.displayName, style: Theme.of(context).textTheme.headlineLarge),
-                const SizedBox(height: StitchTokens.sm),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(color: BeltColors.fromRank(user.beltRank ?? 'white').withValues(alpha: 0.2), borderRadius: BorderRadius.circular(StitchTokens.radiusPill)),
-                  child: Text('${(user.beltRank ?? "white")[0].toUpperCase()}${(user.beltRank ?? "white").substring(1)} Belt', style: TextStyle(color: BeltColors.fromRank(user.beltRank ?? 'white'), fontWeight: FontWeight.w600)),
+              ),
+              profileAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 80),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
-              ],
-            ),
+                error: (e, _) {
+                  final isNotFound = e is DioException && e.response?.statusCode == 404;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isNotFound ? "This profile isn't available." : "Couldn't load this profile.",
+                            style: t.h1Style.copyWith(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            isNotFound
+                                ? 'The attendee you\'re looking for may have moved or removed their profile.'
+                                : 'Please check your connection and try again.',
+                            style: t.bodyStyle.copyWith(color: t.muted),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          TextButton(
+                            onPressed: () => ref.invalidate(publicProfileProvider(userId)),
+                            style: TextButton.styleFrom(foregroundColor: t.primary),
+                            child: const Text('Try Again'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                data: (user) => Column(
+                  children: [
+                    profileGlassHero(context, t, user),
+                    const SizedBox(height: 14),
+                    profileMetaCard(context, ref, t, user, editable: false),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
           ),
         ),
       ),
