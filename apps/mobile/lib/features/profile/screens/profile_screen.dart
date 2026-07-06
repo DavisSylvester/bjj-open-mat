@@ -17,6 +17,13 @@ final _recentSessions = [
   SessionRowData(gymName: 'Gracie Barra Pasadena', giType: 'gi', expLevel: 'beg', time: '9:00 AM', day: 'Sun', distance: '4.5 mi', fee: 0),
 ];
 
+String _memberSince(String? iso) {
+  final d = iso == null ? null : DateTime.tryParse(iso);
+  if (d == null) return '—';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return '${months[d.month - 1]} ${d.year}';
+}
+
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -214,7 +221,7 @@ class _GlassProfile extends StatelessWidget {
                   Divider(height: 1, color: t.border),
                   _MetaRow(t: t, icon: LucideIcons.mapPin, label: 'Home gym', value: homeGymValue),
                   Divider(height: 1, color: t.border),
-                  _MetaRow(t: t, icon: LucideIcons.calendarDays, label: 'Member since', value: '—'),
+                  _MetaRow(t: t, icon: LucideIcons.calendarDays, label: 'Member since', value: _memberSince(user?.createdAt)),
                 ]),
               ),
             ),
