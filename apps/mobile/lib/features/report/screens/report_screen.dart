@@ -84,7 +84,6 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     final t = Theme.of(context).extension<AppTokens>()!;
     return Scaffold(
       backgroundColor: t.bg,
-      appBar: AppBar(title: const Text('Report')),
       body: SafeArea(
         child: _done ? _buildSuccess(t) : _buildForm(t),
       ),
@@ -134,6 +133,8 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text('Report', style: t.h1Style),
+          const SizedBox(height: 20),
           Text('WHAT KIND OF REPORT', style: t.labelStyle),
           const SizedBox(height: 8),
           Row(children: [
@@ -142,34 +143,53 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             _typeChip(t, 'feature', 'Feature', LucideIcons.lightbulb),
           ]),
           const SizedBox(height: 20),
-          Text('TITLE', style: t.labelStyle),
-          const SizedBox(height: 8),
-          _fieldBox(
-            t,
-            child: TextField(
-              controller: _titleCtrl,
-              style: t.bodyStyle,
-              decoration: InputDecoration(
-                hintText: 'Short summary',
-                hintStyle: t.bodyStyle.copyWith(color: t.faint),
-                border: InputBorder.none,
-              ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(t.cardRadius),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 20),
-          Text('DESCRIPTION', style: t.labelStyle),
-          const SizedBox(height: 8),
-          _fieldBox(
-            t,
-            child: TextField(
-              controller: _descCtrl,
-              style: t.bodyStyle,
-              maxLines: 5,
-              decoration: InputDecoration(
-                hintText: 'What happened / what would you like?',
-                hintStyle: t.bodyStyle.copyWith(color: t.faint),
-                border: InputBorder.none,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('TITLE', style: t.labelStyle),
+                const SizedBox(height: 8),
+                _fieldBox(
+                  t,
+                  child: TextField(
+                    controller: _titleCtrl,
+                    style: t.bodyStyle,
+                    decoration: InputDecoration(
+                      hintText: 'Short summary',
+                      hintStyle: t.bodyStyle.copyWith(color: t.faint),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text('DESCRIPTION', style: t.labelStyle),
+                const SizedBox(height: 8),
+                _fieldBox(
+                  t,
+                  child: TextField(
+                    controller: _descCtrl,
+                    style: t.bodyStyle,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: 'What happened / what would you like?',
+                      hintStyle: t.bodyStyle.copyWith(color: t.faint),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           if (_error != null) ...[
@@ -244,9 +264,8 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
   Widget _fieldBox(AppTokens t, {required Widget child}) {
     return Container(
       decoration: BoxDecoration(
-        color: t.surface,
-        borderRadius: BorderRadius.circular(t.cardRadius),
-        border: Border.all(color: t.border),
+        color: t.surfaceHi,
+        borderRadius: BorderRadius.circular(16),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       child: child,

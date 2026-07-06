@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../../shared/widgets/glass_form.dart';
 import '../role_toggle.dart';
 
 /// Back affordance for the full-screen settings route (falls back to /profile
@@ -42,12 +43,14 @@ class _GlassSettings extends StatelessWidget {
               child: Row(children: [
                 _settingsBackButton(context, t),
                 const SizedBox(width: 12),
-                Icon(LucideIcons.settings, color: t.muted, size: 20),
-                const SizedBox(width: 8),
                 Text('Settings', style: t.h1Style),
               ]),
             ),
-            // Settings card
+            // PREFERENCES
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Align(alignment: Alignment.centerLeft, child: glassSectionLabel(t, 'Preferences')),
+            ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
@@ -76,16 +79,29 @@ class _GlassSettings extends StatelessWidget {
                   trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
                   onTap: () {},
                 ),
-                Divider(height: 1, color: t.border),
-                ListTile(
-                  leading: Icon(LucideIcons.info, color: t.muted),
-                  title: Text('About', style: t.bodyStyle),
-                  subtitle: Text(
-                    'BJJ Open Mat Finder v0.1.0',
-                    style: t.miniStyle.copyWith(fontSize: 11),
+              ]),
+            ),
+            const SizedBox(height: 20),
+            // ACCOUNT
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Align(alignment: Alignment.centerLeft, child: glassSectionLabel(t, 'Account')),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: t.surface,
+                borderRadius: BorderRadius.circular(t.cardRadius),
+                border: Border.all(color: t.border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
                   ),
-                ),
-                Divider(height: 1, color: t.border),
+                ],
+              ),
+              child: Column(children: [
                 Builder(builder: (ctx) {
                   final role = ref.watch(authStateProvider).user?.role;
                   final toggle = roleToggle(role);
@@ -115,7 +131,22 @@ class _GlassSettings extends StatelessWidget {
                 ),
               ]),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+            // About footer
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(children: [
+                  Icon(LucideIcons.info, color: t.faint, size: 20),
+                  const SizedBox(height: 8),
+                  Text('BJJ Open Mat Finder', style: t.miniStyle.copyWith(color: t.muted)),
+                  const SizedBox(height: 2),
+                  Text('v0.1.0', style: t.miniStyle.copyWith(color: t.faint)),
+                ]),
+              ),
+            ),
           ]),
         ),
       ),

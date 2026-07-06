@@ -83,8 +83,6 @@ class _GlassNotifications extends StatelessWidget {
             child: Row(children: [
               _backButton(context, t),
               const SizedBox(width: 12),
-              Icon(LucideIcons.bell, color: t.muted, size: 20),
-              const SizedBox(width: 8),
               Text('Notifications', style: t.h1Style),
             ]),
           ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../app/theme.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../../core/design/tokens.dart';
 import '../../../core/reference/ibjjf_weight_classes.dart';
+import '../../../shared/widgets/glass_form.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../widgets/home_gym_picker.dart';
 
@@ -113,154 +116,276 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<AppTokens>()!;
     final social = _social;
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile'), actions: [
-        TextButton(onPressed: _isSaving ? null : _save, child: _isSaving ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Save')),
-      ]),
-      body: ListView(
-        padding: const EdgeInsets.all(StitchTokens.lg),
+      backgroundColor: t.bg,
+      body: SafeArea(
+        child: Column(children: [
+          // Header — big bold in-body title, back affordance, indigo Save action.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).maybePop(),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
+                  child: Icon(LucideIcons.arrowLeft, size: 18, color: t.text),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Text('Edit Profile', style: t.h1Style)),
+              GestureDetector(
+                onTap: _isSaving ? null : _save,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                  child: _isSaving
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: t.primary),
+                        )
+                      : Text('Save', style: t.h2Style.copyWith(color: t.primary, fontSize: 16)),
+                ),
+              ),
+            ]),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+              children: [
+                if (!social)
+                  _sectionCard(t, 'Identity', [
+                    _fieldLabel(t, 'Display Name'),
+                    const SizedBox(height: 6),
+                    TextField(
+                      controller: _nameController,
+                      style: t.bodyStyle,
+                      decoration: glassInput(t, 'Your name'),
+                    ),
+                    const SizedBox(height: 16),
+                    _fieldLabel(t, 'Bio'),
+                    const SizedBox(height: 6),
+                    TextField(
+                      controller: _bioController,
+                      style: t.bodyStyle,
+                      maxLines: 3,
+                      decoration: glassInput(t, 'Tell other grapplers about yourself'),
+                    ),
+                  ]),
+                _sectionCard(t, 'Details', [
+                  _fieldLabel(t, 'Birthday'),
+                  const SizedBox(height: 6),
+                  _pickerRow(
+                    t,
+                    icon: LucideIcons.cake,
+                    label: _birthdayIso ?? 'Select birthday',
+                    onTap: _pickBirthday,
+                  ),
+                  const SizedBox(height: 16),
+                  _fieldLabel(t, 'Home Gym'),
+                  const SizedBox(height: 6),
+                  _pickerRow(
+                    t,
+                    icon: LucideIcons.mapPin,
+                    onTap: _pickHomeGym,
+                    child: _HomeGymLabel(homeGymId: _homeGymId, style: t.bodyStyle),
+                  ),
+                  if (!social) ...[
+                    const SizedBox(height: 16),
+                    Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Expanded(
+                        flex: 3,
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          _fieldLabel(t, 'City'),
+                          const SizedBox(height: 6),
+                          TextField(
+                            controller: _cityController,
+                            style: t.bodyStyle,
+                            decoration: glassInput(t, 'City'),
+                          ),
+                        ]),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 1,
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          _fieldLabel(t, 'State'),
+                          const SizedBox(height: 6),
+                          TextField(
+                            controller: _stateController,
+                            maxLength: 2,
+                            textCapitalization: TextCapitalization.characters,
+                            style: t.bodyStyle,
+                            decoration: glassInput(t, 'CA').copyWith(counterText: ''),
+                          ),
+                        ]),
+                      ),
+                    ]),
+                  ],
+                ]),
+                if (!social)
+                  _sectionCard(t, 'Training', [
+                    _fieldLabel(t, 'Gender'),
+                    const SizedBox(height: 8),
+                    GlassSegmented(
+                      t: t,
+                      value: _gender,
+                      options: const [
+                        (value: 'male', label: 'Male', icon: null),
+                        (value: 'female', label: 'Female', icon: null),
+                      ],
+                      onChanged: (v) => setState(() {
+                        _gender = v;
+                        _weightDivision = null; // division set differs by gender
+                      }),
+                    ),
+                    const SizedBox(height: 16),
+                    _fieldLabel(t, 'Weight'),
+                    const SizedBox(height: 6),
+                    Row(children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _weightValueController,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          style: t.bodyStyle,
+                          decoration: glassInput(t, 'Weight'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 120,
+                        child: GlassSegmented(
+                          t: t,
+                          value: _weightUnit,
+                          options: const [
+                            (value: 'lb', label: 'lb', icon: null),
+                            (value: 'kg', label: 'kg', icon: null),
+                          ],
+                          onChanged: (v) => setState(() => _weightUnit = v),
+                        ),
+                      ),
+                    ]),
+                    const SizedBox(height: 16),
+                    _fieldLabel(t, 'Division'),
+                    const SizedBox(height: 8),
+                    GlassSegmented(
+                      t: t,
+                      value: _divisionContext,
+                      options: const [
+                        (value: 'gi', label: 'Gi', icon: LucideIcons.shirt),
+                        (value: 'nogi', label: 'No-Gi', icon: LucideIcons.swords),
+                      ],
+                      onChanged: (v) => setState(() {
+                        _divisionContext = v;
+                        _weightDivision = null;
+                      }),
+                    ),
+                    const SizedBox(height: 16),
+                    _fieldLabel(t, 'Weight Division'),
+                    const SizedBox(height: 6),
+                    DropdownButtonFormField<String>(
+                      initialValue: _weightDivision,
+                      decoration: glassInput(t, 'Select division'),
+                      icon: Icon(LucideIcons.chevronDown, size: 18, color: t.muted),
+                      style: t.bodyStyle.copyWith(color: t.text),
+                      items: divisionsFor(_gender, _divisionContext)
+                          .map((r) => DropdownMenuItem(value: r.division, child: Text(r.label)))
+                          .toList(),
+                      onChanged: (v) => setState(() => _weightDivision = v),
+                    ),
+                  ]),
+                _sectionCard(t, 'Belt', [
+                  _fieldLabel(t, 'Belt Rank'),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _beltRanks.map((belt) => ChoiceChip(
+                      label: Text(belt[0].toUpperCase() + belt.substring(1)),
+                      selected: belt == _selectedBelt,
+                      selectedColor: BeltColors.fromRank(belt),
+                      labelStyle: TextStyle(color: belt == _selectedBelt ? Colors.white : null),
+                      onSelected: (_) { HapticFeedback.selectionClick(); setState(() => _selectedBelt = belt); },
+                    )).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  _fieldLabel(t, 'Stripes'),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: List.generate(5, (stripes) => ChoiceChip(
+                      label: Text('$stripes'),
+                      selected: stripes == _selectedStripes,
+                      selectedColor: t.primary,
+                      labelStyle: TextStyle(color: stripes == _selectedStripes ? Colors.white : t.body),
+                      onSelected: (_) { HapticFeedback.selectionClick(); setState(() => _selectedStripes = stripes); },
+                    )),
+                  ),
+                ]),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _fieldLabel(AppTokens t, String text) => glassSectionLabel(t, text);
+
+  Widget _sectionCard(AppTokens t, String label, List<Widget> children) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!social) ...[
-            TextField(controller: _nameController, decoration: const InputDecoration(labelText: 'Display Name')),
-            const SizedBox(height: StitchTokens.md),
-            TextField(controller: _bioController, decoration: const InputDecoration(labelText: 'Bio'), maxLines: 3),
-            const SizedBox(height: StitchTokens.md),
-          ],
-          Text('Birthday', style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: StitchTokens.sm),
-          InkWell(
-            onTap: _pickBirthday,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: StitchTokens.sm),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(_birthdayIso ?? 'Select birthday'),
-                  const Icon(Icons.calendar_today, size: 18),
-                ],
-              ),
-            ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8, left: 4),
+            child: glassSectionLabel(t, label),
           ),
-          const SizedBox(height: StitchTokens.md),
-          Text('Home Gym', style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: StitchTokens.sm),
-          InkWell(
-            onTap: _pickHomeGym,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: StitchTokens.sm),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: _HomeGymLabel(homeGymId: _homeGymId)),
-                  const Icon(Icons.chevron_right, size: 20),
-                ],
-              ),
-            ),
-          ),
-          if (!social) ...[
-            const SizedBox(height: StitchTokens.md),
-            Row(children: [
-              Expanded(
-                child: TextField(
-                  controller: _cityController,
-                  decoration: const InputDecoration(labelText: 'City'),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(t.cardRadius),
+              border: Border.all(color: t.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
-              ),
-              const SizedBox(width: StitchTokens.md),
-              SizedBox(
-                width: 90,
-                child: TextField(
-                  controller: _stateController,
-                  maxLength: 2,
-                  textCapitalization: TextCapitalization.characters,
-                  decoration: const InputDecoration(labelText: 'State', counterText: ''),
-                ),
-              ),
-            ]),
-            const SizedBox(height: StitchTokens.md),
-            Text('Gender', style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: StitchTokens.sm),
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'male', label: Text('Male')),
-                ButtonSegment(value: 'female', label: Text('Female')),
               ],
-              selected: {_gender},
-              onSelectionChanged: (s) => setState(() {
-                _gender = s.first;
-                _weightDivision = null; // division set differs by gender
-              }),
             ),
-            const SizedBox(height: StitchTokens.md),
-            Row(children: [
-              Expanded(
-                child: TextField(
-                  controller: _weightValueController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(labelText: 'Weight'),
-                ),
-              ),
-              const SizedBox(width: StitchTokens.md),
-              SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(value: 'lb', label: Text('lb')),
-                  ButtonSegment(value: 'kg', label: Text('kg')),
-                ],
-                selected: {_weightUnit},
-                onSelectionChanged: (s) => setState(() => _weightUnit = s.first),
-              ),
-            ]),
-            const SizedBox(height: StitchTokens.md),
-            Text('Division', style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: StitchTokens.sm),
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'gi', label: Text('Gi')),
-                ButtonSegment(value: 'nogi', label: Text('No-Gi')),
-              ],
-              selected: {_divisionContext},
-              onSelectionChanged: (s) => setState(() {
-                _divisionContext = s.first;
-                _weightDivision = null;
-              }),
-            ),
-            const SizedBox(height: StitchTokens.sm),
-            DropdownButton<String>(
-              isExpanded: true,
-              value: _weightDivision,
-              hint: const Text('Select division'),
-              items: divisionsFor(_gender, _divisionContext)
-                  .map((r) => DropdownMenuItem(value: r.division, child: Text(r.label)))
-                  .toList(),
-              onChanged: (v) => setState(() => _weightDivision = v),
-            ),
-          ],
-          const SizedBox(height: StitchTokens.lg),
-          Text('Belt Rank', style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: StitchTokens.sm),
-          Wrap(
-            spacing: StitchTokens.sm,
-            children: _beltRanks.map((belt) => ChoiceChip(
-              label: Text(belt[0].toUpperCase() + belt.substring(1)),
-              selected: belt == _selectedBelt,
-              selectedColor: BeltColors.fromRank(belt),
-              labelStyle: TextStyle(color: belt == _selectedBelt ? Colors.white : null),
-              onSelected: (_) { HapticFeedback.selectionClick(); setState(() => _selectedBelt = belt); },
-            )).toList(),
-          ),
-          const SizedBox(height: StitchTokens.md),
-          Text('Stripes', style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: StitchTokens.sm),
-          Wrap(
-            spacing: StitchTokens.sm,
-            children: List.generate(5, (stripes) => ChoiceChip(
-              label: Text('$stripes'),
-              selected: stripes == _selectedStripes,
-              onSelected: (_) { HapticFeedback.selectionClick(); setState(() => _selectedStripes = stripes); },
-            )),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _pickerRow(
+    AppTokens t, {
+    required IconData icon,
+    required VoidCallback onTap,
+    String? label,
+    Widget? child,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(color: t.surfaceHi, borderRadius: BorderRadius.circular(16)),
+        child: Row(children: [
+          Icon(icon, size: 18, color: t.muted),
+          const SizedBox(width: 10),
+          Expanded(child: child ?? Text(label ?? '', style: t.bodyStyle)),
+          Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+        ]),
       ),
     );
   }
@@ -268,17 +393,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
 class _HomeGymLabel extends ConsumerWidget {
   final String? homeGymId;
-  const _HomeGymLabel({required this.homeGymId});
+  final TextStyle style;
+  const _HomeGymLabel({required this.homeGymId, required this.style});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = homeGymId;
-    if (id == null) return const Text('Select home gym');
+    if (id == null) return Text('Select home gym', style: style);
     final gymAsync = ref.watch(gymByIdProvider(id));
     return gymAsync.when(
-      data: (gym) => Text(gym.name),
-      loading: () => const Text('Loading...'),
-      error: (_, _) => const Text('Select home gym'),
+      data: (gym) => Text(gym.name, style: style),
+      loading: () => Text('Loading...', style: style),
+      error: (_, _) => Text('Select home gym', style: style),
     );
   }
 }
