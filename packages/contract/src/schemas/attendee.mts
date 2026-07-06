@@ -11,6 +11,9 @@ export const Attendee = t.Object(
     skillLevel: SkillLevel,
     avatarUrl: t.Optional(t.String({ format: "uri" })),
     rsvpAt: t.String(),
+    // False for placeholder attendees whose user document could not be
+    // resolved — clients must not link these to a public profile (404).
+    hasProfile: t.Boolean(),
   },
   { $id: "Attendee" },
 );

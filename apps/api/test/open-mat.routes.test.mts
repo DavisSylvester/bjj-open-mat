@@ -90,6 +90,35 @@ describe("open-mat routes: search filters", () => {
   });
 });
 
+describe("open-mat routes: attendees hasProfile", () => {
+  it("flags attendees with a resolvable profile true and placeholders false", async () => {
+    // Ensure the demo user document exists (getOrCreate) so it resolves.
+    await fetch(`${base}/api/v1/auth/me`, { headers: auth });
+
+    const created = await (await fetch(`${base}/api/v1/open-mats`, {
+      method: "POST", headers: auth,
+      body: JSON.stringify({ newGym: { name: "AttendGym", address: "9 Z St" }, title: "OM", startTime: "10:00", endTime: "12:00" }),
+    })).json();
+    const id = created.data.id as string;
+    const sessionDate = "2026-08-01";
+
+    // Real attendee: RSVP as the demo user (has a profile).
+    await fetch(`${base}/api/v1/open-mats/${id}/rsvp`, { method: "POST", headers: auth, body: JSON.stringify({ sessionDate }) });
+    // Placeholder attendee: an RSVP whose userId has no user document.
+    await client.db(TEST_DB).collection("rsvps").insertOne({ openMatId: id, sessionDate, userId: "ghost-no-profile", rsvpAt: new Date().toISOString() });
+
+    const res = await fetch(`${base}/api/v1/open-mats/${id}/attendees?sessionDate=${sessionDate}`, { headers: auth });
+    const json = await res.json();
+    expect(res.status).toBe(200);
+    const byId = Object.fromEntries(
+      (json.data as { userId: string; hasProfile: boolean; name: string }[]).map((a) => [a.userId, a]),
+    );
+    expect(byId["demo"]?.hasProfile).toBe(true);
+    expect(byId["ghost-no-profile"]?.hasProfile).toBe(false);
+    expect(byId["ghost-no-profile"]?.name).toBe("BJJ Practitioner");
+  });
+});
+
 describe("open-mat routes: security - status filter", () => {
   it("non-admin passing ?status=hidden gets the same live results as the default call", async () => {
     // Create a live session as the demo user (gym_owner, non-admin)

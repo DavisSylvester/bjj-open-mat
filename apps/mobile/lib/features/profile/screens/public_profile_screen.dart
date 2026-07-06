@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme.dart';
@@ -24,7 +25,15 @@ class PublicProfileScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Profile')),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorState(message: e.toString()),
+        error: (e, _) {
+          final is404 = e is DioException && e.response?.statusCode == 404;
+          return ErrorState(
+            message: is404
+                ? "This profile isn't available."
+                : "Couldn't load this profile. Please try again.",
+            onRetry: () => ref.invalidate(publicProfileProvider(userId)),
+          );
+        },
         data: (user) => Center(
           child: Padding(
             padding: const EdgeInsets.all(StitchTokens.xl),
