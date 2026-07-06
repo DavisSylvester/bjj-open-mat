@@ -25,18 +25,20 @@ export class ApiStack extends Stack {
     // CDK is invoked from infra/, so the repo root (Docker build context) is one up.
     const repoRoot = path.resolve(process.cwd(), "..");
 
-    // MONGODB_URI + AUTH_BYPASS_SECRET. Created empty here; the real JSON value is
-    // written out-of-band (aws secretsmanager put-secret-value) so it never enters
-    // the CloudFormation template.
+    // Runtime secrets JSON (MONGODB_URI, AUTH_BYPASS_SECRET, GITHUB_TOKEN). Created
+    // empty here; the real value is written out-of-band (aws secretsmanager
+    // put-secret-value) so it never enters the CloudFormation template.
     const appSecret = new secretsmanager.Secret(this, "AppSecret", {
       secretName: "bjj-open-mat/app",
-      description: "BJJ Open Mat API runtime secrets (MONGODB_URI, AUTH_BYPASS_SECRET)",
+      description: "BJJ Open Mat API runtime secrets (MONGODB_URI, AUTH_BYPASS_SECRET, GITHUB_TOKEN)",
     });
 
     // Public asset bucket for gym logos. Objects live under logos/* and are
     // served public-read via a bucket policy (ACLs disabled). The API presigns
     // PUT uploads; the app displays the stable object URL directly.
+    // Explicitly named per the <app>-<resource_type> convention.
     const assetsBucket = new s3.Bucket(this, "AssetsBucket", {
+      bucketName: "bjj-open-mat-assets",
       objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
       blockPublicAccess: new s3.BlockPublicAccess({
         blockPublicAcls: true,
