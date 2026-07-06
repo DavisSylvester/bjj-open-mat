@@ -147,6 +147,7 @@ export function openMatRoutes(container: Container) {
               skillLevel: "all" as const,
               avatarUrl: u?.avatarUrl,
               rsvpAt: "",
+              hasProfile: u !== null,
             };
           }),
         );
