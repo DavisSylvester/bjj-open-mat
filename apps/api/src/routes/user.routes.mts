@@ -5,6 +5,7 @@ import { authPlugin } from "../auth/auth.middleware.mts";
 import type { Container } from "../container.mts";
 import { AppError } from "../http/errors.mts";
 import { data } from "../http/envelope.mts";
+import { isSocial } from "../auth/is-social.mts";
 
 function requireId(identity: AuthIdentity | null): AuthIdentity {
   if (!identity) throw new AppError("unauthorized", "Authentication required");
@@ -25,7 +26,10 @@ export function userRoutes(container: Container) {
     })
     .put(
       "/api/v1/users/me",
-      async ({ identity, body }) => data(await userFacade.updateProfile(requireId(identity).userId, body)),
+      async ({ identity, body }) => {
+        const id = requireId(identity).userId;
+        return data(await userFacade.updateProfile(id, body, isSocial(id)));
+      },
       { requireAuth: true, body: UpdateUserRequest },
     )
     .get(

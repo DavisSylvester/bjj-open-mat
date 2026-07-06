@@ -27,10 +27,21 @@ export class UserFacade {
     return user;
   }
 
-  public async updateProfile(id: string, patch: UpdateUserRequest): Promise<User> {
-    const updated = await this.users.update(id, patch);
+  public async updateProfile(id: string, patch: UpdateUserRequest, isSocialUser = false): Promise<User> {
+    const effective: UpdateUserRequest = isSocialUser ? this.socialAllowed(patch) : patch;
+    const updated = await this.users.update(id, effective);
     if (!updated) throw new AppError("not_found", `User ${id} not found`);
     return updated;
+  }
+
+  // Social/SSO users may only change these fields; identity comes from the provider.
+  private socialAllowed(patch: UpdateUserRequest): UpdateUserRequest {
+    const allowed: UpdateUserRequest = {};
+    if (patch.birthday !== undefined) allowed.birthday = patch.birthday;
+    if (patch.beltRank !== undefined) allowed.beltRank = patch.beltRank;
+    if (patch.beltStripes !== undefined) allowed.beltStripes = patch.beltStripes;
+    if (patch.homeGymId !== undefined) allowed.homeGymId = patch.homeGymId;
+    return allowed;
   }
 
   public async getSettings(id: string): Promise<UserSettings> {
