@@ -3,75 +3,394 @@
     "name": "BJJ Open Mat API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
-  "variable": [{ "key": "baseUrl", "value": "http://localhost:3100" }],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3100"
+    }
+  ],
   "item": [
     {
       "name": "Health",
       "item": [
-        { "name": "Liveness", "request": { "method": "GET", "url": "{{baseUrl}}/health" } },
-        { "name": "Readiness", "request": { "method": "GET", "url": "{{baseUrl}}/ready" } },
-        { "name": "OpenAPI", "request": { "method": "GET", "url": "{{baseUrl}}/openapi.json" } }
+        {
+          "name": "Liveness",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
+        },
+        {
+          "name": "Readiness",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/ready"
+          }
+        },
+        {
+          "name": "OpenAPI",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/openapi.json"
+          }
+        }
       ]
     },
     {
       "name": "Users",
       "item": [
-        { "name": "Get-or-create me", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/auth/me" } },
-        { "name": "Get me", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/me" } },
-        { "name": "Update me", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"displayName\": \"New Name\",\n  \"beltRank\": \"purple\"\n}" }, "url": "{{baseUrl}}/api/v1/users/me" } },
-        { "name": "Get settings", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/me/settings" } },
-        { "name": "Update settings", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"theme\": \"glass\"\n}" }, "url": "{{baseUrl}}/api/v1/users/me/settings" } },
-        { "name": "Public profile", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/u-me" } }
+        {
+          "name": "Get-or-create me",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/auth/me"
+          }
+        },
+        {
+          "name": "Sync provider identity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"avatarUrl\": \"https://example.com/a.png\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/auth/sync"
+          }
+        },
+        {
+          "name": "Get me",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/me"
+          }
+        },
+        {
+          "name": "Update me",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"New Name\",\n  \"beltRank\": \"purple\",\n  \"beltStripes\": 2,\n  \"birthday\": \"1990-05-15\",\n  \"homeGymId\": \"gym-atos\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/users/me"
+          }
+        },
+        {
+          "name": "Get settings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/me/settings"
+          }
+        },
+        {
+          "name": "Update settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"theme\": \"glass\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/users/me/settings"
+          }
+        },
+        {
+          "name": "Public profile",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/u-me"
+          }
+        }
       ]
     },
     {
       "name": "Gyms",
       "item": [
-        { "name": "List gyms", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/gyms?page=1&limit=20" } },
-        { "name": "Create gym", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Atos HQ\",\n  \"address\": \"9587 Distribution Ave\",\n  \"city\": \"San Diego\",\n  \"state\": \"CA\",\n  \"location\": { \"lat\": 32.901, \"lng\": -117.213 }\n}" }, "url": "{{baseUrl}}/api/v1/gyms" } },
-        { "name": "Nearby gyms", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/gyms/nearby?lat=32.9&lng=-117.21&radiusKm=25" } },
-        { "name": "Gym detail", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/gyms/gym-atos" } },
-        { "name": "Update gym", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"phone\": \"555-0100\"\n}" }, "url": "{{baseUrl}}/api/v1/gyms/gym-atos" } },
-        { "name": "Directions", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/gyms/gym-atos/directions" } },
-        { "name": "Add favorite", "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/gyms/gym-atos/favorite" } },
-        { "name": "Remove favorite", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/gyms/gym-atos/favorite" } }
+        {
+          "name": "List gyms",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Create gym",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Atos HQ\",\n  \"address\": \"9587 Distribution Ave\",\n  \"city\": \"San Diego\",\n  \"state\": \"CA\",\n  \"location\": { \"lat\": 32.901, \"lng\": -117.213 }\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms"
+          }
+        },
+        {
+          "name": "Nearby gyms",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/nearby?lat=32.9&lng=-117.21&radiusKm=25"
+          }
+        },
+        {
+          "name": "Gym detail",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos"
+          }
+        },
+        {
+          "name": "Update gym",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"555-0100\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos"
+          }
+        },
+        {
+          "name": "Directions",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/directions"
+          }
+        },
+        {
+          "name": "Add favorite",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/favorite"
+          }
+        },
+        {
+          "name": "Remove favorite",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/favorite"
+          }
+        }
       ]
     },
     {
       "name": "Open Mats",
       "item": [
-        { "name": "List/finder", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/open-mats?dayOfWeek=5&giType=gi" } },
-        { "name": "Create", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"gymId\": \"gym-atos\",\n  \"title\": \"Friday Night Open Mat\",\n  \"startTime\": \"19:00\",\n  \"endTime\": \"21:00\",\n  \"dayOfWeek\": 5,\n  \"giType\": \"gi\",\n  \"skillLevel\": \"all\"\n}" }, "url": "{{baseUrl}}/api/v1/open-mats" } },
-        { "name": "Nearby", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/open-mats/nearby?lat=32.9&lng=-117.21&radiusKm=25" } },
-        { "name": "Detail", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri" } },
-        { "name": "Update", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"isCancelled\": true\n}" }, "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri" } },
-        { "name": "RSVP", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"sessionDate\": \"2026-06-20\"\n}" }, "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/rsvp" } },
-        { "name": "Cancel RSVP", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/rsvp?sessionDate=2026-06-20" } },
-        { "name": "Attendees", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/attendees?sessionDate=2026-06-20" } },
-        { "name": "Check in", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"sessionDate\": \"2026-06-20\"\n}" }, "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/checkin" } },
-        { "name": "Attendance (checkins)", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/checkins?date=2026-06-20" } }
+        {
+          "name": "List/finder",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/open-mats?dayOfWeek=5&giType=gi"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gymId\": \"gym-atos\",\n  \"title\": \"Friday Night Open Mat\",\n  \"startTime\": \"19:00\",\n  \"endTime\": \"21:00\",\n  \"dayOfWeek\": 5,\n  \"giType\": \"gi\",\n  \"skillLevel\": \"all\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/open-mats"
+          }
+        },
+        {
+          "name": "Nearby",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/open-mats/nearby?lat=32.9&lng=-117.21&radiusKm=25"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isCancelled\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri"
+          }
+        },
+        {
+          "name": "RSVP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionDate\": \"2026-06-20\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/rsvp"
+          }
+        },
+        {
+          "name": "Cancel RSVP",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/rsvp?sessionDate=2026-06-20"
+          }
+        },
+        {
+          "name": "Attendees",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/attendees?sessionDate=2026-06-20"
+          }
+        },
+        {
+          "name": "Check in",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionDate\": \"2026-06-20\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/checkin"
+          }
+        },
+        {
+          "name": "Attendance (checkins)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/open-mats/om-atos-fri/checkins?date=2026-06-20"
+          }
+        }
       ]
     },
     {
       "name": "Check-ins & Training",
       "item": [
-        { "name": "Submit review", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"rating\": 5,\n  \"review\": \"Great rolls\",\n  \"categoryRatings\": { \"instruction\": 5, \"cleanliness\": 4, \"variety\": 5, \"worth_returning\": 5, \"overall\": 5 }\n}" }, "url": "{{baseUrl}}/api/v1/checkins/CHECKIN_ID/review" } },
-        { "name": "My check-ins", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/me/checkins" } }
+        {
+          "name": "Submit review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"review\": \"Great rolls\",\n  \"categoryRatings\": { \"instruction\": 5, \"cleanliness\": 4, \"variety\": 5, \"worth_returning\": 5, \"overall\": 5 }\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/checkins/CHECKIN_ID/review"
+          }
+        },
+        {
+          "name": "My check-ins",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/me/checkins"
+          }
+        }
       ]
     },
     {
       "name": "Favorites",
       "item": [
-        { "name": "My favorites", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/me/favorites" } }
+        {
+          "name": "My favorites",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/me/favorites"
+          }
+        }
       ]
     },
     {
       "name": "Notifications",
       "item": [
-        { "name": "List", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/notifications?unread=true" } },
-        { "name": "Mark read", "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/notifications/NOTIFICATION_ID/read" } },
-        { "name": "Mark all read", "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/notifications/read-all" } }
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/notifications?unread=true"
+          }
+        },
+        {
+          "name": "Mark read",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/notifications/NOTIFICATION_ID/read"
+          }
+        },
+        {
+          "name": "Mark all read",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/notifications/read-all"
+          }
+        }
       ]
     }
   ]
