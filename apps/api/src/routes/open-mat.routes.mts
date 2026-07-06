@@ -127,18 +127,23 @@ export function openMatRoutes(container: Container) {
         const sessionDate = query.sessionDate ?? query.date;
         if (!sessionDate) throw new AppError("bad_request", "sessionDate query param required");
         const userIds = await openMatFacade.attendeeUserIds(params.id, sessionDate);
-        const users = await Promise.all(userIds.map((uid) => userFacade.getById(uid).catch(() => null)));
-        const attendees = users
-          .filter((u): u is NonNullable<typeof u> => u !== null)
-          .map((u) => ({
-            userId: u.id,
-            name: u.displayName,
-            beltRank: u.beltRank ?? "white",
-            beltStripes: u.beltStripes,
-            skillLevel: "all" as const,
-            avatarUrl: u.avatarUrl,
-            rsvpAt: "",
-          }));
+        // Hydrate each RSVP to a profile, but never DROP one whose profile is
+        // missing — otherwise the "going" count under-reports. Fall back to a
+        // minimal attendee keyed by the userId.
+        const attendees = await Promise.all(
+          userIds.map(async (uid) => {
+            const u = await userFacade.getById(uid).catch(() => null);
+            return {
+              userId: uid,
+              name: u?.displayName ?? "BJJ Practitioner",
+              beltRank: u?.beltRank ?? "white",
+              beltStripes: u?.beltStripes,
+              skillLevel: "all" as const,
+              avatarUrl: u?.avatarUrl,
+              rsvpAt: "",
+            };
+          }),
+        );
         return list(attendees, { page: 1, limit: attendees.length, total: attendees.length });
       },
       { query: SessionDateQuery },

@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../data/rsvp_repository.dart';
+import '../models/attendee.dart';
 import '../models/open_mat.dart';
 
 /// "Going" (RSVP) control + public attendee list for one session date.
@@ -82,27 +83,94 @@ class _GoingSectionState extends ConsumerState<GoingSection> {
         ),
         if (attendees.isNotEmpty) ...[
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: attendees
-                .map((a) => GestureDetector(
-                      onTap: () => context.go('/user/${a.userId}'),
-                      child: Chip(
-                        avatar: CircleAvatar(
-                          backgroundColor: t.beltBg[a.beltRank] ?? t.muted,
-                          child: Text(
-                            a.name.isNotEmpty ? a.name[0].toUpperCase() : '?',
-                            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                        label: Text(a.name, style: t.miniStyle),
-                      ),
-                    ))
-                .toList(),
-          ),
+          _AttendeeCard(t: t, attendees: attendees),
         ],
       ],
+    );
+  }
+}
+
+/// Card listing everyone going to the session, each with their name and belt.
+class _AttendeeCard extends StatelessWidget {
+  final AppTokens t;
+  final List<Attendee> attendees;
+  const _AttendeeCard({required this.t, required this.attendees});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.border),
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < attendees.length; i++) ...[
+            if (i > 0) Divider(height: 1, color: t.border),
+            _AttendeeRow(t: t, attendee: attendees[i]),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _AttendeeRow extends StatelessWidget {
+  final AppTokens t;
+  final Attendee attendee;
+  const _AttendeeRow({required this.t, required this.attendee});
+
+  String get _beltLabel {
+    final r = attendee.beltRank;
+    if (r.isEmpty) return 'White Belt';
+    return '${r[0].toUpperCase()}${r.substring(1)} Belt';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final beltBg = t.beltBg[attendee.beltRank] ?? t.muted;
+    final beltFg = t.beltFg[attendee.beltRank] ?? Colors.white;
+    return InkWell(
+      onTap: () => context.go('/user/${attendee.userId}'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(children: [
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: beltBg,
+            backgroundImage: (attendee.avatarUrl != null && attendee.avatarUrl!.isNotEmpty)
+                ? NetworkImage(attendee.avatarUrl!)
+                : null,
+            child: (attendee.avatarUrl == null || attendee.avatarUrl!.isEmpty)
+                ? Text(
+                    attendee.name.isNotEmpty ? attendee.name[0].toUpperCase() : '?',
+                    style: TextStyle(color: beltFg, fontSize: 14, fontWeight: FontWeight.w700),
+                  )
+                : null,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              attendee.name,
+              style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: beltBg,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              _beltLabel,
+              style: t.miniStyle.copyWith(color: beltFg, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ]),
+      ),
     );
   }
 }

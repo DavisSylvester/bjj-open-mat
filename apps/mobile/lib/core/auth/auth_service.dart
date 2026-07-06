@@ -150,7 +150,9 @@ class AuthStateNotifier extends Notifier<AuthState> {
         state = const AuthState(
           status: AuthStatus.authenticated,
           user: UserProfile(
-            id: 'u-me',
+            // Must match the API's DEMO_USER_ID so the client user id lines up
+            // with the server identity RSVPs/check-ins are saved under.
+            id: 'test-user@local.priv',
             email: 'demo@bjj-open-mat.test',
             displayName: 'Demo Owner',
             role: 'gym_owner',
