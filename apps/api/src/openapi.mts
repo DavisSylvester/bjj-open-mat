@@ -1,5 +1,6 @@
 import {
   Attendee,
+  AuthSyncRequest,
   BeltRank,
   CategoryRatings,
   CheckIn,
@@ -52,6 +53,13 @@ export function buildOpenApiDocument(): Record<string, unknown> {
       "/health": { get: { summary: "Liveness", responses: ok(ref("HealthResponse")) } },
       "/ready": { get: { summary: "Readiness", responses: ok(ref("ReadyResponse")) } },
       "/api/v1/auth/me": { get: { summary: "Get-or-create current user", responses: ok(dataOf("User")) } },
+      "/api/v1/auth/sync": {
+        post: {
+          summary: "Sync provider identity (name/email/avatar) for social users",
+          requestBody: { required: true, content: { "application/json": { schema: ref("AuthSyncRequest") } } },
+          responses: ok(dataOf("User")),
+        },
+      },
       "/api/v1/users/me": {
         get: { summary: "Current user", responses: ok(dataOf("User")) },
         put: {
@@ -177,6 +185,7 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         CreateOpenMatRequest,
         UpdateOpenMatRequest,
         UpdateUserRequest,
+        AuthSyncRequest,
         RsvpRequest,
         CreateCheckInRequest,
         CheckInLocationStatus,
