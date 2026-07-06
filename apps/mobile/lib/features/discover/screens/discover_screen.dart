@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
+import '../../../shared/widgets/empty_state.dart';
+import '../../../shared/widgets/gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../../shared/widgets/ticker_strip.dart';
 import '../../open_mats/models/open_mat.dart';
@@ -56,6 +59,17 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       isLive: mat.status == 'live',
       unverified: !mat.verified,
     );
+  }
+
+  /// Up-to-two-letter initials from the signed-in user's name (avatar chip).
+  static String _initials(String? name) {
+    final parts = (name ?? '').trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return 'ME';
+    if (parts.length == 1) {
+      final p = parts.first;
+      return (p.length >= 2 ? p.substring(0, 2) : p).toUpperCase();
+    }
+    return (parts.first[0] + parts.last[0]).toUpperCase();
   }
 
   static String _expLevel(String skillLevel) {
@@ -178,7 +192,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         colors: [t.primary, t.both],
                       ),
                     ),
-                    child: Center(child: Text('MR', style: t.miniStyle.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800))),
+                    child: Center(child: Text(_initials(ref.watch(authStateProvider).user?.displayName), style: t.miniStyle.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800))),
                   ),
                 ],
               ),
@@ -250,20 +264,64 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 error: (e, _) => Center(
                   child: Text("Couldn't load open mats", style: t.bodyStyle.copyWith(color: t.muted)),
                 ),
-                data: (list) => list.isEmpty
-                    ? Center(child: Text('No open mats nearby', style: t.miniStyle))
-                    : ListView.separated(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                        itemCount: list.length,
-                        separatorBuilder: (_, _) => const SizedBox(height: 14),
-                        itemBuilder: (_, i) => SizedBox(
-                          width: double.infinity,
-                          child: SessionRow(
-                            session: _toRow(list[i]),
-                            onTap: () => context.go('/open-mat/${list[i].id}'),
-                          ),
-                        ),
+                data: (list) {
+                  if (list.isEmpty) {
+                    return EmptyState(
+                      icon: LucideIcons.mapPin,
+                      title: _locationLabel != null ? 'No open mats found in $_locationLabel' : 'No open mats found nearby',
+                      subtitle: 'Try widening your search or check back soon.',
+                      actionLabel: 'Search',
+                      onAction: () => context.go('/search'),
+                    );
+                  }
+                  // Sparse feed (1-2 results): pad the screen with a "Gyms
+                  // near you" section so it doesn't read as dead space. 3+
+                  // results already fill the screen on their own.
+                  if (list.length < 3) {
+                    final gyms = distinctGymsFromOpenMats(list);
+                    return SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final mat in list) ...[
+                            SizedBox(
+                              width: double.infinity,
+                              child: SessionRow(
+                                session: _toRow(mat),
+                                onTap: () => context.go('/open-mat/${mat.id}'),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+                          if (gyms.isNotEmpty) ...[
+                            const SizedBox(height: 10),
+                            Text('GYMS NEAR YOU', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
+                            const SizedBox(height: 3),
+                            Text('More places to roll', style: t.h2Style),
+                            const SizedBox(height: 14),
+                            for (final gym in gyms) ...[
+                              GymCard(gym: gym),
+                              const SizedBox(height: 14),
+                            ],
+                          ],
+                        ],
                       ),
+                    );
+                  }
+                  return ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                    itemCount: list.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 14),
+                    itemBuilder: (_, i) => SizedBox(
+                      width: double.infinity,
+                      child: SessionRow(
+                        session: _toRow(list[i]),
+                        onTap: () => context.go('/open-mat/${list[i].id}'),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

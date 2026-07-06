@@ -8,6 +8,13 @@ import '../../../core/design/theme_provider.dart';
 import '../../../core/auth/auth_service.dart';
 import '../role_toggle.dart';
 
+/// Back affordance for the full-screen settings route (falls back to /profile
+/// if there is nothing to pop).
+Widget _settingsBackButton(BuildContext context, AppTokens t) => GestureDetector(
+      onTap: () => context.canPop() ? context.pop() : context.go('/profile'),
+      child: Icon(LucideIcons.arrowLeft, color: t.text, size: 22),
+    );
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -36,6 +43,8 @@ class _SportSettings extends StatelessWidget {
             color: t.bg2,
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
             child: Row(children: [
+              _settingsBackButton(context, t),
+              const SizedBox(width: 12),
               Container(width: 4, height: 28, color: t.red),
               const SizedBox(width: 10),
               Text('Settings', style: t.h1Style.copyWith(fontSize: 22)),
@@ -56,7 +65,11 @@ class _SportSettings extends StatelessWidget {
                   trailing: Consumer(
                     builder: (ctx, watchRef, child) => Switch(
                       value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                      activeThumbColor: t.red,
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: t.red,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: t.faint,
+                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                       onChanged: (v) {
                         HapticFeedback.selectionClick();
                         watchRef.read(themeProvider.notifier).toggle();
@@ -72,7 +85,7 @@ class _SportSettings extends StatelessWidget {
                   leading: Icon(LucideIcons.bell, color: t.muted, size: 18),
                   title: Text('Notifications', style: t.bodyStyle),
                   trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.faint),
-                  onTap: () => context.go('/notifications'),
+                  onTap: () => context.push('/notifications'),
                 ),
               ),
               Divider(height: 1, color: t.border),
@@ -157,6 +170,8 @@ class _GlassSettings extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
               child: Row(children: [
+                _settingsBackButton(context, t),
+                const SizedBox(width: 12),
                 Icon(LucideIcons.settings, color: t.muted, size: 20),
                 const SizedBox(width: 8),
                 Text('Settings', style: t.h1Style),
@@ -188,7 +203,11 @@ class _GlassSettings extends StatelessWidget {
                   trailing: Consumer(
                     builder: (ctx, watchRef, _) => Switch(
                       value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                      activeThumbColor: t.red,
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: t.red,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: t.faint,
+                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                       onChanged: (_) {
                         HapticFeedback.selectionClick();
                         watchRef.read(themeProvider.notifier).toggle();
@@ -201,7 +220,7 @@ class _GlassSettings extends StatelessWidget {
                   leading: Icon(LucideIcons.bell, color: t.muted),
                   title: Text('Notifications', style: t.bodyStyle),
                   trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
-                  onTap: () => context.go('/notifications'),
+                  onTap: () => context.push('/notifications'),
                 ),
                 Divider(height: 1, color: t.border),
                 ListTile(

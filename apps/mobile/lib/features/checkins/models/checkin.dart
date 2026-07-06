@@ -6,6 +6,7 @@ class CheckIn {
   final String checkedInAt;
   final int? rating;
   final String? review;
+  final String? reviewedAt;
   final String? gymName;
   final String? openMatTitle;
   final String? userName;
@@ -32,6 +33,7 @@ class CheckIn {
     required this.checkedInAt,
     this.rating,
     this.review,
+    this.reviewedAt,
     this.gymName,
     this.openMatTitle,
     this.userName,
@@ -60,6 +62,7 @@ class CheckIn {
       checkedInAt: json['checkedInAt'] as String? ?? '',
       rating: json['rating'] as int?,
       review: json['review'] as String?,
+      reviewedAt: json['reviewedAt'] as String?,
       gymName: json['gymName'] as String?,
       openMatTitle: json['openMatTitle'] as String?,
       userName: json['userName'] as String?,

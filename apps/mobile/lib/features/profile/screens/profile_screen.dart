@@ -167,35 +167,41 @@ class _GlassProfile extends StatelessWidget {
                 children: [
                   Text('Profile', style: t.h1Style),
                   Row(children: [
-                    Stack(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
-                          child: Icon(LucideIcons.bell, size: 17, color: t.text),
-                        ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: t.red,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 1.5),
+                    GestureDetector(
+                      onTap: () => context.push('/notifications'),
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
+                            child: Icon(LucideIcons.bell, size: 17, color: t.text),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: t.red,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 9),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
-                      child: Icon(LucideIcons.settings, size: 17, color: t.text),
+                    GestureDetector(
+                      onTap: () => context.push('/settings'),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
+                        child: Icon(LucideIcons.settings, size: 17, color: t.text),
+                      ),
                     ),
                   ]),
                 ],
@@ -312,7 +318,11 @@ class _GlassProfile extends StatelessWidget {
                     trailing: Consumer(
                       builder: (context, watchRef, _) => Switch(
                         value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                        activeThumbColor: t.primary,
+                        activeThumbColor: Colors.white,
+                        activeTrackColor: t.primary,
+                        inactiveThumbColor: Colors.white,
+                        inactiveTrackColor: t.faint,
+                        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                         onChanged: (_) => watchRef.read(themeProvider.notifier).toggle(),
                       ),
                     ),
@@ -322,12 +332,14 @@ class _GlassProfile extends StatelessWidget {
                     leading: Icon(LucideIcons.bell, color: t.muted),
                     title: Text('Notifications', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
                     trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () => context.push('/notifications'),
                   ),
                   Divider(height: 1, color: t.border),
                   ListTile(
                     leading: Icon(LucideIcons.user, color: t.muted),
                     title: Text('Account', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
                     trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () => context.push('/profile/edit'),
                   ),
                   Divider(height: 1, color: t.border),
                   Builder(builder: (ctx) {
@@ -358,6 +370,10 @@ class _GlassProfile extends StatelessWidget {
                     leading: Icon(LucideIcons.logOut, color: t.red),
                     title: Text('Sign out', style: t.bodyStyle.copyWith(color: t.red)),
                     trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () async {
+                      HapticFeedback.selectionClick();
+                      await ref.read(authStateProvider.notifier).logout();
+                    },
                   ),
                 ]),
               ),

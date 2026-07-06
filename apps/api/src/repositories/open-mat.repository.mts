@@ -25,6 +25,8 @@ export interface OpenMatFilter {
   lat?: number;
   lng?: number;
   radiusKm?: number;
+  city?: string;
+  state?: string;
 }
 
 export function escapeRegex(input: string): string {
@@ -91,6 +93,12 @@ export class OpenMatRepository extends BaseRepository {
     if (filter.verified !== undefined) q.verified = filter.verified;
     if (filter.status) q.status = filter.status;
     else q.status = { $ne: "hidden" } as Filter<OpenMatDoc>["status"];
+    if (filter.city && filter.city.trim()) {
+      q.city = { $regex: `^${escapeRegex(filter.city.trim())}$`, $options: "i" } as Filter<OpenMatDoc>["city"];
+    }
+    if (filter.state && filter.state.trim()) {
+      q.state = { $regex: `^${escapeRegex(filter.state.trim())}$`, $options: "i" } as Filter<OpenMatDoc>["state"];
+    }
 
     const and: Filter<OpenMatDoc>[] = [];
     if (filter.q && filter.q.trim()) {

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../shared/widgets/empty_state.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_service.dart';
+import '../../../shared/widgets/gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../open_mats/models/open_mat.dart';
 import '../data/search_query.dart';
@@ -626,7 +628,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               children: [
                 RichText(text: TextSpan(children: [
                   TextSpan(text: '${results.asData?.value.length ?? 0}', style: t.h2Style.copyWith(color: t.primary)),
-                  TextSpan(text: ' Sessions', style: t.h2Style),
+                  TextSpan(text: (results.asData?.value.length ?? 0) == 1 ? ' Session' : ' Sessions', style: t.h2Style),
                 ])),
                 const Spacer(),
                 Text('Map view', style: t.miniStyle.copyWith(color: t.primary, fontWeight: FontWeight.w700, fontSize: 13)),
@@ -639,17 +641,56 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               error: (e, _) => Center(
                 child: Text("Couldn't load results", style: t.bodyStyle.copyWith(color: t.muted)),
               ),
-              data: (list) => list.isEmpty
-                  ? Center(child: Text('0 Sessions', style: t.miniStyle))
-                  : ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      itemCount: list.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 12),
-                      itemBuilder: (_, i) => SessionRow(
-                        session: _toRow(list[i]),
-                        onTap: () => context.go('/open-mat/${list[i].id}'),
-                      ),
+              data: (list) {
+                if (list.isEmpty) {
+                  return EmptyState(
+                    icon: LucideIcons.mapPin,
+                    title: _locationLabel != null ? 'No open mats found in $_locationLabel' : 'No open mats found',
+                    subtitle: 'Try a different area, widen the radius, or clear filters.',
+                  );
+                }
+                // Sparse results (1-2 matches): pad the screen with a "Gyms
+                // near you" section so it doesn't read as dead space. 3+
+                // results already fill the screen on their own.
+                if (list.length < 3) {
+                  final gyms = distinctGymsFromOpenMats(list);
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final mat in list) ...[
+                          SessionRow(
+                            session: _toRow(mat),
+                            onTap: () => context.go('/open-mat/${mat.id}'),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                        if (gyms.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text('GYMS NEAR YOU', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
+                          const SizedBox(height: 3),
+                          Text('More places to roll', style: t.h2Style),
+                          const SizedBox(height: 12),
+                          for (final gym in gyms) ...[
+                            GymCard(gym: gym),
+                            const SizedBox(height: 12),
+                          ],
+                        ],
+                      ],
                     ),
+                  );
+                }
+                return ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  itemCount: list.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
+                  itemBuilder: (_, i) => SessionRow(
+                    session: _toRow(list[i]),
+                    onTap: () => context.go('/open-mat/${list[i].id}'),
+                  ),
+                );
+              },
             ),
           ),
         ]),

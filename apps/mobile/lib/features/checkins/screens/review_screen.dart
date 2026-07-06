@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/stat_bar.dart';
 import '../../../shared/widgets/score_cell.dart';
+import '../data/review_repository.dart';
 
-class ReviewScreen extends StatefulWidget {
+class ReviewScreen extends ConsumerStatefulWidget {
   final String? sessionId;
-  const ReviewScreen({super.key, this.sessionId});
+  final String? checkInId;
+  const ReviewScreen({super.key, this.sessionId, this.checkInId});
 
   @override
-  State<ReviewScreen> createState() => _ReviewScreenState();
+  ConsumerState<ReviewScreen> createState() => _ReviewScreenState();
 }
 
-class _ReviewScreenState extends State<ReviewScreen> {
+class _ReviewScreenState extends ConsumerState<ReviewScreen> {
+  static const Map<String, String> _categoryKeys = {
+    'Instruction Quality': 'instruction',
+    'Mat Cleanliness': 'cleanliness',
+    'Skill Variety': 'variety',
+    'Worth Returning': 'worth_returning',
+    'Overall': 'overall',
+  };
+
   final Map<String, double> _ratings = {
     'Instruction Quality': 4.0,
     'Mat Cleanliness': 3.0,
@@ -21,8 +34,61 @@ class _ReviewScreenState extends State<ReviewScreen> {
     'Overall': 4.0,
   };
   final _reviewCtrl = TextEditingController();
+  bool _submitting = false;
+  String? _error;
 
   double get _composite => _ratings.values.reduce((a, b) => a + b) / _ratings.length;
+
+  // checkInId is threaded through check-in -> checkin-success -> review as a
+  // `checkInId` query param (see checkin_success_screen.dart), or supplied
+  // directly via the widget constructor. If neither is present (e.g. a deep
+  // link without the param) submission is blocked with an error instead of
+  // guessing an id.
+  String? get _resolvedCheckInId {
+    if (widget.checkInId != null && widget.checkInId!.isNotEmpty) return widget.checkInId;
+    try {
+      final fromRoute = GoRouterState.of(context).uri.queryParameters['checkInId'];
+      if (fromRoute != null && fromRoute.isNotEmpty) return fromRoute;
+    } catch (_) {
+      // No GoRouterState available in this context (e.g. shown outside routing).
+    }
+    return null;
+  }
+
+  Future<void> _submit() async {
+    if (_submitting) return;
+    final checkInId = _resolvedCheckInId;
+    if (checkInId == null) {
+      setState(() => _error = "Missing check-in reference — can't submit this review.");
+      return;
+    }
+    setState(() {
+      _submitting = true;
+      _error = null;
+    });
+    final categoryRatings = <String, int>{
+      for (final entry in _ratings.entries) _categoryKeys[entry.key]!: entry.value.round(),
+    };
+    try {
+      await ref.read(reviewRepositoryProvider).submitReview(
+            checkInId,
+            rating: _ratings['Overall']!.round(),
+            review: _reviewCtrl.text.trim(),
+            categoryRatings: categoryRatings,
+          );
+      if (widget.sessionId != null) {
+        ref.invalidate(openMatReviewsProvider(widget.sessionId!));
+      }
+      if (mounted) Navigator.of(context).pop(true);
+    } on ApiException catch (e) {
+      if (mounted) {
+        setState(() {
+          _submitting = false;
+          _error = e.message;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -132,6 +198,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     ),
                   ),
                 ),
+                if (_error != null) ...[
+                  const SizedBox(height: 12),
+                  Text(_error!, style: t.miniStyle.copyWith(color: t.red)),
+                ],
               ]),
             ),
           ),
@@ -141,22 +211,36 @@ class _ReviewScreenState extends State<ReviewScreen> {
             padding: const EdgeInsets.all(16),
             child: t.isSport
                 ? GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: _submitting ? null : _submit,
                     child: Container(
                       width: double.infinity,
                       height: 54,
                       color: t.red,
-                      child: Center(child: Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16))),
+                      child: Center(
+                        child: _submitting
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                              )
+                            : Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
+                      ),
                     ),
                   )
                 : ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: _submitting ? null : _submit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: t.red,
                       minimumSize: const Size.fromHeight(54),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
                     ),
-                    child: Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white)),
+                    child: _submitting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                          )
+                        : Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white)),
                   ),
           ),
         ]),

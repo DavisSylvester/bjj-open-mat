@@ -3,6 +3,7 @@ import { AppError } from "../http/errors.mts";
 import type { CheckInRepository } from "../repositories/check-in.repository.mts";
 import type { OpenMatRepository } from "../repositories/open-mat.repository.mts";
 import type { UserRepository } from "../repositories/user.repository.mts";
+import type { GymRepository } from "../repositories/gym.repository.mts";
 
 type IdFactory = () => string;
 type Clock = () => Date;
@@ -22,9 +23,13 @@ export function haversineMeters(lat1: number, lon1: number, lat2: number, lon2: 
 export class CheckInFacade {
 
   public constructor(
-    private readonly checkins: Pick<CheckInRepository, "insert" | "findById" | "setReview" | "listByUser" | "listBySession">,
+    private readonly checkins: Pick<
+      CheckInRepository,
+      "insert" | "findById" | "setReview" | "listByUser" | "listBySession" | "ratingStatsForGym" | "listReviews"
+    >,
     private readonly openMats: Pick<OpenMatRepository, "findById">,
     private readonly users: Pick<UserRepository, "findById">,
+    private readonly gyms: Pick<GymRepository, "update">,
     private readonly newId: IdFactory,
     private readonly now: Clock = () => new Date(),
   ) {}
@@ -74,8 +79,29 @@ export class CheckInFacade {
     if (checkIn.userId !== userId) throw new AppError("forbidden", "Cannot review another user's check-in");
     const elapsed = this.now().getTime() - new Date(checkIn.checkedInAt).getTime();
     if (elapsed > REVIEW_WINDOW_MS) throw new AppError("conflict", "Review window (48h) has expired");
-    const updated = await this.checkins.setReview(checkInId, { rating: req.rating, review: req.review, categoryRatings: req.categoryRatings });
+    const updated = await this.checkins.setReview(checkInId, {
+      rating: req.rating,
+      review: req.review,
+      categoryRatings: req.categoryRatings,
+      reviewedAt: this.now().toISOString(),
+    });
+    // Recompute the gym's aggregate rating from all reviewed check-ins.
+    if (checkIn.gymId) {
+      const stats = await this.checkins.ratingStatsForGym(checkIn.gymId);
+      await this.gyms.update(checkIn.gymId, {
+        rating: Math.round(stats.avg * 10) / 10,
+        ratingCount: stats.count,
+      });
+    }
     return updated as CheckIn;
+  }
+
+  public async reviewsForGym(gymId: string, skip: number, limit: number): Promise<{ items: CheckIn[]; total: number }> {
+    return this.checkins.listReviews({ gymId }, skip, limit);
+  }
+
+  public async reviewsForOpenMat(openMatId: string, skip: number, limit: number): Promise<{ items: CheckIn[]; total: number }> {
+    return this.checkins.listReviews({ openMatId }, skip, limit);
   }
 
   public async listForUser(userId: string, skip: number, limit: number): Promise<{ items: CheckIn[]; total: number }> {

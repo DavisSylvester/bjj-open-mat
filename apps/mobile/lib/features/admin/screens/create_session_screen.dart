@@ -206,7 +206,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
                     _buildCapacityField(t),
                     const SizedBox(height: 16),
                     _buildNotesField(t),
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 112),
                   ],
                 ),
               ),
@@ -282,7 +282,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
           onTap: () => setState(() => _addingNewGym = false),
           child: Text(
             'Choose existing gym instead',
-            style: t.miniStyle.copyWith(fontSize: 12, color: t.gi, decoration: TextDecoration.underline),
+            style: t.miniStyle.copyWith(fontSize: 12, color: t.primary, decoration: TextDecoration.underline),
           ),
         ),
       ] else ...[
@@ -300,7 +300,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
                 Container(
                   width: 38, height: 38,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [t.gi, t.both]),
+                    gradient: LinearGradient(colors: [t.primary, t.both]),
                     borderRadius: BorderRadius.circular(t.badgeRadius + 4),
                   ),
                   child: Center(child: Text(
@@ -348,7 +348,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
           onTap: () => setState(() => _addingNewGym = true),
           child: Text(
             "Can't find your gym? Add it",
-            style: t.miniStyle.copyWith(fontSize: 12, color: t.gi, decoration: TextDecoration.underline),
+            style: t.miniStyle.copyWith(fontSize: 12, color: t.primary, decoration: TextDecoration.underline),
           ),
         ),
       ],
@@ -406,10 +406,10 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
       builder: (ctx) => SafeArea(
         child: Column(mainAxisSize: MainAxisSize.min, children: gyms.map((g) {
           return ListTile(
-            leading: Icon(LucideIcons.store, size: 18, color: g.id == _gymId ? t.gi : t.muted),
+            leading: Icon(LucideIcons.store, size: 18, color: g.id == _gymId ? t.primary : t.muted),
             title: Text(g.name, style: t.bodyStyle),
             subtitle: Text(g.address, style: t.miniStyle.copyWith(fontSize: 11, color: t.muted)),
-            trailing: g.id == _gymId ? Icon(LucideIcons.check, size: 16, color: t.gi) : null,
+            trailing: g.id == _gymId ? Icon(LucideIcons.check, size: 16, color: t.primary) : null,
             onTap: () => Navigator.of(ctx).pop(g.id),
           );
         }).toList()),
@@ -515,10 +515,10 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
         Container(
           width: 36, height: 36,
           decoration: BoxDecoration(
-            color: t.gi.withValues(alpha: 0.14),
+            color: t.primary.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(t.badgeRadius + 4),
           ),
-          child: Icon(LucideIcons.calendar, size: 18, color: t.gi),
+          child: Icon(LucideIcons.calendar, size: 18, color: t.primary),
         ),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -528,7 +528,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
             style: t.miniStyle.copyWith(fontSize: 11, color: t.muted),
           ),
         ])),
-        _Toggle(on: _isRecurring, onChanged: (v) => setState(() => _isRecurring = v), color: t.gi),
+        _Toggle(on: _isRecurring, onChanged: (v) => setState(() => _isRecurring = v), color: t.primary),
       ]),
     );
   }
@@ -731,10 +731,10 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
       child: Container(
         width: double.infinity, height: 54,
         decoration: BoxDecoration(
-          color: enabled ? t.gi : t.border,
+          color: enabled ? t.primary : t.border,
           borderRadius: BorderRadius.circular(t.cardRadius + 2),
           boxShadow: enabled
-              ? [BoxShadow(color: t.gi.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))]
+              ? [BoxShadow(color: t.primary.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6))]
               : null,
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -763,7 +763,7 @@ class _SessionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Text(title.toUpperCase(), style: t.labelStyle.copyWith(color: t.gi)),
+      Text(title.toUpperCase(), style: t.labelStyle.copyWith(color: t.primary)),
       const SizedBox(width: 10),
       Expanded(child: Container(height: 1, color: t.border)),
     ]);
