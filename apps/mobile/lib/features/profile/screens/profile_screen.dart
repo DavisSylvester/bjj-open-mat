@@ -6,7 +6,10 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../settings/role_toggle.dart';
 import '../../../core/design/tokens.dart';
+import '../../../shared/widgets/belt_icon.dart';
 import '../../../shared/widgets/session_row.dart';
+import '../../gyms/data/gym_repository.dart';
+import '../data/profile_stats.dart';
 
 final _recentSessions = [
   SessionRowData(gymName: 'Atos HQ', giType: 'gi', expLevel: 'all', time: '7:00 PM', day: 'Mon', distance: '1.2 mi', fee: 0),
@@ -20,8 +23,9 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-    return _GlassProfile(t: t, ref: ref, isAdmin: isAdmin);
+    final user = ref.watch(authStateProvider).user;
+    final isAdmin = user?.role == 'admin';
+    return _GlassProfile(t: t, ref: ref, isAdmin: isAdmin, user: user);
   }
 }
 
@@ -29,10 +33,36 @@ class _GlassProfile extends StatelessWidget {
   final AppTokens t;
   final WidgetRef ref;
   final bool isAdmin;
-  const _GlassProfile({required this.t, required this.ref, required this.isAdmin});
+  final UserProfile? user;
+  const _GlassProfile({required this.t, required this.ref, required this.isAdmin, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final displayName = user?.displayName ?? '';
+    final email = user?.email ?? '';
+    final beltRank = user?.beltRank ?? 'white';
+    final beltStripes = user?.beltStripes ?? 0;
+    final avatarUrl = user?.avatarUrl;
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : '?';
+    final beltBg = t.beltBg[beltRank] ?? t.beltBg['white']!;
+    final beltFg = t.beltFg[beltRank] ?? t.beltFg['white']!;
+    final beltLabel = beltRank.isNotEmpty ? '${beltRank[0].toUpperCase()}${beltRank.substring(1)}' : 'White';
+    final stripeLabel = beltStripes == 1 ? 'stripe' : 'stripes';
+
+    final statsAsync = ref.watch(myStatsProvider);
+    final checkInsValue = statsAsync.maybeWhen(data: (s) => '${s.checkIns}', orElse: () => '--');
+    final reviewsValue = statsAsync.maybeWhen(data: (s) => '${s.reviews}', orElse: () => '--');
+    final gymsValue = statsAsync.maybeWhen(data: (s) => '${s.gyms}', orElse: () => '--');
+
+    final birthday = user?.birthday;
+    final age = (birthday != null && birthday.isNotEmpty) ? ageFromBirthday(birthday) : null;
+    final ageValue = age != null ? '$age yrs' : (birthday != null && birthday.isNotEmpty ? '—' : 'Add birthday');
+
+    final homeGymId = user?.homeGymId;
+    final homeGymValue = (homeGymId != null && homeGymId.isNotEmpty)
+        ? ref.watch(gymByIdProvider(homeGymId)).maybeWhen(data: (g) => g.name, orElse: () => '—')
+        : 'Set home gym';
+
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -107,31 +137,40 @@ class _GlassProfile extends StatelessWidget {
                       width: 70,
                       height: 70,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.20),
+                        color: avatarUrl == null || avatarUrl.isEmpty ? beltBg : Colors.white.withValues(alpha: 0.20),
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white.withValues(alpha: 0.60), width: 2.5),
+                        image: (avatarUrl != null && avatarUrl.isNotEmpty)
+                            ? DecorationImage(image: NetworkImage(avatarUrl), fit: BoxFit.cover)
+                            : null,
                       ),
-                      child: Center(child: Text('DS', style: t.h1Style.copyWith(color: Colors.white, fontSize: 26))),
+                      child: (avatarUrl == null || avatarUrl.isEmpty)
+                          ? Center(child: Text(initial, style: t.h1Style.copyWith(color: beltFg, fontSize: 26)))
+                          : null,
                     ),
                     const SizedBox(width: 15),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Davis Sylvester', style: t.h1Style.copyWith(color: Colors.white, fontSize: 23)),
-                          const SizedBox(height: 7),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(8, 4, 10, 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.22),
-                              borderRadius: BorderRadius.circular(999),
+                          Text(displayName, style: t.h1Style.copyWith(color: Colors.white, fontSize: 23)),
+                          const SizedBox(height: 3),
+                          Text(email, style: t.bodyStyle.copyWith(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                          const SizedBox(height: 9),
+                          Row(mainAxisSize: MainAxisSize.min, children: [
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(8, 4, 10, 4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.22),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                BeltIcon(rank: beltRank, stripes: beltStripes, size: 22),
+                                const SizedBox(width: 6),
+                                Text('$beltLabel · $beltStripes $stripeLabel', style: t.miniStyle.copyWith(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
+                              ]),
                             ),
-                            child: Row(mainAxisSize: MainAxisSize.min, children: [
-                              Container(width: 14, height: 8, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(2))),
-                              const SizedBox(width: 6),
-                              Text('Blue · 2 stripes', style: t.miniStyle.copyWith(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
-                            ]),
-                          ),
+                          ]),
                         ],
                       ),
                     ),
@@ -140,7 +179,7 @@ class _GlassProfile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            // Stat strip
+            // Stat strip — real check-in / review / gym counts
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Container(
@@ -152,11 +191,31 @@ class _GlassProfile extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    _MnStatCell(label: 'Mats', value: '27', t: t, borderRight: true),
-                    _MnStatCell(label: 'Hours', value: '48', t: t, borderRight: true),
-                    _MnStatCell(label: 'Reviews', value: '8', t: t, borderRight: false),
+                    _MnStatCell(label: 'Check-ins', value: checkInsValue, t: t, borderRight: true),
+                    _MnStatCell(label: 'Reviews', value: reviewsValue, t: t, borderRight: true),
+                    _MnStatCell(label: 'Gyms', value: gymsValue, t: t, borderRight: false),
                   ],
                 ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            // Metadata: age, home gym, member since
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: t.border),
+                  boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+                ),
+                child: Column(children: [
+                  _MetaRow(t: t, icon: LucideIcons.cake, label: 'Age', value: ageValue),
+                  Divider(height: 1, color: t.border),
+                  _MetaRow(t: t, icon: LucideIcons.mapPin, label: 'Home gym', value: homeGymValue),
+                  Divider(height: 1, color: t.border),
+                  _MetaRow(t: t, icon: LucideIcons.calendarDays, label: 'Member since', value: '—'),
+                ]),
               ),
             ),
             const SizedBox(height: 22),
@@ -253,6 +312,23 @@ class _GlassProfile extends StatelessWidget {
           ]),
         ),
       ),
+    );
+  }
+}
+
+class _MetaRow extends StatelessWidget {
+  final AppTokens t;
+  final IconData icon;
+  final String label;
+  final String value;
+  const _MetaRow({required this.t, required this.icon, required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: t.muted),
+      title: Text(label, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+      trailing: Text(value, style: t.bodyStyle.copyWith(color: t.muted)),
     );
   }
 }
