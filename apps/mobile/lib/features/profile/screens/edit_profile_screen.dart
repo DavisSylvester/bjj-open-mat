@@ -41,6 +41,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _nameController = TextEditingController(text: user?.displayName ?? '');
     _bioController = TextEditingController(text: user?.bio ?? '');
     _selectedBelt = user?.beltRank ?? 'white';
+    _selectedStripes = user?.beltStripes ?? 0;
     _birthday = user?.birthday != null ? DateTime.tryParse(user!.birthday!) : null;
     _homeGymId = user?.homeGymId;
     _cityController = TextEditingController(text: user?.city ?? '');

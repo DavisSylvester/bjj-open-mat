@@ -75,6 +75,7 @@ class UserProfile {
   final String displayName;
   final String? role;
   final String? beltRank;
+  final int? beltStripes;
   final String? weight;
   final String? bio;
   final String? avatarUrl;
@@ -96,6 +97,7 @@ class UserProfile {
     required this.displayName,
     this.role,
     this.beltRank,
+    this.beltStripes,
     this.weight,
     this.bio,
     this.avatarUrl,
@@ -119,6 +121,7 @@ class UserProfile {
       displayName: json['displayName'] as String? ?? '',
       role: json['role'] as String?,
       beltRank: json['beltRank'] as String?,
+      beltStripes: json['beltStripes'] as int?,
       weight: json['weight'] as String?,
       bio: json['bio'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
@@ -140,6 +143,7 @@ class UserProfile {
   Map<String, dynamic> toJson() => {
     'displayName': displayName,
     'beltRank': beltRank,
+    'beltStripes': beltStripes,
     'weight': weight,
     'bio': bio,
     'avatarUrl': avatarUrl,
