@@ -238,20 +238,20 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: selected ? t.primary.withValues(alpha: 0.12) : t.surface,
+            color: selected ? t.primary : t.surface,
             borderRadius: BorderRadius.circular(t.cardRadius),
             border: Border.all(color: selected ? t.primary : t.border, width: selected ? 1.5 : 1),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 18, color: selected ? t.primary : t.muted),
+              Icon(icon, size: 18, color: selected ? Colors.white : t.muted),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: t.bodyStyle.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: selected ? t.primary : t.body,
+                  color: selected ? Colors.white : t.body,
                 ),
               ),
             ],
