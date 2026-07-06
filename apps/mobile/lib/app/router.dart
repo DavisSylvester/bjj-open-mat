@@ -257,12 +257,15 @@ class _ScaffoldWithNavBar extends StatelessWidget {
           ? OMBottomNav(
               selectedIndex: shell.currentIndex,
               isOwner: true,
-              onTap: (i) => shell.goBranch(i),
+              onTap: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
               onAdd: () => context.push('/add-session'),
             )
           : AppBottomNav(
               active: kPracTabs[shell.currentIndex],
-              onTap: (tabId) => shell.goBranch(kPracTabs.indexOf(tabId)),
+              onTap: (tabId) {
+                final idx = kPracTabs.indexOf(tabId);
+                shell.goBranch(idx, initialLocation: idx == shell.currentIndex);
+              },
               onAdd: () => context.push('/add-session'),
             ),
     );

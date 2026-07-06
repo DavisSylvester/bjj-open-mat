@@ -75,6 +75,7 @@ class UserProfile {
   final String displayName;
   final String? role;
   final String? beltRank;
+  final int? beltStripes;
   final String? weight;
   final String? bio;
   final String? avatarUrl;
@@ -86,6 +87,8 @@ class UserProfile {
   final String? weightUnit;
   final String? weightDivision;
   final String? weightDivisionContext;
+  final String? birthday; // ISO YYYY-MM-DD
+  final String? createdAt;
   final UserPreferences? preferences;
 
   const UserProfile({
@@ -95,6 +98,7 @@ class UserProfile {
     required this.displayName,
     this.role,
     this.beltRank,
+    this.beltStripes,
     this.weight,
     this.bio,
     this.avatarUrl,
@@ -106,6 +110,8 @@ class UserProfile {
     this.weightUnit,
     this.weightDivision,
     this.weightDivisionContext,
+    this.birthday,
+    this.createdAt,
     this.preferences,
   });
 
@@ -117,6 +123,7 @@ class UserProfile {
       displayName: json['displayName'] as String? ?? '',
       role: json['role'] as String?,
       beltRank: json['beltRank'] as String?,
+      beltStripes: json['beltStripes'] as int?,
       weight: json['weight'] as String?,
       bio: json['bio'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
@@ -128,6 +135,8 @@ class UserProfile {
       weightUnit: json['weightUnit'] as String?,
       weightDivision: json['weightDivision'] as String?,
       weightDivisionContext: json['weightDivisionContext'] as String?,
+      birthday: json['birthday'] as String?,
+      createdAt: json['createdAt'] as String?,
       preferences: json['preferences'] != null
           ? UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>)
           : null,
@@ -137,6 +146,7 @@ class UserProfile {
   Map<String, dynamic> toJson() => {
     'displayName': displayName,
     'beltRank': beltRank,
+    'beltStripes': beltStripes,
     'weight': weight,
     'bio': bio,
     'avatarUrl': avatarUrl,
@@ -148,11 +158,18 @@ class UserProfile {
     'weightUnit': weightUnit,
     'weightDivision': weightDivision,
     'weightDivisionContext': weightDivisionContext,
+    'birthday': birthday,
+    'createdAt': createdAt,
     if (preferences != null) 'preferences': preferences!.toJson(),
   };
 
   bool get isGymOwner => role == 'gym_owner';
   bool get isPractitioner => role == 'practitioner';
+
+  bool get isSocial {
+    final sub = auth0Id ?? id;
+    return sub.contains('|') && !sub.startsWith('auth0|');
+  }
 }
 
 class AuthStateNotifier extends Notifier<AuthState> {
@@ -179,6 +196,17 @@ class AuthStateNotifier extends Notifier<AuthState> {
       const bypassToken = String.fromEnvironment('AUTH_BYPASS_TOKEN');
       if (devBypass && bypassToken.isNotEmpty) {
         await _authService.apiClient.setToken(bypassToken);
+        // Load the real demo profile from the API so server-side metadata
+        // (birthday, home gym, weight, etc.) and in-app edits are reflected.
+        try {
+          final user = await _authService.getOrCreateProfile();
+          if (user != null) {
+            state = AuthState(status: AuthStatus.authenticated, user: user);
+            return;
+          }
+        } catch (_) {
+          // API unreachable — fall back to the offline stub below.
+        }
         state = const AuthState(
           status: AuthStatus.authenticated,
           user: UserProfile(
@@ -237,6 +265,12 @@ class AuthStateNotifier extends Notifier<AuthState> {
       final credentials = await _authService.login(connection);
       if (kIsWeb) return;
       if (credentials != null) {
+        final pu = credentials.user; // auth0_flutter UserProfile
+        try {
+          await _authService.syncProfile(displayName: pu.name, email: pu.email, avatarUrl: pu.pictureUrl?.toString());
+        } catch (_) {
+          // best-effort provider-metadata sync; login proceeds even if it fails
+        }
         final user = await _authService.getOrCreateProfile();
         state = state.copyWith(status: AuthStatus.authenticated, user: user);
       } else {
@@ -257,6 +291,11 @@ class AuthStateNotifier extends Notifier<AuthState> {
     if (updated != null) {
       state = state.copyWith(user: updated);
     }
+  }
+
+  Future<void> syncProfile({String? displayName, String? email, String? avatarUrl}) async {
+    final updated = await _authService.syncProfile(displayName: displayName, email: email, avatarUrl: avatarUrl);
+    if (updated != null) state = state.copyWith(user: updated);
   }
 }
 
@@ -331,6 +370,19 @@ class AuthService {
 
   Future<UserProfile?> updateProfile(Map<String, dynamic> updates) async {
     final response = await apiClient.put(Endpoints.usersMe, data: updates);
+    final data = response.data;
+    if (data != null && data['data'] != null) {
+      return UserProfile.fromJson(data['data'] as Map<String, dynamic>);
+    }
+    return null;
+  }
+
+  Future<UserProfile?> syncProfile({String? displayName, String? email, String? avatarUrl}) async {
+    final response = await apiClient.post(Endpoints.authSync, data: {
+      if (displayName != null) 'displayName': displayName,
+      if (email != null) 'email': email,
+      if (avatarUrl != null) 'avatarUrl': avatarUrl,
+    });
     final data = response.data;
     if (data != null && data['data'] != null) {
       return UserProfile.fromJson(data['data'] as Map<String, dynamic>);

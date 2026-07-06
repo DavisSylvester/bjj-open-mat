@@ -22,6 +22,7 @@ export const UpdateUserRequest = t.Partial(
     bio: t.String(),
     avatarUrl: t.String(),
     homeGymId: t.String(),
+    birthday: t.String(),
     preferences: UserPreferences,
   }),
   { $id: "UpdateUserRequest" },

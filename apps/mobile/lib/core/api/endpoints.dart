@@ -5,6 +5,7 @@ class Endpoints {
 
   // Auth
   static const String authMe = '/api/v1/auth/me';
+  static const String authSync = '/api/v1/auth/sync';
 
   // Users
   static const String usersMe = '/api/v1/users/me';

@@ -1,5 +1,6 @@
-import type { UpdateSettingsRequest, UpdateUserRequest, User, UserSettings } from "@bjj/contract";
+import type { AuthSyncRequest, UpdateSettingsRequest, UpdateUserRequest, User, UserSettings } from "@bjj/contract";
 import type { AuthIdentity } from "../auth/auth.types.mts";
+import { isSocial } from "../auth/is-social.mts";
 import { AppError } from "../http/errors.mts";
 import type { UserRepository } from "../repositories/user.repository.mts";
 
@@ -21,16 +22,39 @@ export class UserFacade {
     });
   }
 
+  public async syncFromProvider(identity: AuthIdentity, claims: AuthSyncRequest): Promise<User> {
+    const user = await this.getOrCreate(identity);
+    if (!isSocial(identity.userId)) return user; // db/bypass users manage their own identity
+    const patch: Partial<User> = {};
+    if (claims.displayName) patch.displayName = claims.displayName;
+    if (claims.email) patch.email = claims.email;
+    if (claims.avatarUrl) patch.avatarUrl = claims.avatarUrl;
+    if (Object.keys(patch).length === 0) return user;
+    const updated = await this.users.update(identity.userId, patch);
+    return updated ?? user;
+  }
+
   public async getById(id: string): Promise<User> {
     const user = await this.users.findById(id);
     if (!user) throw new AppError("not_found", `User ${id} not found`);
     return user;
   }
 
-  public async updateProfile(id: string, patch: UpdateUserRequest): Promise<User> {
-    const updated = await this.users.update(id, patch);
+  public async updateProfile(id: string, patch: UpdateUserRequest, isSocialUser = false): Promise<User> {
+    const effective: UpdateUserRequest = isSocialUser ? this.socialAllowed(patch) : patch;
+    const updated = await this.users.update(id, effective);
     if (!updated) throw new AppError("not_found", `User ${id} not found`);
     return updated;
+  }
+
+  // Social/SSO users may only change these fields; identity comes from the provider.
+  private socialAllowed(patch: UpdateUserRequest): UpdateUserRequest {
+    const allowed: UpdateUserRequest = {};
+    if (patch.birthday !== undefined) allowed.birthday = patch.birthday;
+    if (patch.beltRank !== undefined) allowed.beltRank = patch.beltRank;
+    if (patch.beltStripes !== undefined) allowed.beltStripes = patch.beltStripes;
+    if (patch.homeGymId !== undefined) allowed.homeGymId = patch.homeGymId;
+    return allowed;
   }
 
   public async getSettings(id: string): Promise<UserSettings> {

@@ -116,3 +116,7 @@ final gymRepositoryProvider = Provider<GymRepository>((ref) {
 });
 
 final allGymsProvider = FutureProvider<List<Gym>>((ref) => ref.read(gymRepositoryProvider).searchAll(''));
+
+final gymByIdProvider = FutureProvider.family<Gym, String>((ref, id) {
+  return ref.read(gymRepositoryProvider).getById(id);
+});

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
+import '../../../shared/widgets/glass_form.dart';
 
 /// Back affordance for full-screen routes reached via push (falls back to
 /// /profile if there is nothing to pop).
@@ -83,10 +84,15 @@ class _GlassNotifications extends StatelessWidget {
             child: Row(children: [
               _backButton(context, t),
               const SizedBox(width: 12),
-              Icon(LucideIcons.bell, color: t.muted, size: 20),
-              const SizedBox(width: 8),
               Text('Notifications', style: t.h1Style),
             ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: glassSectionLabel(t, 'Recent'),
+            ),
           ),
           Expanded(
             child: ListView.builder(

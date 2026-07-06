@@ -44,6 +44,7 @@ export const User = t.Object(
     bio: t.Optional(t.String()),
     avatarUrl: t.Optional(t.String()),
     homeGymId: t.Optional(t.String()),
+    birthday: t.Optional(t.String()), // ISO YYYY-MM-DD
     settings: t.Optional(UserSettings),
     preferences: t.Optional(UserPreferences),
     createdAt: t.Optional(t.String()),
