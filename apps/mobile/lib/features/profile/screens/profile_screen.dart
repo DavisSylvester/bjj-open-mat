@@ -10,12 +10,21 @@ import '../../../shared/widgets/belt_icon.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../data/profile_stats.dart';
 
+const _kMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
 String _memberSince(String? iso) {
   final d = iso == null ? null : DateTime.tryParse(iso);
   if (d == null) return '—';
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return '${months[d.month - 1]} ${d.year}';
+  return '${_kMonths[d.month - 1]} ${d.year}';
 }
+
+String? _formatBirthday(String? iso) {
+  final d = (iso == null || iso.isEmpty) ? null : DateTime.tryParse(iso);
+  if (d == null) return null;
+  return '${_kMonths[d.month - 1]} ${d.day}, ${d.year}';
+}
+
+String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1).replaceAll('_', ' ')}';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -56,12 +65,36 @@ class _GlassProfile extends StatelessWidget {
 
     final birthday = user?.birthday;
     final age = (birthday != null && birthday.isNotEmpty) ? ageFromBirthday(birthday) : null;
-    final ageValue = age != null ? '$age yrs' : (birthday != null && birthday.isNotEmpty ? '—' : 'Add birthday');
 
     final homeGymId = user?.homeGymId;
     final homeGymValue = (homeGymId != null && homeGymId.isNotEmpty)
         ? ref.watch(gymByIdProvider(homeGymId)).maybeWhen(data: (g) => g.name, orElse: () => '—')
         : 'Set home gym';
+
+    // Build the metadata rows dynamically so optional fields only appear when set.
+    final birthdayLabel = _formatBirthday(birthday);
+    final location = [user?.city, user?.state].where((s) => s != null && s.trim().isNotEmpty).join(', ');
+    final weightStr = user?.weightValue != null ? '${user!.weightValue!.round()} ${user!.weightUnit ?? 'lb'}' : null;
+    final metaRows = <Widget>[];
+    void meta(IconData icon, String label, String value) {
+      if (metaRows.isNotEmpty) metaRows.add(Divider(height: 1, color: t.border));
+      metaRows.add(_MetaRow(t: t, icon: icon, label: label, value: value));
+    }
+    void metaOpt(IconData icon, String label, String? value) {
+      if (value != null && value.trim().isNotEmpty) meta(icon, label, value.trim());
+    }
+    if (birthdayLabel != null) {
+      meta(LucideIcons.cake, 'Birthday', birthdayLabel);
+      if (age != null) meta(LucideIcons.gift, 'Age', '$age yrs');
+    } else {
+      meta(LucideIcons.cake, 'Age', 'Add birthday');
+    }
+    meta(LucideIcons.mapPin, 'Home gym', homeGymValue);
+    metaOpt(LucideIcons.navigation, 'Location', location);
+    metaOpt(LucideIcons.dumbbell, 'Weight', weightStr);
+    metaOpt(LucideIcons.award, 'Division', user?.weightDivision != null ? _cap(user!.weightDivision!) : null);
+    metaOpt(LucideIcons.user, 'Gender', user?.gender != null ? _cap(user!.gender!) : null);
+    meta(LucideIcons.calendarDays, 'Member since', _memberSince(user?.createdAt));
 
     return Scaffold(
       backgroundColor: t.bg,
@@ -201,13 +234,7 @@ class _GlassProfile extends StatelessWidget {
                   border: Border.all(color: t.border),
                   boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
                 ),
-                child: Column(children: [
-                  _MetaRow(t: t, icon: LucideIcons.cake, label: 'Age', value: ageValue),
-                  Divider(height: 1, color: t.border),
-                  _MetaRow(t: t, icon: LucideIcons.mapPin, label: 'Home gym', value: homeGymValue),
-                  Divider(height: 1, color: t.border),
-                  _MetaRow(t: t, icon: LucideIcons.calendarDays, label: 'Member since', value: _memberSince(user?.createdAt)),
-                ]),
+                child: Column(children: metaRows),
               ),
             ),
             const SizedBox(height: 22),
