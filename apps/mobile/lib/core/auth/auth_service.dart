@@ -86,6 +86,7 @@ class UserProfile {
   final String? weightUnit;
   final String? weightDivision;
   final String? weightDivisionContext;
+  final String? birthday; // ISO YYYY-MM-DD
   final UserPreferences? preferences;
 
   const UserProfile({
@@ -106,6 +107,7 @@ class UserProfile {
     this.weightUnit,
     this.weightDivision,
     this.weightDivisionContext,
+    this.birthday,
     this.preferences,
   });
 
@@ -128,6 +130,7 @@ class UserProfile {
       weightUnit: json['weightUnit'] as String?,
       weightDivision: json['weightDivision'] as String?,
       weightDivisionContext: json['weightDivisionContext'] as String?,
+      birthday: json['birthday'] as String?,
       preferences: json['preferences'] != null
           ? UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>)
           : null,
@@ -148,11 +151,17 @@ class UserProfile {
     'weightUnit': weightUnit,
     'weightDivision': weightDivision,
     'weightDivisionContext': weightDivisionContext,
+    'birthday': birthday,
     if (preferences != null) 'preferences': preferences!.toJson(),
   };
 
   bool get isGymOwner => role == 'gym_owner';
   bool get isPractitioner => role == 'practitioner';
+
+  bool get isSocial {
+    final sub = auth0Id ?? id;
+    return sub.contains('|') && !sub.startsWith('auth0|');
+  }
 }
 
 class AuthStateNotifier extends Notifier<AuthState> {
@@ -237,6 +246,8 @@ class AuthStateNotifier extends Notifier<AuthState> {
       final credentials = await _authService.login(connection);
       if (kIsWeb) return;
       if (credentials != null) {
+        final pu = credentials.user; // auth0_flutter UserProfile
+        await _authService.syncProfile(displayName: pu.name, email: pu.email, avatarUrl: pu.pictureUrl?.toString());
         final user = await _authService.getOrCreateProfile();
         state = state.copyWith(status: AuthStatus.authenticated, user: user);
       } else {
@@ -257,6 +268,11 @@ class AuthStateNotifier extends Notifier<AuthState> {
     if (updated != null) {
       state = state.copyWith(user: updated);
     }
+  }
+
+  Future<void> syncProfile({String? displayName, String? email, String? avatarUrl}) async {
+    final updated = await _authService.syncProfile(displayName: displayName, email: email, avatarUrl: avatarUrl);
+    if (updated != null) state = state.copyWith(user: updated);
   }
 }
 
@@ -331,6 +347,19 @@ class AuthService {
 
   Future<UserProfile?> updateProfile(Map<String, dynamic> updates) async {
     final response = await apiClient.put(Endpoints.usersMe, data: updates);
+    final data = response.data;
+    if (data != null && data['data'] != null) {
+      return UserProfile.fromJson(data['data'] as Map<String, dynamic>);
+    }
+    return null;
+  }
+
+  Future<UserProfile?> syncProfile({String? displayName, String? email, String? avatarUrl}) async {
+    final response = await apiClient.post(Endpoints.authSync, data: {
+      if (displayName != null) 'displayName': displayName,
+      if (email != null) 'email': email,
+      if (avatarUrl != null) 'avatarUrl': avatarUrl,
+    });
     final data = response.data;
     if (data != null && data['data'] != null) {
       return UserProfile.fromJson(data['data'] as Map<String, dynamic>);
