@@ -9,7 +9,6 @@ import '../../../core/location/location_service.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
-import '../../../shared/widgets/ticker_strip.dart';
 import '../../open_mats/models/open_mat.dart';
 import '../providers/discover_provider.dart';
 
@@ -85,78 +84,10 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     }
   }
 
-  List<TickerItem> _tickerItems(List<OpenMat> mats) => mats
-      .take(6)
-      .map((m) => TickerItem(
-            time: m.startLabel,
-            gym: m.gymName ?? m.title,
-            giType: m.giType,
-          ))
-      .toList();
-
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport ? _buildSport(t) : _buildGlass(t);
-  }
-
-  Widget _buildSport(AppTokens t) {
-    final results = ref.watch(nearbyOpenMatsProvider(_query));
-    final mats = results.asData?.value ?? const <OpenMat>[];
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: Column(children: [
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 4, 14, 10),
-            child: Row(children: [
-              Container(width: 4, height: 22, color: t.red),
-              const SizedBox(width: 8),
-              Text('Open Mat', style: t.displayStyle.copyWith(fontSize: 22)),
-              const SizedBox(width: 8),
-              if (_locationLabel != null)
-                Text(_locationLabel!, style: t.miniStyle.copyWith(color: t.muted, fontSize: 10)),
-              const Spacer(),
-              Icon(LucideIcons.bell, size: 18, color: t.muted),
-              const SizedBox(width: 12),
-              GestureDetector(
-                onTap: () => context.go('/search'),
-                child: Icon(LucideIcons.search, size: 18, color: t.muted),
-              ),
-            ]),
-          ),
-          if (mats.isNotEmpty) TickerStrip(items: _tickerItems(mats)),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
-            child: Row(children: [
-              Container(width: 4, height: 22, color: t.red, margin: const EdgeInsets.only(right: 10)),
-              Text('Live Feed', style: t.h2Style.copyWith(fontSize: 15)),
-              const Spacer(),
-              Text('${mats.length} sessions', style: t.miniStyle),
-            ]),
-          ),
-          Expanded(
-            child: results.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(
-                child: Text("Couldn't load open mats", style: t.bodyStyle.copyWith(color: t.muted)),
-              ),
-              data: (list) => list.isEmpty
-                  ? Center(child: Text('No open mats nearby', style: t.miniStyle))
-                  : ListView.separated(
-                      itemCount: list.length,
-                      separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
-                      itemBuilder: (_, i) => SessionRow(
-                        session: _toRow(list[i]),
-                        onTap: () => context.go('/open-mat/${list[i].id}'),
-                      ),
-                    ),
-            ),
-          ),
-        ]),
-      ),
-    );
+    return _buildGlass(t);
   }
 
   Widget _buildGlass(AppTokens t) {

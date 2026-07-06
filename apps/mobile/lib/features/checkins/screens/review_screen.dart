@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
-import '../../../shared/widgets/stat_bar.dart';
-import '../../../shared/widgets/score_cell.dart';
 import '../data/review_repository.dart';
 
 class ReviewScreen extends ConsumerStatefulWidget {
@@ -36,8 +34,6 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final _reviewCtrl = TextEditingController();
   bool _submitting = false;
   String? _error;
-
-  double get _composite => _ratings.values.reduce((a, b) => a + b) / _ratings.length;
 
   // checkInId is threaded through check-in -> checkin-success -> review as a
   // `checkInId` query param (see checkin_success_screen.dart), or supplied
@@ -105,10 +101,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         child: Column(children: [
           // Header
           Container(
-            color: t.isSport ? t.bg2 : Colors.transparent,
+            color: Colors.transparent,
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
             child: Row(children: [
-              if (t.isSport) Container(width: 4, height: 22, color: t.red, margin: const EdgeInsets.only(right: 10)),
               Expanded(child: Text('Rate Session', style: t.h1Style.copyWith(fontSize: 20))),
               GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
@@ -116,68 +111,36 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               ),
             ]),
           ),
-          if (t.isSport) Divider(height: 1, color: t.border),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                if (t.isSport) ...[
-                  // Composite score
-                  Container(
-                    color: t.surface,
+                // Glass star ratings
+                ..._ratings.entries.map((e) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Container(
                     padding: const EdgeInsets.all(14),
-                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: t.surface,
+                      borderRadius: BorderRadius.circular(t.cardRadius),
+                      border: Border.all(color: t.border),
+                    ),
                     child: Row(children: [
-                      ScoreCell(
-                        label: 'Composite Score',
-                        value: _composite.toStringAsFixed(1),
-                        suffix: '/ 5',
-                        valueColor: _composite >= 4 ? t.green : _composite >= 3 ? t.amber : t.red,
-                      ),
+                      Expanded(child: Text(e.key, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600))),
+                      Row(children: List.generate(5, (i) => GestureDetector(
+                        onTap: () => setState(() => _ratings[e.key] = i + 1.0),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: Icon(
+                            LucideIcons.star,
+                            size: 22,
+                            color: i < e.value ? t.amber : t.muted,
+                          ),
+                        ),
+                      ))),
                     ]),
                   ),
-                  // Stat bar ratings
-                  ..._ratings.entries.map((e) => Column(children: [
-                    Row(children: [
-                      Expanded(child: Text(e.key.toUpperCase(), style: t.miniStyle.copyWith(fontSize: 10))),
-                    ]),
-                    Slider(
-                      value: e.value,
-                      min: 0, max: 5, divisions: 10,
-                      activeColor: _barColor(e.value, t),
-                      inactiveColor: t.border,
-                      onChanged: (v) => setState(() => _ratings[e.key] = v),
-                    ),
-                    StatBar(label: e.key, value: e.value, color: _barColor(e.value, t)),
-                  ])),
-                ] else ...[
-                  // Glass star ratings
-                  ..._ratings.entries.map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: t.surface,
-                        borderRadius: BorderRadius.circular(t.cardRadius),
-                        border: Border.all(color: t.border),
-                      ),
-                      child: Row(children: [
-                        Expanded(child: Text(e.key, style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600))),
-                        Row(children: List.generate(5, (i) => GestureDetector(
-                          onTap: () => setState(() => _ratings[e.key] = i + 1.0),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: Icon(
-                              LucideIcons.star,
-                              size: 22,
-                              color: i < e.value ? t.amber : t.muted,
-                            ),
-                          ),
-                        ))),
-                      ]),
-                    ),
-                  )),
-                ],
+                )),
                 const SizedBox(height: 12),
                 // Written review
                 Container(
@@ -207,50 +170,26 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           ),
           // Submit
           Container(
-            color: t.isSport ? t.bg2 : Colors.transparent,
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16),
-            child: t.isSport
-                ? GestureDetector(
-                    onTap: _submitting ? null : _submit,
-                    child: Container(
-                      width: double.infinity,
-                      height: 54,
-                      color: t.red,
-                      child: Center(
-                        child: _submitting
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
-                              )
-                            : Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white, fontSize: 16)),
-                      ),
-                    ),
-                  )
-                : ElevatedButton(
-                    onPressed: _submitting ? null : _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: t.red,
-                      minimumSize: const Size.fromHeight(54),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
-                    ),
-                    child: _submitting
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
-                          )
-                        : Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white)),
-                  ),
+            child: ElevatedButton(
+              onPressed: _submitting ? null : _submit,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: t.red,
+                minimumSize: const Size.fromHeight(54),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.cardRadius)),
+              ),
+              child: _submitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                    )
+                  : Text('Submit Review', style: t.h2Style.copyWith(color: Colors.white)),
+            ),
           ),
         ]),
       ),
     );
-  }
-
-  Color _barColor(double v, AppTokens t) {
-    if (v >= 4) return t.green;
-    if (v >= 3) return t.amber;
-    return t.red;
   }
 }

@@ -19,25 +19,6 @@ class GiBadge extends StatelessWidget {
       'both' => 'Gi+No-Gi',
       _ => 'Gi',
     };
-    final fontSize = small ? 9.0 : 11.0;
-    final padding = small
-        ? const EdgeInsets.fromLTRB(5, 3, 7, 3)
-        : const EdgeInsets.fromLTRB(6, 4, 9, 4);
-
-    if (t.isSport) {
-      return Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.11),
-          border: Border(left: BorderSide(color: color, width: 2)),
-        ),
-        child: Text(
-          label.toUpperCase(),
-          style: t.miniStyle.copyWith(color: color, fontSize: fontSize),
-        ),
-      );
-    }
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: small ? 9 : 11, vertical: small ? 3 : 5),
       decoration: BoxDecoration(

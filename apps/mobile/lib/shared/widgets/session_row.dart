@@ -3,7 +3,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../core/design/tokens.dart';
 import 'gi_badge.dart';
 import 'exp_badge.dart';
-import 'live_dot.dart';
 
 class SessionRowData {
   final String? id; // open-mat session id, used for navigation to the detail page
@@ -40,124 +39,7 @@ class SessionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport
-        ? _SportRow(session: session, onTap: onTap, t: t)
-        : _GlassCard(session: session, onTap: onTap, t: t);
-  }
-}
-
-class _SportRow extends StatelessWidget {
-  final SessionRowData session;
-  final VoidCallback? onTap;
-  final AppTokens t;
-
-  const _SportRow({required this.session, required this.onTap, required this.t});
-
-  @override
-  Widget build(BuildContext context) {
-    final accent = t.giColor(session.giType);
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: t.surface,
-          border: Border(left: BorderSide(color: accent, width: 3)),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Time column
-            SizedBox(
-              width: 54,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(session.day, style: t.miniStyle.copyWith(fontSize: 9)),
-                  const SizedBox(height: 2),
-                  Text(
-                    session.time.split(' ').first,
-                    style: t.numStyle.copyWith(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 1,
-              height: 40,
-              color: t.border,
-              margin: const EdgeInsets.only(right: 10),
-            ),
-            // Main column
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (session.isLive) ...[
-                        const LiveDot(),
-                        const SizedBox(width: 6),
-                      ],
-                      Text(
-                        session.distance,
-                        style: t.miniStyle.copyWith(fontSize: 9),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    session.gymName,
-                    style: t.h2Style.copyWith(fontSize: 14, letterSpacing: 0.03),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      GiBadge(type: session.giType, small: true),
-                      const SizedBox(width: 4),
-                      ExpBadge(level: session.expLevel, small: true),
-                    ],
-                  ),
-                  if (session.unverified) ...[
-                    const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: t.amber.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        'Unverified',
-                        style: t.miniStyle.copyWith(
-                          fontSize: 9,
-                          color: t.amber,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            // Fee column
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('Mat Fee', style: t.miniStyle.copyWith(fontSize: 9)),
-                const SizedBox(height: 2),
-                Text(
-                  session.fee == 0 ? 'FREE' : '\$${session.fee.toStringAsFixed(0)}',
-                  style: t.numStyle.copyWith(
-                    fontSize: 22,
-                    color: session.fee == 0 ? t.green : t.text,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return _GlassCard(session: session, onTap: onTap, t: t);
   }
 }
 

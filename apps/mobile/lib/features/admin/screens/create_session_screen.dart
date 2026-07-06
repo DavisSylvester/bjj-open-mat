@@ -249,7 +249,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
       decoration: BoxDecoration(
-        color: t.isSport ? t.bg2 : t.bg,
+        color: t.bg,
         border: Border(bottom: BorderSide(color: t.border)),
       ),
       child: Row(children: [

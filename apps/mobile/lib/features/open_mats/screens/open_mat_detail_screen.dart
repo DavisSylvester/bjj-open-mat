@@ -11,7 +11,6 @@ import '../models/open_mat.dart';
 import '../../../shared/widgets/gi_badge.dart';
 import '../../../shared/widgets/exp_badge.dart';
 import '../../../shared/widgets/stat_bar.dart';
-import '../../../shared/widgets/score_cell.dart';
 import '../widgets/going_section.dart';
 
 class OpenMatDetailScreen extends ConsumerWidget {
@@ -28,7 +27,7 @@ class OpenMatDetailScreen extends ConsumerWidget {
     return async.when(
       loading: () => _StatusScaffold(t: t, child: const CircularProgressIndicator()),
       error: (e, _) => _StatusScaffold(t: t, message: "Couldn't load this open mat"),
-      data: (mat) => t.isSport ? _SportDetail(t: t, mat: mat) : _GlassDetail(t: t, mat: mat),
+      data: (mat) => _GlassDetail(t: t, mat: mat),
     );
   }
 }
@@ -45,123 +44,6 @@ class _StatusScaffold extends StatelessWidget {
       backgroundColor: t.bg,
       appBar: AppBar(backgroundColor: t.bg, foregroundColor: t.text, elevation: 0),
       body: Center(child: child ?? Text(message ?? '', style: t.bodyStyle)),
-    );
-  }
-}
-
-class _SportDetail extends StatelessWidget {
-  final AppTokens t;
-  final OpenMat mat;
-  const _SportDetail({required this.t, required this.mat});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: Column(children: [
-          // Top bar
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-            child: Row(children: [
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(mat.gymName ?? mat.title, style: t.h1Style.copyWith(fontSize: 24)),
-                  if (mat.locationLabel != null) Text(mat.locationLabel!, style: t.miniStyle),
-                ],
-              )),
-              Icon(LucideIcons.share2, size: 18, color: t.muted),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          // Gi + Exp badges row
-          Container(
-            color: t.surface,
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-            child: Row(children: [
-              GiBadge(type: mat.giType),
-              const SizedBox(width: 8),
-              ExpBadge(level: mat.skillLevel),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          // scoreboard
-          Container(
-            color: t.surfaceHi,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ScoreCell(label: 'Day', value: mat.specificDate ?? mat.dayName),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Start', value: mat.startLabel),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'End', value: mat.endLabel),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Fee', value: mat.feeLabel, valueColor: mat.feeLabel == 'Free' ? t.green : t.text),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(14),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                GoingSection(t: t, mat: mat),
-                const SizedBox(height: 16),
-                if (mat.gymRating != null) ...[
-                  Row(children: [
-                    Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-                    Text('Stat Sheet', style: t.h2Style.copyWith(fontSize: 14)),
-                  ]),
-                  Divider(color: t.border),
-                  StatBar(label: 'Gym Rating', value: mat.gymRating!, color: t.green),
-                  const SizedBox(height: 16),
-                ],
-                if (mat.description != null && mat.description!.isNotEmpty) ...[
-                  Row(children: [
-                    Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-                    Text('About', style: t.h2Style.copyWith(fontSize: 14)),
-                  ]),
-                  Divider(color: t.border),
-                  Text(mat.description!, style: t.bodyStyle.copyWith(fontSize: 13)),
-                ],
-              ]),
-            ),
-          ),
-          // CTA
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 14),
-            child: GestureDetector(
-              onTap: () => context.go('/open-mat/${mat.id}/checkin'),
-              child: Container(
-                width: double.infinity,
-                height: 54,
-                color: t.green,
-                child: Stack(children: [
-                  Center(child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(LucideIcons.checkCircle, size: 18, color: t.bg),
-                    const SizedBox(width: 10),
-                    Text('Check In', style: t.h2Style.copyWith(color: t.bg, fontSize: 16)),
-                  ])),
-                  // Corner ticks
-                  Positioned(top: 0, left: 0, child: Container(width: 8, height: 8,
-                    decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.white30, width: 2), left: BorderSide(color: Colors.white30, width: 2))))),
-                  Positioned(bottom: 0, right: 0, child: Container(width: 8, height: 8,
-                    decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white30, width: 2), right: BorderSide(color: Colors.white30, width: 2))))),
-                ]),
-              ),
-            ),
-          ),
-        ]),
-      ),
     );
   }
 }

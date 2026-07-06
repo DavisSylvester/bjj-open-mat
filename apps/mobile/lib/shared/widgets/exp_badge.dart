@@ -15,29 +15,11 @@ class ExpBadge extends StatelessWidget {
     final t = Theme.of(context).extension<AppTokens>()!;
     final color = t.expColor(level);
     final label = switch (level.toLowerCase()) {
-      'beg' || 'beginner' => t.isSport ? 'Begin' : 'Beginner',
-      'int' || 'intermediate' => t.isSport ? 'Inter' : 'Intermediate',
-      'adv' || 'advanced' => t.isSport ? 'Adv' : 'Advanced',
-      _ => t.isSport ? 'All Lv' : 'All Levels',
+      'beg' || 'beginner' => 'Beginner',
+      'int' || 'intermediate' => 'Intermediate',
+      'adv' || 'advanced' => 'Advanced',
+      _ => 'All Levels',
     };
-    final fontSize = small ? 9.0 : 11.0;
-    final padding = small
-        ? const EdgeInsets.symmetric(horizontal: 7, vertical: 3)
-        : const EdgeInsets.symmetric(horizontal: 9, vertical: 4);
-
-    if (t.isSport) {
-      return Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.11),
-          border: Border(left: BorderSide(color: color, width: 2)),
-        ),
-        child: Text(
-          label.toUpperCase(),
-          style: t.miniStyle.copyWith(color: color, fontSize: fontSize),
-        ),
-      );
-    }
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: small ? 9 : 11, vertical: small ? 3 : 5),

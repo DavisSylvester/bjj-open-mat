@@ -6,9 +6,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../settings/role_toggle.dart';
 import '../../../core/design/tokens.dart';
-import '../../../core/design/theme_provider.dart';
-import '../../../shared/widgets/belt_badge.dart';
-import '../../../shared/widgets/score_cell.dart';
 import '../../../shared/widgets/session_row.dart';
 
 final _recentSessions = [
@@ -24,124 +21,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-    return t.isSport ? _SportProfile(t: t, isAdmin: isAdmin) : _GlassProfile(t: t, ref: ref, isAdmin: isAdmin);
-  }
-}
-
-class _SportProfile extends StatelessWidget {
-  final AppTokens t;
-  final bool isAdmin;
-  const _SportProfile({required this.t, required this.isAdmin});
-
-  @override
-  Widget build(BuildContext context) {
-    final belts = ['white', 'blue', 'purple', 'brown', 'black'];
-    const currentBelt = 'blue';
-
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: Column(children: [
-          // Player card hero
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('#0027', style: t.miniStyle.copyWith(color: t.amber, fontSize: 10)),
-              const SizedBox(height: 4),
-              Text('Davis S.', style: t.h1Style.copyWith(fontSize: 32)),
-              const SizedBox(height: 8),
-              const BeltBadge(belt: 'blue', stripes: 2),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          // Stat grid
-          Container(
-            color: t.surfaceHi,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ScoreCell(label: 'Mats', value: '47'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Hours', value: '94'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Gyms', value: '8'),
-                Container(width: 1, height: 40, color: t.border),
-                ScoreCell(label: 'Reviews', value: '12'),
-              ],
-            ),
-          ),
-          Divider(height: 1, color: t.border),
-          // Belt progression
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(children: belts.map((belt) {
-              final isActive = belt == currentBelt;
-              final bg = t.beltBg[belt] ?? Colors.grey;
-              return Expanded(child: Container(
-                height: isActive ? 22 : 16,
-                margin: EdgeInsets.only(right: belt != belts.last ? 2 : 0),
-                decoration: BoxDecoration(
-                  color: bg,
-                  border: isActive ? Border.all(color: t.amber, width: 2) : null,
-                ),
-              ));
-            }).toList()),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 4, 14, 8),
-            child: Row(children: [
-              Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-              Text('Recent Sessions', style: t.h2Style.copyWith(fontSize: 14)),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          Expanded(
-            child: ListView.separated(
-              itemCount: _recentSessions.length + 1 + (isAdmin ? 1 : 0),
-              separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
-              itemBuilder: (ctx, i) {
-                if (i < _recentSessions.length) return SessionRow(session: _recentSessions[i]);
-                if (i == _recentSessions.length) {
-                  return GestureDetector(
-                    onTap: () => ctx.go('/owner/dashboard'),
-                    child: Container(
-                      color: t.bg2,
-                      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-                      child: Row(children: [
-                        Container(width: 4, height: 18, color: t.amber, margin: const EdgeInsets.only(right: 8)),
-                        Icon(LucideIcons.store, size: 16, color: t.amber),
-                        const SizedBox(width: 8),
-                        Text('Gym Owner Panel', style: t.miniStyle.copyWith(color: t.amber, fontSize: 11)),
-                        const Spacer(),
-                        Icon(LucideIcons.chevronRight, size: 14, color: t.muted),
-                      ]),
-                    ),
-                  );
-                }
-                // Admin-only: Review submissions
-                return GestureDetector(
-                  onTap: () => ctx.go('/admin/review'),
-                  child: Container(
-                    color: t.bg2,
-                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-                    child: Row(children: [
-                      Container(width: 4, height: 18, color: t.red, margin: const EdgeInsets.only(right: 8)),
-                      Icon(LucideIcons.clipboardCheck, size: 16, color: t.red),
-                      const SizedBox(width: 8),
-                      Text('Review submissions', style: t.miniStyle.copyWith(color: t.red, fontSize: 11)),
-                      const Spacer(),
-                      Icon(LucideIcons.chevronRight, size: 14, color: t.muted),
-                    ]),
-                  ),
-                );
-              },
-            ),
-          ),
-        ]),
-      ),
-    );
+    return _GlassProfile(t: t, ref: ref, isAdmin: isAdmin);
   }
 }
 
@@ -312,22 +192,6 @@ class _GlassProfile extends StatelessWidget {
                   boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
                 ),
                 child: Column(children: [
-                  ListTile(
-                    leading: Icon(LucideIcons.palette, color: t.muted),
-                    title: Text('Sports Ticker Theme', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600)),
-                    trailing: Consumer(
-                      builder: (context, watchRef, _) => Switch(
-                        value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                        activeThumbColor: Colors.white,
-                        activeTrackColor: t.primary,
-                        inactiveThumbColor: Colors.white,
-                        inactiveTrackColor: t.faint,
-                        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
-                        onChanged: (_) => watchRef.read(themeProvider.notifier).toggle(),
-                      ),
-                    ),
-                  ),
-                  Divider(height: 1, color: t.border),
                   ListTile(
                     leading: Icon(LucideIcons.bell, color: t.muted),
                     title: Text('Notifications', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),

@@ -13,10 +13,10 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final tabs = [
-      (id: 'home',     icon: LucideIcons.home,     label: t.isSport ? 'Feed'  : 'Home'),
-      (id: 'search',   icon: LucideIcons.search,   label: t.isSport ? 'Find'  : 'Find'),
-      (id: 'schedule', icon: LucideIcons.calendar, label: t.isSport ? 'Sched' : 'Schedule'),
-      (id: 'profile',  icon: LucideIcons.user,     label: t.isSport ? 'Me'    : 'Profile'),
+      (id: 'home',     icon: LucideIcons.home,     label: 'Home'),
+      (id: 'search',   icon: LucideIcons.search,   label: 'Find'),
+      (id: 'schedule', icon: LucideIcons.calendar, label: 'Schedule'),
+      (id: 'profile',  icon: LucideIcons.user,     label: 'Profile'),
     ];
 
     return Container(
@@ -33,29 +33,6 @@ class AppBottomNav extends StatelessWidget {
               // Left two tabs
               ...tabs.sublist(0, 2).map((tab) {
                 final on = tab.id == active;
-                if (t.isSport) {
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => onTap(tab.id),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: on ? t.surface : Colors.transparent,
-                          border: on ? Border(top: BorderSide(color: t.amber, width: 3)) : null,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(tab.icon, size: 20, color: on ? t.text : t.muted),
-                            const SizedBox(height: 3),
-                            Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.text : t.muted, fontSize: 10)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }
                 return Expanded(
                   child: GestureDetector(
                     onTap: () => onTap(tab.id),
@@ -101,29 +78,6 @@ class AppBottomNav extends StatelessWidget {
               // Right two tabs
               ...tabs.sublist(2).map((tab) {
                 final on = tab.id == active;
-                if (t.isSport) {
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => onTap(tab.id),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: on ? t.surface : Colors.transparent,
-                          border: on ? Border(top: BorderSide(color: t.amber, width: 3)) : null,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(tab.icon, size: 20, color: on ? t.text : t.muted),
-                            const SizedBox(height: 3),
-                            Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.text : t.muted, fontSize: 10)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }
                 return Expanded(
                   child: GestureDetector(
                     onTap: () => onTap(tab.id),

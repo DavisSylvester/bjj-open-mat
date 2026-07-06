@@ -71,13 +71,10 @@ class OwnerDashboardScreen extends ConsumerWidget {
                 child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
               ),
               const SizedBox(width: 12),
-              if (t.isSport)
-                Container(width: 4, height: 22, color: t.red, margin: const EdgeInsets.only(right: 8)),
               Expanded(child: Text('Owner Panel', style: t.h1Style.copyWith(fontSize: 20))),
               Icon(LucideIcons.bell, size: 18, color: t.muted),
             ]),
           ),
-          if (t.isSport) Divider(height: 1, color: t.border),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),
@@ -101,7 +98,6 @@ class OwnerDashboardScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
                 // Section header
                 Row(children: [
-                  if (t.isSport) Container(width: 4, height: 16, color: t.red, margin: const EdgeInsets.only(right: 8)),
                   Text('Quick Actions', style: t.h2Style.copyWith(fontSize: 14)),
                 ]),
                 const SizedBox(height: 10),
@@ -198,9 +194,7 @@ class _ActionRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: t.surface,
           borderRadius: BorderRadius.circular(t.cardRadius),
-          border: t.isSport
-              ? Border(left: BorderSide(color: accent, width: 3))
-              : Border.all(color: t.border),
+          border: Border.all(color: t.border),
         ),
         child: Row(children: [
           Container(

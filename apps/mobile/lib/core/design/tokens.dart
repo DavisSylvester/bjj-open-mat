@@ -34,7 +34,6 @@ class AppTokens extends ThemeExtension<AppTokens> {
   final TextStyle miniStyle;
   final TextStyle numStyle;
   final TextStyle bodyStyle;
-  final bool isSport;
   final double cardRadius;
   final double badgeRadius;
 
@@ -71,91 +70,9 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.miniStyle,
     required this.numStyle,
     required this.bodyStyle,
-    required this.isSport,
     required this.cardRadius,
     required this.badgeRadius,
   });
-
-  factory AppTokens.sport() {
-    final display = GoogleFonts.barlowCondensed(
-      fontWeight: FontWeight.w800,
-      letterSpacing: 0.02,
-      height: 0.95,
-    );
-    return AppTokens(
-      bg: const Color(0xFF070C1F),
-      bg2: const Color(0xFF0B1330),
-      surface: const Color(0xFF101A3A),
-      surfaceHi: const Color(0xFF16244A),
-      border: const Color(0xFF1B2A52),
-      borderHi: const Color(0xFF2A3D6B),
-      text: const Color(0xFFFFFFFF),
-      body: const Color(0xFFC7D3F0),
-      muted: const Color(0xFF7286B0),
-      faint: const Color(0xFF3F5085),
-      primary: const Color(0xFFFF2244),
-      panel: const Color(0xFF101A3A),
-      gold: const Color(0xFFFFC107),
-      red: const Color(0xFFFF2244),
-      amber: const Color(0xFFFFC107),
-      green: const Color(0xFF00E599),
-      gi: const Color(0xFF2196F3),
-      noGi: const Color(0xFFFF9800),
-      both: const Color(0xFFB061FF),
-      allLevels: const Color(0xFF00E599),
-      beginner: const Color(0xFF3DDC84),
-      intermediate: const Color(0xFFFFC107),
-      advanced: const Color(0xFFFF2244),
-      beltBg: const {
-        'white': Color(0xFFE5E5E5),
-        'blue': Color(0xFF1E5BC9),
-        'purple': Color(0xFF7A2BB5),
-        'brown': Color(0xFF6B3A1A),
-        'black': Color(0xFF0A0A0A),
-      },
-      beltFg: const {
-        'white': Color(0xFF0B1330),
-        'blue': Color(0xFFFFFFFF),
-        'purple': Color(0xFFFFFFFF),
-        'brown': Color(0xFFFFFFFF),
-        'black': Color(0xFFFFFFFF),
-      },
-      displayStyle: display.copyWith(fontSize: 22, color: const Color(0xFFFFFFFF)),
-      h1Style: display.copyWith(fontSize: 32, color: const Color(0xFFFFFFFF)),
-      h2Style: display.copyWith(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.05,
-        color: const Color(0xFFFFFFFF),
-      ),
-      labelStyle: display.copyWith(
-        fontSize: 10,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.18,
-        color: const Color(0xFF7286B0),
-      ),
-      miniStyle: display.copyWith(
-        fontSize: 9,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.16,
-        color: const Color(0xFF7286B0),
-      ),
-      numStyle: display.copyWith(
-        fontSize: 26,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0,
-        color: const Color(0xFFFFFFFF),
-      ),
-      bodyStyle: GoogleFonts.barlow(
-        fontWeight: FontWeight.w500,
-        fontSize: 13,
-        color: const Color(0xFFC7D3F0),
-      ),
-      isSport: true,
-      cardRadius: 0,
-      badgeRadius: 0,
-    );
-  }
 
   factory AppTokens.glass() {
     final display = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800);
@@ -205,7 +122,6 @@ class AppTokens extends ThemeExtension<AppTokens> {
       miniStyle:    GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.06, color: const Color(0xFF878C9C)),
       numStyle:     display.copyWith(fontSize: 22, letterSpacing: -0.01, color: const Color(0xFF14151A)),
       bodyStyle:    body.copyWith(fontSize: 14, height: 1.5, color: const Color(0xFF3D4150)),
-      isSport:   false,
       cardRadius: 20,
       badgeRadius: 999,
     );
@@ -250,7 +166,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
     Map<String, Color>? beltBg, Map<String, Color>? beltFg,
     TextStyle? displayStyle, TextStyle? h1Style, TextStyle? h2Style,
     TextStyle? labelStyle, TextStyle? miniStyle, TextStyle? numStyle,
-    TextStyle? bodyStyle, bool? isSport, double? cardRadius, double? badgeRadius,
+    TextStyle? bodyStyle, double? cardRadius, double? badgeRadius,
   }) {
     return AppTokens(
       bg: bg ?? this.bg, bg2: bg2 ?? this.bg2,
@@ -270,7 +186,6 @@ class AppTokens extends ThemeExtension<AppTokens> {
       h2Style: h2Style ?? this.h2Style, labelStyle: labelStyle ?? this.labelStyle,
       miniStyle: miniStyle ?? this.miniStyle, numStyle: numStyle ?? this.numStyle,
       bodyStyle: bodyStyle ?? this.bodyStyle,
-      isSport: isSport ?? this.isSport,
       cardRadius: cardRadius ?? this.cardRadius, badgeRadius: badgeRadius ?? this.badgeRadius,
     );
   }

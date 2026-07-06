@@ -103,21 +103,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     _debounce = Timer(const Duration(milliseconds: 50), _rebuildQuery);
   }
 
-  void _toggleGiType(String id) {
-    setState(() {
-      if (id == 'all') {
-        _filters.removeWhere((f) => f != 'free');
-      } else if (_filters.contains(id)) {
-        _filters.remove(id);
-      } else {
-        // Gi-type is single-select at the API; drop other gi-types first.
-        _filters.removeWhere((f) => f != 'free');
-        _filters.add(id);
-      }
-    });
-    _rebuildSoon();
-  }
-
   void _toggleFilter(String id) {
     setState(() {
       if (_filters.contains(id)) {
@@ -224,7 +209,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return t.isSport ? _buildSport(t) : _buildGlass(t);
+    return _buildGlass(t);
   }
 
   // ── When option chip (shared) ────────────────────────────────────────────
@@ -259,182 +244,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       _whenOption(t, key: const Key('when-month'), label: 'This month', active: _whenLabel == 'This month', onTap: () => _setWhen(WhenRange.thisMonth(now), 'This month')),
       _whenOption(t, key: const Key('when-date'), label: 'Pick a date', active: _when != null && !['This week', 'This weekend', 'This month', 'Any time'].contains(_whenLabel), onTap: _pickDate),
     ];
-  }
-
-  Widget _buildSport(AppTokens t) {
-    final results = ref.watch(searchResultsProvider(_query));
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: Column(children: [
-          Container(
-            color: t.bg2,
-            padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Container(width: 4, height: 22, color: t.red),
-                const SizedBox(width: 8),
-                Text('Find Sessions', style: t.h1Style.copyWith(fontSize: 20)),
-              ]),
-              const SizedBox(height: 10),
-              Container(
-                height: 42,
-                decoration: BoxDecoration(
-                  color: t.surface,
-                  border: Border.all(color: t.border),
-                ),
-                child: Row(children: [
-                  const SizedBox(width: 12),
-                  Icon(LucideIcons.search, size: 16, color: t.muted),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchCtrl,
-                      style: t.bodyStyle,
-                      decoration: InputDecoration(
-                        hintText: 'Gym, location…',
-                        hintStyle: t.miniStyle.copyWith(fontSize: 13),
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (_) => _onTextChanged(),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: _useGps,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(children: [
-                        Icon(LucideIcons.locateFixed, size: 13, color: t.red),
-                        const SizedBox(width: 4),
-                        Text(_locationLabel ?? 'GPS', style: t.miniStyle.copyWith(color: t.red, fontSize: 10)),
-                      ]),
-                    ),
-                  ),
-                ]),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                height: 42,
-                decoration: BoxDecoration(
-                  color: t.surface,
-                  border: Border.all(color: t.border),
-                ),
-                child: Row(children: [
-                  const SizedBox(width: 12),
-                  Icon(LucideIcons.mapPin, size: 16, color: t.muted),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      key: const Key('search-zip'),
-                      controller: _zipCtrl,
-                      style: t.bodyStyle,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: 'ZIP code',
-                        hintStyle: t.miniStyle.copyWith(fontSize: 13),
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (_) => _onZipChanged(),
-                      onSubmitted: (_) {
-                        _rebuildQuery();
-                        _resolveZipLabel();
-                      },
-                    ),
-                  ),
-                ]),
-              ),
-              const SizedBox(height: 10),
-              Row(children: ['All', 'Gi', 'No-Gi', 'Both'].map((label) {
-                final id = label == 'All' ? 'all' : label == 'No-Gi' ? 'nogi' : label.toLowerCase();
-                final active = id == 'all' ? _selectedGiType == null : _filters.contains(id);
-                return Expanded(child: GestureDetector(
-                  onTap: () => _toggleGiType(id),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: active ? t.surfaceHi : Colors.transparent,
-                      border: active ? Border(top: BorderSide(color: t.amber, width: 3)) : null,
-                    ),
-                    child: Text(
-                      label.toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: t.miniStyle.copyWith(color: active ? t.text : t.muted, fontSize: 11),
-                    ),
-                  ),
-                ));
-              }).toList()),
-              const SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: [
-                  for (final w in _whenOptions(t)) ...[w, const SizedBox(width: 8)],
-                ]),
-              ),
-              const SizedBox(height: 10),
-            ]),
-          ),
-          Container(
-            color: t.surface,
-            padding: const EdgeInsets.fromLTRB(14, 10, 14, 4),
-            child: Row(children: [
-              Text('Distance', style: t.miniStyle.copyWith(fontSize: 10)),
-              Expanded(
-                child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: t.red,
-                    inactiveTrackColor: t.border,
-                    thumbColor: t.red,
-                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                    trackHeight: 3,
-                    overlayShape: SliderComponentShape.noOverlay,
-                  ),
-                  child: Slider(
-                    value: _distanceMi,
-                    min: 1,
-                    max: 100,
-                    onChanged: _onDistanceChanged,
-                  ),
-                ),
-              ),
-              Text('${_distanceMi.toStringAsFixed(0)} mi',
-                  style: t.numStyle.copyWith(fontSize: 14)),
-            ]),
-          ),
-          Divider(height: 1, color: t.border),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 8, 14, 4),
-            child: Row(children: [
-              Container(width: 4, height: 16, color: t.red, margin: const EdgeInsets.only(right: 8)),
-              Text('Results', style: t.h2Style.copyWith(fontSize: 13)),
-              const Spacer(),
-              Text('${results.asData?.value.length ?? 0} sessions', style: t.miniStyle),
-            ]),
-          ),
-          Expanded(
-            child: results.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(
-                child: Text("Couldn't load results", style: t.bodyStyle.copyWith(color: t.muted)),
-              ),
-              data: (list) => list.isEmpty
-                  ? Center(child: Text('0 sessions', style: t.miniStyle))
-                  : ListView.separated(
-                      itemCount: list.length,
-                      separatorBuilder: (context, index) => Divider(height: 1, color: t.border),
-                      itemBuilder: (_, i) => SessionRow(
-                        session: _toRow(list[i]),
-                        onTap: () => context.go('/open-mat/${list[i].id}'),
-                      ),
-                    ),
-            ),
-          ),
-        ]),
-      ),
-    );
   }
 
   Widget _buildGlass(AppTokens t) {
