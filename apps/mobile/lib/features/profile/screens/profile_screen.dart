@@ -318,7 +318,11 @@ class _GlassProfile extends StatelessWidget {
                     trailing: Consumer(
                       builder: (context, watchRef, _) => Switch(
                         value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                        activeThumbColor: t.primary,
+                        activeThumbColor: Colors.white,
+                        activeTrackColor: t.primary,
+                        inactiveThumbColor: Colors.white,
+                        inactiveTrackColor: t.faint,
+                        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                         onChanged: (_) => watchRef.read(themeProvider.notifier).toggle(),
                       ),
                     ),

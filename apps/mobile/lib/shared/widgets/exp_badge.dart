@@ -5,7 +5,10 @@ class ExpBadge extends StatelessWidget {
   final String level; // 'all', 'beg', 'int', 'adv'
   final bool small;
 
-  const ExpBadge({super.key, required this.level, this.small = false});
+  /// Use a solid white pill (for colored/gradient backgrounds like the detail hero).
+  final bool onDark;
+
+  const ExpBadge({super.key, required this.level, this.small = false, this.onDark = false});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class ExpBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: small ? 9 : 11, vertical: small ? 3 : 5),
       decoration: BoxDecoration(
-        color: t.panel,
+        color: onDark ? Colors.white : t.panel,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(

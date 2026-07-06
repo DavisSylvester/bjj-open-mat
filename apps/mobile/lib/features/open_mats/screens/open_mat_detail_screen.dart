@@ -182,7 +182,7 @@ class _GlassDetail extends StatelessWidget {
           backgroundColor: t.bg2,
           leading: GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Icon(LucideIcons.arrowLeft, color: t.text),
+            child: const Icon(LucideIcons.arrowLeft, color: Colors.white),
           ),
           flexibleSpace: FlexibleSpaceBar(
             background: Stack(fit: StackFit.expand, children: [
@@ -207,7 +207,7 @@ class _GlassDetail extends StatelessWidget {
                   Row(children: [
                     GiBadge(type: mat.giType, onDark: true),
                     const SizedBox(width: 6),
-                    ExpBadge(level: mat.skillLevel),
+                    ExpBadge(level: mat.skillLevel, onDark: true),
                   ]),
                 ],
               )),

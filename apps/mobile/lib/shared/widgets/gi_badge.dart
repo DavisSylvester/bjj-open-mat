@@ -56,8 +56,10 @@ class GiBadge extends StatelessWidget {
           Text(
             label,
             style: t.miniStyle.copyWith(
-              // Darkened for WCAG contrast on the pale tinted (or white) pill.
-              color: Color.lerp(color, const Color(0xFF14151A), 0.34),
+              // On the white (onDark) pill, use ink so the label matches the
+              // sibling level badge; on the pale tinted pill, use a darkened
+              // tint of the semantic color for a monochrome chip.
+              color: onDark ? t.text : Color.lerp(color, const Color(0xFF14151A), 0.34),
               fontSize: small ? 11 : 12,
               fontWeight: FontWeight.w700,
               letterSpacing: -0.01,

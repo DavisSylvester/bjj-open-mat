@@ -65,7 +65,11 @@ class _SportSettings extends StatelessWidget {
                   trailing: Consumer(
                     builder: (ctx, watchRef, child) => Switch(
                       value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                      activeThumbColor: t.red,
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: t.red,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: t.faint,
+                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                       onChanged: (v) {
                         HapticFeedback.selectionClick();
                         watchRef.read(themeProvider.notifier).toggle();
@@ -199,7 +203,11 @@ class _GlassSettings extends StatelessWidget {
                   trailing: Consumer(
                     builder: (ctx, watchRef, _) => Switch(
                       value: watchRef.watch(themeProvider) == ThemeVariant.sport,
-                      activeThumbColor: t.red,
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: t.red,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: t.faint,
+                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                       onChanged: (_) {
                         HapticFeedback.selectionClick();
                         watchRef.read(themeProvider.notifier).toggle();
