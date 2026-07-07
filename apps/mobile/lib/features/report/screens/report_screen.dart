@@ -192,13 +192,23 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
       await audio.putAudio(pre.uploadUrl, file, 'audio/mp4');
       final t = await audio.transcribe(pre.audioKey);
       _appendTranscript(t.text, pre.audioKey);
-    } catch (_) {
+    } catch (e) {
       if (!mounted) return;
       setState(() {
         _rec = RecordState.error;
-        _recordError = 'Could not transcribe your recording. You can still type the description.';
+        _recordError = _transcriptionErrorMessage(e);
       });
     }
+  }
+
+  /// Picks a user-facing transcription failure message. A 503 /
+  /// `service_unavailable` from the API means transcription isn't wired up
+  /// server-side, which is distinct (and non-blocking) from a generic failure.
+  String _transcriptionErrorMessage(Object e) {
+    if (e is ApiException && (e.status == 503 || e.code == 'service_unavailable')) {
+      return "Voice transcription isn't available right now — you can type your description.";
+    }
+    return 'Could not transcribe your recording. You can still type the description.';
   }
 
   void _appendTranscript(String text, String audioKey) {
@@ -222,11 +232,11 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
       final audio = ref.read(reportAudioRepositoryProvider);
       final t = await audio.transcribe(key);
       _appendTranscript(t.text, key);
-    } catch (_) {
+    } catch (e) {
       if (!mounted) return;
       setState(() {
         _rec = RecordState.error;
-        _recordError = 'Could not transcribe your recording. You can still type the description.';
+        _recordError = _transcriptionErrorMessage(e);
       });
     }
   }
