@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
-import '../../../core/location/geo_repository.dart';
-import '../../../core/location/location_service.dart';
+import '../../../core/location/location_controller.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
@@ -20,26 +19,12 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  // The query driving the live feed. Starts location-less (plain list) and is
-  // upgraded to a geo query once the device location resolves. Never null so
-  // the feed always shows something while GPS is being captured.
-  NearbyQuery _query = const NearbyQuery();
-  String? _locationLabel;
-
   @override
   void initState() {
     super.initState();
-    _captureLocation();
-  }
-
-  Future<void> _captureLocation() async {
-    final loc = await ref.read(locationServiceProvider).current();
-    if (!mounted || loc == null) return;
-    setState(() {
-      _query = NearbyQuery(lat: loc.latitude, lng: loc.longitude);
-    });
-    final rg = await ref.read(geoRepositoryProvider).reverse(loc.latitude, loc.longitude);
-    if (mounted && rg != null) setState(() => _locationLabel = rg.label);
+    // Fetch GPS once via the shared controller (cached + reused by the Find
+    // screen). Deferred to post-frame so we don't mutate providers during build.
+    WidgetsBinding.instance.addPostFrameCallback((_) => ref.read(locationControllerProvider.notifier).ensure());
   }
 
   /// Map an [OpenMat] to the presentational [SessionRowData] used by rows.
@@ -91,7 +76,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   }
 
   Widget _buildGlass(AppTokens t) {
-    final results = ref.watch(nearbyOpenMatsProvider(_query));
+    final locState = ref.watch(locationControllerProvider);
+    final query = locState.hasCoords ? NearbyQuery(lat: locState.lat, lng: locState.lng) : const NearbyQuery();
+    final results = ref.watch(nearbyOpenMatsProvider(query));
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -106,7 +93,21 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(_locationLabel ?? 'Near you', style: t.miniStyle.copyWith(color: t.muted, fontSize: 13)),
+                        if (locState.status == LocationStatus.loading)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(
+                                width: 12,
+                                height: 12,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                              const SizedBox(width: 8),
+                              Text('Locating…', style: t.miniStyle.copyWith(color: t.muted, fontSize: 13)),
+                            ],
+                          )
+                        else
+                          Text(locState.label ?? 'Near you', style: t.miniStyle.copyWith(color: t.muted, fontSize: 13)),
                         const SizedBox(height: 2),
                         Text('Find your roll', style: t.h1Style.copyWith(fontSize: 26)),
                       ],
@@ -199,7 +200,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                   if (list.isEmpty) {
                     return EmptyState(
                       icon: LucideIcons.mapPin,
-                      title: _locationLabel != null ? 'No open mats found in $_locationLabel' : 'No open mats found nearby',
+                      title: locState.label != null ? 'No open mats found in ${locState.label}' : 'No open mats found nearby',
                       subtitle: 'Try widening your search or check back soon.',
                       actionLabel: 'Search',
                       onAction: () => context.go('/search'),
