@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;background:transparent}svg{display:block;width:100vw;height:100vh}</style>
+</head>
+<body>
+<!--
+  Android adaptive-icon FOREGROUND: the stacked OpenMat lockup on a transparent
+  canvas, filling ~90% of the frame. flutter_launcher_icons then applies a 16%
+  inset, landing the lockup at ~60% of the final icon so a circular launcher
+  mask doesn't clip it. Pair with a white adaptive background.
+-->
+<svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <svg x="26" y="83" width="460" height="345" viewBox="0 0 200 150">
+    <defs>
+      <clipPath id="fgl"><rect x="3.5" y="25.5" width="24" height="13" rx="6.5"></rect></clipPath>
+      <clipPath id="fgr"><rect x="36.5" y="25.5" width="24" height="13" rx="6.5"></rect></clipPath>
+    </defs>
+    <g transform="translate(68,2)">
+      <path d="M27 38 L25.3 55.8 a1.6 1.6 0 0 0 2.5 1.4 L33 52 Z" fill="#14151A"></path>
+      <path d="M37 38 L38.7 55.8 a1.6 1.6 0 0 1 -2.5 1.4 L31 52 Z" fill="#14151A"></path>
+      <g clip-path="url(#fgl)">
+        <rect x="3.5" y="25.5" width="24" height="13" fill="#EDEDF2"></rect>
+        <rect x="15.5" y="25.5" width="12" height="13" fill="#2E7BFF"></rect>
+      </g>
+      <g clip-path="url(#fgr)">
+        <rect x="36.5" y="25.5" width="24" height="13" fill="#7A2BB5"></rect>
+        <rect x="48.5" y="25.5" width="12" height="13" fill="#6B3A1A"></rect>
+      </g>
+      <rect x="3.5" y="25.5" width="24" height="13" rx="6.5" fill="none" stroke="#000" stroke-opacity=".06"></rect>
+      <rect x="23.5" y="22.5" width="17" height="19" rx="5.5" fill="#14151A"></rect>
+      <rect x="27.4" y="26.4" width="9.2" height="11.2" rx="3" fill="#fff" opacity=".16"></rect>
+    </g>
+    <text x="100" y="108" text-anchor="middle" font-family="Plus Jakarta Sans, system-ui, sans-serif" font-weight="800" font-size="30" letter-spacing="-0.9" fill="#14151A">Open<tspan fill="#5B53F2">Mat</tspan></text>
+    <text x="100" y="128" text-anchor="middle" font-family="Plus Jakarta Sans, system-ui, sans-serif" font-weight="700" font-size="9" letter-spacing="2" fill="#878C9C">FIND A ROLL, ANYWHERE</text>
+  </svg>
+</svg>
+</body>
+</html>
