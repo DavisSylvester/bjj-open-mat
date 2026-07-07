@@ -56,6 +56,8 @@ export class UserRepository extends BaseRepository {
   }
 
   public async update(id: string, patch: Partial<UserType>): Promise<UserType | null> {
+    // MongoDB rejects an empty $set ("'$set' is empty"). Nothing to change -> no-op.
+    if (Object.keys(patch).length === 0) return this.findById(id);
     const col = this.collection<UserDoc>(COLLECTIONS.users);
     await col.updateOne({ _id: id }, { $set: patch });
     return this.findById(id);
