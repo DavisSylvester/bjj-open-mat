@@ -25,12 +25,17 @@ describe("updateProfile edit restriction", () => {
     return new UserFacade(repo);
   }
 
-  it("social user: strips identity/other fields, keeps birthday/belt/homeGym", async () => {
+  it("social user: strips only provider identity (displayName/avatar), keeps app-data", async () => {
     const cap: { patch?: Partial<User> } = {};
     await facadeWith(cap).updateProfile("google-oauth2|1", {
-      displayName: "Hacker", bio: "x", weight: "170", birthday: "1990-01-05", beltRank: "purple", beltStripes: 2, homeGymId: "g-1",
+      displayName: "Hacker", avatarUrl: "http://x/y.png",
+      bio: "x", weight: "170", city: "LA", state: "CA", gender: "female",
+      birthday: "1990-01-05", beltRank: "purple", beltStripes: 2, homeGymId: "g-1",
     }, true);
-    expect(cap.patch).toEqual({ birthday: "1990-01-05", beltRank: "purple", beltStripes: 2, homeGymId: "g-1" });
+    expect(cap.patch).toEqual({
+      bio: "x", weight: "170", city: "LA", state: "CA", gender: "female",
+      birthday: "1990-01-05", beltRank: "purple", beltStripes: 2, homeGymId: "g-1",
+    });
   });
 
   it("non-social user: passes the full patch through", async () => {
