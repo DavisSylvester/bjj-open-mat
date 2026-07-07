@@ -1,7 +1,7 @@
 name: bjj_open_mat
 description: BJJ Open Mat Finder — find and check in to open mat sessions near you.
 publish_to: 'none'
-version: 0.1.0+3
+version: 0.1.0+4
 
 environment:
   sdk: ^3.7.0
@@ -34,6 +34,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   http_mock_adapter: ^0.6.1
   flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.4
 
 flutter:
   uses-material-design: true
@@ -49,3 +50,15 @@ flutter_launcher_icons:
   min_sdk_android: 21
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "tool/branding/app-icon-foreground-1024.png"
+
+# Native launch/splash screen: OpenMat wordmark lockup centered on white.
+# Regenerate: `dart run flutter_native_splash:create`.
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "tool/branding/splash-logo.png"
+  android: true
+  ios: true
+  web: false
+  android_12:
+    color: "#FFFFFF"
+    image: "tool/branding/splash-logo.png"
