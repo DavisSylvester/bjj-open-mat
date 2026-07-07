@@ -2,6 +2,9 @@ import type { CreateReportRequest, Report } from "@bjj/contract";
 import { logger } from "../config/logger.mts";
 import type { ReportRepository } from "../repositories/report.repository.mts";
 import type { GitHubIssueService } from "../services/github-issue.service.mts";
+import type { AudioStorage } from "../services/audio-storage.mts";
+import type { TranscriptionService } from "../services/transcription.mts";
+import { AppError } from "../http/errors.mts";
 
 type IdFactory = () => string;
 
@@ -10,6 +13,8 @@ export class ReportFacade {
   public constructor(
     private readonly reports: Pick<ReportRepository, "insert" | "update" | "findById" | "listByUser">,
     private readonly issues: GitHubIssueService | null,
+    private readonly audio: AudioStorage | null,
+    private readonly transcription: TranscriptionService | null,
     private readonly newId: IdFactory,
     private readonly repo: string,
   ) {}
@@ -23,6 +28,7 @@ export class ReportFacade {
       description: req.description,
       status: "open",
       createdAt: new Date().toISOString(),
+      audioKeys: req.audioKeys ?? [],
     };
     await this.reports.insert(report);
 
@@ -49,5 +55,13 @@ export class ReportFacade {
 
   public async listMine(userId: string): Promise<Report[]> {
     return this.reports.listByUser(userId);
+  }
+
+  public async transcribe(_userId: string, audioKey: string): Promise<{ text: string; durationMs: number }> {
+    if (!this.audio || !this.transcription) {
+      throw new AppError("service_unavailable", "Voice transcription is not configured");
+    }
+    const bytes = await this.audio.getObject(audioKey);
+    return this.transcription.translateToEnglish(bytes, "audio.m4a");
   }
 }

@@ -78,7 +78,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
-    reportFacade: new ReportFacade(reportRepo, githubIssueService, id, env.githubRepo),
+    reportFacade: new ReportFacade(reportRepo, githubIssueService, null, null, id, env.githubRepo),
     geocoder,
     assetStorage,
     async ensureIndexes(): Promise<void> {
