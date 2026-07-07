@@ -341,11 +341,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Find a Mat', style: t.h1Style),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
-                    child: Icon(LucideIcons.mapPin, size: 18, color: t.primary),
+                  GestureDetector(
+                    onTap: _useGps,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(13)),
+                      child: Icon(LucideIcons.mapPin, size: 18, color: t.primary),
+                    ),
                   ),
                 ],
               ),
