@@ -22,7 +22,10 @@ Follow-ups deferred after shipping the mobile APK + AWS API deploy + custom doma
 - [ ] **Set the remaining GitHub secrets** so `mobile-release.yml` (tag `v*`) produces a signed release build. `MAPS_API_KEY` is set; still need: `ANDROID_KEYSTORE_BASE64` (from `.android-keystore.b64`), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` (`upload`), `ANDROID_KEY_PASSWORD`, plus `API_BASE_URL`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` (the Native id `su1v…`), `AUTH0_AUDIENCE`. See `docs/mobile-cicd.md`.
 
 ## Auth0
-- [ ] **(Optional) Switch mobile callback to a custom scheme.** Today it uses the `https` App Links scheme (`auth0Scheme=https`), which requires the release SHA-256 registered for App Links. Flipping `auth0Scheme` → `com.davissylvester.bjjopenmat` in `apps/mobile/android/app/build.gradle.kts` drops the fingerprint/App-Links requirement (callback becomes `com.davissylvester.bjjopenmat://…`). Simpler; needs an APK rebuild + Auth0 URL update.
+- [x] **Switched mobile callback to a custom scheme** (2026-07-06). `auth0Scheme` is now `com.davissylvester.bjjopenmat` (build.gradle.kts) and `AuthService` passes `webAuthentication(scheme: …)` on native login/logout — fixes the post-login "Not found" (https App Links weren't verified under Play App Signing). **Auth0 dashboard step required:** add this to **bjj-open-mat-native → Allowed Callback URLs AND Allowed Logout URLs**:
+  `com.davissylvester.bjjopenmat://dev-vhvwupdn45hk7gct.us.auth0.com/android/com.davissylvester.bjjopenmat/callback`
+  (iOS variant, same pattern with `/ios/`, if/when iOS ships.)
+- [ ] **Own Google OAuth keys** — replace Auth0 dev keys on the google-oauth2 connection. Runbook: `docs/auth0-google-oauth.md`. (Login already verified working; this removes the dev-keys warning + brands the consent screen.)
 
 ## iOS (deferred until Apple Developer account)
 - [ ] **Enable installable iOS builds.** Requires an Apple Developer account ($99/yr): signing certs + provisioning, then wire release signing into CI (iOS builds a signed IPA to TestFlight via `.github/workflows/mobile-release.yml`; what remains is supplying the Apple secrets).
