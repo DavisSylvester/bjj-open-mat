@@ -55,6 +55,7 @@ app.*.map.json
 !android/app/src/main/res/drawable-*/ic_launcher_*.png
 !android/app/src/main/res/drawable*/splash.png
 !android/app/src/main/res/drawable*/android12splash.png
+!android/app/src/main/res/drawable*/background.png
 !ios/Runner/Assets.xcassets/**/*.png
 
 # Android signing (never commit)
