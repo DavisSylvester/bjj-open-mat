@@ -40,4 +40,32 @@ describe("UserFacade", () => {
     const u = await facade.updateProfile("u-1", { displayName: "B" });
     expect(u.displayName).toBe("B");
   });
+
+  it("getOrCreate synthesizes a valid email when the token carries none", async () => {
+    const repo = fakeRepo([]);
+    const facade = new UserFacade(repo);
+    // Social access tokens don't include the `email` claim, so identity.email is "".
+    const u = await facade.getOrCreate({ userId: "google-oauth2|123", role: "practitioner", email: "", viaBypass: false });
+    expect(u.email).not.toBe("");
+    expect(u.email).toContain("@");
+  });
+
+  it("getOrCreate does not collide on the unique email index for two email-less users", async () => {
+    // Reproduces the production 500: a unique index on `email` rejects a second
+    // user inserted with the same empty email (E11000 duplicate key).
+    const emails = new Set<string>();
+    const uniqueEmailRepo: FakeUserRepo = {
+      ...fakeRepo([]),
+      insert: async (u: User): Promise<User> => {
+        if (emails.has(u.email)) throw new Error("E11000 duplicate key error: email");
+        emails.add(u.email);
+        return u;
+      },
+      findById: async (): Promise<User | null> => null,
+    };
+    const facade = new UserFacade(uniqueEmailRepo);
+    const a = await facade.getOrCreate({ userId: "google-oauth2|111", role: "practitioner", email: "", viaBypass: false });
+    const b = await facade.getOrCreate({ userId: "google-oauth2|222", role: "practitioner", email: "", viaBypass: false });
+    expect(a.email).not.toBe(b.email);
+  });
 });

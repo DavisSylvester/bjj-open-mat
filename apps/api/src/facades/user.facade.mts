@@ -13,13 +13,27 @@ export class UserFacade {
   public async getOrCreate(identity: AuthIdentity): Promise<User> {
     const existing = await this.users.findById(identity.userId);
     if (existing) return existing;
+    // Auth0 access tokens for social logins don't carry the `email` claim, so
+    // identity.email is often "". A blank email violated the unique `email`
+    // index (E11000) the moment a second email-less user was created -> 500.
+    // Synthesize a valid, per-user-unique placeholder; `/auth/sync` then patches
+    // in the real email from the ID token on the client's next call.
+    const email = this.resolveEmail(identity);
     return this.users.insert({
       id: identity.userId,
-      email: identity.email,
-      displayName: identity.email.split("@")[0] ?? identity.userId,
+      email,
+      displayName: email.split("@")[0] ?? identity.userId,
       settings: DEFAULT_SETTINGS,
       createdAt: new Date().toISOString(),
     });
+  }
+
+  // A real email from the token when present; otherwise a unique, RFC-valid
+  // placeholder derived from the (globally unique) Auth0 subject id.
+  private resolveEmail(identity: AuthIdentity): string {
+    if (identity.email && identity.email.includes("@")) return identity.email;
+    const localPart = identity.userId.replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "user";
+    return `${localPart}@users.bjj-open-mat.app`;
   }
 
   public async syncFromProvider(identity: AuthIdentity, claims: AuthSyncRequest): Promise<User> {
