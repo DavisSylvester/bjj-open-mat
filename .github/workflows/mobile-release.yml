@@ -39,9 +39,12 @@ jobs:
               *) echo "::error::No version. Push a v* tag or pass build_name."; exit 1 ;;
             esac
           fi
+          # Offset by 100 so CI versionCodes (101, 102, …) stay above local
+          # builds (pubspec +6) and remain strictly increasing for Play.
+          BUILD_NUMBER=$(( ${{ github.run_number }} + 100 ))
           echo "build_name=$NAME" >> "$GITHUB_OUTPUT"
-          echo "build_number=${{ github.run_number }}" >> "$GITHUB_OUTPUT"
-          echo "Resolved version $NAME (+${{ github.run_number }})"
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "Resolved version $NAME (+$BUILD_NUMBER)"
 
   android:
     needs: version
