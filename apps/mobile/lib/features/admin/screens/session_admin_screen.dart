@@ -68,7 +68,7 @@ class _SessionAdminScreenState extends ConsumerState<SessionAdminScreen> {
               const SizedBox(width: 12),
               Expanded(child: Text('Session Admin', style: t.h1Style.copyWith(fontSize: 20))),
               GestureDetector(
-                onTap: () => context.go('/owner/sessions/${widget.sessionId}/attendance'),
+                onTap: () => context.push('/owner/sessions/${widget.sessionId}/attendance'),
                 child: Icon(LucideIcons.users, size: 18, color: t.muted),
               ),
             ]),
@@ -106,7 +106,7 @@ class _SessionAdminScreenState extends ConsumerState<SessionAdminScreen> {
                   ),
                   const SizedBox(height: 16),
                   GestureDetector(
-                    onTap: () => context.go('/owner/sessions/${widget.sessionId}/attendance'),
+                    onTap: () => context.push('/owner/sessions/${widget.sessionId}/attendance'),
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(

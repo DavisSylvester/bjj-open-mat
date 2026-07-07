@@ -79,7 +79,7 @@ class GymCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     return GestureDetector(
-      onTap: onTap ?? () => context.go('/gym/${gym.gymId}'),
+      onTap: onTap ?? () => context.push('/gym/${gym.gymId}'),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

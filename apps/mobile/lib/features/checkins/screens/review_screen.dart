@@ -75,7 +75,15 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       if (widget.sessionId != null) {
         ref.invalidate(openMatReviewsProvider(widget.sessionId!));
       }
-      if (mounted) Navigator.of(context).pop(true);
+      if (mounted) {
+        if (context.canPop()) {
+          context.pop(true);
+        } else if (widget.sessionId != null) {
+          context.go('/open-mat/${widget.sessionId}');
+        } else {
+          context.go('/');
+        }
+      }
     } on ApiException catch (e) {
       if (mounted) {
         setState(() {
@@ -106,7 +114,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             child: Row(children: [
               Expanded(child: Text('Rate Session', style: t.h1Style.copyWith(fontSize: 20))),
               GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () => context.canPop()
+                    ? context.pop()
+                    : context.go(widget.sessionId != null ? '/open-mat/${widget.sessionId}' : '/'),
                 child: Icon(LucideIcons.x, size: 20, color: t.muted),
               ),
             ]),

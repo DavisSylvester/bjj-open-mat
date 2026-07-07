@@ -61,7 +61,7 @@ class _GlassFavorites extends StatelessWidget {
               itemBuilder: (_, i) {
                 final gym = _stubFavorites[i];
                 return GestureDetector(
-                  onTap: () => context.go('/gym/${gym.id}'),
+                  onTap: () => context.push('/gym/${gym.id}'),
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(14),

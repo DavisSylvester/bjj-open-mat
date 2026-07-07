@@ -147,7 +147,7 @@ class _AttendeeCell extends StatelessWidget {
     // Placeholder attendees (no resolvable user document) must not be linked —
     // /user/:id 404s for them. A null onTap leaves the cell inert.
     return InkWell(
-      onTap: attendee.hasProfile ? () => context.go('/user/${attendee.userId}') : null,
+      onTap: attendee.hasProfile ? () => context.push('/user/${attendee.userId}') : null,
       borderRadius: BorderRadius.circular(12),
       child: Column(
         mainAxisSize: MainAxisSize.min,

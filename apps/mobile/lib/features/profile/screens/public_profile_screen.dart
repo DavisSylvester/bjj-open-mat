@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
@@ -34,7 +35,7 @@ class PublicProfileScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
                 child: GestureDetector(
-                  onTap: () => Navigator.of(context).maybePop(),
+                  onTap: () => context.canPop() ? context.pop() : context.go('/'),
                   child: Padding(
                     padding: const EdgeInsets.all(4),
                     child: Icon(LucideIcons.arrowLeft, color: t.text),
