@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required by geolocator for the "GPS / near me" search. Without these the
+         runtime permission request auto-denies (Android never prompts for an
+         undeclared permission) and location capture silently returns null. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="BJJ Open Mat"
         android:name="${applicationName}"

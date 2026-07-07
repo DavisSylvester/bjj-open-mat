@@ -208,7 +208,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Future<void> _useGps() async {
     _debounce?.cancel();
     final loc = await ref.read(locationServiceProvider).current();
-    if (!mounted || loc == null) return;
+    if (!mounted) return;
+    if (loc == null) {
+      // Never fail silently — tell the user why and offer the ZIP fallback.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Location unavailable. Turn on location and allow the permission, or search by ZIP.')),
+      );
+      return;
+    }
     _gpsLat = loc.latitude;
     _gpsLng = loc.longitude;
     _zipCtrl.clear();
