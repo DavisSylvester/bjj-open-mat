@@ -56,15 +56,15 @@ export class UnconfiguredAudioStorage implements AudioStorage {
     throw new AppError("service_unavailable", "Audio storage is not configured (AUDIO_BUCKET unset)");
   }
 
-  public async presignUpload(): Promise<{ uploadUrl: string; audioKey: string }> {
+  public async presignUpload(_userId: string, _contentType: string): Promise<{ uploadUrl: string; audioKey: string }> {
     this.fail();
   }
 
-  public async getObject(): Promise<Uint8Array> {
+  public async getObject(_key: string): Promise<Uint8Array> {
     this.fail();
   }
 
-  public async signedDownloadUrl(): Promise<string> {
+  public async signedDownloadUrl(_key: string): Promise<string> {
     this.fail();
   }
 }

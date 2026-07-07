@@ -11,7 +11,7 @@ export class WhisperTranscriptionService implements TranscriptionService {
   public async translateToEnglish(audio: Uint8Array, filename: string): Promise<{ text: string; durationMs: number }> {
     const started = performance.now();
     const form = new FormData();
-    form.append("file", new Blob([audio], { type: "audio/mp4" }), filename);
+    form.append("file", new Blob([Buffer.from(audio)], { type: "audio/mp4" }), filename);
     form.append("model", "whisper-1");
     const res = await this.fetchFn("https://api.openai.com/v1/audio/translations", {
       method: "POST",
