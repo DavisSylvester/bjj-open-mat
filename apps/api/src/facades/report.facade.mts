@@ -57,9 +57,12 @@ export class ReportFacade {
     return this.reports.listByUser(userId);
   }
 
-  public async transcribe(_userId: string, audioKey: string): Promise<{ text: string; durationMs: number }> {
+  public async transcribe(userId: string, audioKey: string): Promise<{ text: string; durationMs: number }> {
     if (!this.audio || !this.transcription) {
       throw new AppError("service_unavailable", "Voice transcription is not configured");
+    }
+    if (!audioKey.startsWith(`reports/audio/${userId}/`)) {
+      throw new AppError("not_found", "Audio not found");
     }
     const bytes = await this.audio.getObject(audioKey);
     return this.transcription.translateToEnglish(bytes, "audio.m4a");

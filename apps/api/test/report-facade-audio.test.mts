@@ -45,4 +45,20 @@ describe("ReportFacade audio", () => {
     const facade = new ReportFacade(fake, null, null, null, nextId, "owner/repo");
     await expect(facade.transcribe("u-1", "k")).rejects.toBeDefined();
   });
+
+  it("transcribe rejects an audioKey owned by another user and never calls getObject", async () => {
+    const { fake } = repo();
+    let getObjectCalled = false;
+    const audio = {
+      presignUpload: async (): Promise<{ uploadUrl: string; audioKey: string }> => ({ uploadUrl: "", audioKey: "" }),
+      getObject: async (): Promise<Uint8Array> => { getObjectCalled = true; throw new Error("must not be called"); },
+      signedDownloadUrl: async (): Promise<string> => "",
+    };
+    const transcription = {
+      translateToEnglish: async (): Promise<{ text: string; durationMs: number }> => ({ text: "unused", durationMs: 0 }),
+    };
+    const facade = new ReportFacade(fake, null, audio, transcription, nextId, "owner/repo");
+    await expect(facade.transcribe("u-1", "reports/audio/u-2/x.m4a")).rejects.toBeDefined();
+    expect(getObjectCalled).toBe(false);
+  });
 });
