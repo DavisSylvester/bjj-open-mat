@@ -45,7 +45,7 @@ describe("ReportFacade", () => {
   it("saves a bug report, files an issue with 'bug' label, and patches issue fields back", async () => {
     const r = repo();
     const captured: CreateIssueInput[] = [];
-    const facade = new ReportFacade(r, okIssueService(captured), nextId, "DavisSylvester/bjj-open-mat");
+    const facade = new ReportFacade(r, okIssueService(captured), null, null, nextId, "DavisSylvester/bjj-open-mat");
 
     const created = await facade.create("u-1", { type: "bug", title: "Crash on open", description: "It crashes when I open." });
 
@@ -60,7 +60,7 @@ describe("ReportFacade", () => {
   it("uses the 'enhancement' label for feature reports", async () => {
     const r = repo();
     const captured: CreateIssueInput[] = [];
-    const facade = new ReportFacade(r, okIssueService(captured), nextId, "DavisSylvester/bjj-open-mat");
+    const facade = new ReportFacade(r, okIssueService(captured), null, null, nextId, "DavisSylvester/bjj-open-mat");
 
     await facade.create("u-2", { type: "feature", title: "Add dark mode", description: "Please add a dark theme." });
 
@@ -69,7 +69,7 @@ describe("ReportFacade", () => {
 
   it("still saves the report (no issue fields) when the issue service throws", async () => {
     const r = repo();
-    const facade = new ReportFacade(r, failingIssueService(), nextId, "DavisSylvester/bjj-open-mat");
+    const facade = new ReportFacade(r, failingIssueService(), null, null, nextId, "DavisSylvester/bjj-open-mat");
 
     const created = await facade.create("u-3", { type: "bug", title: "Bad thing", description: "Something is broken." });
 
@@ -82,7 +82,7 @@ describe("ReportFacade", () => {
 
   it("still saves the report when no issue service is configured (null)", async () => {
     const r = repo();
-    const facade = new ReportFacade(r, null, nextId, "DavisSylvester/bjj-open-mat");
+    const facade = new ReportFacade(r, null, null, null, nextId, "DavisSylvester/bjj-open-mat");
 
     const created = await facade.create("u-4", { type: "bug", title: "No token", description: "Mongo only path." });
 
@@ -93,7 +93,7 @@ describe("ReportFacade", () => {
 
   it("listMine returns only the caller's reports", async () => {
     const r = repo();
-    const facade = new ReportFacade(r, null, nextId, "DavisSylvester/bjj-open-mat");
+    const facade = new ReportFacade(r, null, null, null, nextId, "DavisSylvester/bjj-open-mat");
     await facade.create("owner", { type: "bug", title: "Mine one", description: "Belongs to owner." });
     await facade.create("other", { type: "bug", title: "Not mine", description: "Belongs to other." });
 

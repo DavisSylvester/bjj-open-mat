@@ -18,6 +18,7 @@ class _FakeReportRepository implements ReportRepository {
     required String type,
     required String title,
     required String description,
+    List<String> audioKeys = const [],
   }) async {
     calls++;
     capturedType = type;

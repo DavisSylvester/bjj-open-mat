@@ -16,6 +16,12 @@ import {
   type AssetStorage,
 } from "./services/asset-storage.mts";
 import {
+  S3AudioStorage,
+  UnconfiguredAudioStorage,
+  type AudioStorage,
+} from "./services/audio-storage.mts";
+import { WhisperTranscriptionService, type TranscriptionService } from "./services/transcription.mts";
+import {
   HttpGitHubIssueService,
   type GitHubIssueService,
 } from "./services/github-issue.service.mts";
@@ -40,6 +46,7 @@ export interface Container {
   readonly reportFacade: ReportFacade;
   readonly geocoder: Geocoder;
   readonly assetStorage: AssetStorage;
+  readonly audioStorage: AudioStorage;
   ensureIndexes(): Promise<void>;
 }
 
@@ -60,6 +67,12 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const githubIssueService: GitHubIssueService | null = env.githubToken
     ? new HttpGitHubIssueService(env.githubToken, env.githubRepo)
     : null;
+  const audioStorage: AudioStorage = env.audioBucket
+    ? new S3AudioStorage(env.audioBucket, env.audioRegion)
+    : new UnconfiguredAudioStorage();
+  const transcription: TranscriptionService | null = env.openaiApiKey
+    ? new WhisperTranscriptionService(env.openaiApiKey)
+    : null;
 
   return {
     db,
@@ -78,9 +91,10 @@ export function createContainer(db: Db, env: AppEnv): Container {
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
-    reportFacade: new ReportFacade(reportRepo, githubIssueService, id, env.githubRepo),
+    reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
     geocoder,
     assetStorage,
+    audioStorage,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),

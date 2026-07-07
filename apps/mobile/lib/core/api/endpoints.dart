@@ -40,6 +40,8 @@ class Endpoints {
 
   // Reports
   static const String reports = '/api/v1/reports';
+  static const String reportAudioUploadUrl = '/api/v1/reports/audio-upload-url';
+  static const String reportTranscribe = '/api/v1/reports/transcribe';
 
   // Health
   static const String health = '/health';

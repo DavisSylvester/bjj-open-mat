@@ -25,6 +25,7 @@ dependencies:
   intl: ^0.20.2
   google_fonts: ^6.1.0
   lucide_icons: ^0.257.0
+  record: ^5.1.2
 
 dev_dependencies:
   flutter_test:

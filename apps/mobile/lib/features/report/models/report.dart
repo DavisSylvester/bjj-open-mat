@@ -8,6 +8,7 @@ class Report {
   final String? createdAt;
   final int? githubIssueNumber;
   final String? githubIssueUrl;
+  final List<String> audioKeys;
 
   const Report({
     required this.id,
@@ -19,6 +20,7 @@ class Report {
     this.createdAt,
     this.githubIssueNumber,
     this.githubIssueUrl,
+    this.audioKeys = const [],
   });
 
   factory Report.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class Report {
       createdAt: json['createdAt'] as String?,
       githubIssueNumber: (json['githubIssueNumber'] as num?)?.toInt(),
       githubIssueUrl: json['githubIssueUrl'] as String?,
+      audioKeys: (json['audioKeys'] as List?)?.map((e) => e as String).toList() ?? const [],
     );
   }
 }

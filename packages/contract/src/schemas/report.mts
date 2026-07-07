@@ -10,6 +10,7 @@ export const Report = t.Object(
     description: t.String(),
     status: t.Literal("open", { default: "open" }),
     createdAt: t.String(),
+    audioKeys: t.Optional(t.Array(t.String())),
     githubIssueNumber: t.Optional(t.Number()),
     githubIssueUrl: t.Optional(t.String()),
   },
