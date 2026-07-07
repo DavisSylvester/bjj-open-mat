@@ -95,22 +95,34 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       'beltStripes': _selectedStripes,
       if (_birthdayIso != null) 'birthday': _birthdayIso,
       if (_homeGymId != null) 'homeGymId': _homeGymId,
+      // displayName is provider-owned for social users (re-synced each login);
+      // every other field is the user's own app-data and always editable.
       if (!social) 'displayName': _nameController.text.trim(),
-      if (!social) 'bio': _bioController.text.trim(),
-      if (!social) 'city': _cityController.text.trim(),
-      if (!social) 'state': _stateController.text.trim(),
-      if (!social) 'gender': _gender,
-      if (!social) 'weightUnit': _weightUnit,
-      if (!social) 'weightDivisionContext': _divisionContext,
-      if (!social && _weightDivision != null) 'weightDivision': _weightDivision,
-      if (!social && double.tryParse(_weightValueController.text.trim()) != null)
+      'bio': _bioController.text.trim(),
+      'city': _cityController.text.trim(),
+      'state': _stateController.text.trim(),
+      'gender': _gender,
+      'weightUnit': _weightUnit,
+      'weightDivisionContext': _divisionContext,
+      if (_weightDivision != null) 'weightDivision': _weightDivision,
+      if (double.tryParse(_weightValueController.text.trim()) != null)
         'weightValue': double.tryParse(_weightValueController.text.trim()),
     };
-    await ref.read(authStateProvider.notifier).updateProfile(updates);
-    HapticFeedback.heavyImpact();
-    if (mounted) {
-      setState(() => _isSaving = false);
-      Navigator.of(context).maybePop();
+    try {
+      await ref.read(authStateProvider.notifier).updateProfile(updates);
+      HapticFeedback.heavyImpact();
+      if (mounted) {
+        setState(() => _isSaving = false);
+        Navigator.of(context).maybePop();
+      }
+    } catch (_) {
+      // Surface failures instead of leaving the Save spinner stuck forever.
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Couldn't save your profile. Please try again.")),
+        );
+      }
     }
   }
 
@@ -156,8 +168,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               children: [
-                if (!social)
-                  _sectionCard(t, 'Identity', [
+                _sectionCard(t, 'About', [
+                  // Display name comes from the sign-in provider for social
+                  // users (re-synced each login), so it's shown only for
+                  // email/password accounts.
+                  if (!social) ...[
                     _fieldLabel(t, 'Display Name'),
                     const SizedBox(height: 6),
                     TextField(
@@ -166,15 +181,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       decoration: glassInput(t, 'Your name'),
                     ),
                     const SizedBox(height: 16),
-                    _fieldLabel(t, 'Bio'),
-                    const SizedBox(height: 6),
-                    TextField(
-                      controller: _bioController,
-                      style: t.bodyStyle,
-                      maxLines: 3,
-                      decoration: glassInput(t, 'Tell other grapplers about yourself'),
-                    ),
-                  ]),
+                  ],
+                  _fieldLabel(t, 'Bio'),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: _bioController,
+                    style: t.bodyStyle,
+                    maxLines: 3,
+                    decoration: glassInput(t, 'Tell other grapplers about yourself'),
+                  ),
+                ]),
                 _sectionCard(t, 'Details', [
                   _fieldLabel(t, 'Birthday'),
                   const SizedBox(height: 6),
@@ -193,7 +209,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     onTap: _pickHomeGym,
                     child: _HomeGymLabel(homeGymId: _homeGymId, style: t.bodyStyle),
                   ),
-                  if (!social) ...[
+                  ...[
                     const SizedBox(height: 16),
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Expanded(
@@ -226,8 +242,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     ]),
                   ],
                 ]),
-                if (!social)
-                  _sectionCard(t, 'Training', [
+                _sectionCard(t, 'Training', [
                     _fieldLabel(t, 'Gender'),
                     const SizedBox(height: 8),
                     GlassSegmented(
