@@ -285,7 +285,7 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
             style: t.bodyStyle,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Tell practitioners what to expect — vibe, schedule, drop-in policy…',
+              hintText: 'Tell students what to expect — vibe, schedule, drop-in policy…',
               hintStyle: t.miniStyle.copyWith(fontSize: 12),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(14),

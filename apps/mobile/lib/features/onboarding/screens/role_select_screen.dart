@@ -60,7 +60,7 @@ class RoleSelectScreen extends ConsumerWidget {
               _RoleCard(
                 t: t,
                 icon: LucideIcons.user,
-                title: 'Practitioner',
+                title: 'Student',
                 description: 'Find open mats near you, check in, track training, and leave reviews.',
                 accent: t.primary,
                 onTap: () async {

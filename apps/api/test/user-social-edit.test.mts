@@ -38,4 +38,12 @@ describe("updateProfile edit restriction", () => {
     await facadeWith(cap).updateProfile("auth0|1", { displayName: "New Name", birthday: "1991-02-02" }, false);
     expect(cap.patch).toEqual({ displayName: "New Name", birthday: "1991-02-02" });
   });
+
+  it("social user: can set role at onboarding (role is not stripped)", async () => {
+    // Regression: social users were stuck on role-select because socialAllowed
+    // dropped `role`, leaving an empty patch that MongoDB's $set rejected -> 500.
+    const cap: { patch?: Partial<User> } = {};
+    await facadeWith(cap).updateProfile("google-oauth2|1", { role: "gym_owner" }, true);
+    expect(cap.patch).toEqual({ role: "gym_owner" });
+  });
 });
