@@ -4,6 +4,8 @@
          undeclared permission) and location capture silently returns null. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Required by the `record` plugin for voice-note capture on the Report screen. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="BJJ Open Mat"
         android:name="${applicationName}"
