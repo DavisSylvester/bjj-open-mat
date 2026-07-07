@@ -18,6 +18,10 @@ const EnvSchema = t.Object({
   // local dev without a token — reports then save to Mongo only.
   GITHUB_TOKEN: t.Optional(t.String()),
   GITHUB_REPO: t.Optional(t.String()),
+  // Optional: OpenAI API key and audio storage configuration for voice-to-text.
+  OPENAI_API_KEY: t.Optional(t.String()),
+  AUDIO_BUCKET: t.Optional(t.String()),
+  AUDIO_REGION: t.Optional(t.String()),
 });
 
 type RawEnv = Static<typeof EnvSchema>;
@@ -34,6 +38,9 @@ export interface AppEnv {
   readonly assetsRegion: string;
   readonly githubToken: string | undefined;
   readonly githubRepo: string;
+  readonly openaiApiKey: string | undefined;
+  readonly audioBucket: string | undefined;
+  readonly audioRegion: string;
 }
 
 export function loadEnv(source: Record<string, string | undefined> = process.env): AppEnv {
@@ -50,5 +57,8 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     assetsRegion: raw.ASSETS_REGION ?? "us-east-1",
     githubToken: raw.GITHUB_TOKEN,
     githubRepo: raw.GITHUB_REPO ?? "DavisSylvester/bjj-open-mat",
+    openaiApiKey: raw.OPENAI_API_KEY,
+    audioBucket: raw.AUDIO_BUCKET,
+    audioRegion: raw.AUDIO_REGION ?? raw.ASSETS_REGION ?? "us-east-1",
   };
 }
