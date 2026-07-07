@@ -714,7 +714,7 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
           style: t.bodyStyle,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Any notes for practitioners…',
+            hintText: 'Any notes for students…',
             hintStyle: t.miniStyle.copyWith(fontSize: 13),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(14),

@@ -12,7 +12,7 @@ void main() {
   test('gym_owner toggles to practitioner', () {
     final t = roleToggle('gym_owner');
     expect(t.targetRole, 'practitioner');
-    expect(t.label, 'Switch to Practitioner');
+    expect(t.label, 'Switch to Student');
     expect(t.destination, '/');
   });
 
