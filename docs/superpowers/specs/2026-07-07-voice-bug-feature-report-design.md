@@ -2,187 +2,209 @@
 
 **Date:** 2026-07-07
 **Status:** Approved (brainstorming) — ready for implementation plan
-**Area:** `apps/mobile` (Flutter Report screen) + `apps/apis` (Elysia API) + `packages/contract`
+**Area:** `apps/mobile` (Flutter Report screen) + `apps/api` (Elysia API) + `packages/contract`
 
 ## Summary
 
 Enhance the existing in-app **Report** flow so the **Description** can be filled by
-voice. The user records a voice note; the backend stores the **raw audio in S3** and
-transcribes it to **English text via OpenAI Whisper** (translation mode); the English
-text is appended into the still-editable Description. The **Title stays typed and
-required**. Voice is optional — typing still works exactly as today.
+voice. The user records a voice note; the app uploads the raw audio to **S3 via a
+presigned URL**; the backend transcribes it to **English text via OpenAI Whisper**
+(translation mode); the English text is appended into the still-editable Description.
+The **Title stays typed and required**. Voice is optional — typing still works exactly
+as today.
+
+The **raw audio is retained for admin/debugging only** — it is never surfaced to end
+users. Reports link to their audio object keys so an admin can retrieve them later via
+a signed URL.
 
 This builds on the existing `report_screen.dart`, `report_repository.dart`,
-`CreateReportRequest`, and `POST /reports` — it does not introduce a new screen.
+`CreateReportRequest`, `ReportFacade`, and `POST /api/v1/reports` — no new screen.
 
 ## Goals
 
 - Let users dictate the report Description instead of typing it.
-- Persist the **raw audio** centrally (S3) so reports can be reviewed by voice later.
+- Retain the **raw audio** in S3 (admin/debug only) so reports can be reviewed by voice.
 - Transcribe **and translate to English** so all reports arrive in one language.
 - Keep the transcript **editable** before submit; the user reviews before filing.
 - Title remains **typed and required** (min 3 chars, unchanged).
+- Follow existing codebase patterns (presigned S3 uploads, `ReportFacade`, injectable
+  external services, TypeBox contract, `.mts`).
 
-## Non-goals (out of scope for this spec)
+## Non-goals (out of scope)
 
-- Admin playback UI for recorded audio (audio is stored + linked; playback is a
-  separate future admin feature).
-- On-device / live transcription.
-- Editing or re-recording an individual past segment (segments only append; the
-  whole Description text remains freely editable as plain text).
-- Real-time streaming transcription.
+- Admin playback UI. Audio is stored + linked and retrievable via signed URL, but no
+  admin screen is built here. **Audio is never shown to end users.**
+- On-device / live / streaming transcription.
+- Editing/re-recording an individual past segment (segments append; the Description
+  text is freely editable as plain text).
 
 ## Requirements (decided in brainstorming)
 
 1. **Transcription location:** cloud / server-side.
 2. **Provider:** OpenAI Whisper API, **translation** endpoint (any language → English).
-3. **Audio storage:** **AWS S3** bucket (raw recording per segment).
-4. **Flow:** record → stop → `Transcribing…` → English text **appended** into the
-   editable Description; user may record **multiple** times (each appends text + adds
-   one audio object); Title typed; **Submit** links the audio to the report.
+3. **Audio storage:** **AWS S3**, uploaded via **presigned PUT URL** (matches the
+   existing gym-logo upload pattern; the API never handles file bytes for upload).
+4. **Flow:** record → stop → presign → PUT to S3 → transcribe-by-key → `Transcribing…`
+   → English text **appended** into the editable Description; user may record
+   **multiple** times (each appends text + adds one audio key); Title typed;
+   **Submit** persists the audio keys on the report.
 5. **Recording cap:** ~2 minutes / ≤ 24 MB per segment (Whisper's 25 MB limit).
+6. **Audience for audio:** admins only, for debugging.
 
 ## Architecture & data flow
 
 ```
 Report screen
-  tap mic → record (record pkg, .m4a/aac) → stop
+  tap mic → record (record pkg, .m4a/AAC) → stop
      │
-     ├─ POST /api/v1/reports/transcribe   (multipart: audio file)
-     │      API: AudioStorageService.put → S3  reports/audio/pending/<uuid>.m4a
-     │           TranscriptionService.translate(file) → OpenAI Whisper (→ English)
-     │      → 200 { text, audioKey, durationMs }
+     ├─ POST /api/v1/reports/audio-upload-url { contentType: "audio/mp4" }
+     │      API: AudioStorage.presignUpload(userId, contentType)
+     │      → { uploadUrl, audioKey }          key: reports/audio/<userId>/<uuid>.m4a
+     │
+     ├─ HTTP PUT the audio bytes directly to `uploadUrl` (S3)
+     │
+     ├─ POST /api/v1/reports/transcribe { audioKey }
+     │      API: AudioStorage.getObject(audioKey) → bytes
+     │           TranscriptionService.translateToEnglish(bytes, "audio.m4a")
+     │             → OpenAI Whisper /v1/audio/translations (model whisper-1)
+     │      → { text, durationMs }
      │
      ├─ append `text` into the editable Description; push `audioKey` to a local list
      │  (repeat for additional recordings)
      │
      └─ type Title → Submit
             POST /api/v1/reports { type, title, description, audioKeys[] }
-              API: persist report with audioKeys (audio is now "linked")
+              API: ReportFacade.create persists the report with audioKeys
 ```
 
-Two calls: **transcribe** (once per recording) then the existing **create** (once).
-Abandoned recordings remain as orphan objects under the `pending/` prefix and are
-removed by an **S3 lifecycle rule** (e.g., expire `reports/audio/pending/` after 7
-days). Linked audio may optionally be copied/moved to a `reports/audio/linked/`
-prefix on create (implementation detail; the stored `audioKey` is what the report
-references).
+Three calls: **presign** → (direct S3 PUT) → **transcribe**, then the existing
+**create**. The audio object exists in S3 as soon as it's PUT; if the report is never
+submitted the key is simply never referenced. An **S3 lifecycle rule** may expire
+unreferenced audio under `reports/audio/` (operational concern, not code).
 
 ## Components
 
-### Mobile (Flutter)
+### Contract (`packages/contract/src`, TypeBox, `.mts`, barrel-exported)
 
-- **`report_screen.dart`** (modified): add a **mic button** in the Description
-  section. It drives a small recording panel (record duration timer + Stop). The
-  Description remains a normal editable multiline `TextField` at all times.
-  - State machine: `idle → recording → transcribing → idle` (transcript appended),
-    plus a recoverable `error` state. Submit button stays gated on
-    `title ≥ 3 && description ≥ 10` (unchanged).
-  - Multiple recordings: each completed transcription appends `"\n\n" + text`
-    (trimmed) to the Description and appends its `audioKey` to an in-memory
-    `List<String> _audioKeys`.
-- **`report_audio_repository.dart`** (new): `Future<TranscriptionResult> transcribe(File audio)`
-  → `POST /reports/transcribe` (multipart), returns `{ text, audioKey, durationMs }`.
-  Riverpod provider mirrors `reportRepositoryProvider`.
-- **`report_repository.dart`** (modified): `create(...)` gains
-  `List<String> audioKeys = const []` and includes it in the POST body.
-- **Audio capture:** add the **`record`** package. Enforce max duration (~120 s) and
-  stop automatically at the cap with a warning. Recorded format: AAC/`.m4a`.
-- **Permissions:**
-  - iOS `Info.plist`: add **`NSMicrophoneUsageDescription`** (currently missing).
-  - Android `AndroidManifest.xml`: add **`RECORD_AUDIO`**.
+- **`schemas/requests/report-requests.mts`** (modify):
+  - `CreateReportRequest` gains `audioKeys: t.Optional(t.Array(t.String(), { maxItems: 20 }))`.
+  - Add `AudioUploadUrlRequest = t.Object({ contentType: t.Union([t.Literal("audio/mp4"), t.Literal("audio/m4a"), t.Literal("audio/aac")]) }, { $id: "AudioUploadUrlRequest" })`.
+  - Add `TranscribeAudioRequest = t.Object({ audioKey: t.String({ minLength: 1 }) }, { $id: "TranscribeAudioRequest" })`.
+- **`schemas/responses/`** (new file `report-responses.mts`, barrel it):
+  - `AudioUploadUrlResponse = t.Object({ uploadUrl: t.String(), audioKey: t.String() }, { $id: "AudioUploadUrlResponse" })`.
+  - `TranscribeAudioResponse = t.Object({ text: t.String(), durationMs: t.Number() }, { $id: "TranscribeAudioResponse" })`.
+- **`schemas/report.mts`** (modify): `Report` gains
+  `audioKeys: t.Optional(t.Array(t.String()))`.
 
-### Backend (Elysia, Bun) — per layered Router → Service → Repository
+### Backend (`apps/api/src`, Elysia, `.mts`, facade pattern, DI via `container.mts`)
 
-- **New route** `POST /api/v1/reports/transcribe` (auth required):
-  - Accepts `multipart/form-data` with an `audio` file (Elysia `t.File`, validated
-    MIME `audio/*`, size ≤ 24 MB).
-  - `AudioStorageService.put(buffer, key)` → S3, key `reports/audio/pending/<uuid>.<ext>`.
-  - `TranscriptionService.translateToEnglish(buffer, filename)` → OpenAI Whisper
-    (`/v1/audio/translations`, model `whisper-1`).
-  - Returns `TranscribeAudioResponse { text, audioKey, durationMs }`.
-- **`POST /api/v1/reports`** (modified): accept optional `audioKeys: string[]`,
-  persist on the report document.
-- **New services (DI-registered, no `new` in routers/services):**
-  - `TranscriptionService` — wraps an OpenAI client; single `translateToEnglish` method.
-  - `AudioStorageService` — wraps an S3 client (`@aws-sdk/client-s3`); `put`, and a
-    `signedUrl(key)` helper for future admin playback.
-- **Repository:** report persistence extended to store `audioKeys` (Mongo).
-- **Config (via DI, validated with TypeBox `Value.Parse`):** `OPENAI_API_KEY`,
-  `AWS_REGION`, `AWS_S3_BUCKET`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
-  (or instance role). Logging via Winston (no `console.*`).
+- **`services/audio-storage.mts`** (new; model after `services/asset-storage.mts`):
+  `AudioStorage` interface + `S3AudioStorage` (`presignUpload(userId, contentType) →
+  { uploadUrl, audioKey }` via `PutObjectCommand` + `getSignedUrl`; `getObject(key) →
+  Uint8Array` via `GetObjectCommand`; `signedDownloadUrl(key)` for future admin use).
+  An `UnconfiguredAudioStorage` fallback throws `AppError("service_unavailable", …)`
+  when the bucket env is unset — mirrors `UnconfiguredAssetStorage`.
+- **`services/transcription.mts`** (new; model after `services/github-issue.mts`
+  a.k.a. `HttpGitHubIssueService`): `TranscriptionService` interface +
+  `WhisperTranscriptionService` using `fetch` to OpenAI `/v1/audio/translations`
+  (multipart `FormData` with `file` Blob + `model=whisper-1`), returns
+  `{ text, durationMs }`. Injectable, **optional** — `null` when `OPENAI_API_KEY`
+  unset (like the GitHub issue service); the transcribe route then returns
+  `AppError("service_unavailable", …)`.
+- **`routes/report.routes.mts`** (modify): add two authed routes on the existing
+  `/api/v1/reports` module:
+  - `POST /audio-upload-url` `{ body: AudioUploadUrlRequest }` →
+    `data(await audioStorage.presignUpload(userId, body.contentType))`.
+  - `POST /transcribe` `{ body: TranscribeAudioRequest }` →
+    `data(await reportFacade.transcribe(userId, body.audioKey))`.
+  - `POST /` body now includes optional `audioKeys` (contract change flows through).
+- **`facades/report.facade.mts`** (modify): `create` persists `audioKeys` onto the
+  `Report`. Add `transcribe(userId, audioKey): Promise<TranscribeAudioResponse>` that
+  fetches bytes via `AudioStorage.getObject` and calls `TranscriptionService`
+  (throws `service_unavailable` if either dependency is null/unconfigured). Inject
+  `audioStorage` and `transcription` into `ReportFacade`.
+- **`repositories/report.repository.mts`** (modify): `insert`/`update` already persist
+  the whole `Report`; ensure `audioKeys` round-trips (it's part of the `Report` shape).
+- **`container.mts`** (modify): construct `S3AudioStorage` (or `UnconfiguredAudioStorage`)
+  and `WhisperTranscriptionService | null`; pass both into `new ReportFacade(...)`; add
+  to the `Container` interface as needed.
+- **`config/env.mts`** (modify): add `OPENAI_API_KEY` (optional), `AUDIO_BUCKET`
+  (optional), `AUDIO_REGION` (optional; default to `ASSETS_REGION`/`us-east-1`) to
+  `EnvSchema` + `AppEnv` + `loadEnv`.
+- Logging via Winston; no `console.*`.
 
-### Contract (`packages/contract`, TypeBox, `.mts`)
+### Mobile (`apps/mobile/lib`)
 
-- **New** `TranscribeAudioResponse` (`schemas/responses/`):
-  ```ts
-  t.Object({
-    text: t.String(),
-    audioKey: t.String(),
-    durationMs: t.Number(),
-  }, { $id: "TranscribeAudioResponse" })
-  ```
-- **`CreateReportRequest`** gains:
-  ```ts
-  audioKeys: t.Optional(t.Array(t.String(), { maxItems: 20 })),
-  ```
-- **`Report`** model + Dart `Report` model gain `audioKeys: string[]` (default `[]`).
-- Derived types via `Static<typeof ...>`, barrel-exported per existing convention.
+- **`core/api/endpoints.dart`** (modify): add
+  `static const String reportAudioUploadUrl = '/api/v1/reports/audio-upload-url';`
+  and `static const String reportTranscribe = '/api/v1/reports/transcribe';`.
+- **`features/report/data/report_audio_repository.dart`** (new): 
+  `presignUpload(String contentType) → (uploadUrl, audioKey)`;
+  `putAudio(String uploadUrl, File file)` (Dio `put` of bytes with content-type);
+  `transcribe(String audioKey) → (text, durationMs)`. Riverpod provider.
+- **`features/report/data/report_repository.dart`** (modify): `create(...)` gains
+  `List<String> audioKeys = const []`, included in the POST body.
+- **`features/report/models/report.dart`** (modify): add `audioKeys` (default `[]`).
+- **`features/report/screens/report_screen.dart`** (modify): add a mic button on the
+  Description; recording panel (timer + Stop); state machine
+  `idle → recording → transcribing → idle` (+ recoverable `error`). Each finished
+  transcription appends `"\n\n" + text.trim()` to `_descCtrl` and pushes `audioKey`
+  to `List<String> _audioKeys`. Submit passes `audioKeys: _audioKeys`.
+- **Audio capture:** add the **`record`** package; format AAC/`.m4a`
+  (`AudioEncoder.aacLc`), auto-stop at ~120 s.
+- **Permissions:** iOS `Info.plist` add **`NSMicrophoneUsageDescription`**; Android
+  `AndroidManifest.xml` add **`RECORD_AUDIO`**.
 
 ## Data model
 
-`Report` document adds:
-- `audioKeys: string[]` — S3 object keys for the raw recordings, in spoken order.
-
-No separate audio collection; the keys reference S3 objects. Signed URLs are
-generated on demand (future admin playback), never stored.
+`Report` document adds `audioKeys: string[]` (S3 object keys, spoken order). No
+separate collection. Signed URLs are generated on demand for admins; never stored.
 
 ## Error handling
 
-- **Mic permission denied:** inline prompt with a "Open Settings" action; typing
-  remains available.
-- **Offline / upload failure / transcription failure:** inline error on the panel;
-  the Description stays editable so the user can type instead. The failed segment's
-  audio is not linked.
-- **Over-length recording:** auto-stop at the cap with a toast; the captured portion
-  can still be transcribed.
-- **Whisper/S3 5xx:** API returns a typed error envelope; mobile surfaces the message
-  (consistent with existing `ApiException` handling).
-- **Empty/near-silent transcript:** append nothing; show "Didn't catch that — try
-  again."
+- Mic permission denied → inline prompt + "Open Settings"; typing still works.
+- Offline / presign / PUT / transcribe failure → inline error; Description stays
+  editable so the user can type. A failed segment's key is not added to `_audioKeys`.
+- Over-length recording → auto-stop at cap with a toast; captured portion still
+  transcribes.
+- `OPENAI_API_KEY` / `AUDIO_BUCKET` unset → API returns typed
+  `service_unavailable`; mobile surfaces the message (existing `ApiException`).
+- Empty/near-silent transcript → append nothing; show "Didn't catch that — try again."
 
 ## Security & privacy
 
-- Audio contains voice (PII). S3 bucket is **private**; objects are never public.
-  Admin access is via short-lived **signed URLs** only.
-- `transcribe` and `reports` endpoints require authentication (existing behavior).
-- OpenAI/AWS keys live **server-side only** (never in the app).
-- **Privacy policy** (`docs/store/privacy-policy.html`) updated to disclose that
-  voice recordings are collected to process bug/feature reports.
+- Audio contains voice (PII). S3 bucket is **private**; objects never public. Admin
+  access via short-lived **signed URLs** only. **Audio is admin/debug-only.**
+- `audio-upload-url`, `transcribe`, and `reports` routes require auth (existing).
+- OpenAI/AWS keys live **server-side only**.
+- **Privacy policy** (`docs/store/privacy-policy.html`) updated to disclose voice
+  recordings collected to process bug/feature reports.
 
 ## Testing
 
-- **Mobile (widget tests):** record-button state machine (idle→recording→
-  transcribing→appended, and error); transcript appends (not replaces); multiple
-  segments accumulate `audioKeys`; Submit body includes `audioKeys`. Mock
-  `report_audio_repository`.
-- **Backend (`bun test`):** `TranscriptionService` (mock OpenAI client),
-  `AudioStorageService` (mock S3 client), transcribe route validation (MIME/size),
-  `POST /reports` persists `audioKeys`. Contract schema round-trip tests.
+- **Mobile (widget tests):** record-button state machine; transcript appends (not
+  replaces); multiple segments accumulate `audioKeys`; Submit body includes
+  `audioKeys`. Mock `report_audio_repository`.
+- **API (`bun test`):** `WhisperTranscriptionService` (mock `fetch`); `ReportFacade.
+  transcribe` with fake `AudioStorage` + fake `TranscriptionService` (hand-rolled
+  fakes per existing `report-facade.test.mts` style); route test for
+  `POST /reports` persisting `audioKeys` and `audio-upload-url` returning a URL.
+  Contract round-trip validation for the new schemas.
 
 ## Configuration / new env vars
 
 | Var | Where | Purpose |
 |-----|-------|---------|
-| `OPENAI_API_KEY` | API | Whisper transcription/translation |
-| `AWS_REGION`, `AWS_S3_BUCKET` | API | audio storage target |
-| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | API | S3 credentials (or instance role) |
+| `OPENAI_API_KEY` | `apps/api` | Whisper translation (optional; feature off when unset) |
+| `AUDIO_BUCKET` | `apps/api` | S3 bucket for report audio (optional; feature off when unset) |
+| `AUDIO_REGION` | `apps/api` | S3 region for the audio bucket (defaults to `ASSETS_REGION`/`us-east-1`) |
 
-Plus an **S3 lifecycle rule** expiring `reports/audio/pending/` objects (~7 days).
+Plus an **S3 lifecycle rule** to expire unreferenced `reports/audio/` objects (ops).
 
 ## Resolved decisions
 
-- Multiple recordings **append** (not one-shot). ✅
+- Presigned S3 upload (not multipart) — matches codebase. ✅
+- Multiple recordings **append**. ✅
 - **~2 min** per-recording cap. ✅
-- Admin playback is **out of scope** (audio stored + linked only). ✅
 - Translate **always to English**. ✅
+- Audio is **admin/debug-only**, never shown to users; no admin UI in this scope. ✅
