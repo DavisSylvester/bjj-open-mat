@@ -11,6 +11,7 @@ abstract class ReportRepository {
     required String type,
     required String title,
     required String description,
+    List<String> audioKeys = const [],
   });
 
   Future<List<Report>> listMine();
@@ -25,12 +26,14 @@ class ApiReportRepository implements ReportRepository {
     required String type,
     required String title,
     required String description,
+    List<String> audioKeys = const [],
   }) async {
     try {
       final res = await _dio.post(Endpoints.reports, data: {
         'type': type,
         'title': title,
         'description': description,
+        'audioKeys': audioKeys,
       });
       return Report.fromJson(unwrapData(res.data as Map<String, dynamic>));
     } on DioException catch (e) {
