@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { CreateReportRequest } from "@bjj/contract";
+import { AudioUploadUrlRequest, CreateReportRequest, TranscribeAudioRequest } from "@bjj/contract";
 import type { AuthIdentity } from "../auth/auth.types.mts";
 import { authPlugin } from "../auth/auth.middleware.mts";
 import type { Container } from "../container.mts";
@@ -13,7 +13,7 @@ function requireId(identity: AuthIdentity | null): AuthIdentity {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function reportRoutes(container: Container) {
-  const { reportFacade } = container;
+  const { reportFacade, audioStorage } = container;
 
   return new Elysia({ prefix: "/api/v1/reports" })
     .use(authPlugin(container.verifier, container.roleLookup))
@@ -29,5 +29,15 @@ export function reportRoutes(container: Container) {
         return list(items, { page: 1, limit: items.length, total: items.length });
       },
       { requireAuth: true },
+    )
+    .post(
+      "/audio-upload-url",
+      async ({ identity, body }) => data(await audioStorage.presignUpload(requireId(identity).userId, body.contentType)),
+      { requireAuth: true, body: AudioUploadUrlRequest },
+    )
+    .post(
+      "/transcribe",
+      async ({ identity, body }) => data(await reportFacade.transcribe(requireId(identity).userId, body.audioKey)),
+      { requireAuth: true, body: TranscribeAudioRequest },
     );
 }
