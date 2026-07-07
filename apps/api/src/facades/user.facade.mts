@@ -61,17 +61,15 @@ export class UserFacade {
     return updated;
   }
 
-  // Social/SSO users may only change these fields; identity (email/displayName)
-  // comes from the provider. `role` is an in-app choice every user must set at
-  // onboarding and may switch later, so it is allowed here — without it the
-  // patch was empty and the role-select screen 500'd on an empty Mongo $set.
+  // Social/SSO users own all their profile app-data (belt, birthday, weight,
+  // gender, city/state, bio, division, home gym, role). Only displayName and
+  // avatarUrl come from the provider and are re-synced on each login via
+  // syncFromProvider, so edits to those are ignored here to avoid being
+  // silently overwritten. Everything else passes through.
   private socialAllowed(patch: UpdateUserRequest): UpdateUserRequest {
-    const allowed: UpdateUserRequest = {};
-    if (patch.role !== undefined) allowed.role = patch.role;
-    if (patch.birthday !== undefined) allowed.birthday = patch.birthday;
-    if (patch.beltRank !== undefined) allowed.beltRank = patch.beltRank;
-    if (patch.beltStripes !== undefined) allowed.beltStripes = patch.beltStripes;
-    if (patch.homeGymId !== undefined) allowed.homeGymId = patch.homeGymId;
+    const allowed: UpdateUserRequest = { ...patch };
+    delete allowed.displayName;
+    delete allowed.avatarUrl;
     return allowed;
   }
 
