@@ -121,32 +121,40 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
   }
 
   Future<void> _startRecording() async {
-    final recorder = _recorder ??= AudioRecorder();
-    final hasPermission = await recorder.hasPermission();
-    if (!mounted) return;
-    if (!hasPermission) {
+    try {
+      final recorder = _recorder ??= AudioRecorder();
+      final hasPermission = await recorder.hasPermission();
+      if (!mounted) return;
+      if (!hasPermission) {
+        setState(() {
+          _rec = RecordState.error;
+          _recordError = 'Microphone permission is required to record.';
+        });
+        return;
+      }
+      final path =
+          '${Directory.systemTemp.path}/report_audio_${DateTime.now().microsecondsSinceEpoch}.m4a';
+      await recorder.start(const RecordConfig(encoder: AudioEncoder.aacLc), path: path);
+      if (!mounted) return;
+      setState(() {
+        _rec = RecordState.recording;
+        _recordError = null;
+        _recordSeconds = 0;
+      });
+      _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (!mounted) return;
+        setState(() => _recordSeconds++);
+      });
+      _autoStopTimer = Timer(const Duration(seconds: _maxRecordSeconds), () {
+        _stopRecording();
+      });
+    } catch (_) {
+      if (!mounted) return;
       setState(() {
         _rec = RecordState.error;
-        _recordError = 'Microphone permission is required to record.';
+        _recordError = 'Failed to start recording. Please try again.';
       });
-      return;
     }
-    final path =
-        '${Directory.systemTemp.path}/report_audio_${DateTime.now().microsecondsSinceEpoch}.m4a';
-    await recorder.start(const RecordConfig(encoder: AudioEncoder.aacLc), path: path);
-    if (!mounted) return;
-    setState(() {
-      _rec = RecordState.recording;
-      _recordError = null;
-      _recordSeconds = 0;
-    });
-    _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-      setState(() => _recordSeconds++);
-    });
-    _autoStopTimer = Timer(const Duration(seconds: _maxRecordSeconds), () {
-      _stopRecording();
-    });
   }
 
   Future<void> _stopRecording() async {
@@ -156,17 +164,25 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     _autoStopTimer = null;
     final recorder = _recorder;
     if (recorder == null || _rec != RecordState.recording) return;
-    final path = await recorder.stop();
-    if (!mounted) return;
-    if (path == null) {
+    try {
+      final path = await recorder.stop();
+      if (!mounted) return;
+      if (path == null) {
+        setState(() {
+          _rec = RecordState.error;
+          _recordError = 'Recording failed. Please try again.';
+        });
+        return;
+      }
+      setState(() => _rec = RecordState.transcribing);
+      await _uploadAndTranscribe(File(path));
+    } catch (_) {
+      if (!mounted) return;
       setState(() {
         _rec = RecordState.error;
-        _recordError = 'Recording failed. Please try again.';
+        _recordError = 'Failed to stop recording. Please try again.';
       });
-      return;
     }
-    setState(() => _rec = RecordState.transcribing);
-    await _uploadAndTranscribe(File(path));
   }
 
   Future<void> _uploadAndTranscribe(File file) async {
