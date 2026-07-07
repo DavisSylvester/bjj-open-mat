@@ -7,7 +7,7 @@ import '../../../shared/widgets/empty_state.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
-import '../../../core/location/location_service.dart';
+import '../../../core/location/location_controller.dart';
 import '../../../shared/widgets/gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../open_mats/models/open_mat.dart';
@@ -47,7 +47,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   void initState() {
     super.initState();
     _seedFromPreferences();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _useGps());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initGps());
+  }
+
+  /// Seed lat/lng from the shared location controller. Uses [ensure] so it
+  /// reuses the GPS fix Home already captured (no duplicate fetch).
+  Future<void> _initGps() async {
+    await ref.read(locationControllerProvider.notifier).ensure();
+    final s = ref.read(locationControllerProvider);
+    if (!mounted || !s.hasCoords) return;
+    setState(() {
+      _gpsLat = s.lat;
+      _gpsLng = s.lng;
+      _locationLabel = s.label;
+    });
+    _rebuildQuery();
   }
 
   /// Seed the initial "When", "Within", and gi-type from the user's saved
@@ -207,21 +221,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Future<void> _useGps() async {
     _debounce?.cancel();
-    final loc = await ref.read(locationServiceProvider).current();
+    await ref.read(locationControllerProvider.notifier).refresh();
     if (!mounted) return;
-    if (loc == null) {
+    final s = ref.read(locationControllerProvider);
+    if (!s.hasCoords) {
       // Never fail silently — tell the user why and offer the ZIP fallback.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Location unavailable. Turn on location and allow the permission, or search by ZIP.')),
       );
       return;
     }
-    _gpsLat = loc.latitude;
-    _gpsLng = loc.longitude;
+    _gpsLat = s.lat;
+    _gpsLng = s.lng;
+    _locationLabel = s.label;
     _zipCtrl.clear();
     _rebuildQuery();
-    final rg = await ref.read(geoRepositoryProvider).reverse(loc.latitude, loc.longitude);
-    if (mounted && rg != null) setState(() => _locationLabel = rg.label);
   }
 
   /// ZIP field changes: debounce, refresh results, and resolve the ZIP to a
@@ -323,6 +337,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Widget _buildGlass(AppTokens t) {
     final results = ref.watch(searchResultsProvider(_query));
+    final locStatus = ref.watch(locationControllerProvider).status;
     final whenOptions = _whenOptions(t);
     final filters = [
       (id: 'gi', label: 'Gi', color: t.gi),
@@ -383,7 +398,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: Row(children: [
-                        Icon(LucideIcons.locateFixed, size: 13, color: t.primary),
+                        if (locStatus == LocationStatus.loading)
+                          SizedBox(
+                            width: 13,
+                            height: 13,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: t.primary),
+                          )
+                        else
+                          Icon(LucideIcons.locateFixed, size: 13, color: t.primary),
                         const SizedBox(width: 4),
                         Text(_locationLabel ?? 'GPS', style: t.miniStyle.copyWith(color: t.primary, fontSize: 10)),
                       ]),
