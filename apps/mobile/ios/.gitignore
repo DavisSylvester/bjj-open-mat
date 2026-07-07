@@ -20,6 +20,8 @@ Flutter/Flutter.framework
 Flutter/Flutter.podspec
 Flutter/Generated.xcconfig
 Flutter/ephemeral/
+# Holds the iOS Google Maps API key (MAPS_API_KEY) — never commit.
+Flutter/Secrets.xcconfig
 Flutter/app.flx
 Flutter/app.zip
 Flutter/flutter_assets/
