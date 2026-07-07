@@ -12,6 +12,13 @@ const String _auth0Domain = String.fromEnvironment('AUTH0_DOMAIN', defaultValue:
 const String _auth0ClientId = String.fromEnvironment('AUTH0_CLIENT_ID', defaultValue: 'your-client-id');
 const String _auth0Audience = String.fromEnvironment('AUTH0_AUDIENCE', defaultValue: '');
 const Set<String> _auth0Scopes = {'openid', 'profile', 'email', 'offline_access'};
+// Custom callback scheme for NATIVE login/logout. Must match the Android
+// `auth0Scheme` manifestPlaceholder (app/build.gradle.kts) and the iOS URL type,
+// and be registered in Auth0 Allowed Callback/Logout URLs as
+// `<scheme>://<AUTH0_DOMAIN>/{android|ios}/<bundleId>/callback`. Using a custom
+// scheme (not https App Links) makes the redirect deep-link back into the app
+// without domain verification — reliable under Play App Signing.
+const String _auth0Scheme = 'com.davissylvester.bjjopenmat';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   final apiClient = ref.read(apiClientProvider);
@@ -348,7 +355,7 @@ class AuthService {
       );
       return null;
     }
-    final credentials = await _auth0.webAuthentication().login(
+    final credentials = await _auth0.webAuthentication(scheme: _auth0Scheme).login(
       audience: _auth0Audience.isEmpty ? null : _auth0Audience,
       parameters: params,
       scopes: _auth0Scopes,
@@ -394,7 +401,7 @@ class AuthService {
     if (kIsWeb) {
       await _auth0Web!.logout(returnToUrl: Uri.base.origin);
     } else {
-      await _auth0.webAuthentication().logout();
+      await _auth0.webAuthentication(scheme: _auth0Scheme).logout();
       await _storage.deleteAll();
     }
     await apiClient.clearToken();

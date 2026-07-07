@@ -46,7 +46,12 @@ android {
         // Overridable at build time: -Pauth0Domain=... -PmapsApiKey=... (CI passes these from secrets).
         manifestPlaceholders["auth0Domain"] =
             (project.findProperty("auth0Domain") as String?) ?: System.getenv("AUTH0_DOMAIN") ?: "your-tenant.auth0.com"
-        manifestPlaceholders["auth0Scheme"] = "https"
+        // Custom-scheme Auth0 callback (not https App Links): Android always
+        // routes <applicationId>:// deep links back to the app, so login works
+        // without domain verification / SHA-256 — robust under Play App Signing.
+        // Auth0 Allowed Callback/Logout URLs must include:
+        //   com.davissylvester.bjjopenmat://<AUTH0_DOMAIN>/android/com.davissylvester.bjjopenmat/callback
+        manifestPlaceholders["auth0Scheme"] = "com.davissylvester.bjjopenmat"
         manifestPlaceholders["mapsApiKey"] =
             (project.findProperty("mapsApiKey") as String?) ?: System.getenv("MAPS_API_KEY") ?: ""
     }
