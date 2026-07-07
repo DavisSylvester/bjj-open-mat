@@ -14,31 +14,44 @@
 
 Root cause (verified by reading `apps/api/src/container.mts:73` + `report.facade.mts:60`): the container builds `transcription` only when `env.openaiApiKey` is set; otherwise `transcribe()` throws `AppError("service_unavailable", "Voice transcription is not configured")`. The key is absent from `apps/api/.env` and the prod secret, so every transcribe call fails → the client shows "Could not transcribe your recording." (`report_screen.dart:199`).
 
-### Task A1: Provision `OPENAI_API_KEY` (local + prod)
+### Task A1: Source `OPENAI_API_KEY` from GitHub secrets (CI/prod) + local env var (dev)
+
+Key facts (verified):
+- `OPENAI_API_KEY` is already a **GitHub Actions secret** (`gh secret list` shows it). It is **not** committed anywhere and is **not** in the local shell env.
+- `env.mts:22` declares `OPENAI_API_KEY: t.Optional(t.String())` → `env.mts:60` (`openaiApiKey`); `container.mts:73` builds `WhisperTranscriptionService` only when it's set.
+- The deployed Lambda loads config via `config/secrets.mts:resolveEnv()`, which fetches the `bjj-open-mat/app` secret (`APP_SECRET_ARN`) and overlays its JSON onto `process.env`. `resolveEnv` returns `{ ...process.env, ...secretOverrides }`, so a value present in `process.env` (a Lambda env var) is used **unless** the secret also defines that key.
+- `.github/workflows/api-deploy.yml` currently injects **no** env/secrets — so the GitHub secret does not reach the Lambda today.
+
+**Do NOT commit the key or paste it into the plan / `.env` in git.** Local dev reads it from an env var; CI passes the GitHub secret to the deploy.
 
 **Files:**
-- Modify: `apps/api/.env` (local, gitignored)
-- External: AWS Secrets Manager `bjj-open-mat/app`
+- Modify: `.github/workflows/api-deploy.yml`
+- Possibly modify: `infra/` CDK stack (only if setting the Lambda env var via CDK — see Step 3 option B)
 
-- [ ] **Step 1: Add the key locally.** Append `OPENAI_API_KEY=sk-...` (user-supplied) to `apps/api/.env`. Confirm `env.mts:22` already declares `OPENAI_API_KEY: t.Optional(t.String())` and maps it at `env.mts:60` (`openaiApiKey`).
-
-- [ ] **Step 2: Boot the local API and confirm transcription is enabled.**
-
-Run (kill any stale server on 3100 first — see memory `windows-bun-server-port-collision`):
+- [ ] **Step 1: Local dev — use an env var, not a committed file.** Developer exports it before booting the API:
 ```
+export OPENAI_API_KEY=sk-...   # or add to the gitignored apps/api/.env (never committed)
 cd apps/api && bun src/index.mts
 ```
-Expected: server starts on `:3100` with no "transcription disabled" path; `container.mts` builds `WhisperTranscriptionService`.
+`resolveEnv()` no-ops locally (no `APP_SECRET_ARN`) and returns `process.env`, so the exported var is picked up. Confirm the boot log shows Whisper enabled (no "transcription disabled" path).
 
-- [ ] **Step 3: Add the key to the prod secret** (user action; the API picks it up on next cold start):
-```
-aws secretsmanager get-secret-value --secret-id bjj-open-mat/app --region us-east-1 --query SecretString --output text
-# merge OPENAI_API_KEY into the JSON, then:
-aws secretsmanager put-secret-value --secret-id bjj-open-mat/app --region us-east-1 --secret-string '<merged-json>'
-```
-Note in the plan output that this requires valid AWS credentials (the assistant session's were invalid; user runs this or provides creds).
+- [ ] **Step 2: CI/prod — pass the GitHub secret through the deploy.** Add `OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}` to the deploy job's `env:` in `api-deploy.yml`, then propagate it to the Lambda via **one** of:
+  - **Option A (keeps the AWS-secret pattern):** after `cdk deploy`, merge the key into the app secret so `resolveEnv` overlays it:
+    ```yaml
+    - name: Sync OpenAI key into app secret
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        CUR=$(aws secretsmanager get-secret-value --secret-id bjj-open-mat/app --region us-east-1 --query SecretString --output text)
+        NEW=$(printf '%s' "$CUR" | jq --arg k "$OPENAI_API_KEY" '. + {OPENAI_API_KEY:$k}')
+        aws secretsmanager put-secret-value --secret-id bjj-open-mat/app --region us-east-1 --secret-string "$NEW"
+    ```
+    Requires the CI OIDC role to have `secretsmanager:GetSecretValue` + `PutSecretValue` on that secret.
+  - **Option B (CDK-managed Lambda env var):** pass `-c openaiApiKey=$OPENAI_API_KEY` to `cdk deploy` and have the stack add it to the Lambda's `environment`. Simpler IAM, but the value lands in the CloudFormation template/Lambda config. Because the app secret does **not** currently define `OPENAI_API_KEY`, the overlay won't clobber the env var — so this works. Prefer Option A to keep secrets out of templates.
 
-- [ ] **Step 4: Verify end-to-end** once deployed: record on the Report page → transcript appears in the description field. (Manual, after A1/Part-C emulator pass.)
+- [ ] **Step 3: Verify enablement in prod** after the deploy: `curl` a transcribe call is auth-gated, so verify indirectly via the record→transcribe flow on-device (Part C, Step C2/3), or add a temporary boot log line confirming `transcription` is non-null.
+
+- [ ] **Step 4: Commit** the workflow change: `git commit -m "ci(api): pass OPENAI_API_KEY from GitHub secret to the deployed API"`.
 
 ### Task A2: Distinguish "not configured" from a real transcription failure (client polish)
 
