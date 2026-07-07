@@ -15,9 +15,21 @@ class ProfileSetupScreen extends ConsumerStatefulWidget {
 class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
   final _nameController = TextEditingController();
   String _selectedBelt = 'white';
+  DateTime? _birthday;
+  bool _social = false;
   bool _isSaving = false;
 
   static const _beltRanks = ['white', 'blue', 'purple', 'brown', 'black'];
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(authStateProvider).user;
+    // Social logins get their display name from the provider — pre-fill it and
+    // disable editing. Only the belt/birthday are collected here for them.
+    _social = user?.isSocial ?? false;
+    _nameController.text = user?.displayName ?? '';
+  }
 
   @override
   void dispose() {
@@ -25,13 +37,31 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     super.dispose();
   }
 
+  String? get _birthdayIso => _birthday == null
+      ? null
+      : '${_birthday!.year.toString().padLeft(4, '0')}-${_birthday!.month.toString().padLeft(2, '0')}-${_birthday!.day.toString().padLeft(2, '0')}';
+
+  Future<void> _pickBirthday() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _birthday ?? DateTime(now.year - 25, 1, 1),
+      firstDate: DateTime(now.year - 100),
+      lastDate: now,
+    );
+    if (picked != null) setState(() => _birthday = picked);
+  }
+
   Future<void> _save() async {
-    if (_nameController.text.trim().isEmpty) return;
+    // Social users can't edit the display name (it's provider-owned), so don't
+    // block them on it; email/password users must supply one.
+    if (!_social && _nameController.text.trim().isEmpty) return;
     setState(() => _isSaving = true);
 
     await ref.read(authStateProvider.notifier).updateProfile({
-      'displayName': _nameController.text.trim(),
+      if (!_social) 'displayName': _nameController.text.trim(),
       'beltRank': _selectedBelt,
+      if (_birthdayIso != null) 'birthday': _birthdayIso,
     });
 
     if (!mounted) return;
@@ -54,8 +84,26 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
               const SizedBox(height: StitchTokens.sm),
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(hintText: 'Your name on the mat'),
+                enabled: !_social,
+                decoration: InputDecoration(
+                  hintText: 'Your name on the mat',
+                  helperText: _social ? 'From your sign-in account' : null,
+                ),
                 textCapitalization: TextCapitalization.words,
+              ),
+              const SizedBox(height: StitchTokens.lg),
+
+              Text('Birthday', style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: StitchTokens.sm),
+              InkWell(
+                onTap: _pickBirthday,
+                child: InputDecorator(
+                  decoration: const InputDecoration(),
+                  child: Text(
+                    _birthdayIso ?? 'Select your birthday',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
               ),
               const SizedBox(height: StitchTokens.lg),
 

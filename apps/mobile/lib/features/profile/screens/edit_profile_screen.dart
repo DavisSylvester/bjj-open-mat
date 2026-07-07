@@ -170,18 +170,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               children: [
                 _sectionCard(t, 'About', [
                   // Display name comes from the sign-in provider for social
-                  // users (re-synced each login), so it's shown only for
-                  // email/password accounts.
-                  if (!social) ...[
-                    _fieldLabel(t, 'Display Name'),
-                    const SizedBox(height: 6),
-                    TextField(
-                      controller: _nameController,
-                      style: t.bodyStyle,
-                      decoration: glassInput(t, 'Your name'),
+                  // users (re-synced each login), so it's shown but disabled.
+                  _fieldLabel(t, 'Display Name'),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: _nameController,
+                    enabled: !social,
+                    style: t.bodyStyle,
+                    decoration: glassInput(t, 'Your name').copyWith(
+                      helperText: social ? 'Managed by your sign-in provider' : null,
                     ),
-                    const SizedBox(height: 16),
-                  ],
+                  ),
+                  const SizedBox(height: 16),
                   _fieldLabel(t, 'Bio'),
                   const SizedBox(height: 6),
                   TextField(

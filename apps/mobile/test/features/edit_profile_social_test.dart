@@ -37,7 +37,12 @@ void main() {
     expect(find.text('WEIGHT'), findsOneWidget);
     expect(find.text('BELT RANK'), findsOneWidget);
 
-    // Display name stays provider-owned for social users.
-    expect(find.text('DISPLAY NAME'), findsNothing);
+    // Display name is shown but disabled (provider-owned) for social users.
+    expect(find.text('DISPLAY NAME'), findsOneWidget);
+    expect(find.text('Managed by your sign-in provider'), findsOneWidget);
+    final nameField = tester.widget<TextField>(
+      find.ancestor(of: find.text('Google User'), matching: find.byType(TextField)),
+    );
+    expect(nameField.enabled, isFalse);
   });
 }
