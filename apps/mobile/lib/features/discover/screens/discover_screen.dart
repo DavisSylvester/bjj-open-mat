@@ -221,7 +221,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                               width: double.infinity,
                               child: SessionRow(
                                 session: _toRow(mat),
-                                onTap: () => context.go('/open-mat/${mat.id}'),
+                                onTap: () => context.push('/open-mat/${mat.id}'),
                               ),
                             ),
                             const SizedBox(height: 14),
@@ -249,7 +249,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       width: double.infinity,
                       child: SessionRow(
                         session: _toRow(list[i]),
-                        onTap: () => context.go('/open-mat/${list[i].id}'),
+                        onTap: () => context.push('/open-mat/${list[i].id}'),
                       ),
                     ),
                   );

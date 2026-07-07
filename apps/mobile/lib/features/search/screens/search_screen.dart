@@ -616,7 +616,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         for (final mat in list) ...[
                           SessionRow(
                             session: _toRow(mat),
-                            onTap: () => context.go('/open-mat/${mat.id}'),
+                            onTap: () => context.push('/open-mat/${mat.id}'),
                           ),
                           const SizedBox(height: 12),
                         ],
@@ -641,7 +641,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (_, i) => SessionRow(
                     session: _toRow(list[i]),
-                    onTap: () => context.go('/open-mat/${list[i].id}'),
+                    onTap: () => context.push('/open-mat/${list[i].id}'),
                   ),
                 );
               },

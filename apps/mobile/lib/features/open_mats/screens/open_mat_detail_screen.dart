@@ -63,7 +63,7 @@ class _GlassDetail extends StatelessWidget {
           pinned: true,
           backgroundColor: t.bg2,
           leading: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () => context.canPop() ? context.pop() : context.go('/'),
             child: const Icon(LucideIcons.arrowLeft, color: Colors.white),
           ),
           flexibleSpace: FlexibleSpaceBar(
@@ -168,7 +168,7 @@ class _GlassDetail extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ElevatedButton(
-            onPressed: () => context.go('/open-mat/${mat.id}/checkin'),
+            onPressed: () => context.push('/open-mat/${mat.id}/checkin'),
             style: ElevatedButton.styleFrom(
               backgroundColor: t.primary,
               minimumSize: const Size.fromHeight(54),
