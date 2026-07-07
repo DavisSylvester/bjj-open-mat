@@ -11,7 +11,7 @@ Follow-ups deferred after shipping the mobile APK + AWS API deploy + custom doma
 
 ## New follow-ups from the 2026-07-06 session
 - [ ] **Activate Report→GitHub in prod.** Add a `repo`-scoped PAT as `GITHUB_TOKEN` (and optionally `GITHUB_REPO`) to the `bjj-open-mat/app` secret (`aws secretsmanager put-secret-value ...`); the API picks it up on next cold start. Until then reports save to Mongo only. Confirm the repo has `bug` and `enhancement` labels (GitHub defaults).
-- [ ] **GPS chip `getLastKnownPosition` fallback.** The search GPS chip can hang when `getCurrentPosition(high, 8s)` times out waiting for a fresh fix (emulator returns null). Add a `getLastKnownPosition()` fallback so the chip resolves to the last known coords. (Reported earlier; not yet implemented.)
+- [x] **GPS chip fixed** (2026-07-07). Root cause was missing `ACCESS_FINE/COARSE_LOCATION` in AndroidManifest — the runtime permission auto-denied, so `current()` returned null and the chip silently no-op'd. Declared both permissions; also switched capture to medium accuracy + 10s, added a `getLastKnownPosition()` fallback on timeout, and a SnackBar on failure. First open now prompts for location and auto-searches nearby (v9).
 - [ ] **Emulator smoke-test the new UI** on a fresh build: Home/Find/Profile/Report nav, My Training under Profile, Report form submit, belt-icon paged attendee grid, "Save as default" search prefs.
 
 ## Infra / security
