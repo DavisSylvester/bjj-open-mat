@@ -37,3 +37,17 @@ jobs:
       - name: Deploy API stack
         working-directory: infra
         run: npx cdk deploy BjjApiStack --require-approval never
+
+      # Keep the OpenAI key (voice transcription) in the app secret that the
+      # Lambda overlays onto process.env at cold start (config/secrets.mts).
+      # Sourced from the GitHub secret so it is never committed. Skipped if the
+      # secret isn't configured. Requires secretsmanager Get/PutSecretValue on
+      # the bjj-github-deploy role.
+      - name: Sync OPENAI_API_KEY into app secret
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then echo "OPENAI_API_KEY not set; skipping"; exit 0; fi
+          CUR=$(aws secretsmanager get-secret-value --secret-id bjj-open-mat/app --region us-east-1 --query SecretString --output text)
+          NEW=$(printf '%s' "$CUR" | jq --arg k "$OPENAI_API_KEY" '. + {OPENAI_API_KEY: $k}')
+          aws secretsmanager put-secret-value --secret-id bjj-open-mat/app --region us-east-1 --secret-string "$NEW"
