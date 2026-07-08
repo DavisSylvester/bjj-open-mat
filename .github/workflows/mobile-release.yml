@@ -187,7 +187,7 @@ jobs:
             <key>teamID</key><string>${{ secrets.IOS_TEAM_ID }}</string>
             <key>provisioningProfiles</key>
             <dict>
-              <key>com.davissylvester.bjjOpenMat</key><string>$PROFILE_NAME</string>
+              <key>com.davissylvester.bjjopenmat</key><string>$PROFILE_NAME</string>
             </dict>
           </dict>
           </plist>
