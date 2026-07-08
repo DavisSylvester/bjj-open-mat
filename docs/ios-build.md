@@ -7,14 +7,14 @@ The repo is developed on Windows, which cannot compile iOS. These steps run on a
 1. `cd apps/mobile`
 2. `flutter pub get`
 3. `cd ios && pod install && cd ..`
-4. Open `ios/Runner.xcworkspace` in Xcode → select the **Runner** target → **Signing & Capabilities** → set your Apple **Team** (bundle id `com.davissylvester.bjjOpenMat`).
+4. Open `ios/Runner.xcworkspace` in Xcode → select the **Runner** target → **Signing & Capabilities** → set your Apple **Team** (bundle id `com.davissylvester.bjjopenmat`).
 
 ## Auth0 (already configured — verify)
 
 The Native Auth0 app must include these iOS URLs (Allowed Callback + Logout):
 
 ```
-com.davissylvester.bjjOpenMat://dev-vhvwupdn45hk7gct.us.auth0.com/ios/com.davissylvester.bjjOpenMat/callback
+com.davissylvester.bjjopenmat://dev-vhvwupdn45hk7gct.us.auth0.com/ios/com.davissylvester.bjjopenmat/callback
 ```
 
 ## Run on simulator
