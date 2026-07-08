@@ -16,31 +16,39 @@ class LocationState {
 }
 
 class LocationController extends Notifier<LocationState> {
+  // Tracks an in-flight fetch so concurrent callers (Home + Find) share the
+  // same capture and can await its completion instead of racing a half-done
+  // state — awaiting ensure()/refresh() always resolves to the final state.
+  Future<void>? _inflight;
+
   @override
   LocationState build() => const LocationState();
 
-  /// Fetch coords once. No-op if already loading or already resolved (ready).
-  Future<void> ensure() async {
-    if (state.status == LocationStatus.loading || state.status == LocationStatus.ready) return;
-    await _fetch();
+  /// Fetch coords once. Reuses (and awaits) an in-flight fetch; a completed
+  /// `ready` state is a fast no-op.
+  Future<void> ensure() {
+    if (state.status == LocationStatus.ready) return Future<void>.value();
+    return _inflight ??= _fetch();
   }
 
-  /// Force a fresh capture (GPS chip / map-pin tap). No-op while a fetch is in flight.
-  Future<void> refresh() async {
-    if (state.status == LocationStatus.loading) return;
-    await _fetch();
-  }
+  /// Force a fresh capture (GPS chip / map-pin tap). Joins an in-flight fetch
+  /// rather than starting a duplicate.
+  Future<void> refresh() => _inflight ??= _fetch();
 
   Future<void> _fetch() async {
     state = state.copyWith(status: LocationStatus.loading);
-    final loc = await ref.read(locationServiceProvider).current();
-    if (loc == null) {
-      state = const LocationState(status: LocationStatus.unavailable);
-      return;
+    try {
+      final loc = await ref.read(locationServiceProvider).current();
+      if (loc == null) {
+        state = const LocationState(status: LocationStatus.unavailable);
+        return;
+      }
+      state = LocationState(status: LocationStatus.ready, lat: loc.latitude, lng: loc.longitude);
+      final rg = await ref.read(geoRepositoryProvider).reverse(loc.latitude, loc.longitude);
+      if (rg != null) state = state.copyWith(label: rg.label);
+    } finally {
+      _inflight = null;
     }
-    state = LocationState(status: LocationStatus.ready, lat: loc.latitude, lng: loc.longitude);
-    final rg = await ref.read(geoRepositoryProvider).reverse(loc.latitude, loc.longitude);
-    if (rg != null) state = state.copyWith(label: rg.label);
   }
 }
 

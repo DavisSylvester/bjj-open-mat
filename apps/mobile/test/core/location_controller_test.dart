@@ -74,4 +74,23 @@ void main() {
 
     expect(loc.calls, 2);
   });
+
+  test('concurrent ensure() calls share one in-flight fetch and both see coords', () async {
+    final loc = _FakeLocationService();
+    final container = ProviderContainer(overrides: [
+      locationServiceProvider.overrideWithValue(loc),
+      geoRepositoryProvider.overrideWithValue(_FakeGeo()),
+    ]);
+    addTearDown(container.dispose);
+
+    // Simulates Home + Find both calling ensure() before the first resolves.
+    final notifier = container.read(locationControllerProvider.notifier);
+    await Future.wait([notifier.ensure(), notifier.ensure()]);
+
+    final state = container.read(locationControllerProvider);
+    expect(loc.calls, 1); // joined, not duplicated
+    expect(state.status, LocationStatus.ready);
+    expect(state.hasCoords, isTrue);
+    expect(state.label, 'Frisco, TX');
+  });
 }
