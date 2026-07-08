@@ -211,13 +211,31 @@ jobs:
             --dart-define=AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }} \
             --dart-define=AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}
 
+      # `flutter build ipa` names the file after the app (may contain spaces)
+      # and the upload action does not glob-expand its app-path. Resolve the
+      # real artifact and rename it to a deterministic, space-free path.
+      - name: Locate IPA
+        id: ipa
+        run: |
+          SRC=$(ls build/ios/ipa/*.ipa | head -1)
+          DEST="$GITHUB_WORKSPACE/apps/mobile/build/ios/ipa/app-release.ipa"
+          mv "$SRC" "$DEST"
+          echo "path=$DEST" >> "$GITHUB_OUTPUT"
+          echo "Resolved IPA: $DEST"
+
       - name: Decode App Store Connect API key
         env:
           ASC_KEY_B64: ${{ secrets.ASC_API_KEY_P8_BASE64 }}
         run: |
+          KEY="$(echo "$ASC_KEY_B64" | base64 --decode)"
+          # Values written to GITHUB_ENV are NOT auto-masked; redact every line
+          # so the private key never appears in later steps' env dumps.
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$KEY"
           {
             echo 'ASC_API_KEY<<__ASC_EOF__'
-            echo "$ASC_KEY_B64" | base64 --decode
+            echo "$KEY"
             echo ''
             echo '__ASC_EOF__'
           } >> "$GITHUB_ENV"
@@ -225,7 +243,7 @@ jobs:
       - name: Upload to TestFlight
         uses: apple-actions/upload-testflight-build@v3
         with:
-          app-path: apps/mobile/build/ios/ipa/*.ipa
+          app-path: ${{ steps.ipa.outputs.path }}
           issuer-id: ${{ secrets.ASC_ISSUER_ID }}
           api-key-id: ${{ secrets.ASC_KEY_ID }}
           api-private-key: ${{ env.ASC_API_KEY }}
