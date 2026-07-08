@@ -127,12 +127,19 @@ jobs:
 
   ios:
     needs: version
-    runs-on: macos-14
+    runs-on: macos-15
     defaults:
       run:
         working-directory: apps/mobile
     steps:
       - uses: actions/checkout@v4
+
+      # Auth0 2.18.0 (DPoP) requires a modern Swift toolchain; pin the newest
+      # stable Xcode so the pod compiles.
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - uses: subosito/flutter-action@v2
         with:
