@@ -47,7 +47,10 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
+          set -euo pipefail
           if [ -z "$OPENAI_API_KEY" ]; then echo "OPENAI_API_KEY not set; skipping"; exit 0; fi
           CUR=$(aws secretsmanager get-secret-value --secret-id bjj-open-mat/app --region us-east-1 --query SecretString --output text)
+          # jq failure (e.g. malformed secret) aborts the step via pipefail rather
+          # than writing an empty string over the secret.
           NEW=$(printf '%s' "$CUR" | jq --arg k "$OPENAI_API_KEY" '. + {OPENAI_API_KEY: $k}')
           aws secretsmanager put-secret-value --secret-id bjj-open-mat/app --region us-east-1 --secret-string "$NEW"
