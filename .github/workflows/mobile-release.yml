@@ -217,7 +217,8 @@ jobs:
         run: |
           {
             echo 'ASC_API_KEY<<__ASC_EOF__'
-            echo "$ASC_KEY_B64" | base64 -d
+            echo "$ASC_KEY_B64" | base64 --decode
+            echo ''
             echo '__ASC_EOF__'
           } >> "$GITHUB_ENV"
 
