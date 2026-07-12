@@ -12,12 +12,46 @@ the existing API, persist to MongoDB, and trigger a confirmation email via Amazo
 site is deployed to `bjj-open-mat.dsylvester.ai` (Hostinger DNS + AWS S3/CloudFront). Pixel
 accuracy is verified with Playwright.
 
+## Design revision (2026-07-12) — actual design received
+
+The `DesignSync` login path proved unreliable; the user instead provided the Claude Design
+**handoff bundle** `Nocturne gym app design-handoff.zip`, extracted to
+`website/reference/_handoff/`. The authoritative pixel-perfect target is
+`.../project/BJJ Open Mat Landing.dc.html` plus its design system
+`.../project/_ds/nocturne-8bf90f58-.../styles.css`. This design differs substantially from
+the light "liquid glass" concept the original spec assumed. The real design:
+
+- **Theme:** dark "Nocturne" — `--color-bg #161826`, `--color-surface #232532`,
+  `--color-text #e9e9ed`, blurple accent `--color-accent #9184d9`, section band
+  `--color-section #262a60`. Page chrome uses **Inter** (`--font-heading`/`--font-body`,
+  weight 500). The embedded phone mockups use **Barlow** + **Barlow Condensed** and a
+  light "liquid glass" palette internal to the app UI (accents `#E94560` red, `#9C27B0`
+  purple, `#2196F3` blue, `#16C79A` green, `#FF9800` orange).
+- **Sections (top→bottom):** sticky-feel nav → hero (headline + email→*Join the founding
+  list* + microcopy + "I own a gym → claim your mat" link + **interactive Android phone
+  demo**) → full-bleed stat band (100 mi · 1 tap · Gi·No-Gi · $0) → How it works (3 numbered
+  rows) → Gym-owner (copy + *Register your gym — free* / *See owner tools* buttons + a second
+  "Post Session" phone mockup) → close/join (email again) → footer. **No FAQ or feature-grid
+  sections** (drop them from the original plan).
+- **Interactive phone demo (user decision):** reproduce **fully interactive** — port the
+  prototype's `DCLogic` state machine to an Angular component: screens home ↔ detail ↔
+  check-in ↔ profile, RSVP toggle, star-rating rows, and a home/profile bottom nav. Default
+  screen on load is `home`.
+- **Gym-lead capture (user decision):** the *Register your gym — free* button routes to a
+  **dedicated `/register-gym` page** (Nocturne-styled) hosting the full gym-lead form
+  (gym name, owner email, optional owner name/city/state/message) → `submitGymLead`. The
+  landing page itself has no inline gym form.
+- **Fonts:** replace the earlier "Plus Jakarta Sans" assumption with Inter (chrome) +
+  Barlow/Barlow Condensed (phone). Load via Google Fonts as the prototype does.
+
+The backend (Phase 1, complete) is unaffected: both waitlist email inputs call
+`joinWaitlist`; the `/register-gym` form calls `submitGymLead`.
+
 ## Decisions (resolved during brainstorming)
 
 - **Design source:** Claude Design project `45ac103e-5117-445c-9d19-85dba1f3474f`, file
-  `BJJ Open Mat Landing.dc.html`. This is the pixel-perfect target. Fetching it requires a
-  claude.ai login (`/login` → "Claude account with subscription") for the design tool
-  (`DesignSync`).
+  `BJJ Open Mat Landing.dc.html` — now delivered via the handoff bundle above (superseded
+  the `DesignSync` login fetch).
 - **Endpoint model:** Two dedicated **public** lead endpoints in `apps/api`
   (`POST /api/v1/waitlist`, `POST /api/v1/gym-leads`). No Auth0 on the website. The existing
   `POST /api/v1/gyms` (Auth0 owner-only) is untouched; real gym records are still created

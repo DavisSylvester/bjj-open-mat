@@ -42,3 +42,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Design handoff — keep source (html/css/js/md), ignore rasters
+reference/_handoff/**/*.png
+reference/_handoff/**/.thumbnail
