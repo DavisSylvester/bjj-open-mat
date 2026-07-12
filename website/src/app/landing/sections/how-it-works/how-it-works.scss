@@ -1,0 +1,54 @@
+// Responsive overrides only — desktop 3-col rows are defined inline and stay
+// untouched at >=1024px. The fading divider rules are left alone.
+
+// Tablet: collapse to [number | text] two-column; title + body stack in col 2.
+@media (max-width: 1023px) {
+  .how {
+    padding: 72px 0 56px !important;
+  }
+
+  .how-row {
+    grid-template-columns: minmax(40px, 56px) minmax(0, 1fr) !important;
+    gap: 8px 24px !important;
+    padding: 32px 0 !important;
+  }
+
+  // number: col 1, spans both rows and top-aligns.
+  .how-num {
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  // title: col 2, row 1.
+  .how-title {
+    grid-column: 2;
+  }
+
+  // body: col 2, row 2 — full remaining width, no clamp on ch that overflows.
+  .how-body {
+    grid-column: 2;
+    max-width: none !important;
+  }
+}
+
+// Phone: number small above title, body full width beneath.
+@media (max-width: 599px) {
+  .how-row {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+    padding: 28px 0 !important;
+  }
+
+  .how-num {
+    grid-row: auto;
+  }
+
+  .how-title,
+  .how-body {
+    grid-column: 1;
+  }
+
+  .how-title {
+    font-size: 21px !important;
+  }
+}

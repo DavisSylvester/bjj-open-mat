@@ -1,17 +1,17 @@
 <!-- gym owners -->
-<section id="gyms" style="display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: center; padding: 40px 0 84px">
-  <div>
+<section id="gyms" class="gym-owner" style="display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: center; padding: 40px 0 84px">
+  <div class="gym-copy">
     <span style="display: block; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 20px">For gym owners</span>
     <h2 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 32px; line-height: 1.3; letter-spacing: -0.012em; margin: 0; color: var(--color-text)">Put your open mat on the map. Registering is free — being found is free.</h2>
     <p style="font-size: 15.5px; line-height: 1.7; color: color-mix(in srgb, var(--color-text) 78%, transparent); margin: 20px 0 0; max-width: 48ch">Your open mat is one of your best tools for community and new members — if people know it exists. Registering your gym costs nothing, and it's free for practitioners to find you. Travelers and locals discover your mat, RSVP, and show up. You verify your own sessions and see expected attendance before the doors open.</p>
     <p style="font-size: 14px; line-height: 1.6; color: var(--color-accent-300); margin: 16px 0 0; max-width: 48ch">First 100 gyms get the Founding Gym badge and a featured spotlight, forever.</p>
-    <div style="display: flex; gap: var(--space-3); margin-top: 28px">
+    <div class="gym-actions" style="display: flex; gap: var(--space-3); margin-top: 28px">
       <a routerLink="/register-gym" class="btn btn-primary" style="white-space: nowrap">Register your gym — free</a>
       <a href="#how" class="btn btn-ghost" style="white-space: nowrap">See owner tools</a>
     </div>
   </div>
   <!-- owner phone: post a session -->
-  <div style="display: flex; justify-content: center">
+  <div class="gym-phone" style="display: flex; justify-content: center">
     <app-phone-demo variant="owner" />
   </div>
 </section>

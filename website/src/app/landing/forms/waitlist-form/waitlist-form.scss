@@ -18,3 +18,19 @@
   color: var(--color-danger);
   margin: 12px 0 0;
 }
+
+// On very small screens let the email input + button wrap so the button
+// never gets crushed. The button already has white-space: nowrap.
+@media (max-width: 599px) {
+  .wl-row {
+    flex-wrap: wrap;
+  }
+
+  .wl-row .input {
+    flex: 1 1 100%;
+  }
+
+  .wl-row .btn {
+    flex: 1 1 auto;
+  }
+}

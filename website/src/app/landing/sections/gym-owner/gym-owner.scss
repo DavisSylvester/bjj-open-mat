@@ -1,0 +1,28 @@
+// Responsive overrides only — desktop 2-col layout is defined inline and stays
+// untouched at >=1024px.
+
+// Tablet + phone: single column, copy first (natural DOM order), phone below
+// and centered.
+@media (max-width: 1023px) {
+  .gym-owner {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+    padding: 32px 0 56px !important;
+  }
+
+  .gym-phone {
+    justify-content: center !important;
+  }
+}
+
+// Phone: let the two action buttons wrap cleanly instead of overflowing.
+@media (max-width: 599px) {
+  .gym-owner {
+    gap: 32px !important;
+    padding: 24px 0 40px !important;
+  }
+
+  .gym-actions {
+    flex-wrap: wrap !important;
+  }
+}

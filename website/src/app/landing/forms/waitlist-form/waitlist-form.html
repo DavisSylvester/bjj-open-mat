@@ -13,7 +13,7 @@
       [value]="hp()"
       (input)="hp.set($any($event.target).value)">
 
-    <div [style.max-width]="maxWidth()" style="display: flex; gap: var(--space-3); align-items: center; margin-top: 28px">
+    <div class="wl-row" [style.max-width]="maxWidth()" style="display: flex; gap: var(--space-3); align-items: center; margin-top: 28px">
       <input
         class="input"
         type="email"

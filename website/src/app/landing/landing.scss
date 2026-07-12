@@ -1,0 +1,16 @@
+// Responsive overrides only — the 1200px container + 48px gutters are defined
+// inline (pixel-matched prototype) and stay untouched at >=1024px.
+
+@media (max-width: 1023px) {
+  .container {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}

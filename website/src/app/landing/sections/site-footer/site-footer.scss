@@ -1,0 +1,8 @@
+// Responsive overrides only — footer links already wrap (flex-wrap: wrap).
+
+@media (max-width: 599px) {
+  .site-footer {
+    padding: 40px 0 !important;
+    gap: 14px 20px !important;
+  }
+}

@@ -54,3 +54,19 @@
   color: color-mix(in srgb, var(--color-text) 78%, transparent);
   margin: 18px 0 0;
 }
+
+@media (max-width: 1023px) {
+  .rg-nav {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 599px) {
+  .rg-nav {
+    padding: 16px;
+  }
+
+  .rg-main {
+    padding: 28px 16px 72px;
+  }
+}
