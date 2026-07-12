@@ -1,8 +1,41 @@
-<!-- Static email-capture stub. API wiring lands in Task 15. -->
-<div [style.max-width]="maxWidth()" style="display: flex; gap: var(--space-3); align-items: center; margin-top: 28px">
-  <input class="input" type="email" placeholder="you@email.com" aria-label="Email address" style="flex: 1">
-  <button type="button" class="btn btn-primary" style="min-height: 36px; white-space: nowrap">{{ label() }}</button>
-</div>
+<!-- Email-capture form wired to LeadApiService. -->
+@if (state() === 'success') {
+  <p class="wl-success" style="margin-top: 28px">You're on the list 🥋 Check your inbox.</p>
+} @else {
+  <form (submit)="$event.preventDefault(); submit()">
+    <!-- honeypot: hidden from users, catches bots -->
+    <input
+      class="hp"
+      type="text"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+      [value]="hp()"
+      (input)="hp.set($any($event.target).value)">
+
+    <div [style.max-width]="maxWidth()" style="display: flex; gap: var(--space-3); align-items: center; margin-top: 28px">
+      <input
+        class="input"
+        type="email"
+        required
+        placeholder="you@email.com"
+        aria-label="Email address"
+        style="flex: 1"
+        [value]="email()"
+        (input)="email.set($any($event.target).value)">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="min-height: 36px; white-space: nowrap"
+        [disabled]="state() === 'submitting'">{{ label() }}</button>
+    </div>
+
+    @if (state() === 'error') {
+      <p class="wl-error">Something went wrong — try again.</p>
+    }
+  </form>
+}
+
 @if (microcopy(); as micro) {
   <p style="font-size: 13px; line-height: 1.5; color: var(--color-neutral-500); margin: 12px 0 0">{{ micro }}</p>
 }

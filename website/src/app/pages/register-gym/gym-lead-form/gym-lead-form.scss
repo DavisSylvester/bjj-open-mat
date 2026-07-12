@@ -1,0 +1,39 @@
+.gl-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.gl-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.gl-row .field {
+  flex: 1;
+}
+
+.req {
+  color: var(--color-accent);
+}
+
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.gl-success {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-accent);
+}
+
+.gl-error {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e07a7a;
+  margin: 0;
+}

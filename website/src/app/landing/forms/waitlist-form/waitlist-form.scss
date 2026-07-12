@@ -1,0 +1,20 @@
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.wl-success {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-accent);
+}
+
+.wl-error {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e07a7a;
+  margin: 12px 0 0;
+}
