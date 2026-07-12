@@ -5,13 +5,26 @@ folder (`python -m http.server 8099`) and screenshotting at the target size with
 
 Fonts embedded locally in `fonts/` (Plus Jakarta Sans) so renders are on-brand offline.
 
-| File | Size | Use | Source |
+| File | Size | Ratio | Source |
 |---|---|---|---|
-| `fb-post-openmat.png` | 1080×1080 | Practitioner FB group / IG feed post | `fb-post.html` |
-| `fb-post-gym.png` | 1080×1080 | Gym-owner FB group / IG post (gold-forward) | `fb-post-gym.html` |
-| `fb-banner.png` | 1200×630 | Link preview / FB Page cover (landscape) | `fb-banner.html` |
+| `fb-post-openmat.png` | 1080×1080 | 1:1 square | `fb-post.html` |
+| `fb-post-gym.png` | 1080×1080 | 1:1 square (gym-owner, gold-forward) | `fb-post-gym.html` |
+| `fb-banner.png` | 1200×630 | 1.91:1 landscape | `fb-banner.html` |
+| `story-vertical.png` | 1080×1920 | 9:16 vertical | `story-vertical.html` |
 
-For richer art beyond CSS, see [`../claude-design-prompt.md`](../claude-design-prompt.md).
+## Which file for which platform
+
+| Platform | Use this file |
+|---|---|
+| **Facebook** feed / groups | `fb-post-openmat.png` (or `fb-post-gym.png` for owner groups) |
+| **Facebook** link post / Page cover | `fb-banner.png` |
+| **Instagram** feed | `fb-post-openmat.png` (square) |
+| **Instagram** Stories / Reels cover | `story-vertical.png` |
+| **LinkedIn** | `fb-banner.png` (landscape) or the square |
+| **Twitter / X** | `fb-banner.png` (landscape) |
+| **TikTok** | `story-vertical.png` as a cover **only** — TikTok is video-first; the actual post is a filmed clip (see [`../founder-script-pack.md`](../founder-script-pack.md)) |
+
+For richer art beyond CSS (illustration, carousels, dark variants), see [`../claude-design-prompt.md`](../claude-design-prompt.md).
 
 ## Paired captions
 

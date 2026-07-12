@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:600;font-style:normal;src:url('fonts/pjs-600.ttf') format('truetype');}
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:700;font-style:normal;src:url('fonts/pjs-700.ttf') format('truetype');}
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:800;font-style:normal;src:url('fonts/pjs-800.ttf') format('truetype');}
+  :root{--indigo:#5B53F2;--indigo-deep:#4038d6;--gold:#FFB020;--ink:#14151A;--body:#3D4150;--muted:#6B7280;--border:#ECEDF2;--gi:#2E7BFF;--purple:#8B5CF6;--brown:#8B5A2B;--black:#1A1B22;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1080px;height:1920px;}
+  body{font-family:'Plus Jakarta Sans',-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(1100px 900px at 82% 6%, rgba(91,83,242,.20), transparent 60%),
+      radial-gradient(900px 800px at 6% 100%, rgba(255,176,32,.14), transparent 55%),
+      linear-gradient(165deg,#FFFFFF 0%,#F5F6FA 100%);
+    position:relative; overflow:hidden;}
+  .grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(20,21,26,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(20,21,26,.035) 1px,transparent 1px);
+    background-size:72px 72px; mask-image:radial-gradient(circle at 50% 42%,#000 42%,transparent 78%);}
+  .pin{position:absolute;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 16px 40px rgba(91,83,242,.25);}
+  .pin::after{content:'';position:absolute;inset:26%;border-radius:50%;background:#fff;}
+  .pin.a{width:86px;height:86px;background:var(--indigo);top:470px;left:130px;opacity:.9;}
+  .pin.b{width:58px;height:58px;background:var(--gold);top:640px;right:150px;opacity:.9;}
+  .pin.c{width:50px;height:50px;background:var(--gi);bottom:520px;left:180px;opacity:.85;}
+  .wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:150px 96px 150px;}
+  .brand{display:flex;align-items:center;gap:20px;}
+  .belt{display:flex;width:118px;height:44px;border-radius:22px;overflow:hidden;box-shadow:0 6px 18px rgba(20,21,26,.18);position:relative;}
+  .belt span{flex:1;} .belt .w{background:#E9EAF0} .belt .bl{background:var(--gi)} .belt .pu{background:var(--purple)} .belt .br{background:var(--brown)} .belt .bk{background:var(--black)}
+  .belt .knot{position:absolute;left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%);background:var(--black);border-radius:9px;box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .word{font-weight:800;font-size:48px;letter-spacing:-.02em;} .word .m{color:var(--indigo);}
+  .kicker{margin-top:130px;display:inline-flex;align-items:center;gap:12px;background:rgba(91,83,242,.10);color:var(--indigo-deep);
+    font-weight:700;font-size:26px;padding:15px 26px;border-radius:999px;border:1px solid rgba(91,83,242,.18);}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--indigo);box-shadow:0 0 0 5px rgba(91,83,242,.18);}
+  h1{font-size:132px;line-height:.98;letter-spacing:-.035em;font-weight:800;margin:44px 0 0;}
+  h1 .hl{color:var(--indigo);background:linear-gradient(180deg,transparent 62%,rgba(255,176,32,.45) 62%);}
+  .sub{font-size:44px;line-height:1.32;color:var(--body);font-weight:600;margin-top:44px;max-width:820px;}
+  .chips{display:flex;flex-direction:column;gap:22px;margin-top:70px;width:100%;max-width:720px;}
+  .chip{display:flex;align-items:center;justify-content:center;gap:16px;background:#fff;border:1px solid var(--border);border-radius:20px;
+    padding:26px 30px;font-weight:700;font-size:36px;color:var(--ink);box-shadow:0 12px 30px rgba(20,21,26,.06);}
+  .chip .ic{font-size:40px;}
+  .cta{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;}
+  .free{background:var(--gold);color:#3a2a00;font-weight:800;font-size:24px;padding:10px 22px;border-radius:999px;letter-spacing:.05em;}
+  .btn{background:linear-gradient(135deg,var(--indigo),var(--indigo-deep));color:#fff;font-weight:800;font-size:46px;
+    padding:34px 56px;border-radius:22px;box-shadow:0 24px 55px rgba(91,83,242,.38);}
+  .url{font-weight:800;font-size:34px;color:var(--muted);}
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="pin a"></div><div class="pin b"></div><div class="pin c"></div>
+  <div class="wrap">
+    <div class="brand">
+      <div class="belt"><span class="w"></span><span class="bl"></span><span class="pu"></span><span class="br"></span><span class="bk"></span><span class="knot"></span></div>
+      <div class="word">Open<span class="m">Mat</span></div>
+    </div>
+    <span class="kicker"><span class="dot"></span>For every grappler who travels</span>
+    <h1>Find a BJJ open mat <span class="hl">anywhere.</span></h1>
+    <div class="sub">See open mats near you or in any city, see <b>who's going</b>, and tap <b>"I'm going."</b></div>
+    <div class="chips">
+      <div class="chip"><span class="ic">📍</span>Near you or any city</div>
+      <div class="chip"><span class="ic">🥋</span>Gi / No-Gi filters</div>
+      <div class="chip"><span class="ic">👥</span>See who's going</div>
+    </div>
+    <div class="cta">
+      <span class="free">FREE · NOW IN BETA</span>
+      <div class="btn">Join the founding list 🥋</div>
+      <div class="url">bjj-open-mat.dsylvester.io</div>
+    </div>
+  </div>
+</body>
+</html>
