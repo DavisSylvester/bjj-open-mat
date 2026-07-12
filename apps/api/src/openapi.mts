@@ -12,7 +12,9 @@ import {
   Favorite,
   Gym,
   GiType,
+  GymLeadRequest,
   HealthResponse,
+  LeadResponse,
   ListMeta,
   Notification,
   NotificationType,
@@ -28,6 +30,7 @@ import {
   User,
   UserRole,
   UserSettings,
+  WaitlistLeadRequest,
 } from "@bjj/contract";
 
 export function buildOpenApiDocument(): Record<string, unknown> {
@@ -158,6 +161,20 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         post: { summary: "Mark read", parameters: idParam, responses: ok(dataOf("Notification")) },
       },
       "/api/v1/notifications/read-all": { post: { summary: "Mark all read", responses: ok(dataOf("Notification")) } },
+      "/api/v1/waitlist": {
+        post: {
+          summary: "Join the founding waitlist (public)",
+          requestBody: { required: true, content: { "application/json": { schema: ref("WaitlistLeadRequest") } } },
+          responses: ok(dataOf("LeadResponse")),
+        },
+      },
+      "/api/v1/gym-leads": {
+        post: {
+          summary: "Submit a gym lead / claim a gym (public)",
+          requestBody: { required: true, content: { "application/json": { schema: ref("GymLeadRequest") } } },
+          responses: ok(dataOf("LeadResponse")),
+        },
+      },
     },
     components: {
       schemas: {
@@ -190,6 +207,9 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         CreateCheckInRequest,
         CheckInLocationStatus,
         ReviewRequest,
+        WaitlistLeadRequest,
+        GymLeadRequest,
+        LeadResponse,
       },
     },
   };

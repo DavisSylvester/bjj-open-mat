@@ -1,0 +1,72 @@
+.rg-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 48px;
+}
+
+.rg-brand {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.rg-back {
+  font-size: 14px;
+}
+
+.rg-main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
+}
+
+.rg-header {
+  margin-bottom: 32px;
+}
+
+.rg-kicker {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 14px;
+}
+
+.rg-title {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(32px, 5vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.rg-lead {
+  font-size: 16px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+  margin: 18px 0 0;
+}
+
+@media (max-width: 1023px) {
+  .rg-nav {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 599px) {
+  .rg-nav {
+    padding: 16px;
+  }
+
+  .rg-main {
+    padding: 28px 16px 72px;
+  }
+}

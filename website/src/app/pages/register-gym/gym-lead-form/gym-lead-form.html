@@ -1,0 +1,92 @@
+@if (formState() === 'success') {
+  <p class="gl-success" role="status" aria-live="polite">Thanks — we'll be in touch.</p>
+} @else {
+  <form class="gl-form" (submit)="$event.preventDefault(); submit()">
+    <!-- honeypot: hidden from users, catches bots -->
+    <input
+      class="hp"
+      type="text"
+      tabindex="-1"
+      autocomplete="off"
+      aria-label="Leave this field empty"
+      [value]="hp()"
+      (input)="hp.set($any($event.target).value)">
+
+    <div class="field">
+      <label for="gl-gym">Gym name <span class="req">*</span></label>
+      <input
+        id="gl-gym"
+        class="input"
+        type="text"
+        required
+        [value]="gymName()"
+        (input)="gymName.set($any($event.target).value)">
+    </div>
+
+    <div class="field">
+      <label for="gl-email">Your email <span class="req">*</span></label>
+      <input
+        id="gl-email"
+        class="input"
+        type="email"
+        required
+        [value]="ownerEmail()"
+        (input)="ownerEmail.set($any($event.target).value)">
+    </div>
+
+    <div class="field">
+      <label for="gl-name">Your name</label>
+      <input
+        id="gl-name"
+        class="input"
+        type="text"
+        [value]="ownerName()"
+        (input)="ownerName.set($any($event.target).value)">
+    </div>
+
+    <div class="gl-row">
+      <div class="field">
+        <label for="gl-city">City</label>
+        <input
+          id="gl-city"
+          class="input"
+          type="text"
+          [value]="city()"
+          (input)="city.set($any($event.target).value)">
+      </div>
+
+      <div class="field">
+        <label for="gl-state">State</label>
+        <input
+          id="gl-state"
+          class="input"
+          type="text"
+          maxlength="2"
+          placeholder="TX"
+          [value]="state()"
+          (input)="state.set($any($event.target).value)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="gl-message">Message</label>
+      <textarea
+        id="gl-message"
+        class="input"
+        [value]="message()"
+        (input)="message.set($any($event.target).value)"></textarea>
+    </div>
+
+    @if (invalid()) {
+      <p class="gl-error" role="status" aria-live="polite">Gym name and your email are required.</p>
+    }
+    @if (formState() === 'error') {
+      <p class="gl-error" role="status" aria-live="polite">Something went wrong — try again.</p>
+    }
+
+    <button
+      type="submit"
+      class="btn btn-primary btn-block"
+      [disabled]="formState() === 'submitting'">Register your gym</button>
+  </form>
+}

@@ -9,6 +9,7 @@ import { favoriteRoutes } from "./routes/favorite.routes.mts";
 import { geoRoutes } from "./routes/geo.routes.mts";
 import { gymRoutes } from "./routes/gym.routes.mts";
 import { healthRoutes } from "./routes/health.routes.mts";
+import { leadRoutes } from "./routes/lead.routes.mts";
 import { notificationRoutes } from "./routes/notification.routes.mts";
 import { openMatRoutes } from "./routes/open-mat.routes.mts";
 import { reportRoutes } from "./routes/report.routes.mts";
@@ -23,7 +24,7 @@ import { userRoutes } from "./routes/user.routes.mts";
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function buildApp(container: Container) {
   const base = registerErrorHandler(new Elysia(), logger)
-    .use(cors())
+    .use(cors({ origin: container.env.websiteOrigins }))
     .onAfterResponse(({ request, path, set }): void => {
       logger.info(`${request.method} ${path} -> ${set.status ?? ""}`);
     });
@@ -38,5 +39,6 @@ export function buildApp(container: Container) {
     .use(favoriteRoutes(container))
     .use(geoRoutes(container))
     .use(notificationRoutes(container))
-    .use(reportRoutes(container));
+    .use(reportRoutes(container))
+    .use(leadRoutes(container));
 }

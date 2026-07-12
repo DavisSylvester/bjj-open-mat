@@ -1,4 +1,26 @@
-# BJJ Open Mat — Monorepo
+# BJJ Open Mat
+
+> **Find a BJJ open mat anywhere, see who's going, and tap "I'm going."**
+
+BJJ Open Mat is the fastest way to find a place to roll — near you or in any city you're
+traveling to. Open the app and it instantly maps open mats around you, filtered by **gi/no-gi,
+distance, skill level, and when you want to train**. See **who's coming**, RSVP with "I'm going,"
+and **check in** when you arrive. It's community-driven: anyone can add a mat, and gyms verify
+their own sessions. Built by a grappler, for grapplers. Free.
+
+**Highlights**
+- 🔎 Discover/search open mats by **GPS, city, or ZIP** (up to 100 miles)
+- 🥋 Filter by **Gi / No-Gi**, free sessions, skill level, and day/time
+- 👥 **"I'm going"** RSVPs + arrival **check-ins** with a training log — see attendees + belt rank
+- 🏋️ **Gym profiles** with logos; owners post/verify sessions and see expected vs. actual attendance
+- 🌍 The killer use case: **train anywhere you travel**
+
+_Status: **beta** (iOS via TestFlight, Android via Play internal testing)._
+Marketing & go-to-market: [`docs/marketing/`](docs/marketing/) · Full pitch: [`docs/marketing/elevator-pitch.md`](docs/marketing/elevator-pitch.md)
+
+---
+
+## Monorepo
 
 Bun-workspace + Turborepo monorepo for the BJJ Open Mat Finder.
 

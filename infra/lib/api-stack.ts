@@ -8,12 +8,21 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
+import * as sesv2 from "aws-cdk-lib/aws-ses";
 import { DomainName, HttpApi } from "aws-cdk-lib/aws-apigatewayv2";
 import { HttpLambdaIntegration } from "aws-cdk-lib/aws-apigatewayv2-integrations";
 
 const DOMAIN_NAME = "api.bjj-open-mat.dsylvester.io";
 const ZONE_NAME = "dsylvester.io";
 const ZONE_ID = "Z00521283KLJPV4530BY5";
+
+// dsylvester.ai hosted zone (same AWS account) — used for SES DKIM auto-records.
+const AI_ZONE_ID = "Z084603532M2PA5E3QFC8";
+const AI_ZONE_NAME = "dsylvester.ai";
+
+const SES_FROM = "no-reply@dsylvester.ai";
+const ADMIN_EMAIL = "davis.sylvester@davaco.com";
+const WEBSITE_ORIGIN = "https://bjj-open-mat.dsylvester.ai";
 
 // The Bun/Elysia API packaged as a Lambda container image (via the Lambda Web
 // Adapter), fronted by an API Gateway HTTP API on a custom domain. Sensitive values
@@ -83,12 +92,39 @@ export class ApiStack extends Stack {
         AWS_LWA_READINESS_CHECK_PATH: "/health",
         ASSETS_BUCKET: assetsBucket.bucketName,
         ASSETS_REGION: this.region,
+        SES_FROM,
+        ADMIN_EMAIL,
+        WEBSITE_ORIGIN,
+        SES_REGION: this.region,
       },
     });
 
     appSecret.grantRead(fn);
     // The API only ever writes logo objects; scope the grant to that prefix.
     assetsBucket.grantPut(fn, "logos/*");
+
+    // SES send. SendEmail/SendRawEmail don't support tight resource ARNs in the
+    // simple case, so `*` is standard here.
+    fn.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["ses:SendEmail", "ses:SendRawEmail"],
+        resources: ["*"],
+      }),
+    );
+
+    // dsylvester.ai hosted zone lookup (static attributes -> offline synth).
+    const aiZone = route53.PublicHostedZone.fromPublicHostedZoneAttributes(this, "AiZone", {
+      hostedZoneId: AI_ZONE_ID,
+      zoneName: AI_ZONE_NAME,
+    });
+
+    // Verifies dsylvester.ai for SES so no-reply@dsylvester.ai can send. Binding
+    // the identity to the public hosted zone lets CDK auto-create the 3 Easy-DKIM
+    // CNAME records in that zone using the raw DKIM token names — avoiding the
+    // double zone-suffix bug you get by feeding an unresolved token as recordName.
+    new sesv2.EmailIdentity(this, "SesDomainIdentity", {
+      identity: sesv2.Identity.publicHostedZone(aiZone),
+    });
 
     // Existing Route53 hosted zone for dsylvester.io (same AWS account).
     const zone = route53.HostedZone.fromHostedZoneAttributes(this, "Zone", {

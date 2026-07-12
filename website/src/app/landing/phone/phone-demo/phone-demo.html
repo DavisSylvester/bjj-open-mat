@@ -1,0 +1,408 @@
+<!-- Scaled 412x892 Android device frame (see android-frame.jsx: AndroidDevice) -->
+<div [style.width.px]="phoneW()" [style.height.px]="phoneH()" style="overflow: hidden">
+  <div [style.transform]="'scale(' + scale() + ')'" style="transform-origin: top left; width: 412px; height: 892px">
+    <!-- AndroidDevice bezel -->
+    <div style="width: 412px; height: 892px; border-radius: 18px; overflow: hidden; background: #f4fbf8; border: 8px solid rgba(116,119,117,0.5); box-shadow: 0 30px 80px rgba(0,0,0,0.25); display: flex; flex-direction: column; box-sizing: border-box; font-family: 'Barlow', sans-serif">
+      <!-- status bar -->
+      <div style="height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; position: relative; font-family: 'Roboto', system-ui, sans-serif; flex-shrink: 0">
+        <div style="width: 128px; display: flex; align-items: center; gap: 8px">
+          <span style="font-size: 14px; font-weight: 400; letter-spacing: 0.25px; line-height: 20px; color: #171d1b">9:30</span>
+        </div>
+        <div style="position: absolute; left: 50%; top: 8px; transform: translateX(-50%); width: 24px; height: 24px; border-radius: 100px; background: #2e2e2e"></div>
+        <div style="display: flex; align-items: center">
+          <div style="display: flex; padding-right: 2px">
+            <svg width="16" height="16" viewBox="0 0 16 16" style="margin-right: -2px"><path d="M8 13.3L.67 5.97a10.37 10.37 0 0114.66 0L8 13.3z" fill="#171d1b"></path></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" style="margin-right: -2px"><path d="M14.67 14.67V1.33L1.33 14.67h13.34z" fill="#171d1b"></path></svg>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16"><rect x="3.75" y="2" width="8.5" height="13" rx="1.5" fill="#171d1b"></rect><rect x="5.5" y="0.9" width="5" height="2" rx="0.5" fill="#171d1b"></rect></svg>
+        </div>
+      </div>
+
+      <!-- content region -->
+      <div style="flex: 1; overflow: auto; position: relative">
+
+        @if (variant() === 'app') {
+          <!-- ==================== APP VARIANT ==================== -->
+          <div style="position: relative; width: 100%; height: 100%; font-family: 'Barlow', sans-serif; color: #0F1430; overflow: hidden; background: radial-gradient(at 18% 8%, rgba(233,69,96,0.22) 0%, transparent 48%), radial-gradient(at 88% 78%, rgba(156,39,176,0.20) 0%, transparent 46%), radial-gradient(at 72% 26%, rgba(22,199,154,0.16) 0%, transparent 52%), radial-gradient(at 8% 92%, rgba(33,150,243,0.18) 0%, transparent 50%), linear-gradient(180deg, #F8F5EF 0%, #EFEBE3 100%)">
+
+            <!-- ============ HOME / DISCOVER ============ -->
+            @if (isHome()) {
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column">
+                <!-- map -->
+                <div style="position: relative; height: 380px; flex-shrink: 0; background: radial-gradient(ellipse at 30% 20%, #FFFFFF 0%, #EDE9DF 65%, #E2DCCD 100%); overflow: hidden">
+                  <svg width="100%" height="100%" viewBox="0 0 412 380" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0">
+                    <defs>
+                      <pattern id="omg" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <path d="M60 0H0v60" fill="none" stroke="rgba(20,20,40,0.06)" stroke-width="1"></path>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#omg)"></rect>
+                    <path d="M-20 90 L 432 130" stroke="#FFFFFF" stroke-width="7"></path>
+                    <path d="M-20 240 L 432 200" stroke="#FFFFFF" stroke-width="7"></path>
+                    <path d="M120 -20 L 100 400" stroke="#FFFFFF" stroke-width="6"></path>
+                    <path d="M270 -20 L 310 400" stroke="#FFFFFF" stroke-width="7"></path>
+                    <rect x="40" y="160" width="80" height="60" fill="#C8E6C9" rx="6"></rect>
+                    <rect x="300" y="240" width="70" height="70" fill="#C8E6C9" rx="6"></rect>
+                    <path d="M-20 290 Q 60 270 140 300 T 330 290 L 432 310 L 432 400 L -20 400 Z" fill="#BBDEFB" opacity="0.7"></path>
+                  </svg>
+                  <!-- pins -->
+                  <div style="position: absolute; left: 24%; top: 36%; transform: translate(-50%,-100%)">
+                    <div style="width: 36px; height: 36px; border-radius: 99px; background: #2196F3; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(20,20,40,0.35); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px">GI</div>
+                  </div>
+                  <div style="position: absolute; left: 56%; top: 30%; transform: translate(-50%,-100%)">
+                    <div style="width: 44px; height: 44px; border-radius: 99px; background: #9C27B0; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(20,20,40,0.35); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px">GI+</div>
+                  </div>
+                  <div style="position: absolute; left: 79%; top: 52%; transform: translate(-50%,-100%)">
+                    <div style="width: 36px; height: 36px; border-radius: 99px; background: #FF9800; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(20,20,40,0.35); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px">NOGI</div>
+                  </div>
+                  <div style="position: absolute; left: 33%; top: 66%; transform: translate(-50%,-100%)">
+                    <div style="width: 36px; height: 36px; border-radius: 99px; background: #2196F3; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(20,20,40,0.35); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px">GI</div>
+                  </div>
+                  <!-- search pill -->
+                  <div style="position: absolute; top: 14px; left: 16px; right: 16px; height: 52px; border-radius: 18px; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95), 0 8px 24px rgba(20,20,40,0.08); display: flex; align-items: center; padding: 0 14px; gap: 10px; box-sizing: border-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(15,20,48,0.55)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+                    <div style="flex: 1">
+                      <div style="font-size: 14px; font-weight: 600">Search gyms or area</div>
+                      <div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px">Los Angeles, CA · 10mi</div>
+                    </div>
+                    <div style="width: 1px; height: 22px; background: rgba(20,20,40,0.07)"></div>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E94560" stroke-width="2.5" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"></path><circle cx="4" cy="12" r="2"></circle><circle cx="12" cy="10" r="2"></circle><circle cx="20" cy="14" r="2"></circle></svg>
+                  </div>
+                  <!-- count chip -->
+                  <div style="position: absolute; left: 16px; bottom: 14px; padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95), 0 8px 24px rgba(20,20,40,0.08); display: flex; align-items: center; gap: 7px">
+                    <span style="width: 8px; height: 8px; border-radius: 99px; background: #16C79A; box-shadow: 0 0 8px #16C79A"></span>
+                    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em">18 mats open near you</span>
+                  </div>
+                </div>
+                <!-- bottom sheet -->
+                <div style="flex: 1; margin-top: -24px; position: relative; z-index: 2; background: rgba(255,255,255,0.55); backdrop-filter: blur(28px) saturate(180%); border-radius: 28px 28px 0 0; border: 1px solid rgba(20,20,40,0.07); border-bottom: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), 0 -20px 60px rgba(20,20,40,0.06); display: flex; flex-direction: column; overflow: hidden; padding-bottom: 84px">
+                  <div style="display: flex; justify-content: center; padding: 10px 0 6px"><div style="width: 44px; height: 5px; background: rgba(20,20,40,0.18); border-radius: 99px"></div></div>
+                  <div style="display: flex; align-items: flex-end; justify-content: space-between; padding: 6px 18px 12px">
+                    <div>
+                      <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #E94560">Tonight &amp; Tomorrow</div>
+                      <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; line-height: 1; text-transform: uppercase; margin-top: 4px">Open Mats</div>
+                    </div>
+                    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55)">See all →</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 10px; padding: 0 18px; overflow: auto">
+                    <!-- card 1 → detail -->
+                    <div (click)="goDetail()" style="background: rgba(255,255,255,0.55); backdrop-filter: blur(20px) saturate(180%); border-radius: 18px; border: 1px solid rgba(20,20,40,0.07); overflow: hidden; box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 6px 18px rgba(20,20,40,0.08); cursor: pointer">
+                      <div style="height: 3px; background: #9C27B0"></div>
+                      <div style="padding: 13px 14px 14px">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px">
+                          <div style="display: flex; align-items: center; gap: 6px">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9C27B0" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">12:00 – 2:00 PM</span>
+                            <span style="color: rgba(15,20,48,0.55); font-size: 12px">· Sun</span>
+                          </div>
+                          <span style="color: rgba(15,20,48,0.55); font-size: 11px; font-weight: 500">4.1 mi</span>
+                        </div>
+                        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 19px; text-transform: uppercase; margin-bottom: 8px">10th Planet Rosemead</div>
+                        <div style="display: flex; align-items: center; gap: 6px">
+                          <span style="padding: 2px 8px; border-radius: 999px; background: rgba(156,39,176,0.16); color: #9C27B0; border: 1px solid rgba(156,39,176,0.33); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">Gi + No-Gi</span>
+                          <span style="padding: 2px 8px; border-radius: 999px; background: rgba(22,199,154,0.13); color: #16C79A; border: 1px solid rgba(22,199,154,0.27); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">All Levels</span>
+                          <span style="flex: 1"></span>
+                          <span style="padding: 3px 8px; border-radius: 999px; background: rgba(15,20,48,0.05); color: rgba(15,20,48,0.75); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; white-space: nowrap; line-height: 1">$10</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- card 2 -->
+                    <div (click)="goDetail()" style="background: rgba(255,255,255,0.55); backdrop-filter: blur(20px) saturate(180%); border-radius: 18px; border: 1px solid rgba(20,20,40,0.07); overflow: hidden; box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 6px 18px rgba(20,20,40,0.08); cursor: pointer">
+                      <div style="height: 3px; background: #2196F3"></div>
+                      <div style="padding: 13px 14px 14px">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px">
+                          <div style="display: flex; align-items: center; gap: 6px">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">7:00 – 9:00 PM</span>
+                            <span style="color: rgba(15,20,48,0.55); font-size: 12px">· Today</span>
+                          </div>
+                          <span style="color: rgba(15,20,48,0.55); font-size: 11px; font-weight: 500">1.2 mi</span>
+                        </div>
+                        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 19px; text-transform: uppercase; margin-bottom: 8px">Atos HQ</div>
+                        <div style="display: flex; align-items: center; gap: 6px">
+                          <span style="padding: 2px 8px; border-radius: 999px; background: rgba(33,150,243,0.16); color: #2196F3; border: 1px solid rgba(33,150,243,0.33); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">Gi</span>
+                          <span style="padding: 2px 8px; border-radius: 999px; background: rgba(22,199,154,0.13); color: #16C79A; border: 1px solid rgba(22,199,154,0.27); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">All Levels</span>
+                          <span style="flex: 1"></span>
+                          <span style="padding: 3px 8px; border-radius: 999px; background: rgba(22,199,154,0.13); color: #16C79A; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; white-space: nowrap; line-height: 1">Free</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- ============ DETAIL ============ -->
+            @if (isDetail()) {
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; overflow: auto; padding-top: 12px">
+                <div style="display: flex; justify-content: space-between; padding: 0 18px; margin-bottom: 16px">
+                  <div (click)="goHome()" style="width: 40px; height: 40px; border-radius: 13px; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); border: 1px solid rgba(20,20,40,0.07); box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; cursor: pointer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F1430" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+                  </div>
+                  <div style="width: 40px; height: 40px; border-radius: 13px; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); border: 1px solid rgba(20,20,40,0.07); box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F1430" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-8-5-8-11a5 5 0 019-3 5 5 0 019 3c0 6-8 11-8 11h-2z"></path></svg>
+                  </div>
+                </div>
+                <!-- hero card -->
+                <div style="margin: 0 18px 16px; background: linear-gradient(135deg, rgba(156,39,176,0.2) 0%, rgba(255,255,255,0.65) 70%); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); border-radius: 22px; padding: 18px 18px 20px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95), 0 12px 32px rgba(156,39,176,0.18)">
+                  <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9C27B0">Open Mat</div>
+                  <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; line-height: 1; text-transform: uppercase; margin-top: 4px">10th Planet Rosemead</div>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 14px">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(15,20,48,0.55)" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>
+                    <span style="font-size: 14px; color: rgba(15,20,48,0.75); font-weight: 600">Sun, Jul 12 · 12:00 – 2:00 PM</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap">
+                    <span style="padding: 4px 10px; border-radius: 999px; background: rgba(156,39,176,0.16); color: #9C27B0; border: 1px solid rgba(156,39,176,0.33); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">Gi + No-Gi</span>
+                    <span style="padding: 4px 10px; border-radius: 999px; background: rgba(22,199,154,0.13); color: #16C79A; border: 1px solid rgba(22,199,154,0.27); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">All Levels</span>
+                    <span style="padding: 4px 10px; border-radius: 999px; background: rgba(22,199,154,0.13); color: #16C79A; border: 1px solid rgba(22,199,154,0.27); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; line-height: 1">$10 Mat Fee</span>
+                  </div>
+                </div>
+                <!-- address -->
+                <div style="margin: 0 18px 14px; background: rgba(255,255,255,0.55); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 12px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9), 0 8px 24px rgba(20,20,40,0.06)">
+                  <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(233,69,96,0.13); display: flex; align-items: center; justify-content: center">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E94560" stroke-width="2" stroke-linecap="round"><path d="M12 22s7-7.5 7-13a7 7 0 10-14 0c0 5.5 7 13 7 13z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+                  </div>
+                  <div style="flex: 1">
+                    <div style="font-size: 14px; font-weight: 600">3851 Rosemead Blvd</div>
+                    <div style="font-size: 12px; color: rgba(15,20,48,0.55)">Rosemead, CA · 4.1 mi away</div>
+                  </div>
+                  <div style="padding: 8px 12px; border-radius: 10px; background: #E94560; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase">Go</div>
+                </div>
+                <!-- RSVP -->
+                <div style="margin: 0 18px 14px">
+                  <button (click)="toggleGoing()" [style.background]="rsvpBg()" [style.box-shadow]="'0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 0 rgba(0,0,0,0.18) inset, 0 6px 18px ' + rsvpShadow()" style="width: 100%; height: 52px; border-radius: 16px; border: none; cursor: pointer; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase">{{ rsvpLabel() }}</button>
+                </div>
+                @if (going()) {
+                  <div style="margin: 0 18px 14px">
+                    <button (click)="goCheckin()" style="width: 100%; height: 44px; border-radius: 14px; cursor: pointer; background: rgba(255,255,255,0.6); backdrop-filter: blur(16px); color: #0F1430; border: 1px solid rgba(20,20,40,0.07); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: inset 1px 1px 0 rgba(255,255,255,0.9)">Check in — I'm on the mat</button>
+                  </div>
+                }
+                <!-- who's going -->
+                <div style="margin: 0 18px 24px">
+                  <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px">
+                    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; text-transform: uppercase">Who's Going</div>
+                    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; color: #E94560">{{ goingCount() }}</span>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.55); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; overflow: hidden; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9), 0 8px 24px rgba(20,20,40,0.06)">
+                    @if (going()) {
+                      <div style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(20,20,40,0.07); background: rgba(22,199,154,0.09)">
+                        <div style="width: 36px; height: 36px; border-radius: 99px; background: linear-gradient(135deg, #E94560, #9C27B0); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">MR</div>
+                        <div style="flex: 1"><div style="font-size: 13px; font-weight: 600">You</div></div>
+                        <span style="display: inline-flex; height: 18px; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.3)"><span style="background: #6A2A9A; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; padding: 0 8px">Purple Belt</span><span style="width: 12px; background: #2A0D45; display: inline-flex; align-items: center; justify-content: center; gap: 1.5px"><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span></span></span>
+                      </div>
+                    }
+                    <div style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(20,20,40,0.07)">
+                      <div style="width: 36px; height: 36px; border-radius: 99px; background: linear-gradient(135deg, #E94560, #9C27B0); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">M</div>
+                      <div style="flex: 1"><div style="font-size: 13px; font-weight: 600">Marcus T.</div></div>
+                      <span style="display: inline-flex; height: 18px; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.3)"><span style="background: #6A2A9A; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; padding: 0 8px">Purple Belt</span><span style="width: 12px; background: #2A0D45; display: inline-flex; align-items: center; justify-content: center; gap: 1.5px"><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span></span></span>
+                    </div>
+                    <div style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(20,20,40,0.07)">
+                      <div style="width: 36px; height: 36px; border-radius: 99px; background: linear-gradient(135deg, #2196F3, #16C79A); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">J</div>
+                      <div style="flex: 1"><div style="font-size: 13px; font-weight: 600">Jenna K.</div></div>
+                      <span style="display: inline-flex; height: 18px; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.3)"><span style="background: #1E5BC9; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; padding: 0 8px">Blue Belt</span><span style="width: 14px; background: #0D2E6B; display: inline-flex; align-items: center; justify-content: center; gap: 1.5px"><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span></span></span>
+                    </div>
+                    <div style="padding: 12px 14px; display: flex; align-items: center; gap: 12px">
+                      <div style="width: 36px; height: 36px; border-radius: 99px; background: linear-gradient(135deg, #FF9800, #E94560); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">L</div>
+                      <div style="flex: 1"><div style="font-size: 13px; font-weight: 600">Leo S.</div></div>
+                      <span style="display: inline-flex; height: 18px; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.3)"><span style="background: #F5F5F5; color: #1A1A2E; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; padding: 0 8px">White Belt</span><span style="width: 12px; background: #1A1A2E; display: inline-flex; align-items: center; justify-content: center; gap: 1.5px"><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span></span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- ============ CHECK-IN / REVIEW SHEET ============ -->
+            @if (isCheckin()) {
+              <div style="position: absolute; inset: 0">
+                <div style="position: absolute; inset: 0; background: rgba(20,20,40,0.18); backdrop-filter: blur(8px)"></div>
+                <div style="position: absolute; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.78); backdrop-filter: blur(32px) saturate(180%); border-radius: 28px 28px 0 0; border: 1px solid rgba(20,20,40,0.07); border-bottom: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), 0 -24px 60px rgba(20,20,40,0.12); padding-bottom: 28px">
+                  <div style="display: flex; justify-content: center; padding: 10px 0 6px"><div style="width: 44px; height: 5px; background: rgba(20,20,40,0.22); border-radius: 99px"></div></div>
+                  <div style="padding: 12px 22px 16px">
+                    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #E94560">You're checked in at</div>
+                    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; line-height: 1; text-transform: uppercase; margin-top: 4px">10th Planet Rosemead</div>
+                    <div style="color: rgba(15,20,48,0.55); font-size: 13px; margin-top: 2px">Sun · 12:00 – 2:00 PM · Rate the mat</div>
+                  </div>
+                  <div style="padding: 0 22px 16px; display: flex; flex-direction: column; gap: 8px">
+                    @for (row of starRows; track row.key) {
+                      <div style="background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9); padding: 14px; display: flex; align-items: center; justify-content: space-between">
+                        <div style="font-size: 14px; font-weight: 600">{{ row.label }}</div>
+                        <div style="display: flex; gap: 4px">
+                          @for (st of [0, 1, 2, 3, 4]; track st) {
+                            <span (click)="setStar(row.key, st)" style="cursor: pointer; display: inline-flex">
+                              <svg width="22" height="22" viewBox="0 0 24 24" [attr.fill]="starColor(row.key, st)"><path d="M12 2l3 7 7 .8-5.3 4.8 1.6 7.2L12 18l-6.3 3.8 1.6-7.2L2 9.8 9 9z"></path></svg>
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <div style="padding: 0 22px">
+                    <button (click)="postReview()" style="width: 100%; height: 52px; border-radius: 16px; border: none; cursor: pointer; background: #E94560; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 0 rgba(0,0,0,0.18) inset, 0 6px 18px rgba(233,69,96,0.33)">Log this roll</button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- ============ PROFILE ============ -->
+            @if (isProfile()) {
+              <div style="position: absolute; inset: 0; overflow: auto; padding: 12px 0 96px">
+                <div style="padding: 0 18px 16px">
+                  <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 32px; line-height: 1; text-transform: uppercase; margin-bottom: 16px">Profile</div>
+                  <div style="padding: 20px 18px; background: linear-gradient(135deg, rgba(233,69,96,0.2) 0%, rgba(255,255,255,0.65) 60%); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); border-radius: 22px; display: flex; align-items: center; gap: 14px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95), 0 12px 32px rgba(233,69,96,0.18)">
+                    <div style="width: 72px; height: 72px; border-radius: 99px; background: linear-gradient(135deg, #E94560, #9C27B0); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; box-shadow: 0 0 0 3px #fff, 0 0 0 5px rgba(233,69,96,0.53), 0 8px 20px rgba(233,69,96,0.4)">MR</div>
+                    <div style="flex: 1">
+                      <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; line-height: 1">Mateo Reyes</div>
+                      <div style="margin-top: 6px"><span style="display: inline-flex; height: 18px; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.3)"><span style="background: #6A2A9A; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; padding: 0 8px">Purple Belt</span><span style="width: 12px; background: #2A0D45; display: inline-flex; align-items: center; justify-content: center; gap: 1.5px"><span style="width: 2px; height: 10px; background: #fff"></span><span style="width: 2px; height: 10px; background: #fff"></span></span></span></div>
+                      <div style="display: flex; gap: 12px; margin-top: 10px">
+                        <div><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px">{{ matCount() }}</span> <span style="color: rgba(15,20,48,0.55); font-size: 11px; font-weight: 600">mats</span></div>
+                        <div><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px">{{ reviewCount() }}</span> <span style="color: rgba(15,20,48,0.55); font-size: 11px; font-weight: 600">reviews</span></div>
+                        <div><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px">6</span> <span style="color: rgba(15,20,48,0.55); font-size: 11px; font-weight: 600">wk streak</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding: 0 18px 22px">
+                  <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; text-transform: uppercase; margin-bottom: 10px">Training Log</div>
+                  <div style="background: rgba(255,255,255,0.55); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; overflow: hidden; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9), 0 8px 24px rgba(20,20,40,0.06)">
+                    @if (checkedIn()) {
+                      <div style="padding: 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(20,20,40,0.07); background: rgba(22,199,154,0.09)">
+                        <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(22,199,154,0.16); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16C79A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></div>
+                        <div style="flex: 1"><div style="font-size: 14px; font-weight: 700">10th Planet Rosemead</div><div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px; font-weight: 500">Just now · reviewed</div></div>
+                      </div>
+                    }
+                    <div style="padding: 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(20,20,40,0.07)">
+                      <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(33,150,243,0.13); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="1.5"></rect><path d="M6 6v12M18 6v12M2 12h20"></path></svg></div>
+                      <div style="flex: 1"><div style="font-size: 14px; font-weight: 700">Atos HQ</div><div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px; font-weight: 500">Tue · gi · 7:00 PM</div></div>
+                    </div>
+                    <div style="padding: 14px; display: flex; align-items: center; gap: 12px">
+                      <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(255,152,0,0.13); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="1.5"></rect><path d="M6 6v12M18 6v12M2 12h20"></path></svg></div>
+                      <div style="flex: 1"><div style="font-size: 14px; font-weight: 700">Gracie Barra DTLA</div><div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px; font-weight: 500">Last Sat · no-gi · 10:00 AM</div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding: 0 18px">
+                  <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; text-transform: uppercase; margin-bottom: 10px">Favorite Gyms</div>
+                  <div style="background: rgba(255,255,255,0.55); backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; overflow: hidden; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9), 0 8px 24px rgba(20,20,40,0.06)">
+                    <div style="padding: 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(20,20,40,0.07)">
+                      <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(233,69,96,0.08); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="#E94560"><path d="M12 21s-8-5-8-11a5 5 0 019-3 5 5 0 019 3c0 6-8 11-8 11z"></path></svg></div>
+                      <div style="flex: 1"><div style="font-size: 14px; font-weight: 700">Atos HQ</div><div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px; font-weight: 500">San Diego · 1.2 mi</div></div>
+                    </div>
+                    <div style="padding: 14px; display: flex; align-items: center; gap: 12px">
+                      <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(233,69,96,0.08); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="#E94560"><path d="M12 21s-8-5-8-11a5 5 0 019-3 5 5 0 019 3c0 6-8 11-8 11z"></path></svg></div>
+                      <div style="flex: 1"><div style="font-size: 14px; font-weight: 700">10th Planet Rosemead</div><div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px; font-weight: 500">Rosemead · 4.1 mi</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- bottom nav (home + profile screens only) -->
+            @if (showNav()) {
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; z-index: 40; padding: 10px 12px 18px; background: rgba(255,255,255,0.55); backdrop-filter: blur(28px) saturate(180%); border-top: 1px solid rgba(20,20,40,0.07); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9); display: flex; justify-content: space-around; align-items: center">
+                <div (click)="goHome()" [style.background]="navHomeBg()" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 14px; cursor: pointer">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" [attr.stroke]="navHomeColor()" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2V10z"></path></svg>
+                  <span [style.color]="navHomeColor()" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase">Home</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 14px">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(15,20,48,0.55)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(15,20,48,0.55)">Search</span>
+                </div>
+                <div (click)="goProfile()" [style.background]="navProfileBg()" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 14px; cursor: pointer">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" [attr.stroke]="navProfileColor()" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4 4-7 8-7s7 3 8 7"></path></svg>
+                  <span [style.color]="navProfileColor()" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase">Profile</span>
+                </div>
+              </div>
+            }
+
+          </div>
+        } @else {
+          <!-- ==================== OWNER VARIANT (static Post Session mockup) ==================== -->
+          <div style="width: 100%; min-height: 100%; box-sizing: border-box; font-family: 'Barlow', sans-serif; color: #0F1430; padding: 12px 0 20px; background: radial-gradient(at 18% 8%, rgba(233,69,96,0.22) 0%, transparent 48%), radial-gradient(at 88% 78%, rgba(156,39,176,0.20) 0%, transparent 46%), radial-gradient(at 72% 26%, rgba(22,199,154,0.16) 0%, transparent 52%), linear-gradient(180deg, #F8F5EF 0%, #EFEBE3 100%)">
+            <div style="padding: 0 18px 12px; display: flex; align-items: center; justify-content: space-between">
+              <div style="width: 40px; height: 40px; border-radius: 13px; background: rgba(255,255,255,0.65); border: 1px solid rgba(20,20,40,0.07); box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F1430" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+              </div>
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55)">Post Session</span>
+              <div style="width: 40px"></div>
+            </div>
+            <div style="padding: 0 18px 12px"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; line-height: 1; text-transform: uppercase">New Open Mat</div></div>
+            <div style="margin: 0 18px 12px; background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9), 0 8px 24px rgba(20,20,40,0.06); padding: 12px 14px; display: flex; align-items: center; gap: 12px">
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #E94560, #9C27B0); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px">A</div>
+              <div style="flex: 1">
+                <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55)">Posting As</div>
+                <div style="font-size: 14px; font-weight: 700; margin-top: 1px">Atos HQ — San Diego</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(15,20,48,0.55)" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </div>
+            <div style="padding: 0 18px 12px; display: flex; gap: 8px">
+              <div style="flex: 1; background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9); padding: 12px 14px">
+                <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55)">Date</div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E94560" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px">Sat, Jul 18</span>
+                </div>
+              </div>
+              <div style="flex: 1; background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9); padding: 12px 14px">
+                <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55)">Time</div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E94560" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px">10–12 PM</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding: 0 18px 14px">
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55); margin-bottom: 8px">Gi Type</div>
+              <div style="display: flex; gap: 8px">
+                <div style="flex: 1; padding: 14px 0 12px; border-radius: 14px; background: rgba(255,255,255,0.55); border: 1.5px solid rgba(20,20,40,0.07); display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: inset 1px 1px 0 rgba(255,255,255,0.9)">
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: rgba(15,20,48,0.45)">GI</span>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(15,20,48,0.75)">Gi</span>
+                </div>
+                <div style="flex: 1; padding: 14px 0 12px; border-radius: 14px; background: rgba(255,255,255,0.55); border: 1.5px solid rgba(20,20,40,0.07); display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: inset 1px 1px 0 rgba(255,255,255,0.9)">
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: rgba(15,20,48,0.45)">NG</span>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(15,20,48,0.75)">No-Gi</span>
+                </div>
+                <div style="flex: 1; padding: 14px 0 12px; border-radius: 14px; background: rgba(156,39,176,0.13); border: 1.5px solid #9C27B0; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: 0 0 0 4px rgba(156,39,176,0.08), inset 1px 1px 0 rgba(255,255,255,0.9), 0 8px 20px rgba(156,39,176,0.2)">
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: #9C27B0">GI+</span>
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #9C27B0">Both</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding: 0 18px 14px">
+              <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(15,20,48,0.55); margin-bottom: 8px">Experience Level</div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                <span style="padding: 8px 14px; border-radius: 999px; background: rgba(233,69,96,0.13); border: 1px solid #E94560; color: #E94560; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; line-height: 1; box-shadow: 0 4px 12px rgba(233,69,96,0.13)">All Levels</span>
+                <span style="padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); color: rgba(15,20,48,0.75); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; line-height: 1">Beginner</span>
+                <span style="padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); color: rgba(15,20,48,0.75); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; line-height: 1">Advanced</span>
+              </div>
+            </div>
+            <div style="margin: 0 18px 14px; background: rgba(255,255,255,0.55); border: 1px solid rgba(20,20,40,0.07); border-radius: 18px; box-shadow: inset 1.5px 1.5px 1px rgba(255,255,255,0.9); padding: 14px; display: flex; align-items: center; gap: 12px">
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(22,199,154,0.16); display: flex; align-items: center; justify-content: center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16C79A" stroke-width="2" stroke-linecap="round"><rect x="3" y="9" width="18" height="12" rx="1"></rect><path d="M3 13h18M12 9v12M12 9c-1.5-3-5-3-5 0M12 9c1.5-3 5-3 5 0"></path></svg>
+              </div>
+              <div style="flex: 1">
+                <div style="font-size: 14px; font-weight: 700">Free Mat</div>
+                <div style="font-size: 11px; color: rgba(15,20,48,0.55); margin-top: 1px; font-weight: 500">Drop-in welcome, no charge</div>
+              </div>
+              <div style="width: 50px; height: 28px; border-radius: 99px; background: #16C79A; position: relative; box-shadow: 0 4px 12px rgba(22,199,154,0.33), inset 0 1px 0 rgba(255,255,255,0.3)">
+                <div style="position: absolute; right: 2px; top: 2px; width: 24px; height: 24px; border-radius: 99px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.25)"></div>
+              </div>
+            </div>
+            <div style="margin: 0 18px 16px; background: rgba(255,152,0,0.09); border: 1px solid rgba(255,152,0,0.33); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(255,152,0,0.13)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0"></path></svg>
+              <div style="flex: 1; font-size: 12px; color: rgba(15,20,48,0.75); line-height: 1.35; font-weight: 500"><span style="color: #FF9800; font-weight: 800">14 going</span> to your last open mat — 11 checked in.</div>
+            </div>
+            <div style="padding: 0 18px">
+              <button style="width: 100%; height: 52px; border-radius: 16px; border: none; background: #E94560; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 0 rgba(0,0,0,0.18) inset, 0 6px 18px rgba(233,69,96,0.33)">Post Session</button>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <!-- gesture nav pill -->
+      <div style="height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <div style="width: 108px; height: 4px; border-radius: 2px; background: #171d1b; opacity: 0.4"></div>
+      </div>
+    </div>
+  </div>
+</div>

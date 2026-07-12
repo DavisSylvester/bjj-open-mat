@@ -1,0 +1,25 @@
+// Responsive overrides only — desktop nav layout is defined in the global
+// `.nav` component class and stays untouched at >=1024px.
+
+// Tablet: tighten the horizontal padding-driving gutter and gap so the nav
+// never overflows. (The inline padding uses max(48px, ...) which already
+// collapses to 48px below the container width; we reduce the flex gap.)
+@media (max-width: 1023px) {
+  .nav {
+    gap: var(--space-3) !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+// Phone: drop the middle anchor links, keep brand (left) + Join button (right).
+@media (max-width: 599px) {
+  .nav {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .nav-link {
+    display: none;
+  }
+}

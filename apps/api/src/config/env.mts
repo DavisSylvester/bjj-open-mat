@@ -22,6 +22,12 @@ const EnvSchema = t.Object({
   OPENAI_API_KEY: t.Optional(t.String()),
   AUDIO_BUCKET: t.Optional(t.String()),
   AUDIO_REGION: t.Optional(t.String()),
+  // Optional: SES sender + admin recipient for lead notification emails. Absent
+  // in local dev — the container then falls back to the log-only email service.
+  SES_FROM: t.Optional(t.String()),
+  SES_REGION: t.Optional(t.String()),
+  ADMIN_EMAIL: t.Optional(t.String()),
+  WEBSITE_ORIGIN: t.Optional(t.String()),
 });
 
 type RawEnv = Static<typeof EnvSchema>;
@@ -41,6 +47,10 @@ export interface AppEnv {
   readonly openaiApiKey: string | undefined;
   readonly audioBucket: string | undefined;
   readonly audioRegion: string;
+  readonly sesFrom: string | undefined;
+  readonly sesRegion: string;
+  readonly adminEmail: string | undefined;
+  readonly websiteOrigins: string[];
 }
 
 export function loadEnv(source: Record<string, string | undefined> = process.env): AppEnv {
@@ -60,5 +70,11 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     openaiApiKey: raw.OPENAI_API_KEY,
     audioBucket: raw.AUDIO_BUCKET,
     audioRegion: raw.AUDIO_REGION ?? raw.ASSETS_REGION ?? "us-east-1",
+    sesFrom: raw.SES_FROM,
+    sesRegion: raw.SES_REGION ?? raw.ASSETS_REGION ?? "us-east-1",
+    adminEmail: raw.ADMIN_EMAIL,
+    websiteOrigins: [raw.WEBSITE_ORIGIN, "http://localhost:4200"].filter(
+      (o): o is string => typeof o === "string" && o.length > 0,
+    ),
   };
 }

@@ -1,0 +1,8 @@
+// Responsive overrides only — desktop padding is defined inline and stays
+// untouched at >=1024px. The waitlist row wrapping is handled in waitlist-form.
+
+@media (max-width: 599px) {
+  .join-cta {
+    padding: 48px 0 40px !important;
+  }
+}

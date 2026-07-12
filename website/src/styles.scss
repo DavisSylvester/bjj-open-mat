@@ -1,0 +1,26 @@
+// Google Fonts (Inter + Barlow / Barlow Condensed) are loaded via a <link> in
+// src/index.html — Dart Sass rejects a plain-CSS @import placed before @use rules.
+
+@use 'styles/nocturne-tokens';
+@use 'styles/nocturne-components';
+
+// Page ground — ported from the prototype's <head> <style> body rule: layered
+// radial accent glows over the base bg.
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 720px at 82% -160px, color-mix(in srgb, var(--color-accent-900) 75%, transparent), transparent 60%),
+    radial-gradient(1100px 800px at -10% 100%, color-mix(in srgb, black 30%, transparent), transparent 55%),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  // Base body sizing from the Nocturne design system (styles.css body rule).
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  text-wrap: pretty;
+}
+
+a { color: var(--color-accent-300); text-decoration: none; }
+a:hover { color: var(--color-accent-400); }

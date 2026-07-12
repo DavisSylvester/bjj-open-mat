@@ -1,0 +1,25 @@
+// Responsive overrides only. The desktop layout lives in the template's inline
+// styles (the pixel-matched Nocturne prototype) and is left untouched at >=1024px.
+// These media queries beat the inline styles with `!important` on the specific
+// layout-driving properties.
+
+// Tablet + phone: stack the hero to a single column, copy first, phone below.
+@media (max-width: 1023px) {
+  .hero {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding: 56px 0 40px !important;
+  }
+
+  // Center the phone in its (now full-width) row.
+  .hero-phone {
+    align-items: center !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .hero {
+    padding: 40px 0 32px !important;
+    gap: 24px !important;
+  }
+}

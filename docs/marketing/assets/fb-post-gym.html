@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:600;font-style:normal;src:url('fonts/pjs-600.ttf') format('truetype');}
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:700;font-style:normal;src:url('fonts/pjs-700.ttf') format('truetype');}
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:800;font-style:normal;src:url('fonts/pjs-800.ttf') format('truetype');}
+
+  :root{
+    --indigo:#5B53F2; --indigo-deep:#4038d6; --gold:#FFB020; --gold-deep:#b87700;
+    --ink:#14151A; --body:#3D4150; --muted:#6B7280; --border:#ECEDF2;
+    --gi:#2E7BFF; --purple:#8B5CF6; --brown:#8B5A2B; --black:#1A1B22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1080px;height:1080px;}
+  body{
+    font-family:'Plus Jakarta Sans',-apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink);
+    background:
+      radial-gradient(1200px 720px at 80% -10%, rgba(255,176,32,.20), transparent 60%),
+      radial-gradient(900px 600px at 6% 110%, rgba(91,83,242,.14), transparent 55%),
+      linear-gradient(160deg,#FFFFFF 0%,#F5F6FA 100%);
+    position:relative; overflow:hidden;
+  }
+  .grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(20,21,26,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(20,21,26,.035) 1px,transparent 1px);
+    background-size:60px 60px; mask-image:radial-gradient(circle at 52% 40%,#000 40%,transparent 80%);}
+  .pin{position:absolute;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 12px 30px rgba(255,176,32,.28);}
+  .pin::after{content:'';position:absolute;inset:26%;border-radius:50%;background:#fff;}
+  .pin.a{width:64px;height:64px;background:var(--gold);top:150px;left:120px;opacity:.95;}
+  .pin.b{width:44px;height:44px;background:var(--indigo);top:250px;right:150px;opacity:.9;}
+  .pin.c{width:38px;height:38px;background:var(--gi);bottom:250px;left:170px;opacity:.85;}
+
+  .wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:86px 92px 78px;}
+  .brand{display:flex;align-items:center;gap:18px;}
+  .belt{display:flex;width:104px;height:38px;border-radius:19px;overflow:hidden;box-shadow:0 6px 18px rgba(20,21,26,.18);position:relative;}
+  .belt span{flex:1;} .belt .w{background:#E9EAF0} .belt .bl{background:var(--gi)} .belt .pu{background:var(--purple)} .belt .br{background:var(--brown)} .belt .bk{background:var(--black)}
+  .belt .knot{position:absolute;left:50%;top:50%;width:30px;height:30px;transform:translate(-50%,-50%);background:var(--black);border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .word{font-weight:800;font-size:40px;letter-spacing:-.02em;} .word .m{color:var(--indigo);}
+  .tag{margin-left:auto;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+  .hero{margin-top:auto;}
+  .kicker{display:inline-flex;align-items:center;gap:10px;background:rgba(255,176,32,.16);color:var(--gold-deep);
+    font-weight:700;font-size:20px;padding:12px 20px;border-radius:999px;border:1px solid rgba(255,176,32,.30);}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(255,176,32,.22);}
+  h1{font-size:96px;line-height:.99;letter-spacing:-.035em;font-weight:800;margin:30px 0 0;}
+  h1 .hl{color:var(--indigo);background:linear-gradient(180deg,transparent 62%,rgba(255,176,32,.45) 62%);}
+  .sub{font-size:35px;line-height:1.3;color:var(--body);font-weight:600;margin-top:26px;max-width:840px;}
+  .chips{display:flex;gap:16px;margin-top:42px;flex-wrap:wrap;}
+  .chip{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:16px;
+    padding:18px 22px;font-weight:700;font-size:25px;color:var(--ink);box-shadow:0 10px 26px rgba(20,21,26,.06);}
+  .chip .ic{font-size:28px;}
+  .cta{margin-top:50px;display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(135deg,var(--indigo),var(--indigo-deep));color:#fff;border-radius:24px;
+    padding:34px 42px;box-shadow:0 24px 50px rgba(91,83,242,.35);}
+  .cta .l .big{font-weight:800;font-size:34px;letter-spacing:-.01em;}
+  .cta .l .small{font-weight:600;font-size:22px;opacity:.92;margin-top:6px;}
+  .cta .url{font-weight:800;font-size:26px;background:rgba(255,255,255,.16);padding:16px 26px;border-radius:14px;border:1px solid rgba(255,255,255,.28);white-space:nowrap;}
+  .free{display:inline-block;background:var(--gold);color:#3a2a00;font-weight:800;font-size:18px;padding:6px 14px;border-radius:999px;letter-spacing:.04em;margin-bottom:10px;}
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="pin a"></div><div class="pin b"></div><div class="pin c"></div>
+  <div class="wrap">
+    <div class="brand">
+      <div class="belt"><span class="w"></span><span class="bl"></span><span class="pu"></span><span class="br"></span><span class="bk"></span><span class="knot"></span></div>
+      <div class="word">Open<span class="m">Mat</span></div>
+      <div class="tag">Find a roll, anywhere</div>
+    </div>
+    <div class="hero">
+      <span class="kicker"><span class="dot"></span>Gym owners &amp; coaches 🥋</span>
+      <h1>Put your open<br>mat <span class="hl">on the map.</span></h1>
+      <div class="sub">Travelers and locals find your open mat, RSVP, and show up. You verify your own sessions — and it's <b>free</b>.</div>
+      <div class="chips">
+        <div class="chip"><span class="ic">🏅</span>Founding Gym badge</div>
+        <div class="chip"><span class="ic">👀</span>Free exposure</div>
+        <div class="chip"><span class="ic">📅</span>See who's coming</div>
+      </div>
+      <div class="cta">
+        <div class="l">
+          <span class="free">FREE · FIRST 100 GYMS</span>
+          <div class="big">Claim your gym 🏋️</div>
+          <div class="small">More bodies on the mat, zero cost</div>
+        </div>
+        <div class="url">bjj-open-mat.dsylvester.io</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
