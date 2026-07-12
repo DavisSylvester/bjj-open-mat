@@ -35,7 +35,7 @@ describe("WaitlistLeadRepository", () => {
     expect(second).toBe(false);
     const count = await db.collection("waitlistLeads").countDocuments({ email: "dup@b.com" });
     expect(count).toBe(1);
-    const doc = await db.collection("waitlistLeads").findOne({ email: "dup@b.com" });
+    const doc = await db.collection<{ _id: string; email: string }>("waitlistLeads").findOne({ email: "dup@b.com" });
     expect(doc?._id).toBe("w1");
   });
 });
