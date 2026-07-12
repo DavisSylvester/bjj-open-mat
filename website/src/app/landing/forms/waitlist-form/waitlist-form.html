@@ -27,7 +27,15 @@
         type="submit"
         class="btn btn-primary"
         style="min-height: 36px; white-space: nowrap"
-        [disabled]="state() === 'submitting'">{{ label() }}</button>
+        [attr.aria-busy]="state() === 'submitting'"
+        [disabled]="state() === 'submitting'">
+        @if (state() === 'submitting') {
+          <span class="spinner" aria-hidden="true"></span>
+          <span>Joining…</span>
+        } @else {
+          {{ label() }}
+        }
+      </button>
     </div>
 
     @if (state() === 'error') {

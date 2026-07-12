@@ -87,6 +87,14 @@
     <button
       type="submit"
       class="btn btn-primary btn-block"
-      [disabled]="formState() === 'submitting'">Register your gym</button>
+      [attr.aria-busy]="formState() === 'submitting'"
+      [disabled]="formState() === 'submitting'">
+      @if (formState() === 'submitting') {
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Registering…</span>
+      } @else {
+        Register your gym
+      }
+    </button>
   </form>
 }
