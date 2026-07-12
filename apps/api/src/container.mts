@@ -33,6 +33,10 @@ import { OpenMatRepository } from "./repositories/open-mat.repository.mts";
 import { ReportRepository } from "./repositories/report.repository.mts";
 import { RsvpRepository } from "./repositories/rsvp.repository.mts";
 import { UserRepository } from "./repositories/user.repository.mts";
+import { LeadFacade } from "./facades/lead.facade.mts";
+import { WaitlistLeadRepository } from "./repositories/waitlist-lead.repository.mts";
+import { GymLeadRepository } from "./repositories/gym-lead.repository.mts";
+import { SesEmailService, UnconfiguredEmailService, type EmailService } from "./services/email.service.mts";
 
 export interface Container {
   readonly db: Db;
@@ -44,6 +48,8 @@ export interface Container {
   readonly checkInFacade: CheckInFacade;
   readonly notificationFacade: NotificationFacade;
   readonly reportFacade: ReportFacade;
+  readonly leadFacade: LeadFacade;
+  readonly env: AppEnv;
   readonly geocoder: Geocoder;
   readonly assetStorage: AssetStorage;
   readonly audioStorage: AudioStorage;
@@ -59,6 +65,12 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const favoriteRepo = new FavoriteRepository(db);
   const notificationRepo = new NotificationRepository(db);
   const reportRepo = new ReportRepository(db);
+  const waitlistLeadRepo = new WaitlistLeadRepository(db);
+  const gymLeadRepo = new GymLeadRepository(db);
+  const emailService: EmailService =
+    env.sesFrom && env.adminEmail
+      ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
+      : new UnconfiguredEmailService();
   const id = (): string => randomUUID();
   const geocoder = new ZipcodesGeocoder();
   const assetStorage: AssetStorage = env.assetsBucket
@@ -92,6 +104,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
+    leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
+    env,
     geocoder,
     assetStorage,
     audioStorage,
@@ -105,6 +119,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
         favoriteRepo.ensureIndexes(),
         notificationRepo.ensureIndexes(),
         reportRepo.ensureIndexes(),
+        waitlistLeadRepo.ensureIndexes(),
+        gymLeadRepo.ensureIndexes(),
       ]);
     },
   };
