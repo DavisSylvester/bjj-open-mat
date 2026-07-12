@@ -1,5 +1,5 @@
 @if (formState() === 'success') {
-  <p class="gl-success">Thanks — we'll be in touch.</p>
+  <p class="gl-success" role="status" aria-live="polite">Thanks — we'll be in touch.</p>
 } @else {
   <form class="gl-form" (submit)="$event.preventDefault(); submit()">
     <!-- honeypot: hidden from users, catches bots -->
@@ -8,7 +8,7 @@
       type="text"
       tabindex="-1"
       autocomplete="off"
-      aria-hidden="true"
+      aria-label="Leave this field empty"
       [value]="hp()"
       (input)="hp.set($any($event.target).value)">
 
@@ -78,10 +78,10 @@
     </div>
 
     @if (invalid()) {
-      <p class="gl-error">Gym name and your email are required.</p>
+      <p class="gl-error" role="status" aria-live="polite">Gym name and your email are required.</p>
     }
     @if (formState() === 'error') {
-      <p class="gl-error">Something went wrong — try again.</p>
+      <p class="gl-error" role="status" aria-live="polite">Something went wrong — try again.</p>
     }
 
     <button

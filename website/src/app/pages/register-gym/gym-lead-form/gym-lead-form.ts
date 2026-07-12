@@ -1,8 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { LeadApiService } from '../../../core/lead-api.service';
 import type { Utm } from '../../../core/models/i-lead';
-
-type FormState = 'idle' | 'submitting' | 'success' | 'error';
+import { readUtm, type FormState } from '../../../core/lead-utm';
 
 @Component({
   selector: 'app-gym-lead-form',
@@ -48,7 +47,7 @@ export class GymLeadForm {
     this.invalid.set(false);
     this.formState.set('submitting');
 
-    const utm: Utm | undefined = this.readUtm();
+    const utm: Utm = readUtm();
 
     try {
       await this.api.submitGymLead({
@@ -70,18 +69,5 @@ export class GymLeadForm {
   private blankToUndefined(value: string): string | undefined {
     const trimmed = value.trim();
     return trimmed === '' ? undefined : trimmed;
-  }
-
-  private readUtm(): Utm | undefined {
-    const params = new URLSearchParams(window.location.search);
-    const source = params.get('utm_source') ?? undefined;
-    const medium = params.get('utm_medium') ?? undefined;
-    const campaign = params.get('utm_campaign') ?? undefined;
-
-    if (source === undefined && medium === undefined && campaign === undefined) {
-      return undefined;
-    }
-
-    return { source, medium, campaign };
   }
 }

@@ -1,8 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { LeadApiService } from '../../../core/lead-api.service';
 import type { Utm } from '../../../core/models/i-lead';
-
-type FormState = 'idle' | 'submitting' | 'success' | 'error';
+import { readUtm, type FormState } from '../../../core/lead-utm';
 
 @Component({
   selector: 'app-waitlist-form',
@@ -33,7 +32,7 @@ export class WaitlistForm {
 
     this.state.set('submitting');
 
-    const utm: Utm | undefined = this.readUtm();
+    const utm: Utm = readUtm();
 
     try {
       await this.api.joinWaitlist({ email: this.email(), hp: this.hp(), utm });
@@ -41,18 +40,5 @@ export class WaitlistForm {
     } catch {
       this.state.set('error');
     }
-  }
-
-  private readUtm(): Utm | undefined {
-    const params = new URLSearchParams(window.location.search);
-    const source = params.get('utm_source') ?? undefined;
-    const medium = params.get('utm_medium') ?? undefined;
-    const campaign = params.get('utm_campaign') ?? undefined;
-
-    if (source === undefined && medium === undefined && campaign === undefined) {
-      return undefined;
-    }
-
-    return { source, medium, campaign };
   }
 }

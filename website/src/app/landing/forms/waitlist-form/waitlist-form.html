@@ -1,6 +1,6 @@
 <!-- Email-capture form wired to LeadApiService. -->
 @if (state() === 'success') {
-  <p class="wl-success" style="margin-top: 28px">You're on the list 🥋 Check your inbox.</p>
+  <p class="wl-success" role="status" aria-live="polite" style="margin-top: 28px">You're on the list 🥋 Check your inbox.</p>
 } @else {
   <form (submit)="$event.preventDefault(); submit()">
     <!-- honeypot: hidden from users, catches bots -->
@@ -9,7 +9,7 @@
       type="text"
       tabindex="-1"
       autocomplete="off"
-      aria-hidden="true"
+      aria-label="Leave this field empty"
       [value]="hp()"
       (input)="hp.set($any($event.target).value)">
 
@@ -31,7 +31,7 @@
     </div>
 
     @if (state() === 'error') {
-      <p class="wl-error">Something went wrong — try again.</p>
+      <p class="wl-error" role="status" aria-live="polite">Something went wrong — try again.</p>
     }
   </form>
 }
