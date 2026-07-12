@@ -6,13 +6,17 @@ import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as route53 from "aws-cdk-lib/aws-route53";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
 
 const SITE_DOMAIN = "bjj-open-mat.dsylvester.ai";
+const ZONE_ID = "Z084603532M2PA5E3QFC8";
+const ZONE_NAME = "dsylvester.ai";
 
 // Static hosting for the Angular marketing site: a private S3 bucket fronted by
-// CloudFront (OAC). The ACM cert is DNS-validated on Hostinger (dsylvester.ai is
-// NOT in this account's Route53), so the validation CNAME is emitted as an output
-// to add by hand before the deploy can complete. Must be us-east-1 (CloudFront cert).
+// CloudFront (OAC). The ACM cert is DNS-validated against the dsylvester.ai
+// Route53 hosted zone (same AWS account), and an alias A/AAAA record points the
+// site domain at the distribution — fully automated. Must be us-east-1 (CloudFront cert).
 export class WebsiteStack extends Stack {
   public constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
@@ -25,9 +29,15 @@ export class WebsiteStack extends Stack {
       removalPolicy: RemovalPolicy.RETAIN,
     });
 
+    // dsylvester.ai hosted zone (same AWS account); static attributes -> offline synth.
+    const zone = route53.HostedZone.fromHostedZoneAttributes(this, "Zone", {
+      hostedZoneId: ZONE_ID,
+      zoneName: ZONE_NAME,
+    });
+
     const certificate = new acm.Certificate(this, "SiteCert", {
       domainName: SITE_DOMAIN,
-      validation: acm.CertificateValidation.fromDns(), // no hosted zone -> emits a CNAME to add on Hostinger
+      validation: acm.CertificateValidation.fromDns(zone), // auto-creates validation record in the zone
     });
 
     const distribution = new cloudfront.Distribution(this, "SiteDistribution", {
@@ -49,6 +59,19 @@ export class WebsiteStack extends Stack {
       destinationBucket: bucket,
       distribution,
       distributionPaths: ["/*"],
+    });
+
+    // bjj-open-mat.dsylvester.ai -> CloudFront distribution (alias A + AAAA for IPv6).
+    const aliasTarget = route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution));
+    new route53.ARecord(this, "SiteAliasRecord", {
+      zone,
+      recordName: "bjj-open-mat",
+      target: aliasTarget,
+    });
+    new route53.AaaaRecord(this, "SiteAliasRecordAaaa", {
+      zone,
+      recordName: "bjj-open-mat",
+      target: aliasTarget,
     });
 
     new CfnOutput(this, "DistributionDomainName", { value: distribution.distributionDomainName });

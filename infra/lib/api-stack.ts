@@ -16,6 +16,10 @@ const DOMAIN_NAME = "api.bjj-open-mat.dsylvester.io";
 const ZONE_NAME = "dsylvester.io";
 const ZONE_ID = "Z00521283KLJPV4530BY5";
 
+// dsylvester.ai hosted zone (same AWS account) — used for SES DKIM auto-records.
+const AI_ZONE_ID = "Z084603532M2PA5E3QFC8";
+const AI_ZONE_NAME = "dsylvester.ai";
+
 const SES_FROM = "no-reply@dsylvester.ai";
 const ADMIN_EMAIL = "davis.sylvester@davaco.com";
 const WEBSITE_ORIGIN = "https://bjj-open-mat.dsylvester.ai";
@@ -109,15 +113,28 @@ export class ApiStack extends Stack {
     );
 
     // Verifies dsylvester.ai for SES so no-reply@dsylvester.ai can send. Easy DKIM
-    // yields 3 CNAME records that must be added to Hostinger DNS (see the deploy/DNS
-    // task). dsylvester.ai is NOT in this account's Route53, so verification is manual.
+    // yields 3 CNAME records; dsylvester.ai IS in this account's Route53, so we
+    // auto-create those CNAMEs in the zone below (no manual DNS entry needed).
     const emailIdentity = new sesv2.EmailIdentity(this, "SesDomainIdentity", {
       identity: sesv2.Identity.domain("dsylvester.ai"),
     });
+
+    // dsylvester.ai hosted zone lookup (static attributes -> offline synth).
+    const aiZone = route53.HostedZone.fromHostedZoneAttributes(this, "AiZone", {
+      hostedZoneId: AI_ZONE_ID,
+      zoneName: AI_ZONE_NAME,
+    });
+
+    // Auto-create the 3 Easy-DKIM CNAME records in the dsylvester.ai zone. The
+    // record names/values are deploy-time tokens; CDK's fully-qualified-name
+    // handling passes an already-qualified DKIM name through without re-appending
+    // the zone suffix, so pass record.name directly.
     emailIdentity.dkimRecords.forEach((record, i) => {
-      new CfnOutput(this, `SesDkimRecord${i}`, {
-        value: `${record.name} CNAME ${record.value}`,
-        description: `SES DKIM CNAME ${i} — add to Hostinger DNS for dsylvester.ai`,
+      new route53.CnameRecord(this, `SesDkimCname${i}`, {
+        zone: aiZone,
+        recordName: record.name,
+        domainName: record.value,
+        ttl: Duration.hours(1),
       });
     });
 
