@@ -1,6 +1,7 @@
 import { App } from "aws-cdk-lib";
 import { ApiStack } from "../lib/api-stack";
 import { GithubOidcStack } from "../lib/github-oidc-stack";
+import { WebsiteStack } from "../lib/website-stack";
 
 const app = new App();
 const env = { account: "318205107378", region: "us-east-1" };
@@ -11,3 +12,5 @@ new GithubOidcStack(app, "BjjGithubOidcStack", {
   env,
   repo: "DavisSylvester/bjj-open-mat",
 });
+
+new WebsiteStack(app, "BjjWebsiteStack", { env });
