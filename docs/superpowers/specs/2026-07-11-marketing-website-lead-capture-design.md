@@ -47,6 +47,23 @@ the light "liquid glass" concept the original spec assumed. The real design:
 The backend (Phase 1, complete) is unaffected: both waitlist email inputs call
 `joinWaitlist`; the `/register-gym` form calls `submitGymLead`.
 
+### Responsive requirement (2026-07-12, user follow-up)
+
+The delivered Nocturne prototype is a **fixed desktop layout** (48px gutters, 1200px
+container, no media queries). The user requires the site be **responsive and mobile-ready**.
+Reconciliation with the pixel-perfect goal:
+
+- **Desktop (≥ ~1024px, incl. the 1280px pixel-test viewport):** unchanged — remains a
+  pixel-match of the Nocturne prototype (desktop visual diff < 2%).
+- **Tablet/mobile (< ~1024px, phone < ~600px):** a Nocturne-consistent responsive adaptation
+  (the source provides no mobile design, so this is designed, not matched): reduced container
+  padding, single-column hero (copy then centered phone), stat band → 2×2, stacked
+  how-it-works rows, single-column gym-owner, simplified nav, responsive `/register-gym`.
+  Hard requirement: **no horizontal overflow** at 390px and 768px.
+- **Visual tests:** desktop keeps the pixel-diff against `ref-desktop.png`; the mobile check
+  becomes responsive assertions (no horizontal scroll, sections stacked) rather than a diff
+  against the non-responsive squished `ref-mobile.png`.
+
 ## Decisions (resolved during brainstorming)
 
 - **Design source:** Claude Design project `45ac103e-5117-445c-9d19-85dba1f3474f`, file
