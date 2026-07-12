@@ -49,3 +49,8 @@ reference/_handoff/**/.thumbnail
 
 # Playwright MCP scratch output
 .playwright-mcp/
+
+# Playwright visual-regression output (large diff/actual PNGs, HTML report)
+/test-results
+/playwright-report
+/playwright/.cache
