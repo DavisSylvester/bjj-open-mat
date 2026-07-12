@@ -5,24 +5,33 @@ folder (`python -m http.server 8099`) and screenshotting at the target size with
 
 Fonts embedded locally in `fonts/` (Plus Jakarta Sans) so renders are on-brand offline.
 
-| File | Size | Ratio | Source |
+Every audience has every format. Two audiences (**practitioner**, **gym-owner**) × four ratios.
+
+| Format | Size / ratio | Practitioner | Gym-owner |
 |---|---|---|---|
-| `fb-post-openmat.png` | 1080×1080 | 1:1 square | `fb-post.html` |
-| `fb-post-gym.png` | 1080×1080 | 1:1 square (gym-owner, gold-forward) | `fb-post-gym.html` |
-| `fb-banner.png` | 1200×630 | 1.91:1 landscape | `fb-banner.html` |
-| `story-vertical.png` | 1080×1920 | 9:16 vertical | `story-vertical.html` |
+| Square | 1080×1080 · 1:1 | `fb-post-openmat.png` | `fb-post-gym.png` |
+| Portrait | 1080×1350 · 4:5 | `fb-post-portrait.png` | `fb-post-gym-portrait.png` |
+| Landscape | 1200×630 · 1.91:1 | `fb-banner.png` | `fb-banner-gym.png` |
+| Vertical | 1080×1920 · 9:16 | `story-vertical.png` | `story-vertical-gym.png` |
 
-## Which file for which platform
+Each PNG has a matching `.html` source (practitioner: `fb-post.html`, `fb-post-portrait.html`,
+`fb-banner.html`, `story-vertical.html`; gym adds the `-gym` suffix). Re-render any by serving the
+folder and screenshotting at the target size.
 
-| Platform | Use this file |
+## Which format for which platform
+
+| Platform | Best format |
 |---|---|
-| **Facebook** feed / groups | `fb-post-openmat.png` (or `fb-post-gym.png` for owner groups) |
-| **Facebook** link post / Page cover | `fb-banner.png` |
-| **Instagram** feed | `fb-post-openmat.png` (square) |
-| **Instagram** Stories / Reels cover | `story-vertical.png` |
-| **LinkedIn** | `fb-banner.png` (landscape) or the square |
-| **Twitter / X** | `fb-banner.png` (landscape) |
-| **TikTok** | `story-vertical.png` as a cover **only** — TikTok is video-first; the actual post is a filmed clip (see [`../founder-script-pack.md`](../founder-script-pack.md)) |
+| **Facebook** feed / groups | Square or Portrait |
+| **Facebook** link post / Page cover | Landscape |
+| **Instagram** feed | Portrait (best reach) or Square |
+| **Instagram** Stories / Reels cover | Vertical |
+| **LinkedIn** | Landscape (or Square) |
+| **Twitter / X** | Landscape |
+| **TikTok** | Vertical as a cover **only** — TikTok is video-first; the real post is a filmed clip (see [`../founder-script-pack.md`](../founder-script-pack.md)) |
+
+Use the **practitioner** set for general/consumer groups and the **gym-owner** set for
+gym-owner / martial-arts-business groups.
 
 For richer art beyond CSS (illustration, carousels, dark variants), see [`../claude-design-prompt.md`](../claude-design-prompt.md).
 

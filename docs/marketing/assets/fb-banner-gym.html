@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:600;font-style:normal;src:url('fonts/pjs-600.ttf') format('truetype');}
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:700;font-style:normal;src:url('fonts/pjs-700.ttf') format('truetype');}
+  @font-face{font-family:'Plus Jakarta Sans';font-weight:800;font-style:normal;src:url('fonts/pjs-800.ttf') format('truetype');}
+  :root{--indigo:#5B53F2;--indigo-deep:#4038d6;--gold:#FFB020;--gold-deep:#b87700;--ink:#14151A;--body:#3D4150;--muted:#6B7280;--border:#ECEDF2;--gi:#2E7BFF;--purple:#8B5CF6;--brown:#8B5A2B;--black:#1A1B22;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1200px;height:630px;}
+  body{font-family:'Plus Jakarta Sans',-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(900px 600px at 92% 50%, rgba(255,176,32,.20), transparent 62%),
+      radial-gradient(700px 500px at 2% 120%, rgba(91,83,242,.12), transparent 55%),
+      linear-gradient(150deg,#FFFFFF 0%,#F5F6FA 100%);
+    position:relative; overflow:hidden;}
+  .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(20,21,26,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(20,21,26,.03) 1px,transparent 1px);
+    background-size:52px 52px; mask-image:radial-gradient(circle at 78% 50%,#000 30%,transparent 72%);}
+  .wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:52px 64px;}
+  .brand{display:flex;align-items:center;gap:16px;}
+  .belt{display:flex;width:92px;height:34px;border-radius:17px;overflow:hidden;box-shadow:0 6px 18px rgba(20,21,26,.18);position:relative;}
+  .belt span{flex:1;} .belt .w{background:#E9EAF0} .belt .bl{background:var(--gi)} .belt .pu{background:var(--purple)} .belt .br{background:var(--brown)} .belt .bk{background:var(--black)}
+  .belt .knot{position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);background:var(--black);border-radius:7px;box-shadow:0 2px 6px rgba(0,0,0,.35);}
+  .word{font-weight:800;font-size:34px;letter-spacing:-.02em;} .word .m{color:var(--indigo);}
+  .hero{margin-top:auto;max-width:800px;}
+  .kicker{display:inline-flex;align-items:center;gap:9px;background:rgba(255,176,32,.16);color:var(--gold-deep);font-weight:700;font-size:16px;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,176,32,.30);}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(255,176,32,.22);}
+  h1{font-size:66px;line-height:.98;letter-spacing:-.035em;font-weight:800;margin:18px 0 0;}
+  h1 .hl{color:var(--indigo);background:linear-gradient(180deg,transparent 62%,rgba(255,176,32,.45) 62%);}
+  .sub{font-size:24px;line-height:1.3;color:var(--body);font-weight:600;margin-top:16px;max-width:720px;}
+  .row{display:flex;align-items:center;gap:20px;margin-top:auto;}
+  .chips{display:flex;gap:12px;}
+  .chip{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--border);border-radius:13px;padding:12px 16px;font-weight:700;font-size:17px;color:var(--ink);box-shadow:0 8px 20px rgba(20,21,26,.06);}
+  .chip .ic{font-size:20px;}
+  .cta{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  .btn{background:linear-gradient(135deg,var(--indigo),var(--indigo-deep));color:#fff;font-weight:800;font-size:22px;padding:16px 26px;border-radius:15px;box-shadow:0 16px 34px rgba(91,83,242,.35);}
+  .url{font-weight:700;font-size:17px;color:var(--muted);}
+  .free{position:absolute;top:52px;right:64px;z-index:3;background:var(--gold);color:#3a2a00;font-weight:800;font-size:15px;padding:8px 16px;border-radius:999px;letter-spacing:.04em;box-shadow:0 8px 20px rgba(255,176,32,.35);}
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="free">FREE · FIRST 100 GYMS</div>
+  <div class="wrap">
+    <div class="brand">
+      <div class="belt"><span class="w"></span><span class="bl"></span><span class="pu"></span><span class="br"></span><span class="bk"></span><span class="knot"></span></div>
+      <div class="word">Open<span class="m">Mat</span></div>
+    </div>
+    <div class="hero">
+      <span class="kicker"><span class="dot"></span>Gym owners &amp; coaches 🥋</span>
+      <h1>Put your open mat <span class="hl">on the map.</span></h1>
+      <div class="sub">Travelers and locals find your open mat, RSVP, and show up. You verify your own sessions — and it's <b>free</b>.</div>
+    </div>
+    <div class="row">
+      <div class="chips">
+        <div class="chip"><span class="ic">🏅</span>Founding Gym badge</div>
+        <div class="chip"><span class="ic">👀</span>Free exposure</div>
+        <div class="chip"><span class="ic">📅</span>Who's coming</div>
+      </div>
+      <div class="cta">
+        <div class="btn">Claim your gym 🏋️</div>
+        <div class="url">bjj-open-mat.dsylvester.io</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
