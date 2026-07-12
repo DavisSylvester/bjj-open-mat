@@ -15,6 +15,10 @@ body {
     var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
+  // Base body sizing from the Nocturne design system (styles.css body rule).
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
   text-wrap: pretty;
 }
 
