@@ -11,11 +11,32 @@ interface Box {
   readonly height: number;
 }
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+// Required target-device CSS viewport widths (see the responsive-hardening
+// brief). Phones first, then tablets. 360 (Samsung S22) is the narrowest and
+// most likely to reveal overflow. 1024 (iPad Pro 12.9") intentionally falls
+// into the desktop layout and is not swept here.
+const TARGET_WIDTHS: readonly number[] = [
+  360, // Samsung S22 (narrowest)
+  384, // Samsung S22 Ultra
+  393, // iPhone 15 / 15 Pro
+  412, // Pixel 7 / 8 / 9
+  430, // iPhone 15 Plus / Pro Max
+  768, // iPad mini
+  820, // iPad Air
+  834, // iPad Pro 11"
+];
+
+const ROUTES: readonly string[] = ['/', '/register-gym'];
+
+async function settle(page: import('@playwright/test').Page): Promise<void> {
   await page.waitForLoadState('networkidle');
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(150);
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+  await settle(page);
 });
 
 test('no horizontal overflow', async ({ page }, testInfo) => {
@@ -67,10 +88,40 @@ test('key sections are present and visible', async ({ page }) => {
 test('register-gym page has no horizontal overflow', async ({ page }, testInfo) => {
   const viewportWidth = testInfo.project.use.viewport?.width ?? 0;
   await page.goto('/register-gym');
-  await page.waitForLoadState('networkidle');
+  await settle(page);
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(
     scrollWidth,
     `register-gym scrollWidth ${scrollWidth}px exceeds viewport ${viewportWidth}px`,
   ).toBeLessThanOrEqual(viewportWidth + 1);
+});
+
+// ── Target-device sweep ────────────────────────────────────────────────────
+// Data-driven: for every required device width, assert NO horizontal overflow
+// on BOTH routes. Driven by page.setViewportSize inside the test so we don't
+// multiply Playwright projects. Runs once (under the `mobile` project) — gated
+// so the identical sweep is not duplicated under `tablet`.
+test('no horizontal overflow across all target device widths', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'device sweep runs once, under the mobile project');
+
+  const failures: string[] = [];
+
+  for (const route of ROUTES) {
+    for (const width of TARGET_WIDTHS) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(route);
+      await settle(page);
+
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      const innerWidth = await page.evaluate(() => window.innerWidth);
+      // scrollWidth must never exceed the viewport (1px rounding tolerance).
+      if (scrollWidth > innerWidth + 1) {
+        failures.push(
+          `${route} @ ${width}px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
+        );
+      }
+    }
+  }
+
+  expect(failures, `horizontal overflow detected:\n${failures.join('\n')}`).toEqual([]);
 });
