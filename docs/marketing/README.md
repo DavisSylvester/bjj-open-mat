@@ -5,6 +5,7 @@ operational docs to run it. **Status: beta** (iOS TestFlight / Android Play inte
 goal is a warm **waitlist + gym supply**, not raw installs.
 
 ## Start here
+👉 **[`SUMMARY.md`](./SUMMARY.md)** — 2-minute executive overview of the whole kit.
 👉 **[`initial-launch-kit.md`](./initial-launch-kit.md)** — the concrete first-2-weeks checklist and posts. Do this first.
 
 ## The docs
