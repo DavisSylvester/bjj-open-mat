@@ -31,5 +31,13 @@ export default defineConfig({
       testMatch: /responsive\.spec\.ts/,
       use: { viewport: { width: 768, height: 1024 } },
     },
+    // Form-submission E2E: drives the lead-capture flows with the API stubbed
+    // via page.route. Scoped to forms.e2e.spec.ts so it does not run under the
+    // visual/responsive projects (and those do not run this file).
+    {
+      name: 'forms',
+      testMatch: /forms\.e2e\.spec\.ts/,
+      use: { viewport: { width: 1280, height: 900 } },
+    },
   ],
 });
