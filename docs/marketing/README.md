@@ -21,6 +21,8 @@ goal is a warm **waitlist + gym supply**, not raw installs.
 | [`product-hunt-launch.md`](./product-hunt-launch.md) | PH tagline, description, maker comments, timeline | Launch day |
 | [`press-kit.md`](./press-kit.md) | Media/podcast one-pager, boilerplate, pitch emails | Press outreach |
 | [`creator-outreach.md`](./creator-outreach.md) | Creator tiers, deal structures, DM/email templates, brief | Creator seeding |
+| [`claude-design-prompt.md`](./claude-design-prompt.md) | Brand-loaded prompt to generate graphics in Claude Design | Making visuals |
+| [`assets/`](./assets/) | Rendered post graphics (square + banner) + editable HTML sources | Posting |
 | [`elevator-pitch.md`](./elevator-pitch.md) | 5 pitch lengths | Anywhere you describe the app |
 | [`tooling.md`](./tooling.md) | Accounts, scheduler, API path, waitlist plumbing | Setup + ongoing |
 
