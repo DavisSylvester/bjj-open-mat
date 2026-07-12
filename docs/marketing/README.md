@@ -18,6 +18,7 @@ goal is a warm **waitlist + gym supply**, not raw installs.
 | [`founder-script-pack.md`](./founder-script-pack.md) | Talking-head scripts + b-roll shot list | When filming |
 | [`landing-page-copy.md`](./landing-page-copy.md) | Full waitlist page copy + meta/OG | When building the site |
 | [`email-sequence.md`](./email-sequence.md) | Welcome → beta → launch email flow | In your ESP |
+| [`product-hunt-launch.md`](./product-hunt-launch.md) | PH tagline, description, maker comments, timeline | Launch day |
 | [`elevator-pitch.md`](./elevator-pitch.md) | 5 pitch lengths | Anywhere you describe the app |
 | [`tooling.md`](./tooling.md) | Accounts, scheduler, API path, waitlist plumbing | Setup + ongoing |
 
