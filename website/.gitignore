@@ -46,3 +46,6 @@ Thumbs.db
 # Design handoff — keep source (html/css/js/md), ignore rasters
 reference/_handoff/**/*.png
 reference/_handoff/**/.thumbnail
+
+# Playwright MCP scratch output
+.playwright-mcp/
