@@ -39,3 +39,4 @@ website/dist/
 website/.angular/
 website/test-results/
 website/reference/*.png
+website/*.png
