@@ -29,10 +29,14 @@ describe("WaitlistLeadRepository", () => {
       status: "confirmed",
       createdAt: "2026-07-11T00:00:00.000Z",
     };
-    await repo.upsertByEmail(base);
-    await repo.upsertByEmail({ ...base, id: "w2" });
+    const first = await repo.upsertByEmail(base);
+    const second = await repo.upsertByEmail({ ...base, id: "w2" });
+    expect(first).toBe(true);
+    expect(second).toBe(false);
     const count = await db.collection("waitlistLeads").countDocuments({ email: "dup@b.com" });
     expect(count).toBe(1);
+    const doc = await db.collection("waitlistLeads").findOne({ email: "dup@b.com" });
+    expect(doc?._id).toBe("w1");
   });
 });
 

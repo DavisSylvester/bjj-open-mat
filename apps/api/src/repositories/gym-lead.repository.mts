@@ -3,6 +3,10 @@ import type { GymLead } from "@bjj/contract";
 import { COLLECTIONS } from "../db/collections.mts";
 import { BaseRepository } from "./base.repository.mts";
 
+interface GymLeadDoc extends GymLead {
+  _id: string;
+}
+
 export class GymLeadRepository extends BaseRepository {
 
   public constructor(db: Db) {
@@ -10,10 +14,10 @@ export class GymLeadRepository extends BaseRepository {
   }
 
   public async ensureIndexes(): Promise<void> {
-    await this.collection<GymLead>(COLLECTIONS.gymLeads).createIndex({ createdAt: -1 });
+    await this.collection<GymLeadDoc>(COLLECTIONS.gymLeads).createIndex({ createdAt: -1 });
   }
 
   public async insert(lead: GymLead): Promise<void> {
-    await this.collection<GymLead>(COLLECTIONS.gymLeads).insertOne(lead);
+    await this.collection<GymLeadDoc>(COLLECTIONS.gymLeads).insertOne({ ...lead, _id: lead.id });
   }
 }
