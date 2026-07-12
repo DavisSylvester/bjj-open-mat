@@ -1,0 +1,22 @@
+<!-- hero: copy + live demo -->
+<section id="demo" style="display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: center; padding: 84px 0 56px">
+  <div>
+    <span style="display: block; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 20px">Now in beta</span>
+    <h1 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: clamp(42px, 5vw, 72px); line-height: 1.08; letter-spacing: -0.015em; margin: 0; color: var(--color-text)">
+      <span style="display: block">Find a BJJ open mat</span>
+      <span style="display: block">anywhere.</span>
+    </h1>
+    <p style="font-size: 17px; line-height: 1.65; max-width: 54ch; margin: 24px 0 0; color: var(--color-text)">See open mats near you — or in any city you're traveling to. Filter gi and no-gi, see who's going with belt rank, and tap "I'm going."</p>
+    <app-waitlist-form
+      label="Join the founding list"
+      microcopy="Free. No spam. First access plus a Founding Member badge at launch."
+      maxWidth="440px" />
+    <p style="font-size: 14px; margin: 20px 0 0"><a routerLink="/register-gym">I own a gym → claim your mat</a></p>
+  </div>
+
+  <!-- interactive phone demo -->
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+    <app-phone-demo variant="app" />
+    <p style="font-size: 13px; color: var(--color-neutral-500); margin: 0; text-align: center">Live demo — tap a session, RSVP, check in, then open the profile tab.</p>
+  </div>
+</section>

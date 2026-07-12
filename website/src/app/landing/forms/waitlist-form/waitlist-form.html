@@ -1,0 +1,8 @@
+<!-- Static email-capture stub. API wiring lands in Task 15. -->
+<div [style.max-width]="maxWidth()" style="display: flex; gap: var(--space-3); align-items: center; margin-top: 28px">
+  <input class="input" type="email" placeholder="you@email.com" aria-label="Email address" style="flex: 1">
+  <button type="button" class="btn btn-primary" style="min-height: 36px; white-space: nowrap">{{ label() }}</button>
+</div>
+@if (microcopy(); as micro) {
+  <p style="font-size: 13px; line-height: 1.5; color: var(--color-neutral-500); margin: 12px 0 0">{{ micro }}</p>
+}
