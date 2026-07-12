@@ -29,3 +29,13 @@ Thumbs.db
 # Android keystore password (never commit)
 .android-password
 .android-keystore.b64
+
+# Google Play service account (never commit)
+.google-service-account.json
+
+# Website (Angular landing app)
+website/node_modules/
+website/dist/
+website/.angular/
+website/test-results/
+website/reference/*.png
