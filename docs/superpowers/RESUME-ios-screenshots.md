@@ -5,6 +5,23 @@
 current-UI captures already live on Google Play, so Apple doesn't flag the same
 "phantom Schedule tab / misleading" issue. iOS listing is **live / in review**.
 
+---
+
+## ✅ STATUS (2026-07-14): screenshots CAPTURED — only the upload remains
+
+The 3 iOS screenshots are done, at Apple's 6.9" size **1320 × 2868**, saved on the
+capture Mac at `~/Desktop/bjj-ios-screenshots/`:
+- `1-find-75495.png` — Find a Mat, ZIP 75495 → RM Elite result (1 Session, Sun 2:00 PM, Free)
+- `2-rm-elite-detail.png` — RM Elite detail (Directions / I'm going / About / Check In)
+- `3-profile.png` — Profile "BJJ Practitioner" (profile fix verified — no raw Auth0 id)
+
+**Remaining human step:** upload them to App Store Connect (needs Apple ID + 2FA).
+See "Finish-up prompt (another machine)" at the bottom.
+
+> Minor note: `1-find-75495.png` has a faint text caret after "75495" in the ZIP
+> field — barely visible, not a problem. Re-capture unfocused only if you want it
+> pixel-clean (see capture steps below).
+
 > **Why this is parked:** capturing requires a signed-in *practitioner* session.
 > The app router redirects every screen to `/login` when unauthenticated
 > (`apps/mobile/lib/app/router.dart:50-51`). Login is Auth0 (Google/Apple/email)
@@ -92,3 +109,30 @@ present at `/opt/homebrew/bin/cliclick`).
   practitioner discover/profile flow. Do not use it for these screenshots.
 - App Store Connect requires Apple ID + 2FA; the browser session was NOT logged
   in during the parked session. Human must authenticate.
+
+---
+
+## Finish-up prompt (another machine)
+
+Copy the 3 files from `~/Desktop/bjj-ios-screenshots/` to the machine you'll use
+(or download them from the chat where they were delivered), then paste this into
+a Claude Code session there:
+
+> I need to upload 3 new iPhone screenshots to App Store Connect for **BJJ Open Mat**
+> (`com.davissylvester.bjjopenmat`) to fix a Misleading-Claims concern. The 3 files
+> are at `~/Desktop/bjj-ios-screenshots/` (1320×2868, iPhone 6.9"): `1-find-75495.png`,
+> `2-rm-elite-detail.png`, `3-profile.png` — in that display order.
+>
+> I'm logged into App Store Connect (Apple ID + 2FA — I'll handle any auth prompts).
+> Open appstoreconnect.apple.com → BJJ Open Mat → the editable/in-review version →
+> **App Store** tab → **Previews and Screenshots** → **iPhone 6.9" Display**. Walk me
+> through replacing the existing screenshots with these three in order and Saving.
+> If the version is "Waiting for Review," confirm screenshots are still editable
+> without a new binary (they are — it's a metadata change). Do NOT click Submit/
+> Confirm for me — leave the final irreversible submit to me. Also verify the same
+> set covers any other required display sizes, and tell me if a smaller size (6.5")
+> is still required for this app.
+
+**Context if asked:** this mirrors the Google Play set already live (screenshots
+show real prod data — RM Elite Brazilian Jiu-Jitsu, Van Alstyne TX 75495 — no
+phantom "Schedule" tab). Play side is fully published; API deploy is green.
