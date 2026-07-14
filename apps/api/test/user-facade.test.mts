@@ -1,18 +1,28 @@
 import { describe, expect, it } from "bun:test";
 import { UserFacade } from "../src/facades/user.facade.mts";
+import type { NewUser, UserRepository } from "../src/repositories/user.repository.mts";
 import type { User } from "@bjj/contract";
 
-function fakeRepo() {
+type FakeRepo = Pick<UserRepository, "findById" | "insert" | "update" | "upsertByAuth0Id"> & {
+  store: Map<string, User>;
+};
+
+function fakeRepo(): FakeRepo {
   const store = new Map<string, User>();
   return {
     store,
-    findById: async (id: string) => store.get(id) ?? null,
-    insert: async (u: User) => { store.set(u.id, u); return u; },
-    update: async (id: string, patch: Partial<User>) => {
+    findById: async (id: string): Promise<User | null> => store.get(id) ?? null,
+    insert: async (u: User): Promise<User> => { store.set(u.id, u); return u; },
+    update: async (id: string, patch: Partial<User>): Promise<User | null> => {
       const cur = store.get(id); if (!cur) return null;
       const next = { ...cur, ...patch }; store.set(id, next); return next;
     },
-    upsertByAuth0Id: async (u: User) => { store.set(u.id, u); return u; },
+    upsertByAuth0Id: async (auth0Id: string, user: NewUser): Promise<User> => {
+      const existing = store.get(auth0Id);
+      const next = { ...existing, ...user, id: auth0Id } as User;
+      store.set(auth0Id, next);
+      return next;
+    },
   };
 }
 
