@@ -9,6 +9,11 @@ void main() {
     });
     test('keeps a real name', () {
       expect(profileDisplayName('Danaher'), 'Danaher');
+      expect(profileDisplayName('Mary Jane'), 'Mary Jane');
+    });
+    test('falls back for a raw provider id leaked into the name', () {
+      expect(profileDisplayName('auth0-6a36dd6a90830c3d8fb430aa'), 'BJJ Practitioner');
+      expect(profileDisplayName('google-oauth2-102938475610293847561'), 'BJJ Practitioner');
     });
   });
   group('profileEmailForDisplay', () {

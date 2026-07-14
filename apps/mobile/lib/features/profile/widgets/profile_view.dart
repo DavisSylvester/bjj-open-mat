@@ -23,10 +23,23 @@ String? _formatBirthday(String? iso) {
 
 String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1).replaceAll('_', ' ')}';
 
-/// Never show an empty name — a placeholder is friendlier than a blank card
-/// and prevents a raw provider id from surfacing.
-String profileDisplayName(String displayName) =>
-    displayName.trim().isEmpty ? 'BJJ Practitioner' : displayName.trim();
+/// Matches a raw Auth0/social provider subject id that has leaked into a name
+/// field, e.g. `auth0-6a36dd6a90830c3d8fb430aa` or `google-oauth2-1029…`.
+/// These are single-token `<connection>-<id>` strings (no spaces); real names
+/// have spaces or don't start with a connection prefix.
+final RegExp _providerIdName = RegExp(
+  r'^(auth0|google-oauth2|facebook|windowslive|apple|github|twitter|sms|email)-[a-z0-9]+$',
+  caseSensitive: false,
+);
+
+/// Never show an empty name OR a raw provider id — a placeholder is friendlier
+/// than a blank card and guarantees a synthetic identifier never surfaces even
+/// if the backend hasn't yet patched the real name in.
+String profileDisplayName(String displayName) {
+  final n = displayName.trim();
+  if (n.isEmpty || _providerIdName.hasMatch(n)) return 'BJJ Practitioner';
+  return n;
+}
 
 /// Hide the synthetic per-user placeholder email (and empty emails) so a raw
 /// `auth0-…@users.bjj-open-mat.app` identifier is never displayed.
