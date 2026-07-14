@@ -12,6 +12,7 @@ import '../../../shared/widgets/gi_badge.dart';
 import '../../../shared/widgets/exp_badge.dart';
 import '../../../shared/widgets/stat_bar.dart';
 import '../widgets/going_section.dart';
+import '../../gyms/data/directions.dart';
 
 class OpenMatDetailScreen extends ConsumerWidget {
   final String? sessionId;
@@ -48,13 +49,13 @@ class _StatusScaffold extends StatelessWidget {
   }
 }
 
-class _GlassDetail extends StatelessWidget {
+class _GlassDetail extends ConsumerWidget {
   final AppTokens t;
   final OpenMat mat;
   const _GlassDetail({required this.t, required this.mat});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: t.bg,
       body: CustomScrollView(slivers: [
@@ -107,6 +108,23 @@ class _GlassDetail extends StatelessWidget {
               const SizedBox(width: 10),
               _InfoCard(label: 'Fee', value: mat.feeLabel, icon: LucideIcons.dollarSign, t: t, valueColor: mat.feeLabel == 'Free' ? t.green : t.text),
             ]),
+            const SizedBox(height: 14),
+            GestureDetector(
+              onTap: () => openDirections(ref, context, gymId: mat.gymId, address: mat.address),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: t.primary,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Icon(LucideIcons.navigation, size: 16, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text('Directions', style: t.miniStyle.copyWith(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
+                ]),
+              ),
+            ),
             const SizedBox(height: 20),
             GoingSection(t: t, mat: mat),
             if (mat.description != null && mat.description!.isNotEmpty) ...[

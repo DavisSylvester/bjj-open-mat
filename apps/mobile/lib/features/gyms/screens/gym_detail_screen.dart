@@ -8,6 +8,7 @@ import '../../../shared/widgets/session_row.dart';
 import '../../favorites/data/favorite_repository.dart';
 import '../data/gym_repository.dart';
 import '../data/gym_sessions_provider.dart';
+import '../data/directions.dart';
 import '../models/gym.dart';
 
 class GymDetailScreen extends ConsumerWidget {
@@ -124,6 +125,23 @@ class _GlassGymDetail extends ConsumerWidget {
               ],
               if (gym.isVerified) _Pill(label: 'Verified', color: t.green, t: t),
             ]),
+            const SizedBox(height: 14),
+            GestureDetector(
+              onTap: () => openDirections(ref, context, gymId: gym.id, address: gym.address),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: t.primary,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Icon(LucideIcons.navigation, size: 16, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text('Directions', style: t.miniStyle.copyWith(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
+                ]),
+              ),
+            ),
             const SizedBox(height: 20),
             Text('Open Mats', style: t.h2Style),
             const SizedBox(height: 8),
