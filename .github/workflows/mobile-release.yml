@@ -119,6 +119,13 @@ jobs:
           track: ${{ github.event.inputs.play_track || 'internal' }}
           status: draft
 
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-${{ needs.version.outputs.build_number }}.apk
+          path: apps/mobile/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14
+
       - name: Attach APK to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
