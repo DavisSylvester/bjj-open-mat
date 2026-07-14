@@ -36,6 +36,16 @@ export class GithubOidcStack extends Stack {
       }),
     );
 
+    // The api-deploy workflow's post-deploy step reads and rewrites the app
+    // secret to inject OPENAI_API_KEY (voice transcription) using this role's
+    // own credentials — not the CDK bootstrap role — so it needs a direct grant.
+    role.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ["secretsmanager:GetSecretValue", "secretsmanager:PutSecretValue"],
+        resources: [`arn:aws:secretsmanager:${this.region}:${this.account}:secret:bjj-open-mat/app-*`],
+      }),
+    );
+
     new CfnOutput(this, "DeployRoleArn", { value: role.roleArn });
   }
 }
