@@ -1,3 +1,4 @@
+import * as fs from "node:fs";
 import * as path from "node:path";
 import { CfnOutput, RemovalPolicy, Stack, type StackProps } from "aws-cdk-lib";
 import type { Construct } from "constructs";
@@ -54,12 +55,20 @@ export class WebsiteStack extends Stack {
       ],
     });
 
-    new s3deploy.BucketDeployment(this, "DeploySite", {
-      sources: [s3deploy.Source.asset(path.join(repoRoot, "website/dist/website/browser"))],
-      destinationBucket: bucket,
-      distribution,
-      distributionPaths: ["/*"],
-    });
+    // Only wire the content deployment when the built site is present. CDK
+    // synthesizes every stack in the app before deploying any one, so an API
+    // deploy (which never builds the website) would abort synth on a missing
+    // Source.asset() dir. The website-deploy workflow builds first, so the
+    // asset exists there and the site content still deploys.
+    const siteAssetDir = path.join(repoRoot, "website/dist/website/browser");
+    if (fs.existsSync(siteAssetDir)) {
+      new s3deploy.BucketDeployment(this, "DeploySite", {
+        sources: [s3deploy.Source.asset(siteAssetDir)],
+        destinationBucket: bucket,
+        distribution,
+        distributionPaths: ["/*"],
+      });
+    }
 
     // bjj-open-mat.dsylvester.ai -> CloudFront distribution (alias A + AAAA for IPv6).
     const aliasTarget = route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution));
