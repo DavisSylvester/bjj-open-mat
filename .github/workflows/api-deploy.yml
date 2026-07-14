@@ -32,11 +32,15 @@ jobs:
         working-directory: infra
         run: npm ci
 
-      # Builds the Lambda container image (Docker on the runner), pushes to the
-      # CDK-managed ECR, and updates the Lambda + API Gateway.
-      - name: Deploy API stack
+      # Deploy the OIDC deploy-role stack first so any policy changes (e.g. the
+      # secretsmanager grant the sync step below needs) are applied before the
+      # role's in-flight session uses them. IAM evaluates the role's current
+      # policies at call time, so the update takes effect within this same run.
+      # Then build the Lambda container image (Docker on the runner), push to the
+      # CDK-managed ECR, and update the Lambda + API Gateway.
+      - name: Deploy stacks
         working-directory: infra
-        run: npx cdk deploy BjjApiStack --require-approval never
+        run: npx cdk deploy BjjGithubOidcStack BjjApiStack --require-approval never
 
       # Keep the OpenAI key (voice transcription) in the app secret that the
       # Lambda overlays onto process.env at cold start (config/secrets.mts).
