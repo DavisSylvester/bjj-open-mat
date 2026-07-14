@@ -29,13 +29,23 @@ describe("syncFromProvider", () => {
     expect(out.avatarUrl).toBe("https://x/a.png");
   });
 
-  it("non-social user: keeps stored identity (claims ignored)", async () => {
+  it("non-social user: fills the placeholder displayName from provider claims", async () => {
     const store = new Map<string, User>();
     const f = facade(store);
     const email = "db@x.io";
     const dbId: AuthIdentity = { userId: "auth0|5", email, role: "practitioner", viaBypass: false };
     await f.getOrCreate(dbId);
+    const out = await f.syncFromProvider(dbId, { displayName: "Real Name" });
+    expect(out.displayName).toBe("Real Name");
+  });
+
+  it("non-social user: does not overwrite a user-set displayName", async () => {
+    const store = new Map<string, User>();
+    const f = facade(store);
+    const dbId: AuthIdentity = { userId: "auth0|6", email: "db2@x.io", role: "practitioner", viaBypass: false };
+    await f.getOrCreate(dbId);
+    await f.updateProfile("auth0|6", { displayName: "User Set Name" });
     const out = await f.syncFromProvider(dbId, { displayName: "Should Not Apply" });
-    expect(out.displayName).toBe(email.split("@")[0]); // unchanged from getOrCreate
+    expect(out.displayName).toBe("User Set Name");
   });
 });
