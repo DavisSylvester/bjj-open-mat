@@ -48,6 +48,7 @@ export const OpenMatListQuery = t.Object(
     giType: t.Optional(GiType),
     skillLevel: t.Optional(SkillLevel),
     mine: t.Optional(t.Boolean({ description: "sessions at gyms the caller owns" })),
+    gymId: t.Optional(t.String({ description: "sessions at a specific gym" })),
     page: t.Optional(t.Number({ minimum: 1, default: 1 })),
     limit: t.Optional(t.Number({ minimum: 1, maximum: 100, default: 20 })),
     status: t.Optional(OpenMatStatus),

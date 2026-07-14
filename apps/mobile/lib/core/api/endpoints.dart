@@ -34,6 +34,11 @@ class Endpoints {
   // Favorites
   static const String myFavorites = '/api/v1/users/me/favorites';
 
+  // Notifications
+  static const String notifications = '/api/v1/notifications';
+  static String notificationRead(String id) => '/api/v1/notifications/$id/read';
+  static const String notificationsReadAll = '/api/v1/notifications/read-all';
+
   // Geo
   static const String geoReverse = '/api/v1/geo/reverse';
   static const String geoZip = '/api/v1/geo/zip';

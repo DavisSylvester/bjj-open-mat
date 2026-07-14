@@ -18,4 +18,7 @@ describe("contract: community submissions", () => {
   it("OpenMatListQuery accepts status + verified filters", () => {
     expect(Value.Check(OpenMatListQuery, { status: "hidden", verified: false, submittedByMe: true })).toBe(true);
   });
+  it("OpenMatListQuery accepts a gymId filter", () => {
+    expect(Value.Check(OpenMatListQuery, { gymId: "g-123" })).toBe(true);
+  });
 });

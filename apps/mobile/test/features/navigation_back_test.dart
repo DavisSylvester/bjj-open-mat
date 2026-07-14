@@ -5,14 +5,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:bjj_open_mat/core/design/app_theme.dart';
+import 'package:bjj_open_mat/features/gyms/data/gym_repository.dart';
+import 'package:bjj_open_mat/features/gyms/data/gym_sessions_provider.dart';
+import 'package:bjj_open_mat/features/gyms/models/gym.dart';
 import 'package:bjj_open_mat/features/gyms/screens/gym_detail_screen.dart';
+import 'package:bjj_open_mat/features/favorites/data/favorite_repository.dart';
+import 'package:bjj_open_mat/features/open_mats/models/open_mat.dart';
 
 // These tests lock in the navigation-back contract fixed in the audit:
 // list -> detail is a push, so the detail back arrow returns to the list;
 // and a detail reached with no history (deep link) falls back to an explicit
 // parent instead of dead-ending.
 
+const _testGym = Gym(id: 'g1', name: 'Test Gym', address: '123 Main St');
+
+// Gym Detail now fetches real data through providers; stub them so these
+// pure navigation tests don't depend on a live network.
 Widget _app(GoRouter router) => ProviderScope(
+      overrides: [
+        gymByIdProvider.overrideWith((ref, id) async => _testGym),
+        gymSessionsProvider.overrideWith((ref, id) async => <OpenMat>[]),
+        myFavoritesProvider.overrideWith((ref) async => <Gym>[]),
+      ],
       child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
     );
 
@@ -53,13 +67,13 @@ void main() {
     // Enter the detail via push (as discover/search now do).
     await tester.tap(find.text('OPEN GYM'));
     await tester.pumpAndSettle();
-    expect(find.text('ATOS HQ'), findsOneWidget);
+    expect(find.text('TEST GYM'), findsOneWidget);
 
     // Back arrow should pop back to the list.
     await tester.tap(find.byIcon(LucideIcons.arrowLeft).first);
     await tester.pumpAndSettle();
     expect(find.text('OPEN GYM'), findsOneWidget);
-    expect(find.text('ATOS HQ'), findsNothing);
+    expect(find.text('TEST GYM'), findsNothing);
   });
 
   testWidgets('gym detail reached with no history falls back to / instead of dead-ending', (tester) async {
@@ -85,7 +99,7 @@ void main() {
 
     await tester.pumpWidget(_app(router));
     await tester.pumpAndSettle();
-    expect(find.text('ATOS HQ'), findsOneWidget);
+    expect(find.text('TEST GYM'), findsOneWidget);
 
     // canPop() is false here; the guarded handler must go('/') rather than no-op.
     await tester.tap(find.byIcon(LucideIcons.arrowLeft).first);

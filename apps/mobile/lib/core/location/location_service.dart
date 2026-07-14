@@ -1,6 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
+/// True when a GPS fix is a plausible real-world location. Emulators and cold
+/// GPS chips frequently report (0,0) (Null Island) or out-of-range/non-finite
+/// values; those must NOT be treated as "near me" or the near-you query
+/// matches nothing and discovery looks empty. Returning false here routes the
+/// app into the location-less browse-all path.
+bool isPlausibleFix(double lat, double lng) {
+  if (!lat.isFinite || !lng.isFinite) return false;
+  if (lat.abs() > 90 || lng.abs() > 180) return false;
+  if (lat.abs() < 0.01 && lng.abs() < 0.01) return false; // Null Island
+  return true;
+}
+
 class CapturedLocation {
   final double latitude;
   final double longitude;
@@ -30,6 +42,7 @@ class GeolocatorLocationService implements LocationService {
         final pos = await Geolocator.getCurrentPosition(
           locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium, timeLimit: Duration(seconds: 10)),
         );
+        if (!isPlausibleFix(pos.latitude, pos.longitude)) return _lastKnown();
         return CapturedLocation(latitude: pos.latitude, longitude: pos.longitude, accuracyM: pos.accuracy);
       } catch (_) {
         // Fresh fix timed out — fall back to the last cached fix so the search
@@ -44,7 +57,7 @@ class GeolocatorLocationService implements LocationService {
   Future<CapturedLocation?> _lastKnown() async {
     try {
       final pos = await Geolocator.getLastKnownPosition();
-      if (pos == null) return null;
+      if (pos == null || !isPlausibleFix(pos.latitude, pos.longitude)) return null;
       return CapturedLocation(latitude: pos.latitude, longitude: pos.longitude, accuracyM: pos.accuracy);
     } catch (_) {
       return null;

@@ -50,6 +50,7 @@ export function openMatRoutes(container: Container) {
           zip: query.zip,
           city: query.city,
           state: query.state,
+          gymId: query.gymId,
         };
         if (query.mine) filter.gymOwnerId = requireId(identity).userId;
         if (query.submittedByMe) filter.hostId = requireId(identity).userId;

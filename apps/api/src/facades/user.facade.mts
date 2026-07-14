@@ -22,7 +22,7 @@ export class UserFacade {
     return this.users.insert({
       id: identity.userId,
       email,
-      displayName: email.split("@")[0] ?? identity.userId,
+      displayName: "",
       settings: DEFAULT_SETTINGS,
       createdAt: new Date().toISOString(),
     });
@@ -38,11 +38,15 @@ export class UserFacade {
 
   public async syncFromProvider(identity: AuthIdentity, claims: AuthSyncRequest): Promise<User> {
     const user = await this.getOrCreate(identity);
-    if (!isSocial(identity.userId)) return user; // db/bypass users manage their own identity
+    const isPlaceholderEmail = user.email.endsWith("@users.bjj-open-mat.app");
     const patch: Partial<User> = {};
-    if (claims.displayName) patch.displayName = claims.displayName;
-    if (claims.email) patch.email = claims.email;
-    if (claims.avatarUrl) patch.avatarUrl = claims.avatarUrl;
+    // Social users re-sync provider identity every login (they own no local
+    // name). Database users get filled ONLY when the stored value is still the
+    // empty/placeholder default, so a user-edited name is never overwritten.
+    const social = isSocial(identity.userId);
+    if (claims.displayName && (social || user.displayName.trim() === "")) patch.displayName = claims.displayName;
+    if (claims.email && (social || isPlaceholderEmail)) patch.email = claims.email;
+    if (claims.avatarUrl && (social || !user.avatarUrl)) patch.avatarUrl = claims.avatarUrl;
     if (Object.keys(patch).length === 0) return user;
     const updated = await this.users.update(identity.userId, patch);
     return updated ?? user;

@@ -23,11 +23,37 @@ String? _formatBirthday(String? iso) {
 
 String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1).replaceAll('_', ' ')}';
 
+/// Matches a raw Auth0/social provider subject id that has leaked into a name
+/// field, e.g. `auth0-6a36dd6a90830c3d8fb430aa` or `google-oauth2-1029…`.
+/// These are single-token `<connection>-<id>` strings (no spaces); real names
+/// have spaces or don't start with a connection prefix.
+final RegExp _providerIdName = RegExp(
+  r'^(auth0|google-oauth2|facebook|windowslive|apple|github|twitter|sms|email)-[a-z0-9]+$',
+  caseSensitive: false,
+);
+
+/// Never show an empty name OR a raw provider id — a placeholder is friendlier
+/// than a blank card and guarantees a synthetic identifier never surfaces even
+/// if the backend hasn't yet patched the real name in.
+String profileDisplayName(String displayName) {
+  final n = displayName.trim();
+  if (n.isEmpty || _providerIdName.hasMatch(n)) return 'BJJ Practitioner';
+  return n;
+}
+
+/// Hide the synthetic per-user placeholder email (and empty emails) so a raw
+/// `auth0-…@users.bjj-open-mat.app` identifier is never displayed.
+String? profileEmailForDisplay(String email) {
+  if (email.trim().isEmpty) return null;
+  if (email.endsWith('@users.bjj-open-mat.app')) return null;
+  return email;
+}
+
 /// The gradient identity card: avatar + displayName + email + belt pill.
 /// Shared between the main Profile screen and the public attendee profile.
 Widget profileGlassHero(BuildContext context, AppTokens t, UserProfile user) {
-  final displayName = user.displayName;
-  final email = user.email;
+  final displayName = profileDisplayName(user.displayName);
+  final email = profileEmailForDisplay(user.email);
   final beltRank = user.beltRank ?? 'white';
   final beltStripes = user.beltStripes ?? 0;
   final avatarUrl = user.avatarUrl;
@@ -65,9 +91,11 @@ Widget profileGlassHero(BuildContext context, AppTokens t, UserProfile user) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(displayName, style: t.h1Style.copyWith(color: Colors.white, fontSize: 23)),
-                const SizedBox(height: 3),
-                Text(email, style: t.bodyStyle.copyWith(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
-                const SizedBox(height: 9),
+                if (email != null) ...[
+                  const SizedBox(height: 3),
+                  Text(email, style: t.bodyStyle.copyWith(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                  const SizedBox(height: 9),
+                ] else const SizedBox(height: 9),
                 Row(mainAxisSize: MainAxisSize.min, children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 4, 10, 4),
