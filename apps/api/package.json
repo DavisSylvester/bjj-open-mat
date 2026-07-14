@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "bun --watch src/index.mts",
     "start": "bun src/index.mts",
-    "seed": "bun src/data/seed-runner.mts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src test",
     "test": "bun test",
