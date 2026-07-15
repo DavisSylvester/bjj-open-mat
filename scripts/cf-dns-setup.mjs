@@ -37,6 +37,8 @@ const R53_ZONE_ID = 'Z084603532M2PA5E3QFC8';
 const AWS_PROFILE = process.env.AWS_PROFILE ?? 'dsylvesteriii';
 const AWS_REGION = 'us-east-1';
 const CLOUDFRONT_DOMAIN = process.env.CLOUDFRONT_DOMAIN;
+// Set this to reuse an already-created cert (skips step 2) — useful after a failed run.
+const EXISTING_CERT_ARN = process.env.EXISTING_CERT_ARN;
 
 if (!CF_TOKEN) {
   console.error('Error: CLOUDFLARE_DNS_TOKEN is not set.');
@@ -106,15 +108,21 @@ async function main() {
   console.log(`  Zone ID: ${cfZoneId}`);
 
   // 2. Request ACM certificate (us-east-1, required by CloudFront)
-  console.log('\nRequesting ACM certificate...');
-  const certArn = aws(
-    `acm request-certificate` +
-    ` --domain-name ${APEX}` +
-    ` --subject-alternative-names ${WWW} ${SITE}` +
-    ` --validation-method DNS` +
-    ` --query CertificateArn --output text`,
-  );
-  console.log(`  ARN: ${certArn}`);
+  let certArn;
+  if (EXISTING_CERT_ARN) {
+    certArn = EXISTING_CERT_ARN;
+    console.log(`\nReusing existing ACM certificate: ${certArn}`);
+  } else {
+    console.log('\nRequesting ACM certificate...');
+    certArn = aws(
+      `acm request-certificate` +
+      ` --domain-name ${APEX}` +
+      ` --subject-alternative-names ${WWW} ${SITE}` +
+      ` --validation-method DNS` +
+      ` --query CertificateArn --output text`,
+    );
+    console.log(`  ARN: ${certArn}`);
+  }
 
   // 3. Poll until ACM populates DomainValidationOptions (usually ~10 s)
   console.log('\nWaiting for validation options to populate...');
@@ -147,14 +155,17 @@ async function main() {
       });
     } else if (!addedToCf.has(Name)) {
       addedToCf.add(Name);
-      const existing = await cfRequest('GET', `/zones/${cfZoneId}/dns_records?type=CNAME&name=${encodeURIComponent(Name)}`);
+      // ACM returns FQDNs with trailing dots; Cloudflare uses relative names without them.
+      const cfName = Name.replace(/\.$/, '');
+      const cfValue = Value.replace(/\.$/, '');
+      const existing = await cfRequest('GET', `/zones/${cfZoneId}/dns_records?type=CNAME&name=${encodeURIComponent(cfName)}`);
       if (existing.length) {
         console.log(`    -> already present in Cloudflare, skipping`);
       } else {
         await cfRequest('POST', `/zones/${cfZoneId}/dns_records`, {
           type: 'CNAME',
-          name: Name,
-          content: Value,
+          name: cfName,
+          content: cfValue,
           ttl: 300,
           proxied: false, // must be DNS-only for ACM validation
         });
@@ -166,7 +177,7 @@ async function main() {
   if (r53Changes.length) {
     aws(
       `route53 change-resource-record-sets --hosted-zone-id ${R53_ZONE_ID}`,
-      { Changes: r53Changes },
+      { ChangeBatch: { Changes: r53Changes } },
     );
     console.log(`  -> Route 53 updated for ${SITE}`);
   }
