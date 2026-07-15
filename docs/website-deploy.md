@@ -1,11 +1,18 @@
 # Marketing Website — Deploy & DNS Runbook
 
-The marketing site (`website/`, Angular) is hosted on AWS S3 + CloudFront and served at
-**https://bjj-open-mat.dsylvester.ai**. The lead-capture API (waitlist + gym leads) runs on the
-existing Lambda API at **https://api.bjj-open-mat.dsylvester.io** and sends email via Amazon SES.
+The marketing site (`website/`, Angular) is hosted on AWS S3 + CloudFront and served at:
 
-All DNS for `dsylvester.ai` is automated through its Route 53 hosted zone
-(`Z084603532M2PA5E3QFC8`, account `318205107378`) — there are **no manual DNS steps**.
+- **https://bjjopenmat.app** (primary)
+- **https://www.bjjopenmat.app**
+- **https://bjj-open-mat.dsylvester.ai** (original, still active)
+
+The lead-capture API (waitlist + gym leads) runs on the existing Lambda API at
+**https://api.bjj-open-mat.dsylvester.io** and sends email via Amazon SES.
+
+DNS for `dsylvester.ai` is automated via Route 53 (`Z084603532M2PA5E3QFC8`, account
+`318205107378`). DNS for `bjjopenmat.app` is managed in Cloudflare — see
+[docs/cloudflare-dns.md](cloudflare-dns.md) for the full setup runbook and one-time
+certificate provisioning steps.
 
 ## Prerequisites
 

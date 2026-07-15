@@ -13,6 +13,7 @@ import * as targets from "aws-cdk-lib/aws-route53-targets";
 const SITE_DOMAIN = "bjj-open-mat.dsylvester.ai";
 const ZONE_ID = "Z084603532M2PA5E3QFC8";
 const ZONE_NAME = "dsylvester.ai";
+const BJJOPENMAT_DOMAINS = ["bjjopenmat.app", "www.bjjopenmat.app"];
 
 // Static hosting for the Angular marketing site: a private S3 bucket fronted by
 // CloudFront (OAC). The ACM cert is DNS-validated against the dsylvester.ai
@@ -23,6 +24,12 @@ export class WebsiteStack extends Stack {
     super(scope, id, props);
 
     const repoRoot = path.resolve(process.cwd(), "..");
+
+    // When BJJOPENMAT_CERT_ARN is set, import the pre-validated combined cert covering
+    // bjj-open-mat.dsylvester.ai + bjjopenmat.app + www.bjjopenmat.app. Run
+    // scripts/cf-dns-setup.mjs once to create and validate the cert, then save the
+    // ARN as the BJJOPENMAT_CERT_ARN GitHub secret.
+    const certArn = process.env.BJJOPENMAT_CERT_ARN;
 
     const bucket = new s3.Bucket(this, "SiteBucket", {
       bucketName: "bjj-open-mat-website",
@@ -36,17 +43,21 @@ export class WebsiteStack extends Stack {
       zoneName: ZONE_NAME,
     });
 
-    const certificate = new acm.Certificate(this, "SiteCert", {
-      domainName: SITE_DOMAIN,
-      validation: acm.CertificateValidation.fromDns(zone), // auto-creates validation record in the zone
-    });
+    const certificate = certArn
+      ? acm.Certificate.fromCertificateArn(this, "SiteCert", certArn)
+      : new acm.Certificate(this, "SiteCert", {
+          domainName: SITE_DOMAIN,
+          validation: acm.CertificateValidation.fromDns(zone),
+        });
+
+    const domainNames = certArn ? [SITE_DOMAIN, ...BJJOPENMAT_DOMAINS] : [SITE_DOMAIN];
 
     const distribution = new cloudfront.Distribution(this, "SiteDistribution", {
       defaultBehavior: {
         origin: origins.S3BucketOrigin.withOriginAccessControl(bucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
-      domainNames: [SITE_DOMAIN],
+      domainNames,
       certificate,
       defaultRootObject: "index.html",
       errorResponses: [
