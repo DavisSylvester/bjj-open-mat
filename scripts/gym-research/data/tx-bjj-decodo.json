@@ -1,0 +1,1294 @@
+[
+  {
+    "name": "10th Planet Airlock",
+    "website": "https://airlockbjj.com/",
+    "domain": "airlockbjj.com",
+    "city": "Tyler",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://airlockbjj.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "10th Planet Forth Worth",
+    "website": "https://www.10thplanetfortworth.com/",
+    "domain": "10thplanetfortworth.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.10thplanetfortworth.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "Friday",
+      "time": "7:00 PM",
+      "evidence": "00-7:00 PM - Kickboxing 7:00-8:00 PM - All Levels Jiu Jitsu 8:00-9:00 PM - Leg Locks Friday 6:00 PM - Open Mat Saturday 11 :00 A M -12:00 PM - All Levels Jiu Jitsu Sunday 1:00 PM - Open Mat We offer a free trial class for new students."
+    }
+  },
+  {
+    "name": "11",
+    "website": "https://11-21.com/",
+    "domain": "11-21.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://11-21.com/schedule/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "144 Academy &#8211; Premier Jiu",
+    "website": "https://144academy.com/",
+    "domain": "144academy.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://144academy.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "3 Embers Grappling Academy",
+    "website": "https://www.3embersgrapplingacademy.com/",
+    "domain": "3embersgrapplingacademy.com",
+    "city": "Mesquite",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.3embersgrapplingacademy.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "5 Elements Studio",
+    "website": "https://5elementsstudio.com/",
+    "domain": "5elementsstudio.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://5elementsstudio.com/kids-martial-arts-classes-dallas/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Absolute Boxing",
+    "website": "https://absolutefitness247.com/",
+    "domain": "absolutefitness247.com",
+    "city": "Irving",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://absolutefitness247.com/min/?b=styles&amp;f=fonts/css/mor.css,fonts.css,reset.css,academy/main.css,academy/form.css,academy/forms.css,academy/templates/base.css,academy/templates/light.css,academy/schedule-grid.css,academy/schedule.css,academy/instructors.css,manager/belts.css,academy/homepage.css,academy/shop.css,academy/book-pay.css,colors.css,manager/ui.css&amp;v=2e0fff3b10d7",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Absolute Self Defense Academy",
+    "website": "https://absolutesdacademy.com/",
+    "domain": "absolutesdacademy.com",
+    "city": "Killeen",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://absolutesdacademy.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "academyofchampionsdallas.com",
+    "website": "https://academyofchampionsdallas.com/",
+    "domain": "academyofchampionsdallas.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://academyofchampionsdallas.com/#scheduledt",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Aces Jiu Jitsu Club",
+    "website": "https://acesjiujitsuclub.com/",
+    "domain": "acesjiujitsuclub.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://acesjiujitsuclub.com/classes/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Alliance BJJ Fort Worth",
+    "website": "https://alliancejjfw.com/",
+    "domain": "alliancejjfw.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://alliancejjfw.com/pages/schedule",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Alpha Omega Jiu",
+    "website": "https://www.alphaomegajj.com/",
+    "domain": "alphaomegajj.com",
+    "city": "Laredo",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.alphaomegajj.com/new-course-schedule-announced",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "Friday",
+      "time": "7:00pm",
+      "evidence": "Thursdays classes are No-Gi (for Adult classes only).* ​ Friday: &nbsp; &nbsp; &nbsp;Open Mat - 7:00pm-8:00pm ​ Jiu-Jitsu Schedule (Kids) Monday, Wednesday, and Friday All Levels - 6:"
+    }
+  },
+  {
+    "name": "Alvarez Brazilian Jiu Jitsu",
+    "website": "https://alvarezbjj.com/",
+    "domain": "alvarezbjj.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://alvarezbjj.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "AOA BJJ Academy",
+    "website": "https://www.aoacommunity.com/",
+    "domain": "aoacommunity.com",
+    "city": "El Paso",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.aoacommunity.com/schedule",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "TUESDAY",
+      "time": "7 PM",
+      "evidence": "6 ) 7 PM&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Adults BJJ - (Gi) 8 PM&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Open Mat TUESDAY 5:30 AM&nbsp; &nbsp; &nbsp;Adults BJJ - Gi 5 PM&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Kids BJJ - N"
+    }
+  },
+  {
+    "name": "Arlington MMA",
+    "website": "https://arlingtonmma.com/",
+    "domain": "arlingtonmma.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://arlingtonmma.com/min/?b=styles&amp;f=fonts/css/mor.css,fonts.css,reset.css,academy/main.css,academy/form.css,academy/forms.css,academy/templates/base.css,academy/templates/light.css,academy/schedule-grid.css,academy/schedule.css,academy/instructors.css,manager/belts.css,academy/homepage.css,academy/shop.css,academy/book-pay.css,colors.css,manager/ui.css&amp;v=2e0fff3b10d7",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Back Mountain Grappling Academy &#8211; Back Mountain Grappling Academy &#8211; BFC",
+    "website": "https://brawlersmma.com/",
+    "domain": "brawlersmma.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://brawlersmma.com/classes/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "BJJ Finder",
+    "website": "https://www.jiujitsufinder.com/",
+    "domain": "jiujitsufinder.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.jiujitsufinder.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Black Sheep BJJ",
+    "website": "https://blacksheepbjjep.com/",
+    "domain": "blacksheepbjjep.com",
+    "city": "El Paso",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://blacksheepbjjep.com/schedule/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Black Wolf Jiu Jitsu",
+    "website": "https://blackwolfjiujitsu.com/",
+    "domain": "blackwolfjiujitsu.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://blackwolfjiujitsu.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Boon Martial Arts",
+    "website": "https://www.boonmma.com/",
+    "domain": "boonmma.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.boonmma.com/classes",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Brazil",
+    "website": "https://brazil021arlingtonheights.com/",
+    "domain": "brazil021arlingtonheights.com",
+    "city": "Arlington",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://brazil021arlingtonheights.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Brazilian Top Team Irving",
+    "website": "https://www.bttirving.com/",
+    "domain": "bttirving.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.bttirving.com/schedule.html",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": null,
+      "time": null,
+      "evidence": "d No-Gi classes with world-class instruction from champion black belts. Includes Beginners, Essentials, All Levels, and Open Mat sessions.\", \"provider\": { \"@id\": \"https://www.bttirving.com/#organization\" }, \"coursePrerequisites\": \"No experience require"
+    }
+  },
+  {
+    "name": "BTT North Dallas",
+    "website": "https://bttnorthdallas.com/",
+    "domain": "bttnorthdallas.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://bttnorthdallas.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "saturday",
+      "time": "8:30pm",
+      "evidence": "ype:\"gi\"}, {time:\"7:00 – 8:30pm\",name:\"Regular Gi\",type:\"gi\"} ], saturday:[ {time:\"11:00am – 12:30pm\",name:\"Open Mat\",type:\"openmat\"} ], sunday:[] }; Programs Instructors &#128197; Class Times"
+    }
+  },
+  {
+    "name": "Campuzano Martial Arts",
+    "website": "https://campuzanomma.com/",
+    "domain": "campuzanomma.com",
+    "city": "Frisco",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://campuzanomma.com/classes/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Carlos Machado Jiu Jitsu",
+    "website": "https://www.marciosantosjiujitsu.com/",
+    "domain": "marciosantosjiujitsu.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.marciosantosjiujitsu.com/our-classes",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "DFW BOXING CLUB",
+    "website": "https://dfwkickboxing.com/",
+    "domain": "dfwkickboxing.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://dfwkickboxing.com/min/?b=styles&amp;f=fonts/css/mor.css,fonts.css,reset.css,academy/main.css,academy/form.css,academy/forms.css,academy/templates/base.css,academy/templates/light.css,academy/schedule-grid.css,academy/schedule.css,academy/instructors.css,manager/belts.css,academy/homepage.css,academy/shop.css,academy/book-pay.css,colors.css,manager/ui.css&amp;v=2e0fff3b10d7",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "DFW Combat Co.",
+    "website": "https://www.dfwcombat.com/",
+    "domain": "dfwcombat.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.dfwcombat.com/krav-maga-classes",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Diamondback Brazilian Jiu Jitsu",
+    "website": "https://diamondbackbjj.com/",
+    "domain": "diamondbackbjj.com",
+    "city": "Frisco",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://diamondbackbjj.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Fcirondojo.com",
+    "website": "https://fcirondojo.com/",
+    "domain": "fcirondojo.com",
+    "city": "Killeen",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://fcirondojo.com/martial-art-classes-in-copperas-cove-tx/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Fort Worth Combatives Self Defense, First Aid Trauma Medical, Martial Arts and Firearms Training",
+    "website": "https://www.fortworthcombatives.com/",
+    "domain": "fortworthcombatives.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.fortworthcombatives.com/classes/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Georges MMA and Boxing Gym",
+    "website": "https://dallasmmaboxing.com/",
+    "domain": "dallasmmaboxing.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://dallasmmaboxing.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Gracie Barra Corpus Christi",
+    "website": "https://www.graciebarracorpuschristi.com/",
+    "domain": "graciebarracorpuschristi.com",
+    "city": "Corpus Christi",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.graciebarracorpuschristi.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Gracie Barra Jiu",
+    "website": "https://gbfriscotexas.com/",
+    "domain": "gbfriscotexas.com",
+    "city": "Frisco",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://gbfriscotexas.com/self-defense-foundation-adult-bjj-classes/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Grit Factory",
+    "website": "https://gritfactory.net/",
+    "domain": "gritfactory.net",
+    "city": "Plano",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://gritfactory.net/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Home",
+    "website": "https://www.northerntribebjj.com/",
+    "domain": "northerntribebjj.com",
+    "city": "Plano",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.northerntribebjj.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Jiu Jitsu Near Me",
+    "website": "https://jiujitsunearme.org/",
+    "domain": "jiujitsunearme.org",
+    "city": "Arlington",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://jiujitsunearme.org/gyms/new-mexico/albuquerque/gracie-barra-albuquerque-jiu-jitsu-classes",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": null,
+      "time": null,
+      "evidence": "Patient Knowledgeable Technical Supportive World-class Classes Gi No-Gi Competition Advanced Open mat Kids Classes Adult friendly Pricing Good Value Free trial Gracie Barra Albuquerque offers a free introductory class for prospective"
+    }
+  },
+  {
+    "name": "Jiu Jitsu Tech",
+    "website": "https://www.jiujitsutech.com/",
+    "domain": "jiujitsutech.com",
+    "city": "Temple",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.jiujitsutech.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "Sunday",
+      "time": "1:30pm",
+      "evidence": "Sunday Open Mat: All affiliates welcome! 1:30pm - 3:30pm Monday: 10:00am - 11:00am Homeschool JJ 11:00am - 12:00pm Adult JJ 5:30pm - 6:15pm"
+    }
+  },
+  {
+    "name": "Jupiter Kickboxing",
+    "website": "https://jupiterkickboxing.com/",
+    "domain": "jupiterkickboxing.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://jupiterkickboxing.com/schedule-pricing",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "Thursday",
+      "time": "6:00 PM",
+      "evidence": "Tai Chi 6:00 PM Kickboxing 6:45 PM No Gi Judo 7:00 PM Boxing Thursday 5:00 PM Bootcamp 6:00 PM Open Mat 6:00 PM Kickboxing 6:45 PM Grappling 7:00 PM Boxing 7:30 PM MMA Friday 6:00 AM Kickboxing 12:00 PM Kickboxing 4:30 PM"
+    }
+  },
+  {
+    "name": "KuGar Taekwondo",
+    "website": "https://kugartkd.com/",
+    "domain": "kugartkd.com",
+    "city": "Laredo",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://start.kugartkd.com/kidsscheduler",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Laredo Kickboxing Academy",
+    "website": "https://www.laredokickboxingacademy.com/",
+    "domain": "laredokickboxingacademy.com",
+    "city": "Laredo",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.laredokickboxingacademy.com/collections/our-classes",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Legacy BJJ Allen",
+    "website": "https://legacy-bjj.com/",
+    "domain": "legacy-bjj.com",
+    "city": "Plano",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://legacy-bjj.com/schedule/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Login",
+    "website": "https://sfsmma.com/",
+    "domain": "sfsmma.com",
+    "city": "Mesquite",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://sfsmma.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Machado Method Jiu",
+    "website": "https://www.carlosmachado.net/",
+    "domain": "carlosmachado.net",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.carlosmachado.net/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Maple Ave Boxing &amp; MMA Gym in Dallas, Texas",
+    "website": "https://mapleavenueboxinggym.com/",
+    "domain": "mapleavenueboxinggym.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://mapleavenueboxinggym.com/classes",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Marcelo Garcia Dallas Brazilian Jiu",
+    "website": "https://www.marcelogarciadallas.com/",
+    "domain": "marcelogarciadallas.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.marcelogarciadallas.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "Saturday",
+      "time": null,
+      "evidence": "ck; } Coach Mario and Black Belt Jesus training during Saturday Open Mat. #block-6ae624a505f89ffa0b10 { --stroke-style: none;--stroke-thickness: 6px; } #block-6ae624a5"
+    }
+  },
+  {
+    "name": "Marcus Antelante Brazilian Jiu",
+    "website": "https://mabjjacademy.com/",
+    "domain": "mabjjacademy.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://mabjjacademy.com/#schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Mavericks Brazilian Jiu",
+    "website": "https://mavericksbjj.com/",
+    "domain": "mavericksbjj.com",
+    "city": "Laredo",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://mavericksbjj.com/brazilian-jiu-jitsu-classes/#bjjclasses",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "New Concept BJJ Dallas",
+    "website": "https://newconceptbjj.com/",
+    "domain": "newconceptbjj.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://newconceptbjj.com/kids-brazilian-jiu-jitsu-classes-dallas/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "New World Combat Muay Thai/MMA/CQC",
+    "website": "http://newworldcombat.com/",
+    "domain": "newworldcombat.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "http://newworldcombat.com/schedule-1",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Next Generation MMA",
+    "website": "https://nextgenerationmma.com/",
+    "domain": "nextgenerationmma.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://nextgenerationmma.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Ocelotl Martial Arts",
+    "website": "https://www.ocelotlmartialarts.com/",
+    "domain": "ocelotlmartialarts.com",
+    "city": "El Paso",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.ocelotlmartialarts.com/weeklyschedule",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Octagon Martial Arts Studio",
+    "website": "https://octagonmma.com/",
+    "domain": "octagonmma.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://octagonmma.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": null,
+      "time": "1:00pm",
+      "evidence": "0pm Open Mat Jiu-Jitsu Training (Members Only) - Ryan Benoit 12:00-1:00pm"
+    }
+  },
+  {
+    "name": "originalbrazilianjiujitsu.com",
+    "website": "https://originalbrazilianjiujitsu.com/",
+    "domain": "originalbrazilianjiujitsu.com",
+    "city": "Arlington",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://originalbrazilianjiujitsu.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Panther City Martial Arts",
+    "website": "https://panthercitymartialarts.com/",
+    "domain": "panthercitymartialarts.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://panthercitymartialarts.com/schedule/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Precision Jiu Jitsu",
+    "website": "https://precisionjjlindale.com/",
+    "domain": "precisionjjlindale.com",
+    "city": "Tyler",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://precisionjjlindale.com/schedule/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": null,
+      "time": "6:15pm",
+      "evidence": "Ages 7-12 Adult Jiu-Jitsu 6:15pm - 7:00pm Open Mat (By announcement only) 6:00pm – 7:00pm Closed"
+    }
+  },
+  {
+    "name": "progressojiujitsuplano.com",
+    "website": "https://progressojiujitsuplano.com/",
+    "domain": "progressojiujitsuplano.com",
+    "city": "Plano",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://progressojiujitsuplano.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Renzo Gracie Jiu Jitsu DFW",
+    "website": "https://renzograciejiujitsudfw.com/",
+    "domain": "renzograciejiujitsudfw.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://renzograciejiujitsudfw.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Rio Jiu",
+    "website": "https://join.riobjj.com/",
+    "domain": "riobjj.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://join.riobjj.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Sharpen Iron Academy",
+    "website": "https://sharpenironacademy.com/",
+    "domain": "sharpenironacademy.com",
+    "city": "Plano",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://sharpenironacademy.com/adult-bjj-classes/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Silverbackbjj",
+    "website": "https://www.silverbackbjjfw.com/",
+    "domain": "silverbackbjjfw.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.silverbackbjjfw.com/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Six Blades Jiu",
+    "website": "https://jiujitsufortworth.com/",
+    "domain": "jiujitsufortworth.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://jiujitsufortworth.com/jiu-jitsu-classes/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "SixBladesBJJMckinney",
+    "website": "https://www.jiujitsumckinney.com/",
+    "domain": "jiujitsumckinney.com",
+    "city": "Mesquite",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.jiujitsumckinney.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Southside MMA",
+    "website": "https://www.southsidemma.net/",
+    "domain": "southsidemma.net",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.southsidemma.net/schedule",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": null,
+      "time": null,
+      "evidence": "ADULTS&nbsp; FRIDAYS ANS SUNDAYS: NO CLASSES&nbsp; BE ON THE LOOKOUT FOR OPEN MAT &amp; OTHER SPECIAL EVENTS Southside Mixed Martial Arts&nbsp; southsidemma21@gmail.com"
+    }
+  },
+  {
+    "name": "TAMA Martial Arts",
+    "website": "https://tamamartialarts.com/",
+    "domain": "tamamartialarts.com",
+    "city": "Garland",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://tamamartialarts.com/martial-arts-lessons/krav-maga-isd-classes/",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Tension Tribe Jiu Jitsu",
+    "website": "https://www.tensiontribe.com/",
+    "domain": "tensiontribe.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.tensiontribe.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "Twin Wolves MMA",
+    "website": "http://twmma.com/",
+    "domain": "twmma.com",
+    "city": "Killeen",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "http://twmma.com/schedule",
+      "via": "day/time table"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  },
+  {
+    "name": "WISE BRAZILIAN JIU",
+    "website": "https://www.wisejiujitsu.com/",
+    "domain": "wisejiujitsu.com",
+    "city": "Fort Worth",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://www.wisejiujitsu.com/schedule.html",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": true,
+      "day": "Friday",
+      "time": "12:00pm",
+      "evidence": "Friday 12:00pm - 1:15pm Adults Noon Class&ndash; Gi 6:00pm - 6:50pm Kids Open Mat&ndash; Gi 7:00pm - 8:15pm Adults Beginner/Fundamentals Class&ndash; Gi Saturday 9:00am - 1"
+    }
+  },
+  {
+    "name": "Wolfpack MMA",
+    "website": "https://wolfpackmma.com/",
+    "domain": "wolfpackmma.com",
+    "city": "Dallas",
+    "state": "TX",
+    "referencesBjj": true,
+    "schedule": {
+      "found": true,
+      "url": "https://wolfpackmma.com/",
+      "via": "booking-platform embed"
+    },
+    "openMat": {
+      "hosts": false,
+      "day": null,
+      "time": null,
+      "evidence": null
+    }
+  }
+]

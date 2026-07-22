@@ -1,0 +1,3539 @@
+[
+  {
+    "_id": "gpl-ChIJde18M7lxTIYRsVj14Zd17lg",
+    "name": "Rogers Martial Arts",
+    "city": "Van Alstyne",
+    "url": "http://rogersmartialartstx.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJFXYS_2wTTIYRLqlku8kYXFo",
+    "name": "HERNANDEZ MMA & FITNESS",
+    "city": "Anna",
+    "url": "http://hernandezmmafitness.com/",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJaUd9xnJzTIYRcm_B59dy620",
+    "name": "NTX MMA",
+    "city": "Anna",
+    "url": "https://ntxmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJl9_zHgBzTIYRCPnRSW_hKZU",
+    "name": "Professional Black Belt Academy - Melissa",
+    "city": "Melissa",
+    "url": "https://problackbeltmelissa.com/",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJv3iaE_sSTIYRaOyvb4mYJiw",
+    "name": "The Martial Arts Laboratory",
+    "city": "McKinney",
+    "url": "http://themartialartslaboratory.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJJZzWWcWJTIYRmthvDCIgXFU",
+    "name": "Arnold's Martial Arts",
+    "city": "Sherman",
+    "url": "https://arnoldsma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ281qaWITTIYRwkfe0eXd6H8",
+    "name": "GUEGO TEAM MCKINNEY TX",
+    "city": "McKinney",
+    "url": "http://www.tbtgym.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJhTvZ2DIVTIYRrnLzHri6JaU",
+    "name": "RockStar Martial Arts - North McKinney",
+    "city": "McKinney",
+    "url": "https://rockstarmartialarts.com/mckinney",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ_2gJRUGJTIYRIiBNQuKxBVc",
+    "name": "Fight Time Fitness",
+    "city": "Sherman",
+    "url": "http://fighttimefitness.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJM_OB5uQVTIYRNDQm56Yh9AI",
+    "name": "Warrior Martial Arts Academy McKinney",
+    "city": "McKinney",
+    "url": "https://www.warriormartialartsacademy.com/locations/west-mckinney/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJL5NuKwiFTIYRpV-w8FNBS6o",
+    "name": "Freedom Martial Arts Fitness and More",
+    "city": "Sherman",
+    "url": "http://www.freedommafitness.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJNco468oVTIYRsTngkI0a8yc",
+    "name": "Motus | McKinney",
+    "city": "McKinney",
+    "url": "https://www.motusjiujitsu.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJLeRxBUE_TIYReLy5tHmFOt4",
+    "name": "AGUILERA | PROSPER TX",
+    "city": "Prosper",
+    "url": "https://aguileramartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJk0FF6TM_TIYRnAZWLf_6KY0",
+    "name": "Professional Black Belt Academy - Frisco",
+    "city": "Frisco",
+    "url": "http://www.problackbeltfrisco.com/",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJyeyTmOY5TIYRp1ztAOo29P4",
+    "name": "Professional Black Belt Academy West Prosper",
+    "city": "Prosper",
+    "url": "https://problackbeltacademy.com/",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJRf-a3045TIYRyGUMQHKPDBw",
+    "name": "Rockstar Martial Arts - North Frisco",
+    "city": "Frisco",
+    "url": "http://www.rockstarmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJoSutDUg8TIYRgFrYZmdlrec",
+    "name": "Samurai Inti Martial Arts",
+    "city": "Frisco",
+    "url": "http://www.samurai-inti.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJlTBzmUg8TIYRt_E3x84kqNs",
+    "name": "TX Black Belt Academy - Frisco",
+    "city": "Frisco",
+    "url": "http://www.txblackbeltacademy.com/frisco",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJqY8lbCE4TIYR0V7rWsgj_MY",
+    "name": "Talon Martial Arts",
+    "city": "Savannah",
+    "url": "https://talonmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJA4Ns2EU8TIYRgA4Td29F8j8",
+    "name": "Warrior Martial Arts Academy Frisco",
+    "city": "Frisco",
+    "url": "https://www.warriormartialartsacademy.com/locations/central-frisco/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJi5v1n5k5TIYRoh7e3ru5ze4",
+    "name": "Warrior Martial Arts Academy Little Elm",
+    "city": "Frisco",
+    "url": "https://www.warriormartialartsacademy.com/locations/little-elm/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ33mBf-48TIYREOE7QRD6x3M",
+    "name": "Next Generation MMA",
+    "city": "Frisco",
+    "url": "http://www.nextgenerationmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJcSO-QkVJTIYR9yRwNOrEo6w",
+    "name": "Frontier Martial Arts (FKA Talon 377)",
+    "city": "Krugerville",
+    "url": "http://www.frontiermartialarts.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJmyolcLc7TIYRo-h2zevpEfA",
+    "name": "Campuzano MMA",
+    "city": "Frisco",
+    "url": "https://campuzanomma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJoSg0NpwZTIYR7f3LNnG25sg",
+    "name": "Dominion Gym Academy",
+    "city": "Plano",
+    "url": "http://www.dominiongym.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJOY6D4X47TIYRnhzzLHy-Zdc",
+    "name": "Tiger-Rock Martial Arts of Frisco-Legacy Dr",
+    "city": "Frisco",
+    "url": "https://trmafrisco.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJq6o6L675TIYR-iy79frbBIk",
+    "name": "3-D Martial Arts & Tactical Defense",
+    "city": "Whitesboro",
+    "url": "https://www.3dmatd.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJx8kAUsk3TIYRmOsitoKDfzI",
+    "name": "Combate Academy",
+    "city": "Cross Roads",
+    "url": "https://www.combateacademy.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ_UlzMvMFTIYREGPO-WO3R5U",
+    "name": "Wolfpack MMA Wylie",
+    "city": "Wylie",
+    "url": "https://wolfpackmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJCU7nmx8jTIYRbr0iNjUnF0U",
+    "name": "Sharpen Iron Academy - SIA",
+    "city": "Plano",
+    "url": "https://sharpenironacademy.com/lp/?utm_source=google&utm_medium=my-business",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJu5qpse8bTIYRAHkNaw5PCtg",
+    "name": "Eagle Martial Arts Murphy",
+    "city": "Murphy",
+    "url": "https://emabestkids.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ4S1R3b4ZTIYRoDGA_j1bpYI",
+    "name": "Corvo Martial Arts",
+    "city": "Plano",
+    "url": "http://planobjj.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJcaotDQkjTIYRkNQv4w72UJ8",
+    "name": "Warrior Martial Arts Academy Plano",
+    "city": "Plano",
+    "url": "https://www.warriormartialartsacademy.com/locations/west-plano/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJx5A5ezYjTIYROypfL9-sYso",
+    "name": "Mcsweeney Martial Arts and Performance Center",
+    "city": "Plano",
+    "url": "http://mcsweeneymma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJG_kZUgAfTIYRfwxIGjc2Fxw",
+    "name": "Iron MMA",
+    "city": "Richardson",
+    "url": "http://www.ironmmagt.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJMy11GWAfTIYR_iCz28gM1UE",
+    "name": "Corvo Martial Arts",
+    "city": "Richardson",
+    "url": "http://corvomartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJmR0LmbUzTIYRtIVFVwGcATQ",
+    "name": "Fight Right Martial Arts",
+    "city": "Lake Dallas",
+    "url": "https://fightrightmartialarts.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJh-47Fi4hTIYRYYNzEDkv3do",
+    "name": "Mezger Martial Arts at Hidden Gym",
+    "city": "Richardson",
+    "url": "https://hiddengym.net/mma/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJWa5gGcEhTIYRlw2nH0NFH-A",
+    "name": "Brazilian Top Team North Dallas",
+    "city": "Richardson",
+    "url": "http://www.bttnorthdallas.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJz2U5yS7LTYYR8wRkZ0joZh0",
+    "name": "Reding Martial Arts - East Side",
+    "city": "Denton",
+    "url": "http://redingmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJwam4nHgvTIYRCgamvjES8Cw",
+    "name": "Hicks Mixed Martial Arts",
+    "city": "Carrollton",
+    "url": "https://www.hicksmma.com/contact-us",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJSfPIhJQfTIYRO8K2ln0W-8A",
+    "name": "KOVA MMA & Fitness",
+    "city": "Richardson",
+    "url": "http://kovagym.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJXdUc930DTIYRqGFNlgv8cRA",
+    "name": "Wolverine Martial Arts",
+    "city": "Rowlett",
+    "url": "http://wolverinetexas.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpe65Q7j9S4YRxI8Vlm-t9H0",
+    "name": "ZERO MMA",
+    "city": "Caddo Mills",
+    "url": "https://zeromma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ4XMf1_fKTYYRzXKhXr96PLM",
+    "name": "Reding Martial Arts",
+    "city": "Denton",
+    "url": "https://www.redingmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ8YcizlCrToYRwnoNJGBEXtg",
+    "name": "Fortis MMA Lakeside",
+    "city": "Rockwall",
+    "url": "https://fortismmalakeside.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJQXg4UEMmTIYRmKVJsw1enok",
+    "name": "Integrity Martial Arts Academy",
+    "city": "Carrollton",
+    "url": "http://integritycarrollton.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJK7ic0DchTIYRG8KQplcSs0U",
+    "name": "Central Martial Arts",
+    "city": "Dallas",
+    "url": "http://www.centralmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5f7QYsUtTIYRnAYMluGcMb0",
+    "name": "LP Martial Arts",
+    "city": "Lewisville",
+    "url": "https://lpmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJDVZHL4cnTIYRmXxU53hrBMg",
+    "name": "Premier Martial Arts Addison",
+    "city": "Addison",
+    "url": "https://premiermartialarts.com/texas-addison/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJV1Jw2JktTIYRdT_I9gBi7Ss",
+    "name": "Warrior Martial Arts Academy Flower Mound",
+    "city": "Flower Mound",
+    "url": "https://www.warriormartialartsacademy.com/locations/east-flower-mound/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-highland-village",
+    "name": "GB Highland Village",
+    "city": "Highland Village",
+    "url": "https://graciebarrahighlandvillage.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ1QYPGustTIYRHmddMUEMViI",
+    "name": "North Texas Mixed Martial Arts",
+    "city": "Flower Mound",
+    "url": "http://www.ntmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJc-Vh9VmqToYRwQMXsqABCJA",
+    "name": "Wolfpack Mixed Martial Arts",
+    "city": "Rockwall",
+    "url": "https://wolfpackmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJuVsbYfrVTYYRepxzHQhYvL4",
+    "name": "Fuel Mixed Martial Arts",
+    "city": "Coppell",
+    "url": "https://sites.google.com/view/fuel-fightsports-mma",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJPTTjcN5fS4YRkBXk5_fB58U",
+    "name": "Day's Black Belt Academy",
+    "city": "Durant",
+    "url": "http://days-black-belt-academy.maonrails.com/",
+    "verdict": "unknown",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJjVA8oBInTIYRNW3sWjPB9Rc",
+    "name": "Rocha Martial Arts| Las Colinas - Irving, TX",
+    "city": "Irving",
+    "url": "https://www.rochamartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJL6tZgGCeToYRtue7dDWKgtA",
+    "name": "Boon Martial Arts",
+    "city": "Dallas",
+    "url": "http://www.boonmma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ15ru0OGlToYRLlUpeA_Bhic",
+    "name": "gillsmartialartsacademy LLC",
+    "city": "Mesquite",
+    "url": "https://www.gmaa-tx.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJqz4grs-YToYRvWJWiT5b310",
+    "name": "Seo Martial Arts Academy",
+    "city": "Dallas",
+    "url": "https://seosmartialartsacademy.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJV378TJmZToYRY4euYtu4Dvo",
+    "name": "Dallas Fight Club & Fitness",
+    "city": "Dallas",
+    "url": "https://www.dallasfightclub.org/",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJJ6bqRgelToYR2ah2wqyr-hI",
+    "name": "SFS MMA",
+    "city": "Mesquite",
+    "url": "http://www.sfsmmamesquite.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJd6sn6HSlToYRu1S-1UPRPPs",
+    "name": "Park's Martial Arts",
+    "city": "Mesquite",
+    "url": "https://www.parks-tkd.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJQ577F9yYToYRGzd4cF-5Or4",
+    "name": "Fortis MMA",
+    "city": "Dallas",
+    "url": "http://www.fortismma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJt42i2vSdToYRBCCFc1IFjUY",
+    "name": "Global MMA Dallas and Muay Thai",
+    "city": "Dallas",
+    "url": "https://www.globalmma.net/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=5256354928891759876",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJi99SG7nVTYYRpKUd8Ew7jF0",
+    "name": "All American MMA - Southlake",
+    "city": "Southlake",
+    "url": "https://www.allamericanmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ13w0vuzUTYYRWa5ZiQ8-seg",
+    "name": "Reveal Martial Arts Southlake",
+    "city": "Southlake",
+    "url": "https://www.idokarate.com/southlake",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJrUuitFGZToYRdMHN-MvLtFk",
+    "name": "DFW Combat Co",
+    "city": "Dallas",
+    "url": "http://www.dfwcombat.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ2UkFsR-ZToYRnFJuDaMFbYA",
+    "name": "Quintana MMA & Fitness",
+    "city": "Dallas",
+    "url": "http://quintanamma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJGYbkPJevToYRjFxB59uXtZk",
+    "name": "Mesquite Martial Arts Academy",
+    "city": "Mesquite",
+    "url": "https://www.mesquitema.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpdrv_9eeToYRcLsmyCkE47k",
+    "name": "Octagon MMA Dallas",
+    "city": "Dallas",
+    "url": "http://www.octagonmma.com/?utm_campaign=gmb",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ6wvT6iQWTYYRFXUV7WZ2gUc",
+    "name": "Gorrells Family Martial Arts and Fitness",
+    "city": "Madill",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJwcJOuIKyToYRy2J8p43CQGE",
+    "name": "WolfPack MMA Forney",
+    "city": "Forney",
+    "url": "https://wolfpackmma.com/kids-class-schedule/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ0ZD2OKyZToYRcCFzXHoU9Ss",
+    "name": "AzTex MMA",
+    "city": "Dallas",
+    "url": "http://axtexmma.framer.website/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJ1x99CoCbToYRvSm3czea2MA",
+    "name": "Crusader Combat Club",
+    "city": "Dallas",
+    "url": "http://beagle-lime-we6p.squarespace.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJG-8NiDrbTYYRqQZw0qrCmKs",
+    "name": "Peak Performance MMA Justin",
+    "city": "Justin",
+    "url": "https://peakmmainjustin.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJsZbevD-ZToYR7jVG0kNaYT4",
+    "name": "Southside Mixed Martial Arts",
+    "city": "Dallas",
+    "url": "https://www.southsidemma.net/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=4911082027928814551",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJobcBLEPXTYYRwdwaTbglTaM",
+    "name": "All American MMA - Keller",
+    "city": "Keller",
+    "url": "http://www.allamericanmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ9f4SOjWHToYRI97SAPw9G7M",
+    "name": "Cloud Nine MMA",
+    "city": "Arlington",
+    "url": "https://www.cloudninemma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJReaLVfPVTYYRPQx9Zto3yQs",
+    "name": "Fitness Fight Factory",
+    "city": "North Richland Hills",
+    "url": "http://www.fitnessfightfactory.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJx9OE4p2HToYR8owRkdfbvaw",
+    "name": "Arlington Fight Club",
+    "city": "Arlington",
+    "url": "https://arlingtonmma.net/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ65xZl5h9ToYR_fIN3GH7zj0",
+    "name": "Team One Mixed Martial Arts",
+    "city": "Arlington",
+    "url": "http://teamonept.wix.com/personaltrainig",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJIUgoMfR9ToYRxcNuQLH-iXk",
+    "name": "Forever Fitness MMA - Muay Thai Academy",
+    "city": "Arlington",
+    "url": "http://foreverfitness365.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-north-fort-worth",
+    "name": "GB North Fort Worth",
+    "city": "Fort Worth",
+    "url": "https://graciebarra.com/north-fort-worth-tx/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJWf2irw15ToYRz_wKSetYSj8",
+    "name": "Squabble MMA",
+    "city": "Richland Hills",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJr2Wtn3B9ToYRdeB-xh2iSRM",
+    "name": "Lang Son Traders Martial Arts Supplies",
+    "city": "Arlington",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJBxRFvQB9ToYRijEwMFiqV4E",
+    "name": "TX Black Belt Academy Arlington",
+    "city": "Arlington",
+    "url": "http://www.txblackbeltacademy.com/arlington",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ711R4zhlToYRhGYTqCX9cXY",
+    "name": "Gann Fight & Fitness",
+    "city": "Haslet",
+    "url": "http://www.teamgann.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJD1nl1u93ToYRAx68BnFl9VA",
+    "name": "Flux MMA",
+    "city": "Haltom City",
+    "url": "http://www.fluxmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJCbWTR1bdTYYRX_yYoG18gAk",
+    "name": "Fitness Fight Factory Haslet",
+    "city": "Fort Worth",
+    "url": "https://fitnessfightfactoryhaslet.com/Contact",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJmwv4pq-HToYR2GaxdQpiNXA",
+    "name": "Bushido Martial Arts Academy",
+    "city": "Arlington",
+    "url": "https://bushidomartialarts.net/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ0f3tQb6STYYR-KAL8dU8HbI",
+    "name": "Peak Performance Decatur",
+    "city": "Decatur",
+    "url": "https://www.peakdecatur.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJD86gogRZSoYRB9rjKXBsCik",
+    "name": "Asian Martial Arts (Take Seiken Bujutsu)",
+    "city": "Paris",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJgSSuLy4wSoYRLawdPk41REI",
+    "name": "Rose Martial Arts Academy",
+    "city": "Sulphur Springs",
+    "url": "https://rosemaa.com/home",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJtROXWXTrToYRT982zdd5-mU",
+    "name": "Red Oak Academy of Martial Arts",
+    "city": "Red Oak",
+    "url": "http://www.redoakmartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5YxvL-n3SoYRtGxbgkU5gBc",
+    "name": "Warriors Legacy Mixed Martial Arts",
+    "city": "Paris",
+    "url": "http://www.warriorslegacymma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJoU279DTrToYRWXgP-gmmezU",
+    "name": "Martial Arts Experience",
+    "city": "Red Oak",
+    "url": "http://www.themartialartsexperience.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJb0uPc05xToYRFAmeLgmBXes",
+    "name": "New World Combat",
+    "city": "Fort Worth",
+    "url": "http://www.newworldcombat.com/",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ9by_TBfJToYRu7A9VHqPD3A",
+    "name": "American Institute of Korean Martial Arts (Aiokma) HQ",
+    "city": "Ennis",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJWT2H0WxYSoYRa4X5_NmdOXI",
+    "name": "PTX Martial Arts",
+    "city": "Reno",
+    "url": "https://www.ptxmartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-mansfield",
+    "name": "GB Mansfield",
+    "city": "Mansfield",
+    "url": "https://graciebarra.com/mansfield-tx/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJz5VRA7_jTYYRlDzH9bPgMAM",
+    "name": "De La Rosa MMA",
+    "city": "Azle",
+    "url": "http://delarosamma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJw2POTL5zToYRjNGHGNVQldc",
+    "name": "Panther City Martial Arts",
+    "city": "Fort Worth",
+    "url": "http://www.panthercitymartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJFWU2xANhToYRRn62glRTLxc",
+    "name": "Extreme Martial Arts Mansfield",
+    "city": "Mansfield",
+    "url": "https://mansfieldextrememartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJfSqwrqHzToYR7J7mJzHCml4",
+    "name": "TX Black Belt Academy Midlothian",
+    "city": "Midlothian",
+    "url": "http://www.txblackbeltacademy.com/midlothian",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJh3RCfHBxToYRjtpm9knNozw",
+    "name": "Frey MMA",
+    "city": "Fort Worth",
+    "url": "http://www.10thplanetfortworth.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ01tZIakMToYRjZrkwdMs4b4",
+    "name": "Fort Worth Combatives",
+    "city": "Fort Worth",
+    "url": "https://www.fortworthcombatives.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJE7ZhW0ZtToYRyA7ltrw7rd0",
+    "name": "TX Black Belt Academy Fort Worth",
+    "city": "Fort Worth",
+    "url": "https://txblackbeltacademy.com/fort-worth/",
+    "verdict": "bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJA0wkJtHuToYRlJY2Bmx2_60",
+    "name": "Ellis County Martial Arts",
+    "city": "Waxahachie",
+    "url": "http://www.elliscountymartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJnfw2eG-BUoYR1CyTlUhkftI",
+    "name": "Bowie Martial Arts Academy",
+    "city": "Bowie",
+    "url": "http://www.bowiemaa.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ2cBr3CTvToYRO3CMt88LDTQ",
+    "name": "Lone Star Martial Arts LP",
+    "city": "Waxahachie",
+    "url": "http://lonestarmaw.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJe-vnT43vToYRVTtYv9c8VG4",
+    "name": "Micks Martial Arts",
+    "city": "Waxahachie",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJY-PB1gTbToYRwoTB7b72AgI",
+    "name": "Ennis Black Belt Academy",
+    "city": "Ennis",
+    "url": "https://www.ennisblackbelt.com/",
+    "verdict": "unknown",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ6107otIFToYRnt3V56b-80Y",
+    "name": "The Forge Martial Arts Academy",
+    "city": "Aledo",
+    "url": "http://forge817.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJI6Xgf8nrToYRajj3YqcjwqA",
+    "name": "Shumba Combat Sports Academy",
+    "city": "Waxahachie",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJz_lbFf0BToYRTniBI2KpWpk",
+    "name": "Neanderthal Fight Company",
+    "city": "Weatherford",
+    "url": "http://neanderthalfightcompany.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ1X-CQfwiSYYROrCglKK2e7U",
+    "name": "Five Tigers Martial Arts",
+    "city": "Eustace",
+    "url": "https://www.facebook.com/Five-Tigers-Martial-Arts-111962932235954/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJxTOPMO79UYYR58hHvFI1emo",
+    "name": "SDR Academy",
+    "city": "Weatherford",
+    "url": "https://sdrweatherford.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJIeO_MxD-UYYRVyzNfBHaFN0",
+    "name": "Epic Fight & Fitness Martial Arts Academy",
+    "city": "Weatherford",
+    "url": "http://www.epicbjjacademy.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5zVOp2gDSYYRB13YR-2Y6nM",
+    "name": "#903Fighters",
+    "city": "Athens",
+    "url": "https://www.facebook.com/profile.php?id=61576664023443",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gracie-barra-gb-lindale",
+    "name": "GB Lindale",
+    "city": "Lindale",
+    "url": "https://www.gblindale.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJTZmVm8O4SYYRAgbnf9Nz-2w",
+    "name": "TST Martial Arts Academy USA",
+    "city": "Lindale",
+    "url": "http://tstmartialartsacademy.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJd-6tUgb6NYYR2HvcFsYDuKw",
+    "name": "Mt. Pleasant Martial Arts",
+    "city": "Mt Pleasant",
+    "url": "http://www.mountpleasantmartialarts.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJIWUicq7wNYYRMeqpNABCff4",
+    "name": "Revolution Combat Sports",
+    "city": "Mt Pleasant",
+    "url": "http://www.revcomsports.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJn5lPNJbfUYYRH98iEpJj8gg",
+    "name": "Poland's MMA",
+    "city": "Granbury",
+    "url": "https://polandsmixedmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJZZtMH77rUoYROwcvjjPQdSQ",
+    "name": "Amped Mixed Martial Arts",
+    "city": "Henrietta",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJpzORU4XfUYYRr6ROoPz2HB0",
+    "name": "Danny Williams Combat Martial Arts Program",
+    "city": "Granbury",
+    "url": "http://www.dwcmap.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJgej5Wm9ts4cRGGthCAINbts",
+    "name": "Rebellion Martial Arts",
+    "city": "Ada",
+    "url": "https://www.rebellionmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJbzb9iXHMSYYRlYde7mkhnpg",
+    "name": "Songahm Martial Arts Academy (ATA)",
+    "city": "Tyler",
+    "url": "http://www.atasma.com/",
+    "verdict": "not-bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJZ-zXnPkbNoYRKAMFZtqpaWk",
+    "name": "ProComp Sport Martial Arts",
+    "city": "Gilmer",
+    "url": "https://goprocomp.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJdxw4wnHMSYYRAYCzaw3gfV8",
+    "name": "Tiger Rock Martial Arts of Tyler",
+    "city": "Tyler",
+    "url": "https://www.tigerrockmartialarts.com/locations/tyler",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJR8vPPMZbrYcRnwDfXpHsZxQ",
+    "name": "Lucas Martial Arts",
+    "city": "Duncan",
+    "url": "https://www.facebook.com/LucasMartialArts/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJw2fd1TbNSYYR6wlOw-2CrU4",
+    "name": "Inspire Martial Arts",
+    "city": "Tyler",
+    "url": "https://www.inspiremartialartstyler.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJeVhkzT5FrYcRhkNIP1BN2G0",
+    "name": "Rebellion Martial Arts Duncan",
+    "city": "Duncan",
+    "url": "http://www.rebellionmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJP9OdlMItSIYRFRH-x5E1eK4",
+    "name": "Nuon's Martial Arts",
+    "city": "Whitehouse",
+    "url": "https://www.facebook.com/share/1CD3eXHXhS/?mibextid=wwXIfr",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJr-R-Z8UhU4YRG9FfkfFM-so",
+    "name": "Warrior's Way Martial Arts",
+    "city": "Wichita Falls",
+    "url": "http://www.warriorswaytx.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJeWhhxEY3SIYRYHaWN3mGPY8",
+    "name": "Eagle Rock Martial Arts",
+    "city": "Bullard",
+    "url": "http://www.eaglerockma.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJI76ZB5lnrYcRZN2nkCBrHAA",
+    "name": "Marlow Martial Arts Academy / Marlow Batting Club",
+    "city": "Marlow",
+    "url": "http://www.marlowmartialartsacademy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJXx7PTTE7U4YRGvqV4G3hhGs",
+    "name": "Dynamic Martial Arts Center",
+    "city": "Wichita Falls",
+    "url": "https://martialartswichitafalls.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJxbLaRNA_NoYRp1RqyIZ6s-w",
+    "name": "Spring Hill Martial Arts",
+    "city": "Longview",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJgc_Opzc5NoYRnV9ByPHmD0o",
+    "name": "ATA Black Belt & Academy",
+    "city": "Longview",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "high-risk",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJrxd1deo_NoYR7skZPgfFZ-U",
+    "name": "ETX Wrecking Crew Martial Arts",
+    "city": "Longview",
+    "url": "http://www.etxwreckingcrew.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ-5-fLfBHNoYRbbsr573R558",
+    "name": "Longview Martial Arts Academy",
+    "city": "Longview",
+    "url": "http://longviewmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpQQpVjU_NoYRfLpyA_pxTAU",
+    "name": "Team 515 Mixed Martial Arts",
+    "city": "Longview",
+    "url": "http://team515.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ59pOgMJttYcRSRfff2o4mj4",
+    "name": "3 Feathers MMA MUAY THAI Warriors 4 Christ",
+    "city": "Wilburton",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJRYeWeM4ZrYcRNcBTBUlMQZY",
+    "name": "Keikukan- Martial Arts School in Lawton, Ok.",
+    "city": "Lawton",
+    "url": "http://keikukandojo.org/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5f9SZpiCT4YR0tjatGgGdO4",
+    "name": "Shins Martial Arts",
+    "city": "Waco",
+    "url": "http://www.shinsmartialarts.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJfbHuoDEfrYcRpAAk-ymZpFI",
+    "name": "Alpha MMA/RCBJJ Lawton",
+    "city": "Lawton",
+    "url": "https://lawtonmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJPY4O-eZENoYR0O4w6PJqFHI",
+    "name": "Hitt's ATA Black Belt Academy",
+    "city": "Hallsville",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "high-risk",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJd694tkxosocRfOqtr23irug",
+    "name": "Titan Martial Arts",
+    "city": "Norman",
+    "url": "http://www.titanmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ4UqHanJrsocRqT9F8c26K-4",
+    "name": "Jackson Lee Academy",
+    "city": "Norman",
+    "url": "http://www.jacksonleeacademy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJCT91AiUerYcR_9QxtLKILhs",
+    "name": "Southwest Institute of Chinese Martial Arts",
+    "city": "Lawton",
+    "url": "http://www.kungfu-wushu.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpaM_HKppsocRkVHSOeGv5M8",
+    "name": "Fight or Flight Fitness LLC",
+    "city": "Norman",
+    "url": "http://fightorflightnorman.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJtSJ-SeZ7socRi_2mnk2IjBU",
+    "name": "Munoz MMA Academy",
+    "city": "Blanchard",
+    "url": "https://munozmma.net/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJM2SM4CmDrYcRa1rjTO42Tuw",
+    "name": "Dragon Training Academy",
+    "city": "Chickasha",
+    "url": "http://www.thedragondojo.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJAQDQrFcerYcRzswUW_R_oLo",
+    "name": "Anshin Arashi Martial Arts",
+    "city": "Lawton",
+    "url": "https://anshinarashi.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJJcNGlPyDT4YRiJ9gUiAsHIg",
+    "name": "Academy Sports + Outdoors",
+    "city": "Waco",
+    "url": "https://www.academy.com/storelocator/texas/waco/store-0024",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ4fNUYDfJN4YRUgv8tapv54g",
+    "name": "Luke's MMA",
+    "city": "Henderson",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJaQroIoiFT4YRr8QG5t4nPi0",
+    "name": "Martial Arts of Waco",
+    "city": "Waco",
+    "url": "http://martialartswaco.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJd8o-Im9psocRmhazrsoMedU",
+    "name": "Vision Martial Arts Academy",
+    "city": "Norman",
+    "url": "http://www.martialartsnorman.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ780ddpiGT4YR91I_a8bgV28",
+    "name": "Family Martial Arts of Texas",
+    "city": "Waco",
+    "url": "https://familymartialartsoftexas.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJtRSvoxrfN4YRguMJsHryBYs",
+    "name": "Ground Dwellers Texas Roots MMA",
+    "city": "Jacksonville",
+    "url": "https://www.facebook.com/share/1BWLzhnMbz/?mibextid=wwXIfr",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJV_BzehGFT4YR6FhqiPfGboQ",
+    "name": "Vertical Journey Martial Arts",
+    "city": "Waco",
+    "url": "http://www.verticaljourneyma.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJsY2qBO-GT4YRwqFZ85yQWkE",
+    "name": "Central Texas Martial Arts",
+    "city": "Hewitt",
+    "url": "http://www.centraltexasfamilykarate.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJD5bVKACHT4YR45e7cMYaXNM",
+    "name": "Cipher MMA",
+    "city": "Woodway",
+    "url": "http://www.ciphermma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJnWeODcWAT4YRHSvgvtISiQE",
+    "name": "Blitz Mixed Martial Arts",
+    "city": "Robinson",
+    "url": "http://www.blitzmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ2UNubidrsocR6B3irB6hWOU",
+    "name": "Integrity Martial Arts",
+    "city": "Moore",
+    "url": "http://www.integrityma.ninja/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJHwUk7K1BNIYR4JjpVlqyuZY",
+    "name": "East Texas Martial Arts",
+    "city": "Texarkana",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJJ6lwXl4TsocRfnGTo2H-dU8",
+    "name": "National Martial Arts",
+    "city": "Oklahoma City",
+    "url": "http://www.nationalmartialartsok.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ589spX8UsocRFv-SuFVCrbU",
+    "name": "Academy of Martial Arts",
+    "city": "Oklahoma City",
+    "url": "http://www.okcama.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ0c0JcBg8socRNYffYl1yyfQ",
+    "name": "Hero Martial Arts",
+    "city": "Midwest City",
+    "url": "http://hero-martialarts.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJoTaNrh9qNIYR1ILt5OASoic",
+    "name": "Texarkana Combat Sports",
+    "city": "Texarkana",
+    "url": "http://www.texarkanacombatsports.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJN3yxKPHrN4YRVjwnuxY4ifE",
+    "name": "ACBJJ Academy",
+    "city": "Cushing",
+    "url": "https://www.facebook.com/adrenalinechamber/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJUc6CGxsRsocRURbcfjJa2LU",
+    "name": "OKC Combat Sports",
+    "city": "Oklahoma City",
+    "url": "https://okccombatsports.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJofZqxu0ZsocR1qUdE8vSLVM",
+    "name": "Outsiders Combat Club",
+    "city": "Oklahoma City",
+    "url": "http://outsiderscombat.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpQPfxNAvy4cRRXBIOEKU6BY",
+    "name": "Southern Impact Mixed Martial Arts",
+    "city": "Mena",
+    "url": "http://southernimpactmma.wixsite.com/southernimpactmma",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJyYbcQ8f2yocRkc8p8xa15RA",
+    "name": "Oklahoma Combat Sports",
+    "city": "Poteau",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJBcpIZJUesocREaT0gpNXqck",
+    "name": "Pride Mixed Martial Arts",
+    "city": "Edmond",
+    "url": "http://www.edmondkarate.com/",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJSxkPYmYDsocRKGbEeZq-6PA",
+    "name": "American Elite MMA",
+    "city": "Edmond",
+    "url": "http://edmondbjj.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJu1FMcwgPsocRJ9atn7BTpPU",
+    "name": "Yu'ki MMA",
+    "city": "Oklahoma City",
+    "url": "https://m.facebook.com/Yukimma/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJ6-qoRP8esocRHkwA7Cx_KC4",
+    "name": "Mana Martial Arts",
+    "city": "Edmond",
+    "url": "http://www.mmaok.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJBZksbfcesocRqrvXoON7NQ0",
+    "name": "Edmond Martial Arts Academy",
+    "city": "Edmond",
+    "url": "https://edmondmaa.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJrTAcS4AQsocR_zVR7gypZBs",
+    "name": "Solid MMA",
+    "city": "Yukon",
+    "url": "http://www.solidmma.pro/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJv10nNoqMN4YRqvXDrjzjgZM",
+    "name": "Nacogdoches Blackbelt Academy School of Martial Arts",
+    "city": "Nacogdoches",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJUR9V5RRqRYYRgfneVRf1Elg",
+    "name": "Martial ZEN Temple Academy",
+    "city": "Temple",
+    "url": "https://martialzentemple.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJCyssTEdqRYYRvpU2ZzdSsgI",
+    "name": "Legacy Martial Arts",
+    "city": "Temple",
+    "url": "https://legacymartialartstemple.com/location/temple-tx/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJuxOVzameOYYRpoAFicXe7bQ",
+    "name": "ACSOMA (Arlandus Chimney's Schools of Martial Arts)",
+    "city": "Nacogdoches",
+    "url": "https://acsoma.com/contact-us",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJHb7dMw9rRYYRF2m-nIj6_ic",
+    "name": "Storm MMA & Fitness",
+    "city": "Temple",
+    "url": "https://www.stormmmaandfitness.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJVcG0ndeLN4YRmPIKTNM-pzE",
+    "name": "Martinez Martial Arts",
+    "city": "Nacogdoches",
+    "url": "https://www.facebook.com/martinezmartialarts",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJndsZbc-LN4YRX0sljXpPUg8",
+    "name": "Brazilian Top Team Deep East",
+    "city": "Nacogdoches",
+    "url": "https://brazilian-top-team-deep-east.gymdesk.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJb1wLUIIyMYYRh9R1BMtS6rg",
+    "name": "Close Quarter Combatives Unlimited",
+    "city": "Shreveport",
+    "url": "http://www.cqcunlimited.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJz0nYuU9rRYYRbWWHu8osGRo",
+    "name": "Brick City Martial Arts,LLC",
+    "city": "Temple",
+    "url": "http://www.brickcitymartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJL4OmkvVLRYYR4Hd5nHNSQB8",
+    "name": "Fighters Forge",
+    "city": "Killeen",
+    "url": "https://www.facebook.com/profile.php?id=61581756841494&sk=directory_links",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJIWUTKWVJRYYRtg2pDJnnCEk",
+    "name": "G-Team",
+    "city": "Killeen",
+    "url": "https://www.gteambjj.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJuUZR4_hIRYYR1eDLYHZsdqU",
+    "name": "Twin Wolves Martial Arts Academy",
+    "city": "Harker Heights",
+    "url": "http://twmma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJVcnTNs3KNoYRMpAD1MXaNxs",
+    "name": "Benton Martial Arts",
+    "city": "Benton",
+    "url": "http://www.bentonmartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJaaU7eVZJRYYR9SkZaWY40uw",
+    "name": "Martial ZEN Killeen Academy",
+    "city": "Killeen",
+    "url": "http://www.martialzenkilleen.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJdVAvhefhtYcRaJBlspI7DA4",
+    "name": "FreightTrain MMA",
+    "city": "Muskogee",
+    "url": "http://freight-train-mma.gymdesk.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJG7QyuzBIRYYRy118kkiRWhQ",
+    "name": "Legacy Martial Arts",
+    "city": "Harker Heights",
+    "url": "https://legacymartialartskilleen.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ81_IheqzWoYRj99OENk8Z9E",
+    "name": "Legacy Martial Arts - Cove",
+    "city": "Copperas Cove",
+    "url": "http://legacymartialartscove.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJr94DVkhJRYYRVO0e7NOepoQ",
+    "name": "Strike And Submit Martial Arts And Fitness",
+    "city": "Killeen",
+    "url": "https://sasmartialarts.net/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ2ehvjbmSsYcRAdz3nV-diGA",
+    "name": "Top Tier Martial Arts",
+    "city": "Guthrie",
+    "url": "https://www.toptiermartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ-3-edFGxWoYRdrHmZXjuENQ",
+    "name": "Absolute Self Defense Academy",
+    "city": "Copperas Cove",
+    "url": "http://www.absolutesdacademy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJLROk7t1kq4cRggdDUmqs_dM",
+    "name": "Brandon's Martial Arts Studio",
+    "city": "Altus",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJ34MJnsjSNoYRLI4xy4Vyq0Q",
+    "name": "SMAA Shreveport/Bossier City",
+    "city": "Bossier City",
+    "url": "http://www.sbcjiujitsu.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ1y9g_yMtMYYRhWVI7by-nsI",
+    "name": "Tiger Rock Martial Arts of Shreveport",
+    "city": "Shreveport",
+    "url": "https://www.tigerrockmartialarts.com/locations/shreveport",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJaSG4mmFNyocRKa7-6qQZmpw",
+    "name": "Tim Grant’s Action Martial Arts",
+    "city": "Fort Smith",
+    "url": "http://amafortsmith.weebly.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJJ8KzTegXOIYRiK2oQ5tee0Y",
+    "name": "Bowman Academy of Martial Arts",
+    "city": "Lufkin",
+    "url": "https://www.bowmanacademyofmartialarts.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJgVSQs2hNyocR4GMiwpCa42I",
+    "name": "Thompson Defense Academy",
+    "city": "Fort Smith",
+    "url": "http://www.thompsondefenseacademy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJaRfs_f3TNoYRDlzOaI4jkHo",
+    "name": "Elite Combat at The Compound",
+    "city": "Shreveport",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJqfXkCtYzMYYRgXvW8wvtCL8",
+    "name": "Stockwell Martial Arts Academy",
+    "city": "Bossier City",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJFew6AIUxMYYRpdqcjOcIgI0",
+    "name": "81's Fight Club",
+    "city": "Bossier City",
+    "url": "https://instagram.com/81sfightclub",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ-1YUDL6py4cRU6vMbFuBwoQ",
+    "name": "Wolf Pack Martial Arts",
+    "city": "Greenwood",
+    "url": "http://wolfpackma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJNUr4Fa-PtocRQ75QNit2zfI",
+    "name": "Combative Martial Arts USA",
+    "city": "Bixby",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJQ1gK8EsXOIYRkEhjagQhTQA",
+    "name": "ET Fight Academy",
+    "city": "Lufkin",
+    "url": "http://etfightacademy.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJefdaPV9NyocRWNuNnI85BLs",
+    "name": "Championship MMA",
+    "city": "Fort Smith",
+    "url": "http://www.championshipmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJg4uJfSkWOIYRQuC0B4Pbc8k",
+    "name": "Sr. Master Olford's ATA Martial Arts",
+    "city": "Lufkin",
+    "url": "https://www.masterolfordsata.com/",
+    "verdict": "not-bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ04ua5OxMyocRMsVKPHZKgs8",
+    "name": "Family Combat Fitness",
+    "city": "Fort Smith",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJ9STAVFCRtocRW7p7wN-hfhI",
+    "name": "Jenks Martial Arts Academy",
+    "city": "Jenks",
+    "url": "http://www.maausa.net/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJzbOQ50KRtocRbE9Lb-uaxcc",
+    "name": "Strike Martial Arts Academy",
+    "city": "Jenks",
+    "url": "http://teamstrikemartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJXxlOanGzy4cRNh2ZCmI3_7I",
+    "name": "True Strength Martial Arts",
+    "city": "Fort Smith",
+    "url": "http://www.truestrengthmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJXxYNPZc7MYYRa8cGe9XQlbs",
+    "name": "Broadway Martial Arts",
+    "city": "Haughton",
+    "url": "http://www.broadwaymartialarts.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJcTNlcq-JtocRkatSVLuOOSw",
+    "name": "WMA Martial Arts",
+    "city": "Broken Arrow",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJyQjiY-aLtocRrX17QXhbRRw",
+    "name": "Martial Arts Advantage",
+    "city": "Broken Arrow",
+    "url": "http://www.martialartsadvantage.net/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJX-v8NK6TtocRBRSQMKgCK1g",
+    "name": "Relentless Martial Arts",
+    "city": "Tulsa",
+    "url": "http://relentlessmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJg92nHnoKsYcRqE0QfsjspwY",
+    "name": "Jackson Academy Family Martial Arts",
+    "city": "Stillwater",
+    "url": "http://www.jackson-academy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJrdcBDE8KsYcR8pduHcBDSFY",
+    "name": "Stillwater Martial Arts",
+    "city": "Stillwater",
+    "url": "http://stillwaterma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJhQeL426NtocRma3hjI5BQlM",
+    "name": "Triton Fight Center",
+    "city": "Broken Arrow",
+    "url": "http://tritonfightcenter.org/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJrZpt3KqOtocRByrK1lvrp8E",
+    "name": "Forza Combat Sports",
+    "city": "Broken Arrow",
+    "url": "http://www.forzacombatsports.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJOSAxUIGNtocRQ1ri5KFHMJg",
+    "name": "Carson Fight & Fitness",
+    "city": "Tulsa",
+    "url": "https://carsonfightfitness.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJE0wZsFCNtocRfubmvri_h6U",
+    "name": "Tulsa Combat Sports",
+    "city": "Tulsa",
+    "url": "http://www.tulsacombatsports.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ48Cn2TcKsYcR6io-azkL9Uo",
+    "name": "ECS Martial Arts",
+    "city": "Stillwater",
+    "url": "http://stillwatermma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJrSY5nq61y4cRdeIVwTtLC78",
+    "name": "Zane Isaacs Championship MMA",
+    "city": "Van Buren",
+    "url": "http://vanburenmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJUf4XQu8vRYYRwreClRqXROk",
+    "name": "Blitz Martial Arts",
+    "city": "Jarrell",
+    "url": "https://blitzmatx.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJzWPN1DKnsYcRxGZVIZlPfVg",
+    "name": "Infinity Martial Arts & Self Defense",
+    "city": "Stillwater",
+    "url": "http://www.infinityok.net/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJuVOR5kSQVoYRk_hP-3VYQZU",
+    "name": "A Fair Advantage & Navarro's Combatives",
+    "city": "Abilene",
+    "url": "http://www.afairadvantageandnavarrosselfdefense.weebly.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJYyqbi92HRoYRA_nLg49B7vs",
+    "name": "Filipino Kali Academy-B/CS TX",
+    "city": "College Station",
+    "url": "http://www.paksma.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJxUdQIjT_yYcRx7-0_v0KGaA",
+    "name": "Relevant Martial Arts",
+    "city": "Tahlequah",
+    "url": "https://www.facebook.com/RelevantMartialArts",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJn-aAfazrtocR2V9fn-exdVs",
+    "name": "L K Wells Martial Arts & Fitness",
+    "city": "Tulsa",
+    "url": "http://www.lkwellsmartialarts.net/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ_fWFmf6FRoYRtecdKFNci1w",
+    "name": "Bushido Training Institute/Powersports MMA",
+    "city": "College Station",
+    "url": "http://powersportskids.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJm42qwGKERoYRc1udClpLfTU",
+    "name": "Brazos Valley MMA & Fitness",
+    "city": "College Station",
+    "url": "http://www.bvmma.com/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=2871450027626937786",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ7521sP_7yYcREitGXDvL6h8",
+    "name": "Ramos Championship Martial Arts",
+    "city": "Tahlequah",
+    "url": "http://ramostkd.net/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJJ4XqSzWJtocR08vgTAdl9jc",
+    "name": "Cohesion Training Academy",
+    "city": "Tulsa",
+    "url": "https://cohesionbjj.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJOy5yQWKERoYRYobYDTkQx48",
+    "name": "Academy of Modern Martial Arts",
+    "city": "College Station",
+    "url": "http://ammacs.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJOVw_SQmOVoYR9kRDSM5JwxI",
+    "name": "Texas Martial Arts Center",
+    "city": "Abilene",
+    "url": "http://facebook.com/texasmartialarts",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJSU106o8IR4YRm_MiGXvW8QI",
+    "name": "Legacy Martial Arts",
+    "city": "Huntsville",
+    "url": "http://www.legacymartialart.net/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJZ2uqtnWOVoYRcxsk5FcXOjI",
+    "name": "Team Chip Martial Arts Abilene",
+    "city": "Abilene",
+    "url": "https://teamchipmartialarts.com/?utm_campaign=button&utm_medium=weburl&utm_source=gbpa",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJO5583X6OVoYRZkjL--0F9p0",
+    "name": "J.C. Martial Arts",
+    "city": "Abilene",
+    "url": "http://www.jamescoxmartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJwTKlhwuNVoYRcyq8xJVsDDk",
+    "name": "Team Chip Martial Arts Abilene BG",
+    "city": "Abilene",
+    "url": "https://www.teamchipmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJeRIvrBWbRoYRfTqZs1xxyYE",
+    "name": "Palmisano's Martial Arts",
+    "city": "College Station",
+    "url": "http://www.atapma.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJu3GIQtDXRIYRjve9JQHf6Mc",
+    "name": "Evolution Martial Arts Center",
+    "city": "Georgetown",
+    "url": "http://evomartialartscenter.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJa-_tYfHwtocR16H0OYQcziY",
+    "name": "Clinch Martial Arts Academy - Owasso",
+    "city": "Owasso",
+    "url": "http://www.clinchbjj.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-hutto",
+    "name": "GB Hutto",
+    "city": "Hutto",
+    "url": "https://gbhuttobjj.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJdXep7QbQRIYRBOBtNGu4yqE",
+    "name": "Maldonado ATA Martial Arts",
+    "city": "Round Rock",
+    "url": "https://maldonadoata.com/",
+    "verdict": "not-bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJEe5Z8rrRRIYRCJwn_KoFZz4",
+    "name": "Premier Martial Arts Round Rock",
+    "city": "Round Rock",
+    "url": "https://premiermartialarts.com/texas-round-rock/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJKa0y8DfSRIYRb-KiXGXpjGY",
+    "name": "Seven Star Martial Arts",
+    "city": "Round Rock",
+    "url": "https://7starma.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJI_0RFrvVzIcR2KemQ6ywchg",
+    "name": "Vanguard Defense",
+    "city": "Hot Springs",
+    "url": "https://vanguarddefensear.wixsite.com/vanguard-defense-ar",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJs02_bCTTRIYR4AJ6-hF5Bjs",
+    "name": "Stronger MMA & Wrestling",
+    "city": "Round Rock",
+    "url": "https://strongerfighter.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJta8EX5HVMoYRXh1GH3EQFz8",
+    "name": "Off the chain mma",
+    "city": "Hot Springs",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJE6Sv1yPVMoYRl1tGW8CZhXA",
+    "name": "Real Deal Martial Arts",
+    "city": "Hot Springs",
+    "url": "http://realdealmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ70romXPVMoYR99mX6q6toOw",
+    "name": "AR Combat Center",
+    "city": "Hot Springs",
+    "url": "http://www.mandocorps.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJY7jqRCjVMoYR0mf0pE2ATEg",
+    "name": "Professional Black Belt Academy of Hot Springs",
+    "city": "Hot Springs National Park",
+    "url": "http://www.hotspringsmartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJAetSo_0qzYcREUjsbVRUXbs",
+    "name": "Spa City Martial Arts",
+    "city": "Hot Springs",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJN3E1pINDMoYRJDOnM63iBRE",
+    "name": "Tribe Gym & Tribe Martial Arts",
+    "city": "Camden",
+    "url": "http://www.tribegymandmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJiX5cEA7PRIYRNzR9ESQ7BiY",
+    "name": "MACA Martial Arts",
+    "city": "Austin",
+    "url": "https://www.macamartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ_Q-G4SUzW4YRvXf9eBaYd0o",
+    "name": "Invictus Martial Arts",
+    "city": "Austin",
+    "url": "http://go.invictusatx.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJKbJsMFkrzYcRgUbKr5c4K-M",
+    "name": "Ultimate Warrior Martial Arts Academy",
+    "city": "Hot Springs",
+    "url": "https://www.uwmaa.com/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=5577347655217359510",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJidjYBl_NRIYRYkLT9ZaSx7o",
+    "name": "Cooper MMA",
+    "city": "Austin",
+    "url": "http://www.coopermma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ3Y-mRDPNRIYR7T4hEH-Zxos",
+    "name": "Brazilian Top Team Austin",
+    "city": "Austin",
+    "url": "https://www.bttsa.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJAWCuQcohR4YRwRzkeSSXEJ8",
+    "name": "Junkyard Fitness and Fighting Arts",
+    "city": "Montgomery",
+    "url": "http://www.junkyardfightfit.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ7_NOlSHLRIYRVDx-i5ni4d0",
+    "name": "Black Widow MMA",
+    "city": "Austin",
+    "url": "http://www.blackwidowmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJzxdX4nm1RIYRWp1UOaISwp8",
+    "name": "Integrated Fighting Arts Academy",
+    "city": "Austin",
+    "url": "https://www.ifaacademy.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJQf12Ch8_R4YRhe8q7pY60yE",
+    "name": "Worldwide Martial Arts",
+    "city": "Conroe",
+    "url": "http://wwmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ7e46SC6ZyYcRnvx0Hs29-8k",
+    "name": "Inferno Martial Arts Siloam Springs",
+    "city": "Siloam Springs",
+    "url": "http://myinfernofitness.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpZGDOoFlyYcRUnIAXh-9Xw8",
+    "name": "Fight House Gym",
+    "city": "Fayetteville",
+    "url": "https://fighthousegym.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJsQ29Pis_R4YRfdMXW1NsKuQ",
+    "name": "MAC Mixed Martial Arts LLC",
+    "city": "Conroe",
+    "url": "https://macmixedmartialarts.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJ3UKM0A1xyYcRetHLKpDmg-0",
+    "name": "Diamond State Martial Arts - Fayetteville",
+    "city": "Fayetteville",
+    "url": "http://diamondstatemartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJiTx1XLHJMoYRAcwjvIN7bDI",
+    "name": "Vision Martial Arts Malvern",
+    "city": "Malvern",
+    "url": "https://www.visionmaarkansas.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJwYvfZbARMoYR1QeWERH7RO4",
+    "name": "El Dorado Martial Arts",
+    "city": "El Dorado",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJIdN3zn8bMoYRANvbZ4qHFBw",
+    "name": "One Heart Dojo",
+    "city": "El Dorado",
+    "url": "https://www.oneheartdojo.net/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJGV9JIgDXRoYRDOvPU-JFsUQ",
+    "name": "Old Magnolia MMA",
+    "city": "Magnolia",
+    "url": "http://www.oldmagnoliamma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJLQrMN7q0RIYRkQtjufpghAw",
+    "name": "The Void Martial Arts",
+    "city": "Austin",
+    "url": "https://thevoidmma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-spicewood",
+    "name": "GB Spicewood",
+    "city": "Spicewood",
+    "url": "https://graciebarraspicewood.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJMZsElWFryYcReBGyw0uoNdc",
+    "name": "Integrated Combat Systems NWA",
+    "city": "Fayetteville",
+    "url": "https://icsnwa.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJM0FsQXu1RIYRD7vTA1LRbz0",
+    "name": "Austin Fight Team",
+    "city": "Austin",
+    "url": "http://austinfightteam.com/",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJLfYI1ptryYcRA-sb6naqTcw",
+    "name": "Meta Martial Arts",
+    "city": "Fayetteville",
+    "url": "https://meta-ma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJa9eX_dZpyYcR_w5lBc9kHRQ",
+    "name": "NWA Martial Arts Academy",
+    "city": "Fayetteville",
+    "url": "http://www.nwamartialartsacademy.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJc_b7Ed8PVoYRAXbSkxdiT_Y",
+    "name": "Practical Defensive Tactics",
+    "city": "Sweetwater",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJg2PsWda1RIYRcnBHStin9YU",
+    "name": "Simpleman Martial Arts",
+    "city": "Austin",
+    "url": "http://simplemanmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJq086w3tJW4YRxqS0MQ4iAqQ",
+    "name": "Tiger-Rock Martial Arts of South Austin",
+    "city": "Austin",
+    "url": "https://www.tigerrockmartialarts.com/locations/southaustin",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJK_oNaa5uyYcRGsiESCTgU3s",
+    "name": "Fayetteville Martial Arts",
+    "city": "Fayetteville",
+    "url": "http://www.fayettevillemartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJH5p9sFFLW4YR7AqBERZr8Nk",
+    "name": "IJJ Austin",
+    "city": "Austin",
+    "url": "http://www.ijjatx.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-bastrop",
+    "name": "GB Bastrop",
+    "city": "696 W. Texas Hwy 71 Bastrop",
+    "url": "https://graciebarra.com/bastrop-tx/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJx9TssupLW4YR6_cwm994bh0",
+    "name": "Parra Academy of Martial Arts Kali JKD SW Austin",
+    "city": "Austin",
+    "url": "http://www.parraacademy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJt1wmHV1NW4YReOr3DBR3nz0",
+    "name": "Fox House Martial Arts",
+    "city": "Austin",
+    "url": "https://foxhousemartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJFZxV4z99MIYRdmbpAh7CjOw",
+    "name": "Light City Martial Arts",
+    "city": "Natchitoches",
+    "url": "http://www.lightcitymma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJe_4PegXFMYYR2myeSAincc8",
+    "name": "Shield Martial Arts",
+    "city": "Ruston",
+    "url": "http://www.shieldmartialarts.net/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJbQRxZjc3R4YR2lHlpwdTYtI",
+    "name": "Ground Dwellers The Woodlands",
+    "city": "The Woodlands",
+    "url": "http://www.grounddwellersthewoodlands.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJfSIXpP5ryYcRY_blNqE7SxM",
+    "name": "Championship Martial arts Springdale",
+    "city": "Springdale",
+    "url": "https://www.cmaspringdale.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJzRc7-OBHW4YR5ehKbnT156k",
+    "name": "Kings MMA Austin",
+    "city": "Austin",
+    "url": "http://www.kingsmma-atx.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJjzBYhZxLW4YR7FJKR1VxA3c",
+    "name": "Impact Martial Arts Austin TX",
+    "city": "Austin",
+    "url": "https://austinkickboxing.com/?utm_source=google_profile&utm_campaign=localo&utm_medium=mainlink",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJTdBLN-JBW4YRTu48wNOi1N4",
+    "name": "Meta Mixed Martial Arts",
+    "city": "Austin",
+    "url": "https://metamixedmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJb5yjS69NW4YRCtSOxJxYeag",
+    "name": "New Era Martial Arts",
+    "city": "Austin",
+    "url": "http://www.thenewerama.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5X4rcuXFMYYRrDoZeyys_4g",
+    "name": "Triad Martial Arts Academy of Ruston",
+    "city": "Ruston",
+    "url": "https://www.triadmartialartsruston.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJuSAMd_81R4YRIfbQYa8VLu8",
+    "name": "Condition 1 Combat Center",
+    "city": "Spring",
+    "url": "https://condition1combat.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJAc7UMFc1R4YRZ195MReSkVQ",
+    "name": "Spring Martial Arts",
+    "city": "Spring",
+    "url": "http://www.springmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJd5ujS69NW4YR-ULd2b-DE-M",
+    "name": "Austin Submission Fighting",
+    "city": "Austin",
+    "url": "http://austinsubfight.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJx95CzlhMW4YR-yYvivzQHjc",
+    "name": "Vasquez Academy",
+    "city": "Austin",
+    "url": "http://vasquezacademy.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-dripping-springs",
+    "name": "GB Dripping Springs",
+    "city": "Dripping Springs",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJGz2UxD41R4YRRUH62KP_iak",
+    "name": "Odyssey Martial Arts Spring",
+    "city": "Spring",
+    "url": "https://odysseymartialartsspring.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJyXEpFWIPyYcRta02u7YQKNY",
+    "name": "Martial Arts Advantage",
+    "city": "Centerton",
+    "url": "https://mykidsmartialartsclass.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ51YvXt3SQIYRejAEtA2Gfps",
+    "name": "Global Martial Arts",
+    "city": "Tomball",
+    "url": "https://teamglobalmma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJmSLUDndRzYcRn-Pk5c7VSHk",
+    "name": "Revolution Mixed Martial Arts",
+    "city": "Benton",
+    "url": "http://www.revolutionmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJZ-E5knzUQIYRC7OO_kkcqVA",
+    "name": "All-Star Martial Arts",
+    "city": "Cypress",
+    "url": "http://www.allstarma.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5zOv8SfUQIYRGWyKQSnlJnE",
+    "name": "Team Tooke Martial Arts Academy",
+    "city": "Cypress",
+    "url": "http://www.teamtooke-cypress.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJs1L7arpSR4YR62CbesTMPCI",
+    "name": "Elite Mixed Martial Arts - Kingwood",
+    "city": "Kingwood",
+    "url": "https://www.elite-mma.com/?utm_source=local&utm_medium=organic&utm_campaign=kingwood&utm_content=GMB",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJA9o72PrVQIYRRGtnhKtdMig",
+    "name": "Martial Arts USA",
+    "city": "Cypress",
+    "url": "https://cyfairtkd.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJaa9BUZceLoYRmSFdY80htbE",
+    "name": "D'arbonne Martial Arts",
+    "city": "Farmerville",
+    "url": "http://www.darbonnemartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJDeqQcfTNQIYRTGE7pHOZYzc",
+    "name": "Team Tooke Mixed Martial Arts",
+    "city": "Houston",
+    "url": "http://www.teamtooke.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJjePutu3RQIYRAu334vsz7W8",
+    "name": "4oz Fight Club",
+    "city": "Houston",
+    "url": "http://4ozmma.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJSfDVozzRQIYRoi4QzSuMfik",
+    "name": "Grind House Mixed Martial Arts",
+    "city": "Houston",
+    "url": "https://www.grindhousehoustonmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJDXDyTnIDyYcROESwSIfL_io",
+    "name": "Inferno Martial Arts Bella Vista",
+    "city": "Bella Vista",
+    "url": "https://myinfernofitness.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJX_capk1DOoYR08WMrYuOS-c",
+    "name": "West Louisiana Jujutsu Training Academy",
+    "city": "Leesville",
+    "url": "https://leesvillejujutsu.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJYedL-XOtQIYRUoU3PXIHuDo",
+    "name": "Elite Mixed Martial Arts - Atascocita",
+    "city": "Humble",
+    "url": "https://www.elite-mma.com/?utm_source=local&utm_medium=organic&utm_campaign=atascocita&utm_content=GMB",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJdR6I1V_CQIYRrzY8qQHANgA",
+    "name": "Houston MMA Classes",
+    "city": "Cypress",
+    "url": "http://houstonmmaclasses.com/",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gracie-barra-gb-copperfield",
+    "name": "GB Copperfield",
+    "city": "Houston",
+    "url": "https://graciebarracopperfield.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJ13JHV_fXQIYR3Ivprna9CEg",
+    "name": "FS Mixed Martial Arts & Fitness",
+    "city": "Katy",
+    "url": "http://www.fsmmafitness.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ1a_BC9GpXIYRrj-_wjs_fOc",
+    "name": "Fighteria Academy Wimberley, TX - Martial Arts",
+    "city": "Wimberley",
+    "url": "https://www.fighteriaacademy.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJOVniO3AnQYYRv8_2wIaR2jY",
+    "name": "The Fight Lab TX",
+    "city": "Houston",
+    "url": "https://thefightlabtx.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ5Z_sNVih0ocR6EDzX0JBUFY",
+    "name": "Impact Martial Arts - Little Rock",
+    "city": "Little Rock",
+    "url": "http://www.impactmartialartspba.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJpa9U_DOh0ocRSM9aOoqx-xs",
+    "name": "Rock City Mixed Martial Arts",
+    "city": "Little Rock",
+    "url": "http://rockcitymma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-katy",
+    "name": "GB Katy",
+    "city": "Katy",
+    "url": "https://graciebarrakaty.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJA5oH602pXIYR00Pv369Oz6U",
+    "name": "The S.M.A.S.H (San Marcos Academy of Sport and Health)",
+    "city": "San Marcos",
+    "url": "https://smashtx-checkin-12ea4764.viktor.space/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJEwlWaZzFQIYRg-1RzRR0tIc",
+    "name": "Elite Mixed Martial Arts - Memorial/Spring Valley",
+    "city": "Houston",
+    "url": "http://www.elite-mma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJKePeH6qk0ocRJJEZAm5DTlU",
+    "name": "Unity Martial Arts",
+    "city": "Little Rock",
+    "url": "http://www.unitymartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ9SSZsmeoXIYR_leIHAi-Xg4",
+    "name": "Diaz Martial Arts",
+    "city": "San Marcos",
+    "url": "https://www.martialartsclassessanmarcos.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-fulshear",
+    "name": "GB Fulshear",
+    "city": "Fulshear",
+    "url": "https://www.gbfulshear.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJr37mCsvcQIYRL2kgsYEpSYo",
+    "name": "Elite Mixed Martial Arts - Westchase",
+    "city": "Houston",
+    "url": "https://www.elite-mma.com/?utm_source=local&utm_medium=organic&utm_campaign=houston&utm_content=GMB",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJi6vvscGj0ocRnsCqcHstzs0",
+    "name": "ATA Martial Arts - Riverdale",
+    "city": "Little Rock",
+    "url": "https://www.tryata.com/",
+    "verdict": "not-bjj",
+    "prior": "high-risk",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJWT5KabRHLoYRvdwKmh9fyU0",
+    "name": "Kajukenbo Combative Science, LLC",
+    "city": "West Monroe",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJz9sEKAfmV4YRoXJSS1EDlf8",
+    "name": "Angelo Mixed Martial Arts and fitness",
+    "city": "San Angelo",
+    "url": "http://www.facebook.com/angelomixedmartialarts",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJ_-3lj6y80ocRnfl6cMMdjRg",
+    "name": "Westside Mixed Martial Arts",
+    "city": "Little Rock",
+    "url": "http://westsidemma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJcffqA1k3LoYRBk4f985OO_k",
+    "name": "SMAA West Monroe",
+    "city": "West Monroe",
+    "url": "https://www.westmonroejiujitsu.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJB8Cj_QY4LoYRVhtpaIsJ3BU",
+    "name": "Action Martial Arts",
+    "city": "West Monroe",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJTQQjcM1_zYcR5UnSquRTh2k",
+    "name": "Gray Beard Forge MMA",
+    "city": "Conway",
+    "url": "https://graybeardforge.org/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ48FvExiC0ocRjb1SrqEt3fc",
+    "name": "Gravitas Martial Arts",
+    "city": "Conway",
+    "url": "http://www.gravitasmma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJlYUo5MrHQIYRpWKBfmokm6M",
+    "name": "Revolution Dojo Houston",
+    "city": "Houston",
+    "url": "https://revolutiondojohouston.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJS9XhRwU4LoYR0c28wMK1IKM",
+    "name": "Hero Fitness Academy",
+    "city": "West Monroe",
+    "url": null,
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": "no website on google"
+  },
+  {
+    "_id": "gpl-ChIJAbflRP3AQIYRZJKwUu1rOXc",
+    "name": "Elite Mixed Martial Arts - Greenway Plaza/Galleria",
+    "city": "Houston",
+    "url": "https://www.elite-mma.com/?utm_source=local&utm_medium=organic&utm_campaign=greenway&utm_content=GMB",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ4WJTN2rDQIYRM7Ob6gsgZRw",
+    "name": "Team Osiris Martial Arts",
+    "city": "Houston",
+    "url": "http://osirismartialarts.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJD5BowhK_QIYRLJQUB1ngaFo",
+    "name": "Midtown MMA Houston",
+    "city": "Houston",
+    "url": "http://www.midtown-mma-houston.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ28WaqLbBQIYR3pzHS1kYOg0",
+    "name": "Bam Bam Martial Arts Houston",
+    "city": "Houston",
+    "url": "http://bambammartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJJfxw2rG90ocRgcLjnDtxrSc",
+    "name": "All Star Martial Arts - North Little Rock",
+    "city": "North Little Rock",
+    "url": "http://www.allstarmartialarts.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJcV4Io6YfQYYRaMUBoRu3Q04",
+    "name": "Strong Style MMA",
+    "city": "Rosenberg",
+    "url": "https://www.strongstylemma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJTwXB3ipGLoYRxvJqKuNhxoo",
+    "name": "Tiger-Rock Martial Arts of Monroe",
+    "city": "Monroe",
+    "url": "https://www.tigerrockmartialarts.com/locations/monroe",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ9WoMEVpZP4YRzyDLeM8vUaI",
+    "name": "Elite Mixed Martial Arts - Baytown",
+    "city": "Baytown",
+    "url": "https://www.elite-mma.com/?utm_source=local&utm_medium=organic&utm_campaign=Baytown&utm_content=GMB",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ2ZDQZ_u90ocRI8xUISWimN0",
+    "name": "Danny Dring's Living Defense Martial Arts",
+    "city": "Sherwood",
+    "url": "http://livingdefense.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJU9MrUf_mQIYR2Dh6LxzKBAQ",
+    "name": "TX 3RD COAST MMA",
+    "city": "Stafford",
+    "url": "https://www.tx3rdcoastmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ-6JA1FW_0ocRAVbmNotp3FI",
+    "name": "Combat Concepts Academy",
+    "city": "Sherwood",
+    "url": "http://www.combatconceptsacademy.com/?utm_campaign=gmb",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJVVVVVdznQIYRZgLILBQilaE",
+    "name": "Sugar Land Mixed Martial Arts",
+    "city": "Sugar Land",
+    "url": "http://www.sugarlandmixedmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJwZfhxli9XIYRLvUZoXqqZpA",
+    "name": "Extreme Martial Arts",
+    "city": "New Braunfels",
+    "url": "http://www.braunfelsmartialarts.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ1Y0j5MzhQIYRuzs2x9B5_t8",
+    "name": "Evolve Martial Arts",
+    "city": "Sugar Land",
+    "url": "http://evolvemartialartstx.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJa5_njy-9XIYRS4FG_ajFjqc",
+    "name": "MMA Overload",
+    "city": "New Braunfels",
+    "url": "http://www.mmaoverload.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-new-braunfels",
+    "name": "GB New Braunfels",
+    "city": "New Braunfels",
+    "url": "https://graciebarra.com/tx-new-braunfels/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-spring-branch",
+    "name": "GB Spring Branch",
+    "city": "Spring Branch",
+    "url": "https://graciebarra.com/spring-branch-tx/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJHTmuwm_iQIYRT_YmmB2cZwI",
+    "name": "FightTX",
+    "city": "Richmond",
+    "url": "http://www.fighttx.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ7fEuxTKBXIYRRFTEWI11VDM",
+    "name": "Inochi Mixed Martial Arts Academy - Paul Haben",
+    "city": "Bulverde",
+    "url": "http://www.inochimma.com/",
+    "verdict": "not-bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ7_j6RAO9XIYR3tees6t-oXE",
+    "name": "Premier Martial Arts New Braunfels South",
+    "city": "New Braunfels",
+    "url": "https://premiermartialarts.com/texas-new-braunfels/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-sienna",
+    "name": "GB Sienna",
+    "city": "Fresno",
+    "url": "https://graciebarra.com/fresno-tx-sienna/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-pearland",
+    "name": "GB Pearland",
+    "city": "Pearland",
+    "url": "https://gbpearland.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ44H8g6q5XIYRReroaTz4oJc",
+    "name": "Montaña Fighting Systems",
+    "city": "Seguin",
+    "url": "https://www.jiujitsuseguin.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJxwRTEAbv0ocRTg8Jnwi_Hz0",
+    "name": "Cabot Muay Thai & MMA",
+    "city": "Cabot",
+    "url": "https://www.9ptscabot.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-texas",
+    "name": "GB Texas",
+    "city": "Webster",
+    "url": "https://graciebarratx.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-boerne",
+    "name": "GB Boerne",
+    "city": "Boerne",
+    "url": "https://graciebarra.com/boerne-tx/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJvaQxwbuJXIYRGUKmlnmvwsA",
+    "name": "Victory Martial Arts - Stone Ridge",
+    "city": "San Antonio",
+    "url": "http://www.victoryma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJn2TDonBiXIYRi7J3nIUGa5U",
+    "name": "Victory Martial Arts - Hardy Oak",
+    "city": "San Antonio",
+    "url": "https://www.victoryma.com/school/hardy-oak-texas/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJy1e_s4JhXIYR8c2DR1MhaBA",
+    "name": "Studio Martial Arts",
+    "city": "San Antonio",
+    "url": "https://studiomartialartssa.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJiRSTSztiXIYRTEAsbAxur4M",
+    "name": "Victory Martial Arts - Stone Oak",
+    "city": "San Antonio",
+    "url": "https://www.victoryma.com/school/stone-oak-texas/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJW-d61a6NXIYRM1ERUSIxq4E",
+    "name": "ONE Academy | SATX",
+    "city": "San Antonio",
+    "url": "https://www.oneacademysa.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJl4GktmT5LoYRXT8vQgUjdJU",
+    "name": "Stephensons Next Level Martial Arts",
+    "city": "Rayville",
+    "url": "http://stephensonsnlma.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJs3Q4tVX1XIYRgkq8hy6ut5M",
+    "name": "Ohana Academy HQ",
+    "city": "San Antonio",
+    "url": "http://ohanajiujitsu.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJrf-sHXxhXIYREmPXKvBHm10",
+    "name": "Championship Martial Arts - San Antonio",
+    "city": "San Antonio",
+    "url": "http://www.sanantoniofamilykarate.com/",
+    "verdict": "not-bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ7RhY8eP0XIYRWgBVUdvEOR4",
+    "name": "Victory Martial Arts - Alamo Heights",
+    "city": "San Antonio",
+    "url": "https://www.victoryma.com/school/alamo-heights-texas/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-alamo-heights",
+    "name": "GB Alamo Heights",
+    "city": "United States of America.",
+    "url": "https://gbalamoheights.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-moss-bluff",
+    "name": "GB Moss Bluff",
+    "city": "70611",
+    "url": "https://www.gbmossbluff.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJ2ZwX1dD1XIYRGYfvaMsEozI",
+    "name": "Alamo Heights Combat Club",
+    "city": "Alamo Heights",
+    "url": "https://www.alamoheightscombatclub.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJm0Ac-IgFL4YR42hwhSsFjW8",
+    "name": "Combat Room",
+    "city": "Winnsboro",
+    "url": "https://www.facebook.com/share/1DfxwJFuFB/?mibextid=wwXIfr",
+    "verdict": "unknown",
+    "prior": "likely",
+    "note": "fetch failed"
+  },
+  {
+    "_id": "gpl-ChIJMVwWg_VoXIYRnCoCd_FeWUo",
+    "name": "Dominion MMA®",
+    "city": "San Antonio",
+    "url": "https://www.dominionmma.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJfQWP9WvvXIYRHmdLnCgThhE",
+    "name": "RCMATX MMA Academy",
+    "city": "Adkins",
+    "url": "http://www.rcmatx.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJMWLeWmZdXIYRfAx0Q2cOq-E",
+    "name": "Kingdom Martial Arts Academy",
+    "city": "San Antonio",
+    "url": "https://kingdommartialartsacademy.com/",
+    "verdict": "unknown",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-lake-charles",
+    "name": "GB Lake Charles",
+    "city": "Lake Charles",
+    "url": "https://www.gblakecharles.com/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gracie-barra-gb-alamo-ranch",
+    "name": "GB Alamo Ranch",
+    "city": "San Antonio",
+    "url": "https://graciebarra.com/alamo-ranch-tx/",
+    "verdict": "bjj",
+    "prior": "plain",
+    "note": ""
+  },
+  {
+    "_id": "gpl-ChIJvR0qpRVdXIYRlrh3_WG53p4",
+    "name": "RONIN MMA TEXAS",
+    "city": "San Antonio",
+    "url": "http://www.roninmmatx.com/",
+    "verdict": "bjj",
+    "prior": "likely",
+    "note": ""
+  }
+]

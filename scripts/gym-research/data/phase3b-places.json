@@ -1,0 +1,8412 @@
+[
+  {
+    "name": "Rogers Martial Arts",
+    "address": "178 S Main Dr",
+    "city": "Van Alstyne",
+    "state": "TX",
+    "postalCode": "75495",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5751899,
+        33.4216468
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJde18M7lxTIYRsVj14Zd17lg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 21,
+    "distanceMi": 0.3
+  },
+  {
+    "name": "HERNANDEZ MMA & FITNESS",
+    "address": "2049 Hanakoa Falls Dr",
+    "city": "Anna",
+    "state": "TX",
+    "postalCode": "75409",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5747937,
+        33.3508811
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJFXYS_2wTTIYRLqlku8kYXFo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 26,
+    "distanceMi": 4.8
+  },
+  {
+    "name": "NTX MMA",
+    "address": "2010 W White St Ste 145",
+    "city": "Anna",
+    "state": "TX",
+    "postalCode": "75409",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5733498,
+        33.3462841
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJaUd9xnJzTIYRcm_B59dy620",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 46,
+    "distanceMi": 5.1
+  },
+  {
+    "name": "Professional Black Belt Academy - Melissa",
+    "address": "2901 McKinney St #200",
+    "city": "Melissa",
+    "state": "TX",
+    "postalCode": "75454",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5743224,
+        33.2867346
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJl9_zHgBzTIYRCPnRSW_hKZU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 45,
+    "distanceMi": 9.2
+  },
+  {
+    "name": "The Martial Arts Laboratory",
+    "address": "2000 N McDonald St Ste 500d",
+    "city": "McKinney",
+    "state": "TX",
+    "postalCode": "75071",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.6119683,
+        33.2246713
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJv3iaE_sSTIYRaOyvb4mYJiw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 130,
+    "distanceMi": 13.6
+  },
+  {
+    "name": "Next Generation MMA Celina | No Gi Jiu Jitsu | Boxing | Wrestling | Fitness",
+    "address": "200 S Louisiana Dr Ste 110",
+    "city": "Celina",
+    "state": "TX",
+    "postalCode": "75009",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7852475,
+        33.3221938
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJwxTOgCxBTIYRE-LV8SFHHio",
+    "types": [
+      "establishment",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 9,
+    "distanceMi": 13.6
+  },
+  {
+    "name": "Fight Time Fitness",
+    "address": "908 N Broughton St",
+    "city": "Sherman",
+    "state": "TX",
+    "postalCode": "75090",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.6054834,
+        33.6459187
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ_2gJRUGJTIYRIiBNQuKxBVc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 53,
+    "distanceMi": 15.7
+  },
+  {
+    "name": "Warrior Martial Arts Academy McKinney",
+    "address": "6840 Virginia Pkwy Ste 145",
+    "city": "McKinney",
+    "state": "TX",
+    "postalCode": "75071",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7069951,
+        33.2006515
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJM_OB5uQVTIYRNDQm56Yh9AI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 42,
+    "distanceMi": 16.8
+  },
+  {
+    "name": "Freedom Martial Arts Fitness and More",
+    "address": "3200 Versaille Dr",
+    "city": "Sherman",
+    "state": "TX",
+    "postalCode": "75090",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5969226,
+        33.6716446
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJL5NuKwiFTIYRpV-w8FNBS6o",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 11,
+    "distanceMi": 17.4
+  },
+  {
+    "name": "Rolling River Jiu-Jitsu & MMA",
+    "address": "100 TX-11",
+    "city": "Randolph",
+    "state": "TX",
+    "postalCode": "75475",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.25666609999999,
+        33.4849691
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJU9hBCmuFS4YRyW6BiMUdaMI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 19.2
+  },
+  {
+    "name": "Professional Black Belt Academy - Frisco",
+    "address": "11020 Panther Creek Pkwy Ste 100",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75035",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7835207,
+        33.1886417
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJk0FF6TM_TIYRnAZWLf_6KY0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 99,
+    "distanceMi": 19.8
+  },
+  {
+    "name": "MOMO BJJ",
+    "address": "12828 Eldorado Pkwy #140",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75035",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7665904,
+        33.1750515
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJgdVb8-o_TIYR6xMd73V0Ihc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 4,
+    "distanceMi": 20.1
+  },
+  {
+    "name": "Professional Black Belt Academy West Prosper",
+    "address": "3620 W First St Ste 10",
+    "city": "Prosper",
+    "state": "TX",
+    "postalCode": "75078",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8594055,
+        33.2302856
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJyeyTmOY5TIYRp1ztAOo29P4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 102,
+    "distanceMi": 20.8
+  },
+  {
+    "name": "Gym Jitsu Allen",
+    "address": "1108 N Greenville Ave #103",
+    "city": "Allen",
+    "state": "TX",
+    "postalCode": "75002",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.65218209999999,
+        33.1140268
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJdVPDXDERTIYRRzir44cEgyk",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 225,
+    "distanceMi": 21.5
+  },
+  {
+    "name": "4Korners Jiu Jitsu-Princeton",
+    "address": "5274 Co Rd 1102 Suite A",
+    "city": "Princeton",
+    "state": "TX",
+    "postalCode": "75407",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.4919422,
+        33.0971055
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJLbQEE1kJTIYRf05Ykoc5XSI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 49,
+    "distanceMi": 22.9
+  },
+  {
+    "name": "Soul Fighters Martial Arts Training Center",
+    "address": "1223 W McDermott Dr",
+    "city": "Allen",
+    "state": "TX",
+    "postalCode": "75013",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.69797709999999,
+        33.0995655
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJXftIRVUiTIYRyLuVMcoeveI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 80,
+    "distanceMi": 23.2
+  },
+  {
+    "name": "Samurai Inti Martial Arts",
+    "address": "7410 Preston Rd #105",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.80255199999999,
+        33.139508
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJoSutDUg8TIYRgFrYZmdlrec",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 246,
+    "distanceMi": 23.3
+  },
+  {
+    "name": "TX Black Belt Academy - Frisco",
+    "address": "7010 Preston Rd #200",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8024346,
+        33.1366984
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJlTBzmUg8TIYRt_E3x84kqNs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 87,
+    "distanceMi": 23.4
+  },
+  {
+    "name": "Talon Martial Arts",
+    "address": "26795 US-380 #500",
+    "city": "Savannah",
+    "state": "TX",
+    "postalCode": "76227",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.91199069999999,
+        33.22033
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJqY8lbCE4TIYR0V7rWsgj_MY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 151,
+    "distanceMi": 23.6
+  },
+  {
+    "name": "Warrior Martial Arts Academy Frisco",
+    "address": "6803 Preston Rd #142",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.80473599999999,
+        33.1349574
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJA4Ns2EU8TIYRgA4Td29F8j8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 66,
+    "distanceMi": 23.6
+  },
+  {
+    "name": "Warrior Martial Arts Academy Little Elm",
+    "address": "2833 Eldorado Pkwy #303",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75033",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.88585839999999,
+        33.1764743
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJi5v1n5k5TIYRoh7e3ru5ze4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 77,
+    "distanceMi": 24.4
+  },
+  {
+    "name": "Next Generation MMA",
+    "address": "2995 Preston Rd Ste 1550",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8079889,
+        33.1040003
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ33mBf-48TIYREOE7QRD6x3M",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 96,
+    "distanceMi": 25.5
+  },
+  {
+    "name": "Frontier Martial Arts (FKA Talon 377)",
+    "address": "4620 US-377 #4A",
+    "city": "Krugerville",
+    "state": "TX",
+    "postalCode": "76227",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9851835,
+        33.2633613
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJcSO-QkVJTIYR9yRwNOrEo6w",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 57,
+    "distanceMi": 25.8
+  },
+  {
+    "name": "Campuzano MMA",
+    "address": "2626 Stonebrook Pkwy #600",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8670958,
+        33.1337178
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJmyolcLc7TIYRo-h2zevpEfA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 128,
+    "distanceMi": 25.8
+  },
+  {
+    "name": "Dominion Gym Academy",
+    "address": "6100 K Ave Ste 117",
+    "city": "Plano",
+    "state": "TX",
+    "postalCode": "75074",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.6885556,
+        33.0577141
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJoSg0NpwZTIYR7f3LNnG25sg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 15,
+    "distanceMi": 25.8
+  },
+  {
+    "name": "Solidarity MMA • Jiu-Jitsu • Kickboxing Academy",
+    "address": "14111 King Rd #510",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75036",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.893688,
+        33.1528708
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJrZnWERA7TIYRReAXj7avkEk",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 209,
+    "distanceMi": 25.9
+  },
+  {
+    "name": "Tiger-Rock Martial Arts of Frisco-Legacy Dr",
+    "address": "4060 Legacy Dr #301",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8379696,
+        33.113455
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJOY6D4X47TIYRnhzzLHy-Zdc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 139,
+    "distanceMi": 25.9
+  },
+  {
+    "name": "Wolfpack MMA Wylie",
+    "address": "2041 S State Hwy 78 Ste 109",
+    "city": "Wylie",
+    "state": "TX",
+    "postalCode": "75098",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5116424,
+        33.021614
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ_UlzMvMFTIYREGPO-WO3R5U",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 24,
+    "distanceMi": 27.8
+  },
+  {
+    "name": "Rolling House Jiu-Jitsu",
+    "address": "1915 N Central Expy Ste 370",
+    "city": "Plano",
+    "state": "TX",
+    "postalCode": "75075",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.71152289999999,
+        33.027852
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJt60w7SEZTIYRh_Vs8y0Gx4Q",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 16,
+    "distanceMi": 28.1
+  },
+  {
+    "name": "Sharpen Iron Academy - SIA",
+    "address": "Lakeside Market, 4017 Preston Rd Ste 542",
+    "city": "Plano",
+    "state": "TX",
+    "postalCode": "75093",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7965897,
+        33.0518488
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJCU7nmx8jTIYRbr0iNjUnF0U",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 131,
+    "distanceMi": 28.3
+  },
+  {
+    "name": "High Ground Jiu Jitsu",
+    "address": "345 W Farm To Market 544 Ste 200",
+    "city": "Murphy",
+    "state": "TX",
+    "postalCode": "75094",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.62052969999999,
+        33.0120145
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJIaRFNCUbTIYRhIYbXqagdbE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 47,
+    "distanceMi": 28.3
+  },
+  {
+    "name": "Eagle Martial Arts Murphy",
+    "address": "420 Village Dr",
+    "city": "Murphy",
+    "state": "TX",
+    "postalCode": "75094",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.62344000000002,
+        33.0100066
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJu5qpse8bTIYRAHkNaw5PCtg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 227,
+    "distanceMi": 28.4
+  },
+  {
+    "name": "Warrior Martial Arts Academy Plano",
+    "address": "3400 Preston Rd #220",
+    "city": "Plano",
+    "state": "TX",
+    "postalCode": "75093",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7928968,
+        33.0442116
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJcaotDQkjTIYRkNQv4w72UJ8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 27,
+    "distanceMi": 28.7
+  },
+  {
+    "name": "Mcsweeney Martial Arts and Performance Center",
+    "address": "2901 W 15th St Ste B",
+    "city": "Plano",
+    "state": "TX",
+    "postalCode": "75075",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.75071849999999,
+        33.0200502
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJx5A5ezYjTIYROypfL9-sYso",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.4,
+    "ratingCount": 110,
+    "distanceMi": 29.3
+  },
+  {
+    "name": "Carlson Gracie DFW - Jiu-Jitsu & Martial Arts in Lewisville",
+    "address": "3964 State Hwy 121 #750",
+    "city": "Lewisville",
+    "state": "TX",
+    "postalCode": "75056",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8990506,
+        33.0591523
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJzXN5Uh4kTIYRMJq3r85sChQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 143,
+    "distanceMi": 31
+  },
+  {
+    "name": "Iron MMA",
+    "address": "1565 N Central Expy #102",
+    "city": "Richardson",
+    "state": "TX",
+    "postalCode": "75080",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.721477,
+        32.9685378
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJG_kZUgAfTIYRfwxIGjc2Fxw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 10,
+    "distanceMi": 32.2
+  },
+  {
+    "name": "Corvo Martial Arts",
+    "address": "810 W Arapaho Rd Ste 66",
+    "city": "Richardson",
+    "state": "TX",
+    "postalCode": "75080",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.74898429999999,
+        32.9631515
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJMy11GWAfTIYR_iCz28gM1UE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 210,
+    "distanceMi": 33
+  },
+  {
+    "name": "Fight Right Martial Arts",
+    "address": "501 S Lake Dallas Dr",
+    "city": "Lake Dallas",
+    "state": "TX",
+    "postalCode": "75065",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0284652,
+        33.1171188
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJmR0LmbUzTIYRtIVFVwGcATQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 103,
+    "distanceMi": 33.3
+  },
+  {
+    "name": "Mezger Martial Arts at Hidden Gym",
+    "address": "235 N Central Expy",
+    "city": "Richardson",
+    "state": "TX",
+    "postalCode": "75080",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7346281,
+        32.9530496
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJh-47Fi4hTIYRYYNzEDkv3do",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 462,
+    "distanceMi": 33.5
+  },
+  {
+    "name": "Reding Martial Arts - East Side",
+    "address": "215 S Woodrow Ln",
+    "city": "Denton",
+    "state": "TX",
+    "postalCode": "76205",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.11143829999999,
+        33.212049
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJz2U5yS7LTYYR8wRkZ0joZh0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.2,
+    "ratingCount": 10,
+    "distanceMi": 33.9
+  },
+  {
+    "name": "Hicks Mixed Martial Arts",
+    "address": "1500 W Hebron Pkwy Ste 104",
+    "city": "Carrollton",
+    "state": "TX",
+    "postalCode": "75010",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9305459,
+        33.0211855
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJwam4nHgvTIYRCgamvjES8Cw",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 116,
+    "distanceMi": 34.2
+  },
+  {
+    "name": "KOVA MMA & Fitness",
+    "address": "1055 S Sherman St Ste 104",
+    "city": "Richardson",
+    "state": "TX",
+    "postalCode": "75081",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.740144,
+        32.937989
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJSfPIhJQfTIYRO8K2ln0W-8A",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 23,
+    "distanceMi": 34.6
+  },
+  {
+    "name": "Fortis MMA Lakeside",
+    "address": "2010 Industrial Blvd",
+    "city": "Rockwall",
+    "state": "TX",
+    "postalCode": "75087",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.4416031,
+        32.9169327
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ8YcizlCrToYRwnoNJGBEXtg",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 44,
+    "distanceMi": 35.7
+  },
+  {
+    "name": "Integrity Martial Arts Academy",
+    "address": "2659 E Belt Line Rd",
+    "city": "Carrollton",
+    "state": "TX",
+    "postalCode": "75006",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8614875,
+        32.9536069
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJQXg4UEMmTIYRmKVJsw1enok",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 84,
+    "distanceMi": 36.1
+  },
+  {
+    "name": "Central Martial Arts",
+    "address": "12835 Preston Rd #322",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75230",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.80534159999999,
+        32.9246118
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJK7ic0DchTIYRG8KQplcSs0U",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 40,
+    "distanceMi": 36.6
+  },
+  {
+    "name": "LP Martial Arts",
+    "address": "1128 W Main St",
+    "city": "Lewisville",
+    "state": "TX",
+    "postalCode": "75067",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.02248,
+        33.0407401
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ5f7QYsUtTIYRnAYMluGcMb0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 83,
+    "distanceMi": 36.6
+  },
+  {
+    "name": "Premier Martial Arts Addison",
+    "address": "14380 Marsh Ln",
+    "city": "Addison",
+    "state": "TX",
+    "postalCode": "75001",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8537971,
+        32.9394016
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJDVZHL4cnTIYRmXxU53hrBMg",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 33,
+    "distanceMi": 36.8
+  },
+  {
+    "name": "Warrior Martial Arts Academy Flower Mound",
+    "address": "765 Cross Timbers Rd 107 # 107",
+    "city": "Flower Mound",
+    "state": "TX",
+    "postalCode": "75028",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0387525,
+        33.0412517
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJV1Jw2JktTIYRdT_I9gBi7Ss",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 88,
+    "distanceMi": 37.3
+  },
+  {
+    "name": "North Texas Mixed Martial Arts",
+    "address": "6050 Long Prairie Rd #800d",
+    "city": "Flower Mound",
+    "state": "TX",
+    "postalCode": "75028",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0801707,
+        33.0680883
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ1QYPGustTIYRHmddMUEMViI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.3,
+    "ratingCount": 89,
+    "distanceMi": 37.8
+  },
+  {
+    "name": "Wolfpack Mixed Martial Arts",
+    "address": "179 County Line Rd",
+    "city": "Rockwall",
+    "state": "TX",
+    "postalCode": "75032",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.456259,
+        32.879911
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJc-Vh9VmqToYRwQMXsqABCJA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 97,
+    "distanceMi": 38
+  },
+  {
+    "name": "Gracie Barra Jiu-Jitsu Argyle",
+    "address": "2126 Hamilton Rd Ste 210 220",
+    "city": "Argyle",
+    "state": "TX",
+    "postalCode": "76226",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1641271,
+        33.1515465
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJIVuRM4PLTYYRavWID0KUbp8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 25,
+    "distanceMi": 38.5
+  },
+  {
+    "name": "Ground Control Jiu Jitsu Garland",
+    "address": "1780 Northwest Hwy #140",
+    "city": "Garland",
+    "state": "TX",
+    "postalCode": "75041",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.65506789999999,
+        32.8637694
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJu7LwGwSnToYRSqAjU6CKQ-I",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 35,
+    "distanceMi": 38.7
+  },
+  {
+    "name": "Gracie Barra Coppell Brazilian Jiu Jitsu",
+    "address": "110 W Sandy Lake Rd #130",
+    "city": "Coppell",
+    "state": "TX",
+    "postalCode": "75019",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.99482,
+        32.970355
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJn8Md2AEpTIYRwtM81rFJSKQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 45,
+    "distanceMi": 39.2
+  },
+  {
+    "name": "Libre Jiu Jitsu",
+    "address": "13150 Senlac Dr Ste 190",
+    "city": "Farmers Branch",
+    "state": "TX",
+    "postalCode": "75234",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.909026,
+        32.9219443
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJEbDcCPgnTIYRGVC79ZMzeL8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 10,
+    "distanceMi": 39.3
+  },
+  {
+    "name": "Fuel Mixed Martial Arts",
+    "address": "150 S Denton Tap Rd Ste 106",
+    "city": "Coppell",
+    "state": "TX",
+    "postalCode": "75019",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9926505,
+        32.966886
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJuVsbYfrVTYYRepxzHQhYvL4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 43,
+    "distanceMi": 39.4
+  },
+  {
+    "name": "Day's Black Belt Academy",
+    "address": "117 N 4th Ave",
+    "city": "Durant",
+    "state": "OK",
+    "postalCode": "74701",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.3797799,
+        33.9920709
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJPTTjcN5fS4YRkBXk5_fB58U",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 11,
+    "distanceMi": 41.2
+  },
+  {
+    "name": "Boon Martial Arts",
+    "address": "5757 W Lovers Ln #217",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75209",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8139375,
+        32.8514375
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJL6tZgGCeToYRtue7dDWKgtA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 133,
+    "distanceMi": 41.6
+  },
+  {
+    "name": "gillsmartialartsacademy LLC",
+    "address": "2517 Franklin Dr C",
+    "city": "Mesquite",
+    "state": "TX",
+    "postalCode": "75150",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.61955909999999,
+        32.7979095
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ15ru0OGlToYRLlUpeA_Bhic",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 6,
+    "distanceMi": 43
+  },
+  {
+    "name": "Seo Martial Arts Academy",
+    "address": "4104 Live Oak St",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75204",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.77938150000001,
+        32.7965543
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJqz4grs-YToYRvWJWiT5b310",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 26,
+    "distanceMi": 44.6
+  },
+  {
+    "name": "Dallas Fight Club & Fitness",
+    "address": "2629 N Stemmons Fwy Ste 207",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75207",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8418925,
+        32.8062204
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJV378TJmZToYRY4euYtu4Dvo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 223,
+    "distanceMi": 45
+  },
+  {
+    "name": "Park's Martial Arts",
+    "address": "120 E Main St",
+    "city": "Mesquite",
+    "state": "TX",
+    "postalCode": "75149",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.59832899999999,
+        32.7666066
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJd6sn6HSlToYRu1S-1UPRPPs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 38,
+    "distanceMi": 45.2
+  },
+  {
+    "name": "Global MMA Dallas and Muay Thai",
+    "address": "1336 Inwood Rd",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75247",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8519143,
+        32.8059488
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJt42i2vSdToYRBCCFc1IFjUY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 29,
+    "distanceMi": 45.3
+  },
+  {
+    "name": "All American MMA - Southlake",
+    "address": "545 S Nolen Dr Ste 250 b",
+    "city": "Southlake",
+    "state": "TX",
+    "postalCode": "76092",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1080958,
+        32.9331242
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJi99SG7nVTYYRpKUd8Ew7jF0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 17,
+    "distanceMi": 45.4
+  },
+  {
+    "name": "Reveal Martial Arts Southlake",
+    "address": "2120 E Southlake Blvd Ste B",
+    "city": "Southlake",
+    "state": "TX",
+    "postalCode": "76092",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1210067,
+        32.9424917
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ13w0vuzUTYYRWa5ZiQ8-seg",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 296,
+    "distanceMi": 45.5
+  },
+  {
+    "name": "DFW Combat Co",
+    "address": "131 Express St",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75207",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.82898139999999,
+        32.7935477
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJrUuitFGZToYRdMHN-MvLtFk",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 92,
+    "distanceMi": 45.6
+  },
+  {
+    "name": "Quintana MMA & Fitness",
+    "address": "1925 E Levee St",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75207",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.82953380000001,
+        32.7917604
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ2UkFsR-ZToYRnFJuDaMFbYA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 30,
+    "distanceMi": 45.7
+  },
+  {
+    "name": "Mesquite Martial Arts Academy",
+    "address": "540 Clay Mathis Rd #170",
+    "city": "Mesquite",
+    "state": "TX",
+    "postalCode": "75181",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5611587,
+        32.7588011
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJGYbkPJevToYRjFxB59uXtZk",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 63,
+    "distanceMi": 45.7
+  },
+  {
+    "name": "WolfPack MMA Forney",
+    "address": "107 N Profit Row",
+    "city": "Forney",
+    "state": "TX",
+    "postalCode": "75126",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.4395959,
+        32.7332801
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJwcJOuIKyToYRy2J8p43CQGE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 73,
+    "distanceMi": 48.1
+  },
+  {
+    "name": "Jiujitsuwithjesus",
+    "address": "2527 W Colorado Blvd",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75211",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.86370819999999,
+        32.7603397
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJCQsUd3ibToYRObX6ewNmsmE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 22,
+    "distanceMi": 48.4
+  },
+  {
+    "name": "AzTex MMA",
+    "address": "121 W Jefferson Blvd",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75208",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.823782,
+        32.743506
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ0ZD2OKyZToYRcCFzXHoU9Ss",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 14,
+    "distanceMi": 48.8
+  },
+  {
+    "name": "Crusader Combat Club",
+    "address": "1515 S Ewing Ave Ste 120",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75216",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.811858,
+        32.7288924
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ1x99CoCbToYRvSm3czea2MA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 41,
+    "distanceMi": 49.6
+  },
+  {
+    "name": "Peak Performance MMA Justin",
+    "address": "17515 Matany Rd Bldg 1, Suite 1200",
+    "city": "Justin",
+    "state": "TX",
+    "postalCode": "76247",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3080775,
+        33.0403192
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJG-8NiDrbTYYRqQZw0qrCmKs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 35,
+    "distanceMi": 49.6
+  },
+  {
+    "name": "Southside Mixed Martial Arts",
+    "address": "Shopping Center, #1070",
+    "city": "Dallas",
+    "state": "TX",
+    "postalCode": "75224",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8308057,
+        32.7213572
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJsZbevD-ZToYR7jVG0kNaYT4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 62,
+    "distanceMi": 50.4
+  },
+  {
+    "name": "All American MMA - Keller",
+    "address": "102 Keller Hicks Rd #127",
+    "city": "Keller",
+    "state": "TX",
+    "postalCode": "76248",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2543391,
+        32.9388692
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJobcBLEPXTYYRwdwaTbglTaM",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 116,
+    "distanceMi": 51.2
+  },
+  {
+    "name": "Peak Performance MMA & BJJ",
+    "address": "5500 Feed Mill Dr Ste 520",
+    "city": "Keller",
+    "state": "TX",
+    "postalCode": "76248",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2601526,
+        32.9421659
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJh6hjBmfXTYYRHz1Eg231z_E",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 204,
+    "distanceMi": 51.4
+  },
+  {
+    "name": "King's Gambit Jiu Jitsu",
+    "address": "1424 Airport Fwy Ste U",
+    "city": "Bedford",
+    "state": "TX",
+    "postalCode": "76022",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.14820970000001,
+        32.8365666
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJQRajTxp_ToYRTfWJ1P7ybXw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 6,
+    "distanceMi": 52
+  },
+  {
+    "name": "Missions Jiu-Jitsu",
+    "address": "301 Tanger Dr Ste 108",
+    "city": "Terrell",
+    "state": "TX",
+    "postalCode": "75160",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.28382239999999,
+        32.7024837
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9z1rGndPSYYRw-9gIW1qoSA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 9,
+    "distanceMi": 52.5
+  },
+  {
+    "name": "Cloud Nine MMA",
+    "address": "1156 107th St.",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76011",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0574918,
+        32.7641857
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9f4SOjWHToYRI97SAPw9G7M",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 105,
+    "distanceMi": 53.1
+  },
+  {
+    "name": "Fitness Fight Factory",
+    "address": "8443 Blvd 26",
+    "city": "North Richland Hills",
+    "state": "TX",
+    "postalCode": "76180",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2021041,
+        32.8442171
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJReaLVfPVTYYRPQx9Zto3yQs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.4,
+    "ratingCount": 110,
+    "distanceMi": 53.6
+  },
+  {
+    "name": "DFW MMA - Jiu Jitsu & Muay Thai Boxing Fight Team - Arlington",
+    "address": "2071 E Division St",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76011",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0772829,
+        32.7433268
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJU1lXJVaHToYRAlpqjs6xI38",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 54.9
+  },
+  {
+    "name": "Arlington Fight Club",
+    "address": "",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76011",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0767662,
+        32.7432851
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJx9OE4p2HToYR8owRkdfbvaw",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 20,
+    "distanceMi": 54.9
+  },
+  {
+    "name": "Team One Mixed Martial Arts",
+    "address": "955 N Cooper St",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76011",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.11244239999999,
+        32.7480483
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ65xZl5h9ToYR_fIN3GH7zj0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 6,
+    "distanceMi": 55.7
+  },
+  {
+    "name": "Forever Fitness MMA - Muay Thai Academy",
+    "address": "955 N Cooper St",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76011",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.11244239999999,
+        32.7480483
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJIUgoMfR9ToYRxcNuQLH-iXk",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 3.8,
+    "ratingCount": 10,
+    "distanceMi": 55.7
+  },
+  {
+    "name": "Squabble MMA",
+    "address": "7415 Whitehall St",
+    "city": "Richland Hills",
+    "state": "TX",
+    "postalCode": "76118",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2197427,
+        32.8074843
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJWf2irw15ToYRz_wKSetYSj8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 21,
+    "distanceMi": 56.2
+  },
+  {
+    "name": "Lang Son Traders Martial Arts Supplies",
+    "address": "318 E Abram St",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76010",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.10377140000001,
+        32.7353332
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJr2Wtn3B9ToYRdeB-xh2iSRM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest",
+      "store"
+    ],
+    "rating": 4.9,
+    "ratingCount": 166,
+    "distanceMi": 56.2
+  },
+  {
+    "name": "360 Jiu Jitsu",
+    "address": "830 Mayfield Rd Ste 120",
+    "city": "Grand Prairie",
+    "state": "TX",
+    "postalCode": "75052",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.01699289999999,
+        32.6923951
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ07FtD-CIToYRAYMsCoiHheY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 81,
+    "distanceMi": 56.3
+  },
+  {
+    "name": "Gann Fight & Fitness",
+    "address": "12512 Willow Springs Rd Ste 112",
+    "city": "Haslet",
+    "state": "TX",
+    "postalCode": "76052",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3915466,
+        32.954287
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ711R4zhlToYRhGYTqCX9cXY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 83,
+    "distanceMi": 56.9
+  },
+  {
+    "name": "Flux MMA",
+    "address": "4105 Denton Hwy",
+    "city": "Haltom City",
+    "state": "TX",
+    "postalCode": "76117",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2656605,
+        32.8245766
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJD1nl1u93ToYRAx68BnFl9VA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 88,
+    "distanceMi": 57.2
+  },
+  {
+    "name": "Covenant Jiu Jitsu Academy",
+    "address": "1013 W Park Row Dr",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76013",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1198727,
+        32.7221765
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJf4vztpp9ToYRQXFVTftaVRw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 7,
+    "distanceMi": 57.5
+  },
+  {
+    "name": "Fitness Fight Factory Haslet",
+    "address": "12515 N Saginaw Blvd Ste 103",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76179",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.42151229999999,
+        32.9574237
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJCbWTR1bdTYYRX_yYoG18gAk",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 40,
+    "distanceMi": 58.2
+  },
+  {
+    "name": "Bushido Martial Arts Academy",
+    "address": "1304 W Arkansas Ln",
+    "city": "Arlington",
+    "state": "TX",
+    "postalCode": "76013",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1285027,
+        32.7059631
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJmwv4pq-HToYR2GaxdQpiNXA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 55,
+    "distanceMi": 58.7
+  },
+  {
+    "name": "Ooze Jiu-Jitsu",
+    "address": "760 N Beach St",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76111",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2869372,
+        32.7732871
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJi9f4fQVxToYRxjJA3TT6ZQ8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 60.6
+  },
+  {
+    "name": "Ichi Ni San Judo & Jiu Jitsu",
+    "address": "510 US-175 Ste E",
+    "city": "Kaufman",
+    "state": "TX",
+    "postalCode": "75142",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.3043311,
+        32.570854
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ29b7sfVJSYYRYC9liNqf4vM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 60.8
+  },
+  {
+    "name": "Texoma Martial Arts Jiu Jitsu + Self Defense",
+    "address": "819 Grand Ave",
+    "city": "Ardmore",
+    "state": "OK",
+    "postalCode": "73401",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1379551,
+        34.1791974
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ_57ynjEpTYYRBX-bxxAEVVE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 12,
+    "distanceMi": 61.5
+  },
+  {
+    "name": "Red Oak Academy of Martial Arts",
+    "address": "320 East Ovilla Road",
+    "city": "Red Oak",
+    "state": "TX",
+    "postalCode": "75154",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8006889,
+        32.5341741
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJtROXWXTrToYRT982zdd5-mU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 7,
+    "distanceMi": 62.5
+  },
+  {
+    "name": "Martial Arts Experience",
+    "address": "243 East Ovilla Road",
+    "city": "Red Oak",
+    "state": "TX",
+    "postalCode": "75154",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8094903,
+        32.5314926
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJoU279DTrToYRWXgP-gmmezU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 13,
+    "distanceMi": 62.8
+  },
+  {
+    "name": "New World Combat",
+    "address": "3000 Cullen St Ste A",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76107",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3599304,
+        32.7624115
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJb0uPc05xToYRFAmeLgmBXes",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 37,
+    "distanceMi": 64.1
+  },
+  {
+    "name": "American Institute of Korean Martial Arts (Aiokma) HQ",
+    "address": "530 Stacks Rd",
+    "city": "Ennis",
+    "state": "TX",
+    "postalCode": "75119",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.5593636,
+        32.472574
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9by_TBfJToYRu7A9VHqPD3A",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 4,
+    "distanceMi": 65.5
+  },
+  {
+    "name": "PTX Martial Arts",
+    "address": "6055 Lamar Rd",
+    "city": "Reno",
+    "state": "TX",
+    "postalCode": "75462",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.47211,
+        33.663748
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJWT2H0WxYSoYRa4X5_NmdOXI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 21,
+    "distanceMi": 66
+  },
+  {
+    "name": "De La Rosa MMA",
+    "address": "612 Profit St",
+    "city": "Azle",
+    "state": "TX",
+    "postalCode": "76020",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.54786969999999,
+        32.9050967
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJz5VRA7_jTYYRlDzH9bPgMAM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 11,
+    "distanceMi": 66.3
+  },
+  {
+    "name": "Panther City Martial Arts",
+    "address": "2512 Mall Cir",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76116",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4342746,
+        32.7387484
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJw2POTL5zToYRjNGHGNVQldc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 42,
+    "distanceMi": 68.3
+  },
+  {
+    "name": "Extreme Martial Arts Mansfield",
+    "address": "1848 Lone Star Rd 410, #412",
+    "city": "Mansfield",
+    "state": "TX",
+    "postalCode": "76063",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1103134,
+        32.5275156
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJFWU2xANhToYRRn62glRTLxc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 195,
+    "distanceMi": 68.9
+  },
+  {
+    "name": "Frey MMA",
+    "address": "5364 Wedgmont Cir N",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76133",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3848539,
+        32.6690536
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJh3RCfHBxToYRjtpm9knNozw",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 15,
+    "distanceMi": 69.7
+  },
+  {
+    "name": "10th Planet Fort Worth Jiu Jitsu",
+    "address": "5364 Wedgmont Cir N",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76133",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3847562,
+        32.6690754
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJbVJ6u69xToYR1ni9GeTo4HQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 43,
+    "distanceMi": 69.7
+  },
+  {
+    "name": "Fort Worth Combatives",
+    "address": "8808 Camp Bowie W Blvd #110",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76116",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4701022,
+        32.7249511
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ01tZIakMToYRjZrkwdMs4b4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 221,
+    "distanceMi": 70.4
+  },
+  {
+    "name": "TX Black Belt Academy Fort Worth",
+    "address": "5666 Overton Ridge Blvd",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76132",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.412734,
+        32.6768199
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJE7ZhW0ZtToYRyA7ltrw7rd0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 202,
+    "distanceMi": 70.4
+  },
+  {
+    "name": "Spartan Grappling Academy",
+    "address": "554 J E Woody Rd",
+    "city": "Springtown",
+    "state": "TX",
+    "postalCode": "76082",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.69514749999999,
+        32.9579318
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJMfzUCOH7TYYRen539jktGwc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 16,
+    "distanceMi": 72
+  },
+  {
+    "name": "Ellis County Martial Arts",
+    "address": "811 Ferris Ave",
+    "city": "Waxahachie",
+    "state": "TX",
+    "postalCode": "75165",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.84614599999999,
+        32.39571
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJA0wkJtHuToYRlJY2Bmx2_60",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 74,
+    "distanceMi": 72.4
+  },
+  {
+    "name": "Genesis Jiu Jitsu Burleson",
+    "address": "12848 South Fwy Ste 236",
+    "city": "Burleson",
+    "state": "TX",
+    "postalCode": "76028",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3236847,
+        32.5713043
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJPT00bqJpToYRijsYTVrah7c",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 100,
+    "distanceMi": 72.8
+  },
+  {
+    "name": "Lone Star Martial Arts LP",
+    "address": "300 W Main St",
+    "city": "Waxahachie",
+    "state": "TX",
+    "postalCode": "75165",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8488623,
+        32.3864119
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ2cBr3CTvToYRO3CMt88LDTQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 25,
+    "distanceMi": 73.1
+  },
+  {
+    "name": "Micks Martial Arts",
+    "address": "401 Cantrell St",
+    "city": "Waxahachie",
+    "state": "TX",
+    "postalCode": "75165",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8516212,
+        32.3811147
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJe-vnT43vToYRVTtYv9c8VG4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 3,
+    "ratingCount": 2,
+    "distanceMi": 73.5
+  },
+  {
+    "name": "Gracie Jiu Jitsu",
+    "address": "",
+    "city": "Hugo",
+    "state": "OK",
+    "postalCode": "74743",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5045851,
+        34.0107577
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJF9MVKMfpSoYRdkDxZdf73NE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 74.1
+  },
+  {
+    "name": "Ennis Black Belt Academy",
+    "address": "105 SW Main St",
+    "city": "Ennis",
+    "state": "TX",
+    "postalCode": "75119",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.627259,
+        32.3273978
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJY-PB1gTbToYRwoTB7b72AgI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 8,
+    "distanceMi": 75.5
+  },
+  {
+    "name": "The Forge Martial Arts Academy",
+    "address": "681 Bear Cat Rd",
+    "city": "Aledo",
+    "state": "TX",
+    "postalCode": "76008",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.6140155,
+        32.722533
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ6107otIFToYRnt3V56b-80Y",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 6,
+    "distanceMi": 76.9
+  },
+  {
+    "name": "Murray County Jiu Jitsu",
+    "address": "2118 1/2 W Broadway St",
+    "city": "Sulphur",
+    "state": "OK",
+    "postalCode": "73086",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9972078,
+        34.5068014
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJL2N3dvwls4cR7AD6z7um9g8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 78.8
+  },
+  {
+    "name": "Epic Fight & Fitness Martial Arts Academy",
+    "address": "1886 Mineral Wells Hwy",
+    "city": "Weatherford",
+    "state": "TX",
+    "postalCode": "76088",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8307028,
+        32.7618791
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJIeO_MxD-UYYRVyzNfBHaFN0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 74,
+    "distanceMi": 85.5
+  },
+  {
+    "name": "Ronin Style: Striking and Grappling",
+    "address": "119 E Archer St",
+    "city": "Jacksboro",
+    "state": "TX",
+    "postalCode": "76458",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.1580354,
+        33.2195207
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJmfoqg45BUoYRW4y_nrkuLCY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 6,
+    "distanceMi": 92.2
+  },
+  {
+    "name": "TST Martial Arts Academy USA",
+    "address": "15656 FM 849",
+    "city": "Lindale",
+    "state": "TX",
+    "postalCode": "75771",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4229529,
+        32.4932924
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJTZmVm8O4SYYRAgbnf9Nz-2w",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 26,
+    "distanceMi": 92.7
+  },
+  {
+    "name": "Mt. Pleasant Martial Arts",
+    "address": "114 N Jefferson Ave",
+    "city": "Mt Pleasant",
+    "state": "TX",
+    "postalCode": "75455",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.96824699999999,
+        33.157139
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJd-6tUgb6NYYR2HvcFsYDuKw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 53,
+    "distanceMi": 94.8
+  },
+  {
+    "name": "Amped Mixed Martial Arts",
+    "address": "",
+    "city": "Henrietta",
+    "state": "TX",
+    "postalCode": "76365",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.19526499999999,
+        33.8143018
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJZZtMH77rUoYROwcvjjPQdSQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 96.8
+  },
+  {
+    "name": "Level Ground Jiu-Jitsu",
+    "address": "4000 N Broadway Ave",
+    "city": "Ada",
+    "state": "OK",
+    "postalCode": "74820",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.6781688,
+        34.8188098
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ-0dk2XJts4cR2gAjcr6Md7w",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 3,
+    "distanceMi": 96.8
+  },
+  {
+    "name": "Danny Williams Combat Martial Arts Program",
+    "address": "804 W Pearl St",
+    "city": "Granbury",
+    "state": "TX",
+    "postalCode": "76048",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.79578529999999,
+        32.4425071
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJpzORU4XfUYYRr6ROoPz2HB0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 72,
+    "distanceMi": 97.6
+  },
+  {
+    "name": "Rebellion Martial Arts",
+    "address": "1408 S Main St",
+    "city": "Ada",
+    "state": "OK",
+    "postalCode": "74820",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.6784339,
+        34.8488343
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJgej5Wm9ts4cRGGthCAINbts",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 16,
+    "distanceMi": 98.9
+  },
+  {
+    "name": "Songahm Martial Arts Academy (ATA)",
+    "address": "3213 Seaton St.",
+    "city": "Tyler",
+    "state": "TX",
+    "postalCode": "75701",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.33329260000001,
+        32.3129151
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJbzb9iXHMSYYRlYde7mkhnpg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 21,
+    "distanceMi": 105.3
+  },
+  {
+    "name": "ProComp Sport Martial Arts",
+    "address": "202 Buffalo St",
+    "city": "Gilmer",
+    "state": "TX",
+    "postalCode": "75644",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.945398,
+        32.7298734
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJZ-zXnPkbNoYRKAMFZtqpaWk",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 26,
+    "distanceMi": 106
+  },
+  {
+    "name": "Inspire Martial Arts",
+    "address": "1505 E Grande Blvd",
+    "city": "Tyler",
+    "state": "TX",
+    "postalCode": "75703",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.2834529,
+        32.2772175
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJw2fd1TbNSYYR6wlOw-2CrU4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 109.1
+  },
+  {
+    "name": "WTX Jiu Jitsu",
+    "address": "200 S Lavaca St",
+    "city": "Whitney",
+    "state": "TX",
+    "postalCode": "76692",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.31286060000001,
+        31.947386
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJwQS_YZu7T4YRFvMYcpcNDHM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 110.3
+  },
+  {
+    "name": "Jungle Cat Jiu Jitsu",
+    "address": "15240 TX-110 Suite D",
+    "city": "Whitehouse",
+    "state": "TX",
+    "postalCode": "75791",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.2411357,
+        32.2578727
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJj_9GD5rNSYYRi5Cqz5sQCjs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 20,
+    "distanceMi": 111.7
+  },
+  {
+    "name": "Nuon's Martial Arts",
+    "address": "704 TX-110",
+    "city": "Whitehouse",
+    "state": "TX",
+    "postalCode": "75791",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.22318510000001,
+        32.2164414
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJP9OdlMItSIYRFRH-x5E1eK4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 13,
+    "distanceMi": 114.5
+  },
+  {
+    "name": "Eagle Rock Martial Arts",
+    "address": "475 E Main St",
+    "city": "Bullard",
+    "state": "TX",
+    "postalCode": "75757",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.317404,
+        32.1429598
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJeWhhxEY3SIYRYHaWN3mGPY8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.3,
+    "ratingCount": 18,
+    "distanceMi": 114.7
+  },
+  {
+    "name": "Spring Hill Martial Arts",
+    "address": "3547 Gilmer Rd",
+    "city": "Longview",
+    "state": "TX",
+    "postalCode": "75604",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.79998359999999,
+        32.5513518
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJxbLaRNA_NoYRp1RqyIZ6s-w",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 119.3
+  },
+  {
+    "name": "ATA Black Belt & Academy",
+    "address": "2129 Gilmer Rd",
+    "city": "Longview",
+    "state": "TX",
+    "postalCode": "75604",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.7874105,
+        32.5277086
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJgc_Opzc5NoYRnV9ByPHmD0o",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 13,
+    "distanceMi": 120.8
+  },
+  {
+    "name": "Seeds 13 Jiu-Jitsu Academy - Longview,TX",
+    "address": "1809 W Loop 281 #100",
+    "city": "Longview",
+    "state": "TX",
+    "postalCode": "75604",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.78490359999999,
+        32.5239655
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJZW8aEQA5NoYRy1PIXtPvtT4",
+    "types": [
+      "establishment",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 121.1
+  },
+  {
+    "name": "Longview Martial Arts Academy",
+    "address": "2901 N Eastman Rd",
+    "city": "Longview",
+    "state": "TX",
+    "postalCode": "75605",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.7229647,
+        32.5324081
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ-5-fLfBHNoYRbbsr573R558",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.2,
+    "ratingCount": 36,
+    "distanceMi": 123.9
+  },
+  {
+    "name": "3 Feathers MMA MUAY THAI Warriors 4 Christ",
+    "address": "147 E Main St",
+    "city": "Wilburton",
+    "state": "OK",
+    "postalCode": "74578",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.3081031,
+        34.9189524
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ59pOgMJttYcRSRfff2o4mj4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 14,
+    "distanceMi": 126.5
+  },
+  {
+    "name": "Keikukan- Martial Arts School in Lawton, Ok.",
+    "address": "1202 SE 45th St",
+    "city": "Lawton",
+    "state": "OK",
+    "postalCode": "73507",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.33426949999999,
+        34.5961559
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJRYeWeM4ZrYcRNcBTBUlMQZY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 19,
+    "distanceMi": 129.2
+  },
+  {
+    "name": "Shins Martial Arts",
+    "address": "3000 Bellmead Dr",
+    "city": "Waco",
+    "state": "TX",
+    "postalCode": "76705",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1015123,
+        31.589541
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ5f9SZpiCT4YR0tjatGgGdO4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 20,
+    "distanceMi": 130.1
+  },
+  {
+    "name": "Pressure 580 Jiu-Jitsu / Pedigo Submission Fighting Lawton",
+    "address": "204 SE B Ave Ste B",
+    "city": "Lawton",
+    "state": "OK",
+    "postalCode": "73501",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.3842837,
+        34.6067438
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJpUiV2GsZrYcRT0IG92yHY2g",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 131.9
+  },
+  {
+    "name": "Hitt's ATA Black Belt Academy",
+    "address": "304 W Main St B",
+    "city": "Hallsville",
+    "state": "TX",
+    "postalCode": "75650",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.5782717,
+        32.5046681
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJPY4O-eZENoYR0O4w6PJqFHI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 16,
+    "distanceMi": 132.2
+  },
+  {
+    "name": "Jackson Lee Academy",
+    "address": "1716 W Lindsey St",
+    "city": "Norman",
+    "state": "OK",
+    "postalCode": "73069",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4660643,
+        35.2024687
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ4UqHanJrsocRqT9F8c26K-4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 27,
+    "distanceMi": 133.1
+  },
+  {
+    "name": "Southwest Institute of Chinese Martial Arts",
+    "address": "2602 SW Lee Blvd",
+    "city": "Lawton",
+    "state": "OK",
+    "postalCode": "73505",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.428564,
+        34.5938107
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJCT91AiUerYcR_9QxtLKILhs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 26,
+    "distanceMi": 133.4
+  },
+  {
+    "name": "Fight or Flight Fitness LLC",
+    "address": "1309 24th Ave SW",
+    "city": "Norman",
+    "state": "OK",
+    "postalCode": "73069",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.47517839999999,
+        35.2032347
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJpaM_HKppsocRkVHSOeGv5M8",
+    "types": [
+      "establishment",
+      "health",
+      "lodging",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 24,
+    "distanceMi": 133.4
+  },
+  {
+    "name": "Anshin Arashi Martial Arts",
+    "address": "1301 NW 40th St",
+    "city": "Lawton",
+    "state": "OK",
+    "postalCode": "73505",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.442617,
+        34.62241470000001
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJAQDQrFcerYcRzswUW_R_oLo",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 135.2
+  },
+  {
+    "name": "Academy Sports + Outdoors",
+    "address": "210 N New Rd",
+    "city": "Waco",
+    "state": "TX",
+    "postalCode": "76710",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1724093,
+        31.52299709999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJJcNGlPyDT4YRiJ9gUiAsHIg",
+    "types": [
+      "clothing_store",
+      "establishment",
+      "point_of_interest",
+      "shoe_store",
+      "store"
+    ],
+    "rating": 4.2,
+    "ratingCount": 2942,
+    "distanceMi": 135.5
+  },
+  {
+    "name": "Cossatot Jiu Jitsu",
+    "address": "404 W De Queen Ave",
+    "city": "De Queen",
+    "state": "AR",
+    "postalCode": "71832",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.34172509999999,
+        34.0379083
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJC5TA0QPhNIYRNohv2eKymIQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 3,
+    "distanceMi": 135.5
+  },
+  {
+    "name": "Vision Martial Arts Academy",
+    "address": "1310 N Interstate Dr",
+    "city": "Norman",
+    "state": "OK",
+    "postalCode": "73072",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.48800489999999,
+        35.235045
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJd8o-Im9psocRmhazrsoMedU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 72,
+    "distanceMi": 135.7
+  },
+  {
+    "name": "Dequeen BJJ",
+    "address": "856 E Collin Raye Dr #1",
+    "city": "De Queen",
+    "state": "AR",
+    "postalCode": "71832",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.3250139,
+        34.0450374
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ8ft-7XzhNIYR0OBzJZJYpyE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 8,
+    "distanceMi": 136.6
+  },
+  {
+    "name": "Family Martial Arts of Texas",
+    "address": "7005 Woodway Dr #111",
+    "city": "Waco",
+    "state": "TX",
+    "postalCode": "76712",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.2003908,
+        31.5078511
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ780ddpiGT4YR91I_a8bgV28",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 144,
+    "distanceMi": 137
+  },
+  {
+    "name": "Vertical Journey Martial Arts",
+    "address": "8726 La Village Ave",
+    "city": "Waco",
+    "state": "TX",
+    "postalCode": "76712",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.20846309999999,
+        31.4848744
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJV_BzehGFT4YR6FhqiPfGboQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 45,
+    "distanceMi": 138.6
+  },
+  {
+    "name": "Cipher MMA",
+    "address": "22016 Woodway Dr",
+    "city": "Woodway",
+    "state": "TX",
+    "postalCode": "76712",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.259103,
+        31.48437359999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJD5bVKACHT4YR45e7cMYaXNM",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 4,
+    "distanceMi": 139.5
+  },
+  {
+    "name": "Integrity Martial Arts",
+    "address": "101 N Eastern Ave",
+    "city": "Moore",
+    "state": "OK",
+    "postalCode": "73160",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4775605,
+        35.3387251
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ2UNubidrsocR6B3irB6hWOU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 89,
+    "distanceMi": 142.1
+  },
+  {
+    "name": "East Texas Martial Arts",
+    "address": "512 Burma Rd",
+    "city": "Texarkana",
+    "state": "TX",
+    "postalCode": "75501",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.1069235,
+        33.4272779
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJHwUk7K1BNIYR4JjpVlqyuZY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 4,
+    "distanceMi": 142.6
+  },
+  {
+    "name": "National Martial Arts",
+    "address": "11829 S Portland Ave",
+    "city": "Oklahoma City",
+    "state": "OK",
+    "postalCode": "73170",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.5842691,
+        35.3498474
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJJ6lwXl4TsocRfnGTo2H-dU8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 120,
+    "distanceMi": 145.1
+  },
+  {
+    "name": "Academy of Martial Arts",
+    "address": "7315 S Shields Blvd",
+    "city": "Oklahoma City",
+    "state": "OK",
+    "postalCode": "73149",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.5073549,
+        35.3930239
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ589spX8UsocRFv-SuFVCrbU",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 46,
+    "distanceMi": 146.2
+  },
+  {
+    "name": "Hero Martial Arts",
+    "address": "2800 Global Pkwy",
+    "city": "Midwest City",
+    "state": "OK",
+    "postalCode": "73130",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.372637,
+        35.437168
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ0c0JcBg8socRNYffYl1yyfQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 54,
+    "distanceMi": 146.5
+  },
+  {
+    "name": "Centerville Jiu Jitsu",
+    "address": "342 TX-75",
+    "city": "Centerville",
+    "state": "TX",
+    "postalCode": "75833",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.98147829999999,
+        31.2712283
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJoXBusd07RoYRVIOToJL3mVs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 3,
+    "distanceMi": 152.5
+  },
+  {
+    "name": "Outsiders Combat Club",
+    "address": "1633 N Meridian Ave",
+    "city": "Oklahoma City",
+    "state": "OK",
+    "postalCode": "73127",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.60277169999999,
+        35.4853374
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJofZqxu0ZsocR1qUdE8vSLVM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 24,
+    "distanceMi": 154.1
+  },
+  {
+    "name": "Southern Impact Mixed Martial Arts",
+    "address": "1142 US-71 ste A",
+    "city": "Mena",
+    "state": "AR",
+    "postalCode": "71953",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.23978389999999,
+        34.5744426
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJpQPfxNAvy4cRRXBIOEKU6BY",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 156
+  },
+  {
+    "name": "American Elite MMA",
+    "address": "14330 N Lincoln Blvd Ste 504",
+    "city": "Edmond",
+    "state": "OK",
+    "postalCode": "73013",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.5021531,
+        35.6159808
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJSxkPYmYDsocRKGbEeZq-6PA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 36,
+    "distanceMi": 160.6
+  },
+  {
+    "name": "Yu'ki MMA",
+    "address": "6909 W Hefner Rd Ste 7",
+    "city": "Oklahoma City",
+    "state": "OK",
+    "postalCode": "73162",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.63574,
+        35.581812
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJu1FMcwgPsocRJ9atn7BTpPU",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 51,
+    "distanceMi": 161
+  },
+  {
+    "name": "Mana Martial Arts",
+    "address": "441 S Fretz Ave",
+    "city": "Edmond",
+    "state": "OK",
+    "postalCode": "73003",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.48764229999999,
+        35.6512214
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ6-qoRP8esocRHkwA7Cx_KC4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 74,
+    "distanceMi": 162.6
+  },
+  {
+    "name": "Edmond Martial Arts Academy",
+    "address": "610 S Kelly Ave Ste G",
+    "city": "Edmond",
+    "state": "OK",
+    "postalCode": "73003",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4952287,
+        35.6503603
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJBZksbfcesocRqrvXoON7NQ0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 38,
+    "distanceMi": 162.7
+  },
+  {
+    "name": "Armando Perez-Raptor BJJ",
+    "address": "2828 E Danforth Rd",
+    "city": "Edmond",
+    "state": "OK",
+    "postalCode": "73034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4430964,
+        35.6663652
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJazArlKQfsocRCUDSo_cusL0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 14,
+    "distanceMi": 162.8
+  },
+  {
+    "name": "Solid MMA",
+    "address": "12301 Merritt Ave",
+    "city": "Yukon",
+    "state": "OK",
+    "postalCode": "73099",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.68513209999999,
+        35.59529
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJrTAcS4AQsocR_zVR7gypZBs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 45,
+    "distanceMi": 162.9
+  },
+  {
+    "name": "Gradient Jiu-Jitsu Academy",
+    "address": "146 Rock Creek Dr",
+    "city": "Nacogdoches",
+    "state": "TX",
+    "postalCode": "75965",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.6286025,
+        31.7189348
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJPXD7gD-LN4YRncs5_Pv4zhg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 163.5
+  },
+  {
+    "name": "Nacogdoches Blackbelt Academy School of Martial Arts",
+    "address": "2817 Westward Dr",
+    "city": "Nacogdoches",
+    "state": "TX",
+    "postalCode": "75964",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.68270729999999,
+        31.6527565
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJv10nNoqMN4YRqvXDrjzjgZM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 3,
+    "distanceMi": 164.7
+  },
+  {
+    "name": "Martial ZEN Temple Academy",
+    "address": "302 Green Hollow Dr",
+    "city": "Temple",
+    "state": "TX",
+    "postalCode": "76502",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4188842,
+        31.1209163
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJUR9V5RRqRYYRgfneVRf1Elg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 20,
+    "distanceMi": 166.2
+  },
+  {
+    "name": "Legacy Martial Arts",
+    "address": "6504 W Adams Ave",
+    "city": "Temple",
+    "state": "TX",
+    "postalCode": "76502",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.410792,
+        31.117323
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJCyssTEdqRYYRvpU2ZzdSsgI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 26,
+    "distanceMi": 166.3
+  },
+  {
+    "name": "ACSOMA (Arlandus Chimney's Schools of Martial Arts)",
+    "address": "4822 N University Dr",
+    "city": "Nacogdoches",
+    "state": "TX",
+    "postalCode": "75965",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.63458299999999,
+        31.64844669999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJuxOVzameOYYRpoAFicXe7bQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 2,
+    "distanceMi": 166.8
+  },
+  {
+    "name": "Brick City Martial Arts,LLC",
+    "address": "5515 S 31st St",
+    "city": "Temple",
+    "state": "TX",
+    "postalCode": "76502",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3873941,
+        31.0484603
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJz0nYuU9rRYYRbWWHu8osGRo",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 27,
+    "distanceMi": 170.5
+  },
+  {
+    "name": "Fighters Forge",
+    "address": "502 N 8th St",
+    "city": "Killeen",
+    "state": "TX",
+    "postalCode": "76541",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7259364,
+        31.1217207
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJL4OmkvVLRYYR4Hd5nHNSQB8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 172.3
+  },
+  {
+    "name": "Benton Martial Arts",
+    "address": "5608 LA-3 Ste I",
+    "city": "Benton",
+    "state": "LA",
+    "postalCode": "71006",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.74331699999999,
+        32.630954
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJVcnTNs3KNoYRMpAD1MXaNxs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 36,
+    "distanceMi": 173.1
+  },
+  {
+    "name": "Martial ZEN Killeen Academy",
+    "address": "2700 S Fort Hood St H",
+    "city": "Killeen",
+    "state": "TX",
+    "postalCode": "76542",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7531578,
+        31.0925
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJaaU7eVZJRYYR9SkZaWY40uw",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 61,
+    "distanceMi": 174.8
+  },
+  {
+    "name": "FreightTrain MMA",
+    "address": "210 E Okmulgee St",
+    "city": "Muskogee",
+    "state": "OK",
+    "postalCode": "74403",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.3656615,
+        35.7466799
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJdVAvhefhtYcRaJBlspI7DA4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 23,
+    "distanceMi": 175
+  },
+  {
+    "name": "Legacy Martial Arts",
+    "address": "3055 Stillhouse Lake Rd Ste 204",
+    "city": "Harker Heights",
+    "state": "TX",
+    "postalCode": "76548",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.6550601,
+        31.0517765
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJG7QyuzBIRYYRy118kkiRWhQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 88,
+    "distanceMi": 175.3
+  },
+  {
+    "name": "Legacy Martial Arts - Cove",
+    "address": "3010 US-190",
+    "city": "Copperas Cove",
+    "state": "TX",
+    "postalCode": "76522",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.862552,
+        31.1192871
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ81_IheqzWoYRj99OENk8Z9E",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 21,
+    "distanceMi": 175.7
+  },
+  {
+    "name": "Brandon's Martial Arts Studio",
+    "address": "701 S Main St",
+    "city": "Altus",
+    "state": "OK",
+    "postalCode": "73521",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -99.3340549,
+        34.6316686
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJLROk7t1kq4cRggdDUmqs_dM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 11,
+    "distanceMi": 178.5
+  },
+  {
+    "name": "Tiger Rock Martial Arts of Shreveport",
+    "address": "1010 Professional Dr W",
+    "city": "Shreveport",
+    "state": "LA",
+    "postalCode": "71105",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.7269424,
+        32.414413
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ1y9g_yMtMYYRhWVI7by-nsI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 20,
+    "distanceMi": 179.5
+  },
+  {
+    "name": "Tim Grant’s Action Martial Arts",
+    "address": "7710 US-271",
+    "city": "Fort Smith",
+    "state": "AR",
+    "postalCode": "72908",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.4231485,
+        35.3113265
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJaSG4mmFNyocRKa7-6qQZmpw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 16,
+    "distanceMi": 179.5
+  },
+  {
+    "name": "Bowman Academy of Martial Arts",
+    "address": "1026 S John Redditt Dr Studio B",
+    "city": "Lufkin",
+    "state": "TX",
+    "postalCode": "75904",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.7553081,
+        31.3215025
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJJ8KzTegXOIYRiK2oQ5tee0Y",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 179.9
+  },
+  {
+    "name": "Thunderkick Jiu-Jitsu and MMA",
+    "address": "216 S Main St",
+    "city": "Sapulpa",
+    "state": "OK",
+    "postalCode": "74066",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.1145693,
+        35.9959521
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJm0P92fCTtocRnAQrTs5WKD8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.4,
+    "ratingCount": 26,
+    "distanceMi": 179.9
+  },
+  {
+    "name": "Wolf Pack Martial Arts",
+    "address": "716 Clinic St A",
+    "city": "Greenwood",
+    "state": "AR",
+    "postalCode": "72936",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.2788302,
+        35.2225514
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ-1YUDL6py4cRU6vMbFuBwoQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 25,
+    "distanceMi": 181
+  },
+  {
+    "name": "Combative Martial Arts USA",
+    "address": "8124 East 126th St S",
+    "city": "Bixby",
+    "state": "OK",
+    "postalCode": "74008",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.88544689999999,
+        35.9813005
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJNUr4Fa-PtocRQ75QNit2zfI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 15,
+    "distanceMi": 181.3
+  },
+  {
+    "name": "Championship MMA",
+    "address": "4301 Regions Park Dr #11",
+    "city": "Fort Smith",
+    "state": "AR",
+    "postalCode": "72916",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.386528,
+        35.325653
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJefdaPV9NyocRWNuNnI85BLs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 44,
+    "distanceMi": 181.6
+  },
+  {
+    "name": "Sr. Master Olford's ATA Martial Arts",
+    "address": "3202 S John Redditt Dr",
+    "city": "Lufkin",
+    "state": "TX",
+    "postalCode": "75904",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.7277327,
+        31.3083694
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJg4uJfSkWOIYRQuC0B4Pbc8k",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 11,
+    "distanceMi": 181.6
+  },
+  {
+    "name": "Bulldog Jiu Jitsu",
+    "address": "417 Antioch St",
+    "city": "Delight",
+    "state": "AR",
+    "postalCode": "71940",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.5024497,
+        34.0313193
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJa1pIJgBpM4YRMiypKn4f_BU",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 181.8
+  },
+  {
+    "name": "Bulldog Jiu Jitsu",
+    "address": "419 Antioch St",
+    "city": "Delight",
+    "state": "AR",
+    "postalCode": "71940",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.5024869,
+        34.0312539
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJs10pdgBpM4YR4s8bQ8KyyLE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 181.8
+  },
+  {
+    "name": "Jenks Martial Arts Academy",
+    "address": "728 W Main St",
+    "city": "Jenks",
+    "state": "OK",
+    "postalCode": "74037",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.9787769,
+        36.02232800000001
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9STAVFCRtocRW7p7wN-hfhI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 31,
+    "distanceMi": 183
+  },
+  {
+    "name": "True Strength Martial Arts",
+    "address": "5111 Rogers Ave Ste 75",
+    "city": "Fort Smith",
+    "state": "AR",
+    "postalCode": "72903",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.37380970000001,
+        35.3653394
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJXxlOanGzy4cRNh2ZCmI3_7I",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 10,
+    "distanceMi": 184.1
+  },
+  {
+    "name": "WMA Martial Arts",
+    "address": "1817 S Aspen Ave",
+    "city": "Broken Arrow",
+    "state": "OK",
+    "postalCode": "74012",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.81403750000001,
+        36.0332651
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJcTNlcq-JtocRkatSVLuOOSw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 9,
+    "distanceMi": 185.7
+  },
+  {
+    "name": "Martial Arts Advantage",
+    "address": "603 S Aspen Ave",
+    "city": "Broken Arrow",
+    "state": "OK",
+    "postalCode": "74012",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.81483480000001,
+        36.0475309
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJyQjiY-aLtocRrX17QXhbRRw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 254,
+    "distanceMi": 186.7
+  },
+  {
+    "name": "Relentless Martial Arts",
+    "address": "6202 S Sheridan Rd",
+    "city": "Tulsa",
+    "state": "OK",
+    "postalCode": "74133",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.9052354,
+        36.0739577
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJX-v8NK6TtocRBRSQMKgCK1g",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 55,
+    "distanceMi": 187.3
+  },
+  {
+    "name": "Carson Fight & Fitness",
+    "address": "9535 E 47th Pl",
+    "city": "Tulsa",
+    "state": "OK",
+    "postalCode": "74145",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.8694586,
+        36.0951463
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJOSAxUIGNtocRQ1ri5KFHMJg",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 32,
+    "distanceMi": 189.2
+  },
+  {
+    "name": "Blitz Martial Arts",
+    "address": "200 County Rd 306 Ste 2201",
+    "city": "Jarrell",
+    "state": "TX",
+    "postalCode": "76537",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.6159543,
+        30.810296
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJUf4XQu8vRYYRwreClRqXROk",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 66,
+    "distanceMi": 190.2
+  },
+  {
+    "name": "Infinity Martial Arts & Self Defense",
+    "address": "1615 N Country Club Rd Ste C",
+    "city": "Stillwater",
+    "state": "OK",
+    "postalCode": "74075",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.12268499999999,
+        36.13823
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJzWPN1DKnsYcRxGZVIZlPfVg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 25,
+    "distanceMi": 190.3
+  },
+  {
+    "name": "Filipino Kali Academy-B/CS TX",
+    "address": "4589 Elmo Weedon Rd",
+    "city": "College Station",
+    "state": "TX",
+    "postalCode": "77845",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.2709342,
+        30.6603999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJYyqbi92HRoYRA_nLg49B7vs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 6,
+    "distanceMi": 191.5
+  },
+  {
+    "name": "Relevant Martial Arts",
+    "address": "5231 S Muskogee Ave",
+    "city": "Tahlequah",
+    "state": "OK",
+    "postalCode": "74464",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.9767992,
+        35.86120349999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJxUdQIjT_yYcRx7-0_v0KGaA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 2,
+    "distanceMi": 191.7
+  },
+  {
+    "name": "L K Wells Martial Arts & Fitness",
+    "address": "2702 W Edison St",
+    "city": "Tulsa",
+    "state": "OK",
+    "postalCode": "74127",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.0229292,
+        36.1609112
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJn-aAfazrtocR2V9fn-exdVs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 22,
+    "distanceMi": 192
+  },
+  {
+    "name": "Gracie Jiu-Jitsu Tahlequah",
+    "address": "108 Monroe St",
+    "city": "Tahlequah",
+    "state": "OK",
+    "postalCode": "74464",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.9759098,
+        35.89497950000001
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJoebHy0z5yYcRxsrNy_HFBQQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 193.8
+  },
+  {
+    "name": "Academy of Modern Martial Arts",
+    "address": "2551 Texas Ave S Ste. A",
+    "city": "College Station",
+    "state": "TX",
+    "postalCode": "77840",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.3066793,
+        30.6061845
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJOy5yQWKERoYRYobYDTkQx48",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 18,
+    "distanceMi": 195.1
+  },
+  {
+    "name": "Texas Martial Arts Center",
+    "address": "1174 Butternut St",
+    "city": "Abilene",
+    "state": "TX",
+    "postalCode": "79602",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -99.7388271,
+        32.4359951
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJOVw_SQmOVoYR9kRDSM5JwxI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.5,
+    "ratingCount": 10,
+    "distanceMi": 195.4
+  },
+  {
+    "name": "Legacy Martial Arts",
+    "address": "1015 13th St",
+    "city": "Huntsville",
+    "state": "TX",
+    "postalCode": "77340",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5497773,
+        30.7212802
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJSU106o8IR4YRm_MiGXvW8QI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 6,
+    "distanceMi": 196
+  },
+  {
+    "name": "Team Chip Martial Arts Abilene BG",
+    "address": "6410 Buffalo Gap Rd",
+    "city": "Abilene",
+    "state": "TX",
+    "postalCode": "79606",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -99.7766147,
+        32.3715732
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJwTKlhwuNVoYRcyq8xJVsDDk",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 2,
+    "distanceMi": 199.1
+  },
+  {
+    "name": "Palmisano's Martial Arts",
+    "address": "6708 Victoria Ave",
+    "city": "College Station",
+    "state": "TX",
+    "postalCode": "77845",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.29650799999999,
+        30.53611949999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJeRIvrBWbRoYRfTqZs1xxyYE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 35,
+    "distanceMi": 199.9
+  },
+  {
+    "name": "Evolution Martial Arts Center",
+    "address": "4879 Williams Dr #201",
+    "city": "Georgetown",
+    "state": "TX",
+    "postalCode": "78633",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.73343729999999,
+        30.6957681
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJu3GIQtDXRIYRjve9JQHf6Mc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 145,
+    "distanceMi": 200
+  },
+  {
+    "name": "Clinch Martial Arts Academy - Owasso",
+    "address": "102 S Atlanta St",
+    "city": "Owasso",
+    "state": "OK",
+    "postalCode": "74055",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.85675270000002,
+        36.2650779
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJa-_tYfHwtocR16H0OYQcziY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest",
+      "school"
+    ],
+    "rating": 5,
+    "ratingCount": 229,
+    "distanceMi": 200.8
+  },
+  {
+    "name": "Ralph Gracie Georgetown",
+    "address": "275 SE Inner Loop #170",
+    "city": "Georgetown",
+    "state": "TX",
+    "postalCode": "78626",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.6801972,
+        30.60757
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJS-Be4-_XRIYRYSxbtdc2YS4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 197,
+    "distanceMi": 204.7
+  },
+  {
+    "name": "John's Gym Liberty Hill Jiu Jitsu",
+    "address": "233 Co Rd 214 #110",
+    "city": "Liberty Hill",
+    "state": "TX",
+    "postalCode": "78642",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.9143928,
+        30.6727699
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJm2Ocj_vXWoYRbbLsOt4zN5E",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 58,
+    "distanceMi": 205.3
+  },
+  {
+    "name": "Pragma Jiu Jitsu Leander",
+    "address": "1633n US-183 Suite 100/102",
+    "city": "Leander",
+    "state": "TX",
+    "postalCode": "78641",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.86519,
+        30.632021
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJjxOZu4srW4YRnWK4VFM514c",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 12,
+    "distanceMi": 206.8
+  },
+  {
+    "name": "Maldonado ATA Martial Arts",
+    "address": "4500 E Palm Valley Blvd Ste 126",
+    "city": "Round Rock",
+    "state": "TX",
+    "postalCode": "78665",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.616106,
+        30.533166
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJdXep7QbQRIYRBOBtNGu4yqE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 348,
+    "distanceMi": 208.5
+  },
+  {
+    "name": "Clan Velez Jiu-Jitsu",
+    "address": "3141 Eagles Nest St #230",
+    "city": "Round Rock",
+    "state": "TX",
+    "postalCode": "78665",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.6797646,
+        30.5505637
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ1Spgy03PRIYRBQhAzltPJiM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 38,
+    "distanceMi": 208.5
+  },
+  {
+    "name": "Pragma Jiu Jitsu",
+    "address": "2535 FM 685 Suite 700",
+    "city": "Hutto",
+    "state": "TX",
+    "postalCode": "78634",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.57492640000001,
+        30.5040292
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJKQKS4HHbRIYRHB-bljh3J8w",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 44,
+    "distanceMi": 209.7
+  },
+  {
+    "name": "Premier Martial Arts Round Rock",
+    "address": "1200 E Palm Valley Blvd",
+    "city": "Round Rock",
+    "state": "TX",
+    "postalCode": "78664",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.66748919999999,
+        30.5187364
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJEe5Z8rrRRIYRCJwn_KoFZz4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 101,
+    "distanceMi": 210.3
+  },
+  {
+    "name": "Seven Star Martial Arts",
+    "address": "1001 Sam Bass Rd Ste 600",
+    "city": "Round Rock",
+    "state": "TX",
+    "postalCode": "78681",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.69302499999999,
+        30.516657
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJKa0y8DfSRIYRb-KiXGXpjGY",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 91,
+    "distanceMi": 210.9
+  },
+  {
+    "name": "Stronger MMA & Wrestling",
+    "address": "3805 Stonebridge Dr Unit 3",
+    "city": "Round Rock",
+    "state": "TX",
+    "postalCode": "78681",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7379029,
+        30.5105056
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJs02_bCTTRIYR4AJ6-hF5Bjs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 33,
+    "distanceMi": 212.2
+  },
+  {
+    "name": "Off the chain mma",
+    "address": "1510 Lakeshore Dr",
+    "city": "Hot Springs",
+    "state": "AR",
+    "postalCode": "71913",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.09246879999999,
+        34.4692396
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJta8EX5HVMoYRXh1GH3EQFz8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 5,
+    "distanceMi": 212.6
+  },
+  {
+    "name": "Real Deal Martial Arts",
+    "address": "4501 Central Ave # B10",
+    "city": "Hot Springs",
+    "state": "AR",
+    "postalCode": "71913",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.0787016,
+        34.4492981
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJE6Sv1yPVMoYRl1tGW8CZhXA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 30,
+    "distanceMi": 212.9
+  },
+  {
+    "name": "Gracie Humaita Cedar Park",
+    "address": "1754 Bagdad Rd Bldg. D",
+    "city": "Cedar Park",
+    "state": "TX",
+    "postalCode": "78613",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8418995,
+        30.5280944
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9-F88mstW4YRHYyfSjUMMjU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 69,
+    "distanceMi": 213.1
+  },
+  {
+    "name": "Professional Black Belt Academy of Hot Springs",
+    "address": "263 Cornerstone Blvd",
+    "city": "Hot Springs National Park",
+    "state": "AR",
+    "postalCode": "71913",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.0595457,
+        34.4610287
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJY7jqRCjVMoYR0mf0pE2ATEg",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 44,
+    "distanceMi": 214.2
+  },
+  {
+    "name": "Tribe Gym & Tribe Martial Arts",
+    "address": "1105 Fairview Rd SW Suite 213",
+    "city": "Camden",
+    "state": "AR",
+    "postalCode": "71701",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.8500827,
+        33.5353093
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJN3E1pINDMoYRJDOnM63iBRE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 107,
+    "distanceMi": 215.1
+  },
+  {
+    "name": "Renzo Gracie Pflugerville",
+    "address": "15301 N Interstate Hwy 35 Unit C",
+    "city": "Pflugerville",
+    "state": "TX",
+    "postalCode": "78660",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.66625599999999,
+        30.4466295
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ97kXfLXPRIYRUmmy7PAAZ6w",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 29,
+    "distanceMi": 215.1
+  },
+  {
+    "name": "MACA Martial Arts",
+    "address": "14611 Burnet Rd Ste. 107",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78728",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.695116,
+        30.4505782
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJiX5cEA7PRIYRNzR9ESQ7BiY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 144,
+    "distanceMi": 215.3
+  },
+  {
+    "name": "Invictus Martial Arts",
+    "address": "9800 N Lake Creek Pkwy Ste 140",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78717",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7941006,
+        30.4741533
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ_Q-G4SUzW4YRvXf9eBaYd0o",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 73,
+    "distanceMi": 215.6
+  },
+  {
+    "name": "Fighting Fit Kickboxing & Jiu Jitsu",
+    "address": "1779 Wells Branch Pkwy #101",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78728",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.67463950000001,
+        30.435208
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJt-mOlWTORIYRstx8LGUe-Bs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 289,
+    "distanceMi": 216
+  },
+  {
+    "name": "Ultimate Warrior Martial Arts Academy",
+    "address": "1534 Malvern Avenue Suite V, 1534 Malvern Ave Ste V",
+    "city": "Hot Springs",
+    "state": "AR",
+    "postalCode": "71901",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.0400737,
+        34.4949233
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJKbJsMFkrzYcRgUbKr5c4K-M",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 7,
+    "distanceMi": 216
+  },
+  {
+    "name": "Cox Martial Arts Montgomery - Taekwondo & Jiu-Jitsu",
+    "address": "19786 Hwy 105 W Ste 160",
+    "city": "Montgomery",
+    "state": "TX",
+    "postalCode": "77356",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.6662698,
+        30.3862796
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJsRN-dbkhR4YRvkMzvX2vZCQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 41,
+    "distanceMi": 216.4
+  },
+  {
+    "name": "Gracie Humaitá Montgomery, TX",
+    "address": "17099 Walden Rd #190",
+    "city": "Montgomery",
+    "state": "TX",
+    "postalCode": "77356",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.6514342,
+        30.385483
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJZbg2V9IhR4YRQIKNz8kv5m0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 216.6
+  },
+  {
+    "name": "Cooper MMA",
+    "address": "12129 N FM 620 Ste 330",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78750",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8162129,
+        30.4611179
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJidjYBl_NRIYRYkLT9ZaSx7o",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.5,
+    "ratingCount": 90,
+    "distanceMi": 216.9
+  },
+  {
+    "name": "TFI Jiu Jitsu Cedar Park",
+    "address": "13642 N Hwy 183 Ste 300",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78750",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.79278749999999,
+        30.4543644
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJK4-mnT8zW4YRANY1mH6MPE4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 119,
+    "distanceMi": 216.9
+  },
+  {
+    "name": "Junkyard Fitness and Fighting Arts",
+    "address": "18409 Hwy 105 W Bldg d",
+    "city": "Montgomery",
+    "state": "TX",
+    "postalCode": "77356",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.6439535,
+        30.3763697
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJAWCuQcohR4YRwRzkeSSXEJ8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 55,
+    "distanceMi": 217.3
+  },
+  {
+    "name": "John's Gym Mixed Martial Arts and Jiu Jitsu",
+    "address": "11416 Ranch Rd 620 N",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78726",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.828939,
+        30.453944
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJfx1otn-3RIYR_o0qm-OUqkU",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 276,
+    "distanceMi": 217.6
+  },
+  {
+    "name": "Black Widow MMA",
+    "address": "10515 N Mopac Expy Ste H (rear",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78759",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.731783,
+        30.3904277
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7_NOlSHLRIYRVDx-i5ni4d0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 122,
+    "distanceMi": 220
+  },
+  {
+    "name": "Integrated Fighting Arts Academy",
+    "address": "9603 Saunders Ln",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78758",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7235279,
+        30.3782642
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJzxdX4nm1RIYRWp1UOaISwp8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 60,
+    "distanceMi": 220.6
+  },
+  {
+    "name": "Cox Martial Arts Conroe - Taekwondo & Jiu-Jitsu",
+    "address": "1408 N Loop 336 W Ste c",
+    "city": "Conroe",
+    "state": "TX",
+    "postalCode": "77304",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4813192,
+        30.3360785
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJI7hr5xw8R4YRXVtbfQlS9uI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 84,
+    "distanceMi": 222.6
+  },
+  {
+    "name": "Worldwide Martial Arts",
+    "address": "1201 N FM 3083 Rd E",
+    "city": "Conroe",
+    "state": "TX",
+    "postalCode": "77303",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4333987,
+        30.3478798
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJQf12Ch8_R4YRhe8q7pY60yE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 39,
+    "distanceMi": 222.7
+  },
+  {
+    "name": "Inferno Martial Arts Siloam Springs",
+    "address": "1029 S Maxwell St",
+    "city": "Siloam Springs",
+    "state": "AR",
+    "postalCode": "72761",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.5397662,
+        36.1730848
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7e46SC6ZyYcRnvx0Hs29-8k",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 32,
+    "distanceMi": 222.7
+  },
+  {
+    "name": "Petra Jiu-Jitsu",
+    "address": "1712 N Frazier St Ste 106",
+    "city": "Conroe",
+    "state": "TX",
+    "postalCode": "77301",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4644929,
+        30.328138
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJPUKMVZE_R4YRDTYifKY9OAo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 9,
+    "distanceMi": 223.4
+  },
+  {
+    "name": "MAC Mixed Martial Arts LLC",
+    "address": "1510 E Dallas St Ste B",
+    "city": "Conroe",
+    "state": "TX",
+    "postalCode": "77301",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.43915559999999,
+        30.3265069
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJsQ29Pis_R4YRfdMXW1NsKuQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 10,
+    "distanceMi": 224
+  },
+  {
+    "name": "Vision Martial Arts Malvern",
+    "address": "1721 Martin Luther King Blvd k",
+    "city": "Malvern",
+    "state": "AR",
+    "postalCode": "72104",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.8264109,
+        34.3853072
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJiTx1XLHJMoYRAcwjvIN7bDI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 45,
+    "distanceMi": 225.3
+  },
+  {
+    "name": "Insight BJJ, Striking & MMA - Brenham",
+    "address": "304 E Mansfield St",
+    "city": "Brenham",
+    "state": "TX",
+    "postalCode": "77833",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.39255759999999,
+        30.1555295
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJq1TDYKepRoYRArJjzNl0UZU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 225.8
+  },
+  {
+    "name": "Old Magnolia MMA",
+    "address": "19011 FM 1488",
+    "city": "Magnolia",
+    "state": "TX",
+    "postalCode": "77355",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.75835219999999,
+        30.2059027
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJGV9JIgDXRoYRDOvPU-JFsUQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 24,
+    "distanceMi": 227.2
+  },
+  {
+    "name": "The Void Martial Arts",
+    "address": "701 Tillery St Ste A7B",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78702",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7042307,
+        30.260578
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJLQrMN7q0RIYRkQtjufpghAw",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 60,
+    "distanceMi": 228
+  },
+  {
+    "name": "Austin Fight Team",
+    "address": "700 E Live Oak St",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78704",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.746763,
+        30.2401724
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJM0FsQXu1RIYRD7vTA1LRbz0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 53,
+    "distanceMi": 230.1
+  },
+  {
+    "name": "Simpleman Martial Arts",
+    "address": "1701 W Ben White Blvd Unit 163",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78745",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7835686,
+        30.2266404
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJg2PsWda1RIYRcnBHStin9YU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 122,
+    "distanceMi": 231.7
+  },
+  {
+    "name": "Tiger-Rock Martial Arts of South Austin",
+    "address": "5501 W US Hwy 290 Service Rd Ste C",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78735",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.84110079999999,
+        30.2351977
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJq086w3tJW4YRxqS0MQ4iAqQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 85,
+    "distanceMi": 232.2
+  },
+  {
+    "name": "Parra Academy of Martial Arts Kali JKD SW Austin",
+    "address": "6908 Western Oaks Blvd",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78749",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8504638,
+        30.22268859999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJx9TssupLW4YR6_cwm994bh0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 26,
+    "distanceMi": 233.2
+  },
+  {
+    "name": "Fox House Martial Arts",
+    "address": "3601 W William Cannon Dr #225",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78749",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.83396409999999,
+        30.2153892
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJt1wmHV1NW4YReOr3DBR3nz0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 58,
+    "distanceMi": 233.3
+  },
+  {
+    "name": "Shield Martial Arts",
+    "address": "138 Shaman Rd",
+    "city": "Ruston",
+    "state": "LA",
+    "postalCode": "71270",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.6913976,
+        32.5098447
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJe_4PegXFMYYR2myeSAincc8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 8,
+    "distanceMi": 234
+  },
+  {
+    "name": "Championship Martial arts Springdale",
+    "address": "1772 W Sunset Ave #2b",
+    "city": "Springdale",
+    "state": "AR",
+    "postalCode": "72762",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.1497345,
+        36.1753019
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJfSIXpP5ryYcRY_blNqE7SxM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 11,
+    "distanceMi": 235
+  },
+  {
+    "name": "Kings MMA Austin",
+    "address": "11190 Circle Dr Ste 480",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78736",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.9545943,
+        30.2241469
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJzRc7-OBHW4YR5ehKbnT156k",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 64,
+    "distanceMi": 235.1
+  },
+  {
+    "name": "Jiu - Jitsu Judo",
+    "address": "S Service Rd W",
+    "city": "Ruston",
+    "state": "LA",
+    "postalCode": "71270",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.6559051,
+        32.5392883
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJY56UCwnFMYYRWEiNq5CsfJo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": null,
+    "ratingCount": null,
+    "distanceMi": 235.4
+  },
+  {
+    "name": "Impact Martial Arts Austin TX",
+    "address": "9501 Menchaca Rd",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78748",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8197144,
+        30.1766051
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJjzBYhZxLW4YR7FJKR1VxA3c",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 157,
+    "distanceMi": 235.6
+  },
+  {
+    "name": "Meta Mixed Martial Arts",
+    "address": "11601 US-290 Suite B101",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78737",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.9654963,
+        30.2135999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJTdBLN-JBW4YRTu48wNOi1N4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 74,
+    "distanceMi": 236
+  },
+  {
+    "name": "New Era Martial Arts",
+    "address": "10203 Old Manchaca Rd",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78748",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8305342,
+        30.1726812
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJb5yjS69NW4YRCtSOxJxYeag",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 57,
+    "distanceMi": 236.1
+  },
+  {
+    "name": "Condition 1 Combat Center",
+    "address": "606 Rayford Rd A",
+    "city": "Spring",
+    "state": "TX",
+    "postalCode": "77386",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.432653,
+        30.126013
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJuSAMd_81R4YRIfbQYa8VLu8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 88,
+    "distanceMi": 237.4
+  },
+  {
+    "name": "Spring Martial Arts",
+    "address": "2021 Rayford Rd",
+    "city": "Spring",
+    "state": "TX",
+    "postalCode": "77386",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.41085629999999,
+        30.1240857
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJAc7UMFc1R4YRZ195MReSkVQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 23,
+    "distanceMi": 237.8
+  },
+  {
+    "name": "Austin Submission Fighting",
+    "address": "11940 Menchaca Rd #104",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78748",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.83435120000001,
+        30.1456356
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJd5ujS69NW4YR-ULd2b-DE-M",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 28,
+    "distanceMi": 237.9
+  },
+  {
+    "name": "Vasquez Academy",
+    "address": "12110 Menchaca Rd #401",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78748",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.83496000000001,
+        30.14242
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJx95CzlhMW4YR-yYvivzQHjc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 40,
+    "distanceMi": 238.1
+  },
+  {
+    "name": "Odyssey Martial Arts Spring",
+    "address": "22131 Rothwood Rd suite 504",
+    "city": "Spring",
+    "state": "TX",
+    "postalCode": "77389",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4933369,
+        30.0861681
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJGz2UxD41R4YRRUH62KP_iak",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 202,
+    "distanceMi": 239
+  },
+  {
+    "name": "Martial Arts Advantage",
+    "address": "427 W Centerton Blvd",
+    "city": "Centerton",
+    "state": "AR",
+    "postalCode": "72719",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.28930520000002,
+        36.3578313
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJyXEpFWIPyYcRta02u7YQKNY",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 109,
+    "distanceMi": 240.9
+  },
+  {
+    "name": "Global Martial Arts",
+    "address": "11214 Indian Trails Dr",
+    "city": "Tomball",
+    "state": "TX",
+    "postalCode": "77375",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5852453,
+        30.0257962
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ51YvXt3SQIYRejAEtA2Gfps",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 111,
+    "distanceMi": 241.7
+  },
+  {
+    "name": "Carlson Gracie North Houston",
+    "address": "6450 Louetta Rd",
+    "city": "Spring",
+    "state": "TX",
+    "postalCode": "77379",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.51338640000002,
+        30.027588
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJV7P6rKXNQIYRiyKIfsyFQ1I",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 105,
+    "distanceMi": 242.6
+  },
+  {
+    "name": "All-Star Martial Arts",
+    "address": "14405 Telge Rd",
+    "city": "Cypress",
+    "state": "TX",
+    "postalCode": "77429",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.65492460000002,
+        29.985019
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJZ-E5knzUQIYRC7OO_kkcqVA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 38,
+    "distanceMi": 243.5
+  },
+  {
+    "name": "Team Tooke Martial Arts Academy",
+    "address": "16718 House Hahl Rd Ste l",
+    "city": "Cypress",
+    "state": "TX",
+    "postalCode": "77433",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.70979299999999,
+        29.9617099
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ5zOv8SfUQIYRGWyKQSnlJnE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 82,
+    "distanceMi": 244.4
+  },
+  {
+    "name": "Gracie Jiu-Jitsu Cypress",
+    "address": "17110 House Hahl Rd Ste B-1",
+    "city": "Cypress",
+    "state": "TX",
+    "postalCode": "77433",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.71056449999999,
+        29.9592848
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJUblBPxHVQIYRudLoqva1_sE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.2,
+    "ratingCount": 10,
+    "distanceMi": 244.5
+  },
+  {
+    "name": "Atlas Jiu Jitsu Buda",
+    "address": "2581 S Loop 4 Unit 525",
+    "city": "Buda",
+    "state": "TX",
+    "postalCode": "78610",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.84293579999999,
+        30.0458108
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJVasfq-hTW4YRtcJjW6BTTk4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 34,
+    "distanceMi": 244.7
+  },
+  {
+    "name": "Elite Mixed Martial Arts - Kingwood",
+    "address": "2259 Northpark Dr",
+    "city": "Kingwood",
+    "state": "TX",
+    "postalCode": "77339",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.2122675,
+        30.0695614
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJs1L7arpSR4YR62CbesTMPCI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 307,
+    "distanceMi": 245
+  },
+  {
+    "name": "Martial Arts USA",
+    "address": "11808 Barker Cypress Rd Ste E",
+    "city": "Cypress",
+    "state": "TX",
+    "postalCode": "77433",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.67517289999999,
+        29.9476229
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJA9o72PrVQIYRRGtnhKtdMig",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 240,
+    "distanceMi": 245.7
+  },
+  {
+    "name": "D'arbonne Martial Arts",
+    "address": "108 N Main St",
+    "city": "Farmerville",
+    "state": "LA",
+    "postalCode": "71241",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.40566,
+        32.7738035
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJaa9BUZceLoYRmSFdY80htbE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 12,
+    "distanceMi": 245.7
+  },
+  {
+    "name": "Team Tooke Mixed Martial Arts",
+    "address": "10111 Grant Rd Ste R",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77070",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.56880199999999,
+        29.9649375
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJDeqQcfTNQIYRTGE7pHOZYzc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 188,
+    "distanceMi": 246
+  },
+  {
+    "name": "4oz Fight Club",
+    "address": "12525 Jones Rd",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77070",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5864665,
+        29.9557295
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJjePutu3RQIYRAu334vsz7W8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.5,
+    "ratingCount": 60,
+    "distanceMi": 246.4
+  },
+  {
+    "name": "Grind House Mixed Martial Arts",
+    "address": "20220 Hempstead Rd #7",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77065",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.6223242,
+        29.9179687
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJSfDVozzRQIYRoi4QzSuMfik",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 42,
+    "distanceMi": 248.4
+  },
+  {
+    "name": "Dojo Kyle Jiu-Jitsu and Martial Arts",
+    "address": "111 S Main St",
+    "city": "Kyle",
+    "state": "TX",
+    "postalCode": "78640",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8762052,
+        29.9879171
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJrxpl6Z5WW4YR7sL1r4_3Zf4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 108,
+    "distanceMi": 249.1
+  },
+  {
+    "name": "Inferno Martial Arts Bella Vista",
+    "address": "408 NE Towncenter",
+    "city": "Bella Vista",
+    "state": "AR",
+    "postalCode": "72714",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.2471341,
+        36.4766547
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJDXDyTnIDyYcROESwSIfL_io",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 116,
+    "distanceMi": 249.1
+  },
+  {
+    "name": "Elite Mixed Martial Arts - Atascocita",
+    "address": "5334 FM 1960 Ste B",
+    "city": "Humble",
+    "state": "TX",
+    "postalCode": "77346",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.1958829,
+        29.9978149
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJYedL-XOtQIYRUoU3PXIHuDo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 83,
+    "distanceMi": 250
+  },
+  {
+    "name": "Houston MMA Classes",
+    "address": "18611 FM 529 #201",
+    "city": "Cypress",
+    "state": "TX",
+    "postalCode": "77433",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.69301809999999,
+        29.879194
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJdR6I1V_CQIYRrzY8qQHANgA",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.6,
+    "ratingCount": 28,
+    "distanceMi": 250.1
+  },
+  {
+    "name": "FS Mixed Martial Arts & Fitness",
+    "address": "2020 Katy Hockley Cut Off Rd #2d",
+    "city": "Katy",
+    "state": "TX",
+    "postalCode": "77493",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.80859629999999,
+        29.8022746
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ13JHV_fXQIYR3Ivprna9CEg",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 383,
+    "distanceMi": 254
+  },
+  {
+    "name": "Fighteria Academy Wimberley, TX - Martial Arts",
+    "address": "10330 Ranch Rd 12",
+    "city": "Wimberley",
+    "state": "TX",
+    "postalCode": "78676",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.09243420000001,
+        29.9489272
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ1a_BC9GpXIYRrj-_wjs_fOc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 357,
+    "distanceMi": 255.8
+  },
+  {
+    "name": "The Fight Lab TX",
+    "address": "1718 Fry Rd Ste 470",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77084",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.7161349,
+        29.7910584
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJOVniO3AnQYYRv8_2wIaR2jY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 167,
+    "distanceMi": 255.8
+  },
+  {
+    "name": "Impact Martial Arts - Little Rock",
+    "address": "14300 Cantrell Rd",
+    "city": "Little Rock",
+    "state": "AR",
+    "postalCode": "72223",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.4316805,
+        34.8033811
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ5Z_sNVih0ocR6EDzX0JBUFY",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 44,
+    "distanceMi": 255.8
+  },
+  {
+    "name": "Kaizen Jiu Jitsu",
+    "address": "Behind Eden, 121 Fredericksburg St",
+    "city": "San Marcos",
+    "state": "TX",
+    "postalCode": "78666",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.9428207,
+        29.8821048
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJm_Vht8-pXIYRXkFpCAdVppw",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 26,
+    "distanceMi": 257.2
+  },
+  {
+    "name": "Reign Jiu Jitsu",
+    "address": "1648A S Mason Rd",
+    "city": "Katy",
+    "state": "TX",
+    "postalCode": "77450",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.7521194,
+        29.7566677
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ0VvApZ0nQYYRtCNaSPMwoz8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 320,
+    "distanceMi": 257.8
+  },
+  {
+    "name": "Elite Mixed Martial Arts - Memorial/Spring Valley",
+    "address": "1010 Bade St",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77055",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.51785869999999,
+        29.7855567
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJEwlWaZzFQIYRg-1RzRR0tIc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 72,
+    "distanceMi": 258.8
+  },
+  {
+    "name": "Rilion Gracie Jiu Jitsu Energy Corridor",
+    "address": "1396 Eldridge Pkwy B",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77077",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.6262864,
+        29.7606557
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7-cu6wrcQIYRovAbM59dYCo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 78,
+    "distanceMi": 259
+  },
+  {
+    "name": "Metis Jiu Jitsu",
+    "address": "9200 Hempstead Rd Ste 140",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77008",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4493669,
+        29.7944289
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJJyukf7jHQIYRyBGU4wI1STU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 4,
+    "distanceMi": 259.2
+  },
+  {
+    "name": "Elite Mixed Martial Arts - Westchase",
+    "address": "11380 Westheimer Rd",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77077",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.57984739999999,
+        29.7377532
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJr37mCsvcQIYRL2kgsYEpSYo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 476,
+    "distanceMi": 261.1
+  },
+  {
+    "name": "ATA Martial Arts - Riverdale",
+    "address": "1800 Riverfront Dr",
+    "city": "Little Rock",
+    "state": "AR",
+    "postalCode": "72202",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.3071944,
+        34.7677263
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJi6vvscGj0ocRnsCqcHstzs0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 57,
+    "distanceMi": 261.6
+  },
+  {
+    "name": "Kajukenbo Combative Science, LLC",
+    "address": "2026 New Natchitoches Rd",
+    "city": "West Monroe",
+    "state": "LA",
+    "postalCode": "71292",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.1995768,
+        32.4963908
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJWT5KabRHLoYRvdwKmh9fyU0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 4,
+    "distanceMi": 261.8
+  },
+  {
+    "name": "Angelo Mixed Martial Arts and fitness",
+    "address": "1602 N Chadbourne St",
+    "city": "San Angelo",
+    "state": "TX",
+    "postalCode": "76903",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -100.4457663,
+        31.4769332
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJz9sEKAfmV4YRoXJSS1EDlf8",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 90,
+    "distanceMi": 262.3
+  },
+  {
+    "name": "Action Martial Arts",
+    "address": "104 Summer Ln",
+    "city": "West Monroe",
+    "state": "LA",
+    "postalCode": "71291",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.1810584,
+        32.5139855
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJB8Cj_QY4LoYRVhtpaIsJ3BU",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 10,
+    "distanceMi": 262.5
+  },
+  {
+    "name": "Gray Beard Forge MMA",
+    "address": "3150 Vail Ave",
+    "city": "Conway",
+    "state": "AR",
+    "postalCode": "72032",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.468335,
+        35.1216566
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJTQQjcM1_zYcR5UnSquRTh2k",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 13,
+    "distanceMi": 262.5
+  },
+  {
+    "name": "Gravitas Martial Arts",
+    "address": "1030 Front St",
+    "city": "Conway",
+    "state": "AR",
+    "postalCode": "72032",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.4415367,
+        35.0925968
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ48FvExiC0ocRjb1SrqEt3fc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 44,
+    "distanceMi": 263
+  },
+  {
+    "name": "Hero Fitness Academy",
+    "address": "130 Kiroli Rd",
+    "city": "West Monroe",
+    "state": "LA",
+    "postalCode": "71291",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.1624298,
+        32.5323927
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJS9XhRwU4LoYR0c28wMK1IKM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 11,
+    "distanceMi": 263.3
+  },
+  {
+    "name": "Elite Mixed Martial Arts - Greenway Plaza/Galleria",
+    "address": "3311 Richmond Ave Ste 101",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77098",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4267988,
+        29.7338279
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJAbflRP3AQIYRZJKwUu1rOXc",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 248,
+    "distanceMi": 263.6
+  },
+  {
+    "name": "Team Osiris Martial Arts",
+    "address": "7141 Southwest Fwy",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77074",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5100476,
+        29.7053353
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ4WJTN2rDQIYRM7Ob6gsgZRw",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 505,
+    "distanceMi": 264.3
+  },
+  {
+    "name": "Bam Bam Martial Arts Houston",
+    "address": "West University Dance Center, 4007 Bellaire Blvd II",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77025",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4413211,
+        29.7049042
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ28WaqLbBQIYR3pzHS1kYOg0",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 271,
+    "distanceMi": 265.3
+  },
+  {
+    "name": "All Star Martial Arts - North Little Rock",
+    "address": "5501 John F Kennedy Blvd",
+    "city": "North Little Rock",
+    "state": "AR",
+    "postalCode": "72116",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.2530744,
+        34.8052844
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJJfxw2rG90ocRgcLjnDtxrSc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.1,
+    "ratingCount": 68,
+    "distanceMi": 265.4
+  },
+  {
+    "name": "Gracie Jiu Jitsu of North Monroe",
+    "address": "1125 Forsythe Ave",
+    "city": "Monroe",
+    "state": "LA",
+    "postalCode": "71201",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.122912,
+        32.5261331
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7x2cSQBHLoYRe8QjjZaVijs",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 265.6
+  },
+  {
+    "name": "Strong Style MMA",
+    "address": "4106 Farm to Market Rd 723 Suite D",
+    "city": "Rosenberg",
+    "state": "TX",
+    "postalCode": "77471",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.8111578,
+        29.6190421
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJcV4Io6YfQYYRaMUBoRu3Q04",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 48,
+    "distanceMi": 266.5
+  },
+  {
+    "name": "5 Star Jiu-Jitsu Strength & Conditioning",
+    "address": "1104 Oliver Rd",
+    "city": "Monroe",
+    "state": "LA",
+    "postalCode": "71201",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.1035162,
+        32.5232502
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJg3cjD8BHLoYRqT7lubVwS5k",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 266.8
+  },
+  {
+    "name": "Tiger-Rock Martial Arts of Monroe",
+    "address": "2259 Louisville Ave",
+    "city": "Monroe",
+    "state": "LA",
+    "postalCode": "71201",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.100681,
+        32.5215136
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJTwXB3ipGLoYRxvJqKuNhxoo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 22,
+    "distanceMi": 266.9
+  },
+  {
+    "name": "Inevat Jiu Jitsu East Downtown",
+    "address": "7241 Lawndale St",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77012",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.2888854,
+        29.7173405
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ3fCFhZ6Ju24RCw629CpAX6I",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 23,
+    "distanceMi": 266.9
+  },
+  {
+    "name": "Elite Mixed Martial Arts - Baytown",
+    "address": "5232 East Fwy",
+    "city": "Baytown",
+    "state": "TX",
+    "postalCode": "77521",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.979258,
+        29.80406499999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9WoMEVpZP4YRzyDLeM8vUaI",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 324,
+    "distanceMi": 267
+  },
+  {
+    "name": "TX 3RD COAST MMA",
+    "address": "11925 Southwest Fwy",
+    "city": "Stafford",
+    "state": "TX",
+    "postalCode": "77477",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5708349,
+        29.6471142
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJU9MrUf_mQIYR2Dh6LxzKBAQ",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.8,
+    "ratingCount": 116,
+    "distanceMi": 267.4
+  },
+  {
+    "name": "Trinity Jiu Jitsu",
+    "address": "7220 US-281",
+    "city": "Spring Branch",
+    "state": "TX",
+    "postalCode": "78070",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.4093207,
+        29.8434381
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJFYOHu3eBXIYREAzdrU9_gzs",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 24,
+    "distanceMi": 269.5
+  },
+  {
+    "name": "Extreme Martial Arts",
+    "address": "1965 Post Rd #507",
+    "city": "New Braunfels",
+    "state": "TX",
+    "postalCode": "78130",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.087756,
+        29.7220037
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJwZfhxli9XIYRLvUZoXqqZpA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 354,
+    "distanceMi": 270.5
+  },
+  {
+    "name": "Evolve Martial Arts",
+    "address": "13440 University Blvd Ste 200",
+    "city": "Sugar Land",
+    "state": "TX",
+    "postalCode": "77479",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.6490936,
+        29.5861072
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ1Y0j5MzhQIYRuzs2x9B5_t8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 63,
+    "distanceMi": 270.5
+  },
+  {
+    "name": "MMA Overload",
+    "address": "1287 Industrial St Ste 201",
+    "city": "New Braunfels",
+    "state": "TX",
+    "postalCode": "78130",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.0993041,
+        29.7143984
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJa5_njy-9XIYRS4FG_ajFjqc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest",
+      "store"
+    ],
+    "rating": 3.9,
+    "ratingCount": 35,
+    "distanceMi": 271.2
+  },
+  {
+    "name": "Pride Lands Jiu-Jitsu",
+    "address": "115 Alves Ln",
+    "city": "New Braunfels",
+    "state": "TX",
+    "postalCode": "78130",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.0842266,
+        29.69532569999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ9-XTNDu9XIYR3JEWgTrDhbI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 17,
+    "distanceMi": 272.2
+  },
+  {
+    "name": "FightTX",
+    "address": "602 Crabb River Rd",
+    "city": "Richmond",
+    "state": "TX",
+    "postalCode": "77469",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.697503,
+        29.544025
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJHTmuwm_iQIYRT_YmmB2cZwI",
+    "types": [
+      "establishment",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 30,
+    "distanceMi": 272.8
+  },
+  {
+    "name": "United Jiujitsu Team",
+    "address": "4024 Strawberry Rd",
+    "city": "Pasadena",
+    "state": "TX",
+    "postalCode": "77504",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.19135500000002,
+        29.6497581
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJRVGYgjSZQIYRa6VzCXfeI9M",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 123,
+    "distanceMi": 273
+  },
+  {
+    "name": "Gracie Barra Riverstone – Jiu-Jitsu & Self-Defense in Sugar Land",
+    "address": "18806 Noble Seven Ln Suite 102",
+    "city": "Sugar Land",
+    "state": "TX",
+    "postalCode": "77479",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5847032,
+        29.5476982
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJp_R9aOflQIYRH9Hj9g7HXeI",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 273.9
+  },
+  {
+    "name": "Inochi Mixed Martial Arts Academy - Paul Haben",
+    "address": "32496 US-281",
+    "city": "Bulverde",
+    "state": "TX",
+    "postalCode": "78163",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.4252813,
+        29.7748052
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7fEuxTKBXIYRRFTEWI11VDM",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 37,
+    "distanceMi": 274.3
+  },
+  {
+    "name": "Premier Martial Arts New Braunfels South",
+    "address": "2009 S Walnut Ave",
+    "city": "New Braunfels",
+    "state": "TX",
+    "postalCode": "78130",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.118048,
+        29.6695517
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7_j6RAO9XIYR3tees6t-oXE",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 29,
+    "distanceMi": 274.5
+  },
+  {
+    "name": "Montaña Fighting Systems",
+    "address": "214 E Court St",
+    "city": "Seguin",
+    "state": "TX",
+    "postalCode": "78155",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.96308739999999,
+        29.5691327
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ44H8g6q5XIYRReroaTz4oJc",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest",
+      "store"
+    ],
+    "rating": 4.9,
+    "ratingCount": 38,
+    "distanceMi": 278.3
+  },
+  {
+    "name": "Cabot Muay Thai & MMA",
+    "address": "2790 S 2nd St A",
+    "city": "Cabot",
+    "state": "AR",
+    "postalCode": "72023",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -92.0525237,
+        34.9532743
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJxwRTEAbv0ocRTg8Jnwi_Hz0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 2,
+    "distanceMi": 279.6
+  },
+  {
+    "name": "Victory Martial Arts - Stone Ridge",
+    "address": "21019 U.S. Hwy 281 S Ste. 818",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78258",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.4562753,
+        29.6420453
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJvaQxwbuJXIYRGUKmlnmvwsA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 206,
+    "distanceMi": 283.4
+  },
+  {
+    "name": "Victory Martial Arts - Hardy Oak",
+    "address": "19903 Stone Oak Pkwy Suite 206",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78258",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.4909292,
+        29.6433293
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJn2TDonBiXIYRi7J3nIUGa5U",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 163,
+    "distanceMi": 284.2
+  },
+  {
+    "name": "Studio Martial Arts",
+    "address": "19141 Stone Oak Pkwy #306",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78258",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.49620139999999,
+        29.625577
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJy1e_s4JhXIYR8c2DR1MhaBA",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 234,
+    "distanceMi": 285.4
+  },
+  {
+    "name": "Victory Martial Arts - Stone Oak",
+    "address": "19179 Blanco Rd #107",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78258",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.513003,
+        29.620225
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJiRSTSztiXIYRTEAsbAxur4M",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 207,
+    "distanceMi": 286.1
+  },
+  {
+    "name": "ONE Academy | SATX",
+    "address": "13924 Nacogdoches Rd",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78217",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.38514990000002,
+        29.5669534
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJW-d61a6NXIYRM1ERUSIxq4E",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 171,
+    "distanceMi": 286.7
+  },
+  {
+    "name": "Championship Martial Arts - San Antonio",
+    "address": "14381 Blanco Rd",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78216",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.5158931,
+        29.5735612
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJrf-sHXxhXIYREmPXKvBHm10",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 87,
+    "distanceMi": 289.2
+  },
+  {
+    "name": "Jiu-Jitsu",
+    "address": "",
+    "city": "Beebe",
+    "state": "AR",
+    "postalCode": "72012",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -91.8848806,
+        35.080893
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJWV5hl0T80ocRALfvzcClSF0",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 1,
+    "distanceMi": 291.6
+  },
+  {
+    "name": "Victory Martial Arts - Alamo Heights",
+    "address": "1432 Austin Hwy Unit 102",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78209",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.43553,
+        29.4913547
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJ7RhY8eP0XIYRWgBVUdvEOR4",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.7,
+    "ratingCount": 93,
+    "distanceMi": 292.6
+  },
+  {
+    "name": "Combat Room",
+    "address": "3630 Front St",
+    "city": "Winnsboro",
+    "state": "LA",
+    "postalCode": "71295",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -91.7251797,
+        32.17065669999999
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJm0Ac-IgFL4YR42hwhSsFjW8",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 5,
+    "distanceMi": 294.9
+  },
+  {
+    "name": "Monarch Jiu Jitsu Academy",
+    "address": "10242 W Loop 1604 N Ste 108",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78254",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.67922689999999,
+        29.539099
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJkS5HhC5dXIYREj-cKxG3g8I",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 94,
+    "distanceMi": 295.3
+  },
+  {
+    "name": "Dominion MMA®",
+    "address": "9910 W Loop 1604 N #117",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78254",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.68079279999999,
+        29.5343101
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJMVwWg_VoXIYRnCoCd_FeWUo",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest",
+      "spa"
+    ],
+    "rating": 4.9,
+    "ratingCount": 470,
+    "distanceMi": 295.6
+  },
+  {
+    "name": "The Alchemist Jiu Jitsu Academy",
+    "address": "1712 S Gregg St",
+    "city": "Big Spring",
+    "state": "TX",
+    "postalCode": "79720",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -101.4730704,
+        32.2372594
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJDYicBgAj-YYR6zR0bm8BknQ",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 5,
+    "ratingCount": 16,
+    "distanceMi": 295.6
+  },
+  {
+    "name": "RCMATX MMA Academy",
+    "address": "12145 TX-107 Loop",
+    "city": "Adkins",
+    "state": "TX",
+    "postalCode": "78101",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.2457408,
+        29.3676637
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJfQWP9WvvXIYRHmdLnCgThhE",
+    "types": [
+      "establishment",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 20,
+    "distanceMi": 296.7
+  },
+  {
+    "name": "Kingdom Martial Arts Academy",
+    "address": "5409 Bandera Rd Suite 210",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78238",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.5931112,
+        29.4810522
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJMWLeWmZdXIYRfAx0Q2cOq-E",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest",
+      "store"
+    ],
+    "rating": 5,
+    "ratingCount": 207,
+    "distanceMi": 296.9
+  },
+  {
+    "name": "RONIN MMA TEXAS",
+    "address": "5630 W Loop 1604 N Ste 104",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78251",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.7064614,
+        29.488681
+      ]
+    },
+    "source": "google-places",
+    "googlePlaceId": "ChIJvR0qpRVdXIYRlrh3_WG53p4",
+    "types": [
+      "establishment",
+      "gym",
+      "health",
+      "point_of_interest"
+    ],
+    "rating": 4.9,
+    "ratingCount": 83,
+    "distanceMi": 299.1
+  }
+]

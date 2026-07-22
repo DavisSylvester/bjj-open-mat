@@ -6,7 +6,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/location/location_controller.dart';
 import '../../../shared/widgets/empty_state.dart';
-import '../../../shared/widgets/gym_card.dart';
+import '../../../shared/widgets/nearby_gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../open_mats/models/open_mat.dart';
 import '../providers/discover_provider.dart';
@@ -189,76 +189,102 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 ],
               ),
             ),
-            // Live session cards
+            // Feed: open mats, then an always-on "Gyms near you" section.
             Expanded(
-              child: results.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(
-                  child: Text("Couldn't load open mats", style: t.bodyStyle.copyWith(color: t.muted)),
-                ),
-                data: (list) {
-                  if (list.isEmpty) {
-                    return EmptyState(
-                      icon: LucideIcons.mapPin,
-                      title: locState.label != null ? 'No open mats found in ${locState.label}' : 'No open mats found nearby',
-                      subtitle: 'Try widening your search or check back soon.',
-                      actionLabel: 'Search',
-                      onAction: () => context.go('/search'),
-                    );
-                  }
-                  // Sparse feed (1-2 results): pad the screen with a "Gyms
-                  // near you" section so it doesn't read as dead space. 3+
-                  // results already fill the screen on their own.
-                  if (list.length < 3) {
-                    final gyms = distinctGymsFromOpenMats(list);
-                    return SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (final mat in list) ...[
-                            SizedBox(
-                              width: double.infinity,
-                              child: SessionRow(
-                                session: _toRow(mat),
-                                onTap: () => context.push('/open-mat/${mat.id}'),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    results.when(
+                      loading: () => const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                      error: (e, _) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Center(
+                          child: Text("Couldn't load open mats", style: t.bodyStyle.copyWith(color: t.muted)),
+                        ),
+                      ),
+                      data: (list) {
+                        if (list.isEmpty) {
+                          return EmptyState(
+                            icon: LucideIcons.mapPin,
+                            title: locState.label != null ? 'No open mats found in ${locState.label}' : 'No open mats found nearby',
+                            subtitle: 'Try widening your search or check back soon.',
+                            actionLabel: 'Search',
+                            onAction: () => context.go('/search'),
+                          );
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final mat in list) ...[
+                              SizedBox(
+                                width: double.infinity,
+                                child: SessionRow(
+                                  session: _toRow(mat),
+                                  onTap: () => context.push('/open-mat/${mat.id}'),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 14),
-                          ],
-                          if (gyms.isNotEmpty) ...[
-                            const SizedBox(height: 10),
-                            Text('GYMS NEAR YOU', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
-                            const SizedBox(height: 3),
-                            Text('More places to roll', style: t.h2Style),
-                            const SizedBox(height: 14),
-                            for (final gym in gyms) ...[
-                              GymCard(gym: gym),
                               const SizedBox(height: 14),
                             ],
                           ],
-                        ],
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                    itemCount: list.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 14),
-                    itemBuilder: (_, i) => SizedBox(
-                      width: double.infinity,
-                      child: SessionRow(
-                        session: _toRow(list[i]),
-                        onTap: () => context.push('/open-mat/${list[i].id}'),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
+                    if (locState.hasCoords) _NearbyGymsSection(lat: locState.lat!, lng: locState.lng!),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Always-on "Gyms near you" section: every gym within 50 miles (80 km) of the
+/// device, sourced from [nearbyGymsProvider]. Hidden while empty/erroring.
+class _NearbyGymsSection extends ConsumerWidget {
+  final double lat;
+  final double lng;
+
+  const _NearbyGymsSection({required this.lat, required this.lng});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = Theme.of(context).extension<AppTokens>()!;
+    final gymsAsync = ref.watch(nearbyGymsProvider(NearbyQuery(lat: lat, lng: lng, radiusKm: 80)));
+
+    return gymsAsync.when(
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: 24),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, _) => Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: Text("Couldn't load nearby gyms", style: t.miniStyle.copyWith(color: t.muted)),
+      ),
+      data: (gyms) {
+        if (gyms.isEmpty) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            Text('GYMS NEAR YOU', style: t.miniStyle.copyWith(color: t.primary, fontSize: 11)),
+            const SizedBox(height: 3),
+            Text('Within 50 miles', style: t.h2Style),
+            const SizedBox(height: 14),
+            for (final gym in gyms) ...[
+              NearbyGymCard(gym: gym),
+              const SizedBox(height: 14),
+            ],
+          ],
+        );
+      },
     );
   }
 }

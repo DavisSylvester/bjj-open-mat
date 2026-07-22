@@ -1,0 +1,642 @@
+[
+  {
+    "name": "Bear Loebe's Karate",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.647968,
+        29.8353756
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 4291218857,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Brazilian Fight Factory",
+    "address": "11150 Research Boulevard, Unit 102",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78759",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7469381,
+        30.4067687
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 6484182963,
+    "phone": null,
+    "website": "https://brazilianfightfactory.com/"
+  },
+  {
+    "name": "Broadway Martial Arts",
+    "address": "4615 Highway 80, Unit Suite 5",
+    "city": "Haughton",
+    "state": "LA",
+    "postalCode": "71037",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.5703306,
+        32.5567219
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 1501650471,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Championship Martial Arts Las Colinas",
+    "address": "Unit 100",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.941589,
+        32.901982
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 6790723538,
+    "phone": "+1-972-401-2999",
+    "website": "https://CMALasColinas.com/"
+  },
+  {
+    "name": "Dojo Fit Club of Pearland",
+    "address": "3111 South Main Street",
+    "city": "Pearland",
+    "state": "TX",
+    "postalCode": "77581",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.2805654,
+        29.5525924
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 410595273,
+    "phone": "+1-281-412-9630",
+    "website": null
+  },
+  {
+    "name": "Flower Mound Taekwondo",
+    "address": "2240 Morriss Road, Unit 120",
+    "city": "Flower Mound",
+    "state": "TX",
+    "postalCode": "75028",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0459676,
+        33.0160317
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 617692191,
+    "phone": "+1-972-355-0844",
+    "website": "http://www.fm-tkd.com"
+  },
+  {
+    "name": "Garland Ata Black Belt Academy",
+    "address": "3420 Broadway Boulevard, Unit 126",
+    "city": "Garland",
+    "state": "TX",
+    "postalCode": "75043",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.6141614,
+        32.873688
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 9673669096,
+    "phone": "+1-972-271-5425",
+    "website": "https://www.garlandata.com/"
+  },
+  {
+    "name": "H-E-B/Grapevine Martial Arts",
+    "address": "2501 North Main Street, Unit 130",
+    "city": "Euless",
+    "state": "TX",
+    "postalCode": "76039",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0834686,
+        32.8726254
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 13738322872,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Hippo Social Club",
+    "address": "3250 Limmer Loop, Unit Unit #5",
+    "city": "Hutto",
+    "state": "TX",
+    "postalCode": "78634",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.5498244,
+        30.5592311
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11404919751,
+    "phone": null,
+    "website": "https://www.hipposocialclub.com/"
+  },
+  {
+    "name": "Inferno Martial Arts",
+    "address": "3065 North College Avenue",
+    "city": "Fayetteville",
+    "state": "AR",
+    "postalCode": "72703",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.1464872,
+        36.1073139
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 1125111103,
+    "phone": "+1 479 715 6625",
+    "website": "https://www.myinfernofitness.com/"
+  },
+  {
+    "name": "Integrated Combat Systems",
+    "address": "1360 North College Avenue",
+    "city": "Fayetteville",
+    "state": null,
+    "postalCode": "72703",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.1553281,
+        36.0804281
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 10286872287,
+    "phone": "+1 479 275 4698",
+    "website": "https://www.icsnwa.com/"
+  },
+  {
+    "name": "Karate USA",
+    "address": "6105 Youree Drive, Unit A",
+    "city": "Shreveport",
+    "state": "LA",
+    "postalCode": "71105",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.7211597,
+        32.4518624
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 1333609589,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Legacy Tae Kwon Do",
+    "address": "3224 S Broadway, Unit 142",
+    "city": "Edmond",
+    "state": "OK",
+    "postalCode": "73013",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.4827557,
+        35.6240216
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 13537201837,
+    "phone": "+14052163411",
+    "website": "https://www.legacytkdok.com/"
+  },
+  {
+    "name": "Lions Krav Maga",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7422071,
+        30.3622437
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11445454147,
+    "phone": "+1 512 588 3356",
+    "website": "https://lionskravmaga.com/"
+  },
+  {
+    "name": "Martial Arts",
+    "address": "Unit 130",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0472489,
+        33.0112485
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11756795065,
+    "phone": "+1-682-273-0899",
+    "website": "https://www.TXBBA.com"
+  },
+  {
+    "name": "Martial Arts",
+    "address": "Unit 1130C",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0225348,
+        33.0408151
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11776338328,
+    "phone": null,
+    "website": "https://www.lpmartialarts.com"
+  },
+  {
+    "name": "Martial Arts America",
+    "address": "1704 East Parkway Drive",
+    "city": "Russellville",
+    "state": "AR",
+    "postalCode": "72802",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.1127604,
+        35.2822284
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 1539475141,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Moy Tung Kung Fu Academy",
+    "address": "3601 South Sandman Street, Unit 220",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4113004,
+        29.7339295
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 6496768393,
+    "phone": null,
+    "website": "https://houston.txkungfu.com"
+  },
+  {
+    "name": "Pak's Karate",
+    "address": "1040 Bellevue Road",
+    "city": "Haughton",
+    "state": "LA",
+    "postalCode": "71037",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.6135387,
+        32.5574793
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 1051962066,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Power Martial Arts",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.8000785,
+        36.0613755
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 9743727993,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Premier Martial Arts",
+    "address": "2055 Westheimer Road, Unit 160",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4091336,
+        29.7420786
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 9518207152,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Premier Martial Arts",
+    "address": "2001 West Kenosha Street North",
+    "city": "Broken Arrow",
+    "state": "OK",
+    "postalCode": "74012",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.8133922,
+        36.0604884
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 10894993710,
+    "phone": "+1-918-858-4348",
+    "website": "http://premiermartialarts.com/westbrokenarrow/"
+  },
+  {
+    "name": "Premier Martial Arts",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.069147,
+        33.0150144
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 12987795214,
+    "phone": "+1-972-798-8923",
+    "website": "http://www.premiermartialarts.com/flowermound"
+  },
+  {
+    "name": "Premier Martial Arts",
+    "address": "6300 FM 1463, Unit 250",
+    "city": "Fulshear",
+    "state": "TX",
+    "postalCode": "77441",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.8469565,
+        29.6999575
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 13163089620,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Roser Martial Arts Center Plano",
+    "address": "1915 N Central Expy, Unit 170",
+    "city": "Plano",
+    "state": "TX",
+    "postalCode": "75075",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7117223,
+        33.0278357
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 5286061255,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Strickland's Taekwondo",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0703887,
+        33.0261746
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11950736530,
+    "phone": "+1-972-691-0777",
+    "website": null
+  },
+  {
+    "name": "Tae Kwon Do",
+    "address": "Unit 600",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9915357,
+        33.0115049
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11709033141,
+    "phone": "+1 214-606-4884",
+    "website": null
+  },
+  {
+    "name": "The Compound",
+    "address": "East 70th Street",
+    "city": "Shreveport",
+    "state": "LA",
+    "postalCode": "71105",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.6947663,
+        32.4511612
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 1119236883,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Tiger-Rock Martial Arts",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -94.1421648,
+        30.0847544
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 12385463620,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Unified Tae Kwon Do",
+    "address": "125 West Elm Street",
+    "city": "Hillsboro",
+    "state": "TX",
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1326383,
+        32.0105901
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 12393074652,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Urban Jungle Self-Defense",
+    "address": "1035 West 18th Street",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4178555,
+        29.8019989
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 752863201,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Victory Martial Arts",
+    "address": "Unit Suite 113",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.6329644,
+        29.6641817
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 3259434779,
+    "phone": "+1-210-698-2191",
+    "website": "https://www.victoryma.com/schools/leon-springs-tx/"
+  }
+]

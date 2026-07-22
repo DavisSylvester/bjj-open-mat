@@ -21,6 +21,8 @@
     "mobile:e2e:create": "cd apps/mobile && flutter test integration_test/create_open_mat_session_test.dart -d emulator-5554 --dart-define=DEV_BYPASS=true --dart-define=AUTH_BYPASS_TOKEN=dev-bypass-local-secret --dart-define=API_BASE_URL=http://10.0.2.2:3100",
     "mobile:e2e:submit": "cd apps/mobile && flutter test integration_test/community_submission_test.dart -d emulator-5554 --dart-define=DEV_BYPASS=true --dart-define=AUTH_BYPASS_TOKEN=dev-bypass-local-secret --dart-define=API_BASE_URL=http://10.0.2.2:3100",
     "mobile:e2e:search": "cd apps/mobile && node ../../scripts/e2e-search.mjs",
+    "mobile:e2e:location": "cd apps/mobile && node ../../scripts/e2e-location.mjs",
+    "mobile:e2e:discover": "cd apps/mobile && node ../../scripts/e2e-discover.mjs",
     "mobile:web": "cd apps/mobile && flutter run -d chrome --web-port=8088 --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100",
     "mobile:build": "cd apps/mobile && flutter build web --dart-define-from-file=.env --dart-define=API_BASE_URL=http://localhost:3100",
     "mobile:apk": "cd apps/mobile && flutter build apk --release --dart-define-from-file=.env --dart-define=API_BASE_URL=https://api.bjj-open-mat.dsylvester.io -Pauth0Domain=dev-vhvwupdn45hk7gct.us.auth0.com -PmapsApiKey=$MAPS_API_KEY",

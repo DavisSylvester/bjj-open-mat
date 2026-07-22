@@ -44,4 +44,6 @@ jobs:
 
       - name: Deploy website stack
         working-directory: infra
+        env:
+          BJJOPENMAT_CERT_ARN: ${{ secrets.BJJOPENMAT_CERT_ARN }}
         run: npx cdk deploy BjjWebsiteStack --require-approval never
