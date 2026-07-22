@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Christian Karate and Jiujitsu Academy",
+    "address": "",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.814743,
+        36.055327
+      ]
+    },
+    "source": "osm",
+    "osmType": "way",
+    "osmId": 1172619806,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Gator Pit Brazilian Jiu-Jitsu",
+    "address": "2950 East Texas Street, Unit Suite 6",
+    "city": "Bossier City",
+    "state": "LA",
+    "postalCode": "71111",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.7051456,
+        32.5264298
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 9473393311,
+    "phone": null,
+    "website": null
+  },
+  {
+    "name": "Gracie Gym Brazilian Jiu-Jitsu",
+    "address": "819 West Arapaho Road, Unit 18",
+    "city": "Richardson",
+    "state": "TX",
+    "postalCode": "75080",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.7492591,
+        32.9616016
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 10052929792,
+    "phone": "+1 469-904-0677",
+    "website": "https://graciegymrichardson.com/locations/richardson-tx/"
+  },
+  {
+    "name": "Kama Jiu-Jitsu",
+    "address": "Unit 1200",
+    "city": null,
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0416583,
+        33.0417009
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 11492747817,
+    "phone": "+1-682-223-0721",
+    "website": "https://kamajiujitsu.com"
+  },
+  {
+    "name": "Ravlin Martial Arts Brazilian Jiu-Jitsu & Muay Thai",
+    "address": "10371 Stella Link Road",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77025",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4375307,
+        29.6695966
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 9509743500,
+    "phone": "+1-713-377-8859",
+    "website": "https://ravlinmartialarts.com"
+  },
+  {
+    "name": "Silva Academy Brazilian Jiu-Jitsu",
+    "address": "2488 Meadowglen Drive, Unit 201",
+    "city": "Lewisville",
+    "state": "TX",
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.0025516,
+        33.0054324
+      ]
+    },
+    "source": "osm",
+    "osmType": "node",
+    "osmId": 8372113059,
+    "phone": "+1 469-322-9616",
+    "website": "https://www.silvaacademy.com"
+  }
+]

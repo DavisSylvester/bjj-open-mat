@@ -1,0 +1,722 @@
+[
+  {
+    "type": "node",
+    "id": 1125111103,
+    "lat": 36.1073139,
+    "lon": -94.1464872,
+    "tags": {
+      "addr:city": "Fayetteville",
+      "addr:country": "US",
+      "addr:full": "3065 North College Avenue",
+      "addr:housenumber": "3065",
+      "addr:postcode": "72703",
+      "addr:state": "AR",
+      "addr:street": "North College Avenue",
+      "amenity": "dojo",
+      "name": "Inferno Martial Arts",
+      "phone": "+1 479 715 6625",
+      "sport": "martial_arts",
+      "website": "https://www.myinfernofitness.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3259434779,
+    "lat": 29.6641817,
+    "lon": -98.6329644,
+    "tags": {
+      "addr:unit": "Suite 113",
+      "leisure": "sports_centre",
+      "level": "0",
+      "name": "Victory Martial Arts",
+      "phone": "+1-210-698-2191",
+      "sport": "martial_arts",
+      "website": "https://www.victoryma.com/schools/leon-springs-tx/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4291218857,
+    "lat": 29.8353756,
+    "lon": -95.647968,
+    "tags": {
+      "leisure": "sports_centre",
+      "name": "Bear Loebe's Karate",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 5286061255,
+    "lat": 33.0278357,
+    "lon": -96.7117223,
+    "tags": {
+      "addr:city": "Plano",
+      "addr:housenumber": "1915",
+      "addr:postcode": "75075",
+      "addr:state": "TX",
+      "addr:street": "N Central Expy",
+      "addr:unit": "170",
+      "amenity": "dojo",
+      "name": "Roser Martial Arts Center Plano",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6484182963,
+    "lat": 30.4067687,
+    "lon": -97.7469381,
+    "tags": {
+      "addr:city": "Austin",
+      "addr:housenumber": "11150",
+      "addr:postcode": "78759",
+      "addr:state": "TX",
+      "addr:street": "Research Boulevard",
+      "addr:unit": "102",
+      "amenity": "dojo",
+      "name": "Brazilian Fight Factory",
+      "sport": "martial_arts",
+      "website": "https://brazilianfightfactory.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6496768393,
+    "lat": 29.7339295,
+    "lon": -95.4113004,
+    "tags": {
+      "addr:city": "Houston",
+      "addr:housenumber": "3601",
+      "addr:state": "TX",
+      "addr:street": "South Sandman Street",
+      "addr:unit": "220",
+      "leisure": "sports_centre",
+      "name": "Moy Tung Kung Fu Academy",
+      "opening_hours": "Mo,We,Fr 19:00-21:00",
+      "sport": "martial_arts",
+      "website": "https://houston.txkungfu.com"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6790723538,
+    "lat": 32.901982,
+    "lon": -96.941589,
+    "tags": {
+      "addr:unit": "100",
+      "amenity": "dojo",
+      "email": "mail@cmalascolinas.com",
+      "name": "Championship Martial Arts Las Colinas",
+      "opening_hours": "Mo-Th 17:00-20:00; Fr 17:00-19:30; Sa 10:00-12:00",
+      "phone": "+1-972-401-2999",
+      "sport": "martial_arts",
+      "website": "https://CMALasColinas.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 8372113059,
+    "lat": 33.0054324,
+    "lon": -97.0025516,
+    "tags": {
+      "addr:city": "Lewisville",
+      "addr:housenumber": "2488",
+      "addr:state": "TX",
+      "addr:street": "Meadowglen Drive",
+      "addr:unit": "201",
+      "check_date": "2026-05-10",
+      "leisure": "fitness_centre",
+      "name": "Silva Academy Brazilian Jiu-Jitsu",
+      "opening_hours": "\"It has a different schedule depending on the season.\"",
+      "phone": "+1 469-322-9616",
+      "postal_code": "75067",
+      "sport": "martial_arts",
+      "website": "https://www.silvaacademy.com",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9473393311,
+    "lat": 32.5264298,
+    "lon": -93.7051456,
+    "tags": {
+      "addr:city": "Bossier City",
+      "addr:housenumber": "2950",
+      "addr:postcode": "71111",
+      "addr:state": "LA",
+      "addr:street": "East Texas Street",
+      "addr:unit": "Suite 6",
+      "name": "Gator Pit Brazilian Jiu-Jitsu",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9509743500,
+    "lat": 29.6695966,
+    "lon": -95.4375307,
+    "tags": {
+      "addr:city": "Houston",
+      "addr:floor": "1",
+      "addr:housenumber": "10371",
+      "addr:postcode": "77025",
+      "addr:state": "TX",
+      "addr:street": "Stella Link Road",
+      "amenity": "dojo",
+      "contact:facebook": "https://www.facebook.com/RavlinMartialArts/",
+      "contact:instagram": "https://www.instagram.com/ravlinmahouston",
+      "contact:twitter": "https://www.twitter.com/RavlinMAhouston",
+      "name": "Ravlin Martial Arts Brazilian Jiu-Jitsu & Muay Thai",
+      "opening_hours": "Mo 09:00-21:00; Tu-Fr 10:00-21:00; Sa 09:00-13:00",
+      "phone": "+1-713-377-8859",
+      "sport": "martial_arts",
+      "website": "https://ravlinmartialarts.com"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9518207152,
+    "lat": 29.7420786,
+    "lon": -95.4091336,
+    "tags": {
+      "addr:city": "Houston",
+      "addr:housenumber": "2055",
+      "addr:state": "TX",
+      "addr:street": "Westheimer Road",
+      "addr:unit": "160",
+      "check_date": "2024-01-30",
+      "club": "sport",
+      "name": "Premier Martial Arts",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9673669096,
+    "lat": 32.873688,
+    "lon": -96.6141614,
+    "tags": {
+      "addr:city": "Garland",
+      "addr:country": "US",
+      "addr:housenumber": "3420",
+      "addr:postcode": "75043",
+      "addr:state": "TX",
+      "addr:street": "Broadway Boulevard",
+      "addr:unit": "126",
+      "leisure": "sports_centre",
+      "name": "Garland Ata Black Belt Academy",
+      "opening_hours": "Mo,We,Fr 16:30-21:00",
+      "payment:american_express": "yes",
+      "payment:cash": "yes",
+      "payment:mastercard": "yes",
+      "payment:visa": "yes",
+      "phone": "+1-972-271-5425",
+      "sport": "martial_arts",
+      "start_date": "1987",
+      "website": "https://www.garlandata.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9743727993,
+    "lat": 36.0613755,
+    "lon": -95.8000785,
+    "tags": {
+      "leisure": "fitness_centre",
+      "name": "Power Martial Arts",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10052929792,
+    "lat": 32.9616016,
+    "lon": -96.7492591,
+    "tags": {
+      "addr:city": "Richardson",
+      "addr:housenumber": "819",
+      "addr:postcode": "75080",
+      "addr:state": "TX",
+      "addr:street": "West Arapaho Road",
+      "addr:unit": "18",
+      "leisure": "fitness_centre",
+      "name": "Gracie Gym Brazilian Jiu-Jitsu",
+      "phone": "+1 469-904-0677",
+      "sport": "martial_arts",
+      "website": "https://graciegymrichardson.com/locations/richardson-tx/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10286872287,
+    "lat": 36.0804281,
+    "lon": -94.1553281,
+    "tags": {
+      "addr:city": "Fayetteville",
+      "addr:housenumber": "1360",
+      "addr:postcode": "72703",
+      "addr:street": "North College Avenue",
+      "email": "integratedcombatsystemsnwa@gmail.com",
+      "leisure": "fitness_centre",
+      "name": "Integrated Combat Systems",
+      "phone": "+1 479 275 4698",
+      "sport": "martial_arts",
+      "website": "https://www.icsnwa.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 10894993710,
+    "lat": 36.0604884,
+    "lon": -95.8133922,
+    "tags": {
+      "addr:city": "Broken Arrow",
+      "addr:housenumber": "2001",
+      "addr:postcode": "74012",
+      "addr:state": "OK",
+      "addr:street": "West Kenosha Street North",
+      "amenity": "dojo",
+      "brand": "Premier Martial Arts",
+      "brand:wikidata": "Q120717448",
+      "leisure": "sports_centre",
+      "name": "Premier Martial Arts",
+      "phone": "+1-918-858-4348",
+      "sport": "martial_arts",
+      "website": "http://premiermartialarts.com/westbrokenarrow/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11404919751,
+    "lat": 30.5592311,
+    "lon": -97.5498244,
+    "tags": {
+      "addr:city": "Hutto",
+      "addr:housenumber": "3250",
+      "addr:postcode": "78634",
+      "addr:state": "TX",
+      "addr:street": "Limmer Loop",
+      "addr:unit": "Unit #5",
+      "check_date": "2025-11-15",
+      "check_date:currency:XBT": "2025-11-15",
+      "currency:XBT": "yes",
+      "leisure": "fitness_centre",
+      "name": "Hippo Social Club",
+      "opening_hours": "Mo-Su 09:00-21:00",
+      "payment:cash": "yes",
+      "payment:credit_cards": "yes",
+      "payment:lightning": "yes",
+      "payment:lightning:operator": "square",
+      "payment:lightning_contactless": "no",
+      "payment:onchain": "no",
+      "sport": "martial_arts;hiit;weightlifting;athletics;fitness",
+      "survey:date": "2023-12-09",
+      "website": "https://www.hipposocialclub.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11445454147,
+    "lat": 30.3622437,
+    "lon": -97.7422071,
+    "tags": {
+      "club": "sport",
+      "name": "Lions Krav Maga",
+      "phone": "+1 512 588 3356",
+      "sport": "martial_arts",
+      "website": "https://lionskravmaga.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11492747817,
+    "lat": 33.0417009,
+    "lon": -97.0416583,
+    "tags": {
+      "addr:unit": "1200",
+      "club": "sport",
+      "level": "1",
+      "name": "Kama Jiu-Jitsu",
+      "phone": "+1-682-223-0721",
+      "sport": "martial_arts",
+      "website": "https://kamajiujitsu.com",
+      "wheelchair": "limited"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11709033141,
+    "lat": 33.0115049,
+    "lon": -96.9915357,
+    "tags": {
+      "addr:unit": "600",
+      "level": "1",
+      "name": "Tae Kwon Do",
+      "phone": "+1 214-606-4884",
+      "shop": "sports",
+      "sport": "martial_arts",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11756795065,
+    "lat": 33.0112485,
+    "lon": -97.0472489,
+    "tags": {
+      "addr:unit": "130",
+      "club": "sport",
+      "level": "1",
+      "name": "Martial Arts",
+      "operator": "TX Black Belt Academy",
+      "phone": "+1-682-273-0899",
+      "sport": "martial_arts",
+      "website": "https://www.TXBBA.com",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11776338328,
+    "lat": 33.0408151,
+    "lon": -97.0225348,
+    "tags": {
+      "addr:unit": "1130C",
+      "club": "sport",
+      "level": "1",
+      "name": "Martial Arts",
+      "opening_hours": "Tu-Fr 11:30-13:30,16:30-20:30; Sa 09:30-13:30; PH closed; Mo 16:30-20:30; Su closed",
+      "sport": "martial_arts",
+      "website": "https://www.lpmartialarts.com",
+      "wheelchair": "limited"
+    }
+  },
+  {
+    "type": "node",
+    "id": 11950736530,
+    "lat": 33.0261746,
+    "lon": -97.0703887,
+    "tags": {
+      "alt_name": "Karate",
+      "club": "sport",
+      "level": "1",
+      "name": "Strickland's Taekwondo",
+      "opening_hours": "Mo-Th 10:00-20:00; Sa 09:30-12:00; PH closed; Fr 17:30-19:00",
+      "phone": "+1-972-691-0777",
+      "sport": "martial_arts",
+      "toilets": "yes",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12385463620,
+    "lat": 30.0847544,
+    "lon": -94.1421648,
+    "tags": {
+      "check_date": "2026-01-31",
+      "leisure": "sports_centre",
+      "name": "Tiger-Rock Martial Arts",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12393074652,
+    "lat": 32.0105901,
+    "lon": -97.1326383,
+    "tags": {
+      "addr:city": "Hillsboro",
+      "addr:housenumber": "125",
+      "addr:state": "TX",
+      "addr:street": "West Elm Street",
+      "amenity": "dojo",
+      "contact:facebook": "https://www.facebook.com/hillsborotkd/",
+      "name": "Unified Tae Kwon Do",
+      "panoramax": "79df7de1-4553-4646-aee7-2f60d77ed47d",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12987795214,
+    "lat": 33.0150144,
+    "lon": -97.069147,
+    "tags": {
+      "brand": "Premier Martial Arts",
+      "brand:wikidata": "Q120717448",
+      "check_date": "2025-10-05",
+      "fee": "yes",
+      "leisure": "sports_centre",
+      "name": "Premier Martial Arts",
+      "operator:type": "private",
+      "phone": "+1-972-798-8923",
+      "sport": "martial_arts",
+      "website": "http://www.premiermartialarts.com/flowermound"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13163089620,
+    "lat": 29.6999575,
+    "lon": -95.8469565,
+    "tags": {
+      "addr:city": "Fulshear",
+      "addr:housenumber": "6300",
+      "addr:postcode": "77441",
+      "addr:state": "TX",
+      "addr:street": "FM 1463",
+      "addr:unit": "250",
+      "brand": "Premier Martial Arts",
+      "brand:wikidata": "Q120717448",
+      "leisure": "sports_centre",
+      "name": "Premier Martial Arts",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13537201837,
+    "lat": 35.6240216,
+    "lon": -97.4827557,
+    "tags": {
+      "addr:city": "Edmond",
+      "addr:housenumber": "3224",
+      "addr:postcode": "73013",
+      "addr:state": "OK",
+      "addr:street": "S Broadway",
+      "addr:unit": "142",
+      "amenity": "dojo",
+      "name": "Legacy Tae Kwon Do",
+      "opening_hours": "Mo-Fr 14:00-20:00",
+      "phone": "+14052163411",
+      "sport": "martial_arts",
+      "website": "https://www.legacytkdok.com/"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13542187034,
+    "lat": 30.0851643,
+    "lon": -94.1349788,
+    "tags": {
+      "check_date": "2026-02-10",
+      "leisure": "sports_centre",
+      "martial_arts": "karate",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "node",
+    "id": 13738322872,
+    "lat": 32.8726254,
+    "lon": -97.0834686,
+    "tags": {
+      "addr:city": "Euless",
+      "addr:housenumber": "2501",
+      "addr:postcode": "76039",
+      "addr:state": "TX",
+      "addr:street": "North Main Street",
+      "addr:unit": "130",
+      "amenity": "dojo",
+      "name": "H-E-B/Grapevine Martial Arts",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 410595273,
+    "center": {
+      "lat": 29.5525924,
+      "lon": -95.2805654
+    },
+    "tags": {
+      "addr:city": "Pearland",
+      "addr:housenumber": "3111",
+      "addr:postcode": "77581",
+      "addr:state": "TX",
+      "addr:street": "South Main Street",
+      "building": "yes",
+      "leisure": "sports_centre",
+      "name": "Dojo Fit Club of Pearland",
+      "phone": "+1-281-412-9630",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 617692191,
+    "center": {
+      "lat": 33.0160317,
+      "lon": -97.0459676
+    },
+    "tags": {
+      "addr:city": "Flower Mound",
+      "addr:housenumber": "2240",
+      "addr:postcode": "75028",
+      "addr:state": "TX",
+      "addr:street": "Morriss Road",
+      "addr:unit": "120",
+      "amenity": "dojo",
+      "building": "yes",
+      "check_date": "2024-10-20",
+      "description": "Building sign reads \"Karate\"",
+      "internet_access": "wlan",
+      "internet_access:fee": "no",
+      "name": "Flower Mound Taekwondo",
+      "payment:cash": "yes",
+      "payment:mastercard": "yes",
+      "payment:visa": "yes",
+      "phone": "+1-972-355-0844",
+      "source": "survey",
+      "sport": "martial_arts",
+      "website": "http://www.fm-tkd.com",
+      "wheelchair": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "id": 752863201,
+    "center": {
+      "lat": 29.8019989,
+      "lon": -95.4178555
+    },
+    "tags": {
+      "addr:city": "Houston",
+      "addr:housenumber": "1035",
+      "addr:state": "TX",
+      "addr:street": "West 18th Street",
+      "building": "retail",
+      "check_date": "2025-02-21",
+      "leisure": "fitness_centre",
+      "name": "Urban Jungle Self-Defense",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1051962066,
+    "center": {
+      "lat": 32.5574793,
+      "lon": -93.6135387
+    },
+    "tags": {
+      "addr:city": "Haughton",
+      "addr:housenumber": "1040",
+      "addr:postcode": "71037",
+      "addr:state": "LA",
+      "addr:street": "Bellevue Road",
+      "building": "commercial",
+      "name": "Pak's Karate",
+      "source": "microsoft/BuildingFootprints",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1119236883,
+    "center": {
+      "lat": 32.4511612,
+      "lon": -93.6947663
+    },
+    "tags": {
+      "addr:city": "Shreveport",
+      "addr:postcode": "71105",
+      "addr:state": "LA",
+      "addr:street": "East 70th Street",
+      "building": "yes",
+      "leisure": "fitness_centre",
+      "name": "The Compound",
+      "sport": "boxing;martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1172619806,
+    "center": {
+      "lat": 36.055327,
+      "lon": -95.814743
+    },
+    "tags": {
+      "amenity": "dojo",
+      "name": "Christian Karate and Jiujitsu Academy",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1333609589,
+    "center": {
+      "lat": 32.4518624,
+      "lon": -93.7211597
+    },
+    "tags": {
+      "addr:city": "Shreveport",
+      "addr:housenumber": "6105",
+      "addr:postcode": "71105",
+      "addr:state": "LA",
+      "addr:street": "Youree Drive",
+      "addr:unit": "A",
+      "building": "commercial",
+      "building:levels": "1",
+      "height": "4",
+      "name": "Karate USA",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1359647712,
+    "center": {
+      "lat": 32.7233467,
+      "lon": -96.4607948
+    },
+    "tags": {
+      "leisure": "pitch",
+      "lit": "yes",
+      "sport": "martial_arts",
+      "surface": "concrete"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1501650471,
+    "center": {
+      "lat": 32.5567219,
+      "lon": -93.5703306
+    },
+    "tags": {
+      "addr:city": "Haughton",
+      "addr:housenumber": "4615",
+      "addr:postcode": "71037",
+      "addr:state": "LA",
+      "addr:street": "Highway 80",
+      "addr:unit": "Suite 5",
+      "building": "commercial",
+      "name": "Broadway Martial Arts",
+      "sport": "martial_arts"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1539475141,
+    "center": {
+      "lat": 35.2822284,
+      "lon": -93.1127604
+    },
+    "tags": {
+      "addr:city": "Russellville",
+      "addr:housenumber": "1704",
+      "addr:postcode": "72802",
+      "addr:state": "AR",
+      "addr:street": "East Parkway Drive",
+      "amenity": "dojo",
+      "building": "yes",
+      "check_date": "2026-07-19",
+      "name": "Martial Arts America",
+      "sport": "martial_arts"
+    }
+  }
+]

@@ -1,0 +1,952 @@
+[
+  {
+    "name": "GB McKinney",
+    "address": "7901 Eldorado Parkway, Suite 120",
+    "city": "McKinney",
+    "state": "TX",
+    "postalCode": "75070",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.72107630000001,
+        33.1741362
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbmckinney.com/",
+    "distanceMi": 18.8
+  },
+  {
+    "name": "GB Frisco",
+    "address": "360 Stonebrook Pkwy #106",
+    "city": "Frisco",
+    "state": "TX",
+    "postalCode": "75034",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.8890606,
+        33.1453608
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbfriscotexas.com/",
+    "distanceMi": 26.1
+  },
+  {
+    "name": "GB Highland Village",
+    "address": "200 Marketplace Ln, Suite 205",
+    "city": "Highland Village",
+    "state": "TX",
+    "postalCode": "75077",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.07980459999999,
+        33.07667240000001
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarrahighlandvillage.com/",
+    "distanceMi": 37.4
+  },
+  {
+    "name": "GB Argyle",
+    "address": "",
+    "city": "2126 Hamilton Rd STE 210-220 Argyle",
+    "state": "TX",
+    "postalCode": "76226",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.1641271,
+        33.1515465
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/argyle-tx/",
+    "distanceMi": 38.5
+  },
+  {
+    "name": "GB Coppell",
+    "address": "100 W Sandy Lake Rd",
+    "city": "Coppell",
+    "state": "TX",
+    "postalCode": "75019",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9941616,
+        32.9696039
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbcoppell.com/",
+    "distanceMi": 39.3
+  },
+  {
+    "name": "GB Southlake",
+    "address": "2225 W Southlake Blvd Suite 435",
+    "city": "Southlake",
+    "state": "TX",
+    "postalCode": "76092",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.18478329999999,
+        32.9364544
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbsouthlake.com/",
+    "distanceMi": 48.4
+  },
+  {
+    "name": "GB North Fort Worth",
+    "address": "7410 N Beach St, Suite 120",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76137",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.28834359999999,
+        32.87267930000001
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/north-fort-worth-tx/",
+    "distanceMi": 55.8
+  },
+  {
+    "name": "GB Cedar Hill",
+    "address": "329 N Hwy 67 Suite 220",
+    "city": "Cedar Hill",
+    "state": "TX",
+    "postalCode": "75104",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.9474876,
+        32.593382
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/cedar-hill-tx/",
+    "distanceMi": 61
+  },
+  {
+    "name": "GB West Fort Worth",
+    "address": "2700 White Settlement Road",
+    "city": "Fort Worth",
+    "state": "TX",
+    "postalCode": "76107",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.35463089999999,
+        32.7596325
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbwestfortworth.com/",
+    "distanceMi": 64
+  },
+  {
+    "name": "GB Mansfield",
+    "address": "780 W Debbie Ln #300",
+    "city": "Mansfield",
+    "state": "TX",
+    "postalCode": "76063",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.154398,
+        32.5919874
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/mansfield-tx/",
+    "distanceMi": 66.2
+  },
+  {
+    "name": "GB Burleson",
+    "address": "201-c NE Wilshire Blvd, Suite 107, Burleson, TX, 76028",
+    "city": "United States of America.",
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.3266213,
+        32.5472993
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.graciebarraburleson.com/",
+    "distanceMi": 74.2
+  },
+  {
+    "name": "GB Lindale",
+    "address": "16075 FM 849",
+    "city": "Lindale",
+    "state": "TX",
+    "postalCode": "75771",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4208129,
+        32.5011651
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gblindale.com/",
+    "distanceMi": 92.4
+  },
+  {
+    "name": "GB Tyler",
+    "address": "6371 Elkton Trail",
+    "city": "Tyler",
+    "state": "TX",
+    "postalCode": "75703",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.3448538,
+        32.2786331
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbtyler.com/",
+    "distanceMi": 106.6
+  },
+  {
+    "name": "GB Bryan",
+    "address": "3123 Wildflower Dr, Suite 600, Bryan, TX 77802",
+    "city": "United States of America.",
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.32239910000001,
+        30.6630891
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarrabryan.com/",
+    "distanceMi": 191.1
+  },
+  {
+    "name": "GB South College",
+    "address": "1275 Arrington Rd, Building B",
+    "city": "College Station",
+    "state": "TX",
+    "postalCode": "77845",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -96.26531899999999,
+        30.557742
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbsouthcollege.com/",
+    "distanceMi": 198.6
+  },
+  {
+    "name": "GB Georgetown",
+    "address": "4402 Williams Dr #160",
+    "city": "Georgetown",
+    "state": "TX",
+    "postalCode": "78628",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.7173746,
+        30.6808326
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbgeorgetown.com/",
+    "distanceMi": 200.6
+  },
+  {
+    "name": "GB Hutto",
+    "address": "571 Ed Schmidt Blvd, Suite 110",
+    "city": "Hutto",
+    "state": "TX",
+    "postalCode": "78634",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.5611016,
+        30.5495369
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbhuttobjj.com/",
+    "distanceMi": 206.5
+  },
+  {
+    "name": "GB Round Rock",
+    "address": "105 E Old Settlers Blvd, Ste 108",
+    "city": "Round Rock",
+    "state": "TX",
+    "postalCode": "78664",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.68720069999999,
+        30.5326999
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbroundrock.com/",
+    "distanceMi": 209.8
+  },
+  {
+    "name": "GB Cedar Park",
+    "address": "1805 Hur Industrial Blvd",
+    "city": "Ste 100 Cedar Park",
+    "state": "TX",
+    "postalCode": "78613",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8749419,
+        30.5198429
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbcedarpark.com/",
+    "distanceMi": 214.3
+  },
+  {
+    "name": "GB North Austin",
+    "address": "8868 Research Blvd #608",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78758",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.720761,
+        30.369154
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbnorthaustin.com/",
+    "distanceMi": 221.2
+  },
+  {
+    "name": "GB Conroe",
+    "address": "4705 W Davis St #100",
+    "city": "Conroe",
+    "state": "TX",
+    "postalCode": "77304",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5113688,
+        30.3321302
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarraconroetx.com/",
+    "distanceMi": 222.4
+  },
+  {
+    "name": "GB Westlake",
+    "address": "8947 Bee Caves Rd Lower Level #102",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78746",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.86378479999999,
+        30.3175963
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbwestlakehills.com/",
+    "distanceMi": 227.2
+  },
+  {
+    "name": "GB Spicewood",
+    "address": "5200 Electric Avenue, Building 6",
+    "city": "Spicewood",
+    "state": "TX",
+    "postalCode": "78669",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.04128399999999,
+        30.3409952
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarraspicewood.com/",
+    "distanceMi": 229.4
+  },
+  {
+    "name": "GB Research Forest",
+    "address": "4747 Research Forest Dr Site 125",
+    "city": "The Woodlands",
+    "state": "TX",
+    "postalCode": "77381",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.4907669,
+        30.1863249
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "http://gbresearchforest.com/",
+    "distanceMi": 232.4
+  },
+  {
+    "name": "GB Bastrop",
+    "address": "",
+    "city": "696 W. Texas Hwy 71 Bastrop",
+    "state": "TX",
+    "postalCode": "78602",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.34956799999999,
+        30.1097757
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/bastrop-tx/",
+    "distanceMi": 233.1
+  },
+  {
+    "name": "GB South Austin",
+    "address": "8204 Brodie Ln #102",
+    "city": "Austin",
+    "state": "TX",
+    "postalCode": "78745",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.8390149,
+        30.2016754
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbsouthaustin.com/",
+    "distanceMi": 234.3
+  },
+  {
+    "name": "GB The Woodlands",
+    "address": "25501 Richards Rd",
+    "city": "Spring",
+    "state": "TX",
+    "postalCode": "77386",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.43239319999999,
+        30.1357502
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://mmathewoodlands.com/",
+    "distanceMi": 236.7
+  },
+  {
+    "name": "GB Dripping Springs",
+    "address": "261 Frog Pond Ln",
+    "city": "Dripping Springs",
+    "state": "TX",
+    "postalCode": "78620",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.03795269999999,
+        30.1920908
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": null,
+    "distanceMi": 238.9
+  },
+  {
+    "name": "GB Buda",
+    "address": "2610 Main St #100",
+    "city": "Buda",
+    "state": "TX",
+    "postalCode": "78610",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -97.80849479999999,
+        30.0894524
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbbuda.com/",
+    "distanceMi": 241.2
+  },
+  {
+    "name": "GB Cypress",
+    "address": "15103 Mason Rd Suite B07",
+    "city": "Cypress",
+    "state": "TX",
+    "postalCode": "77433",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.74115139999999,
+        29.9940261
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gb-cypress.com/",
+    "distanceMi": 241.8
+  },
+  {
+    "name": "GB Copperfield",
+    "address": "17319 Farm to Market Rd 529",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77095",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.67105,
+        29.8784384
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarracopperfield.com/",
+    "distanceMi": 250.5
+  },
+  {
+    "name": "GB Katy",
+    "address": "21734 Provincial Blvd",
+    "city": "Katy",
+    "state": "TX",
+    "postalCode": "77450",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.7474628,
+        29.7795935
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarrakaty.com/",
+    "distanceMi": 256.3
+  },
+  {
+    "name": "GB Fulshear",
+    "address": "29810 FM 1093 F",
+    "city": "Fulshear",
+    "state": "TX",
+    "postalCode": "77441",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.88959779999999,
+        29.6915053
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbfulshear.com/",
+    "distanceMi": 260.8
+  },
+  {
+    "name": "GB Westchase Houston",
+    "address": "2610 Fondren Rd",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77063",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5224858,
+        29.7391363
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbwestchase.com/",
+    "distanceMi": 261.8
+  },
+  {
+    "name": "GB River Oaks",
+    "address": "4310 Westheimer Rd #240",
+    "city": "Houston",
+    "state": "TX",
+    "postalCode": "77027",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.45065129999999,
+        29.74177
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbriveroaks.com/",
+    "distanceMi": 262.7
+  },
+  {
+    "name": "GB Richmond-TX",
+    "address": "7910 W Grand Pkwy S suite 200",
+    "city": "Richmond",
+    "state": "TX",
+    "postalCode": "77406",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.7422615,
+        29.6612933
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbrichmondtx.com/",
+    "distanceMi": 264.3
+  },
+  {
+    "name": "GB Fort Bend",
+    "address": "350 Promenade Wy #700",
+    "city": "Sugar Land",
+    "state": "TX",
+    "postalCode": "77478",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.64803099999999,
+        29.6092561
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": null,
+    "distanceMi": 269
+  },
+  {
+    "name": "GB New Braunfels",
+    "address": "",
+    "city": "New Braunfels",
+    "state": "TX",
+    "postalCode": "78130",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.06834300000001,
+        29.7049806
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/tx-new-braunfels/",
+    "distanceMi": 271.2
+  },
+  {
+    "name": "GB Spring Branch",
+    "address": "19750 TX-46 #110",
+    "city": "Spring Branch",
+    "state": "TX",
+    "postalCode": "78070",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.4128111,
+        29.7981679
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/spring-branch-tx/",
+    "distanceMi": 272.5
+  },
+  {
+    "name": "GB Riverstone",
+    "address": "18806 Noble Seven Lane, Suite 102",
+    "city": "Sugar Land",
+    "state": "TX",
+    "postalCode": "77479",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.5847032,
+        29.5476982
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": null,
+    "distanceMi": 273.9
+  },
+  {
+    "name": "GB Sienna",
+    "address": "12131 Hwy 6 Suite 104",
+    "city": "Fresno",
+    "state": "TX",
+    "postalCode": "77545",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.48194439999999,
+        29.5193701
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/fresno-tx-sienna/",
+    "distanceMi": 277.2
+  },
+  {
+    "name": "GB Pearland",
+    "address": "3229 E Broadway St",
+    "city": "Pearland",
+    "state": "TX",
+    "postalCode": "77581",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.27046399999999,
+        29.5598265
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbpearland.com/",
+    "distanceMi": 277.6
+  },
+  {
+    "name": "GB Cibolo",
+    "address": "2251 FM 1103 Suite 106",
+    "city": "Cibolo",
+    "state": "TX",
+    "postalCode": "78108",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.2218997,
+        29.5992714
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbcibolo.com/",
+    "distanceMi": 281.1
+  },
+  {
+    "name": "GB Texas",
+    "address": "450 E NASA Pkwy",
+    "city": "Webster",
+    "state": "TX",
+    "postalCode": "77598",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -95.11413739999999,
+        29.5394925
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarratx.com/",
+    "distanceMi": 281.7
+  },
+  {
+    "name": "GB Boerne",
+    "address": "30875 Frontage Rd",
+    "city": "Boerne",
+    "state": "TX",
+    "postalCode": "78006",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.6989155,
+        29.7472509
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/boerne-tx/",
+    "distanceMi": 282.7
+  },
+  {
+    "name": "GB San Antonio",
+    "address": "20711 Wilderness Oak #106",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78258",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.51647090000002,
+        29.635156
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/san-antonio-tx/",
+    "distanceMi": 285.3
+  },
+  {
+    "name": "GB Alamo Heights",
+    "address": "1230 Austin Hwy, Ste 100 B, San Antonio, TX 78209",
+    "city": "United States of America.",
+    "state": null,
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.44483509999999,
+        29.4880454
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://gbalamoheights.com/",
+    "distanceMi": 293
+  },
+  {
+    "name": "GB Moss Bluff",
+    "address": "Moss Bluff",
+    "city": "70611",
+    "state": "LA",
+    "postalCode": null,
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.19070970000001,
+        30.3027042
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gbmossbluff.com/",
+    "distanceMi": 293.1
+  },
+  {
+    "name": "GB Lake Charles",
+    "address": "310 W McNeese St",
+    "city": "Lake Charles",
+    "state": "LA",
+    "postalCode": "70605",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.2234252,
+        30.1766658
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://www.gblakecharles.com/",
+    "distanceMi": 298.4
+  },
+  {
+    "name": "GB Alamo Ranch",
+    "address": "10919 Culebra Rd #187",
+    "city": "San Antonio",
+    "state": "TX",
+    "postalCode": "78253",
+    "country": null,
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -98.70831229999999,
+        29.4974633
+      ]
+    },
+    "source": "gracie-barra",
+    "brand": "Gracie Barra",
+    "website": "https://graciebarra.com/alamo-ranch-tx/",
+    "distanceMi": 298.6
+  }
+]
