@@ -28,6 +28,11 @@ const EnvSchema = t.Object({
   SES_REGION: t.Optional(t.String()),
   ADMIN_EMAIL: t.Optional(t.String()),
   WEBSITE_ORIGIN: t.Optional(t.String()),
+  // Optional: Auth0 Management API M2M credentials used to delete a user's
+  // Auth0 identity on account deletion. Absent in local dev — deletion then
+  // only removes app data and logs a no-op for the Auth0 side.
+  AUTH0_M2M_CLIENT_ID: t.Optional(t.String()),
+  AUTH0_M2M_CLIENT_SECRET: t.Optional(t.String()),
 });
 
 type RawEnv = Static<typeof EnvSchema>;
@@ -51,6 +56,8 @@ export interface AppEnv {
   readonly sesRegion: string;
   readonly adminEmail: string | undefined;
   readonly websiteOrigins: string[];
+  readonly auth0M2mClientId: string | undefined;
+  readonly auth0M2mClientSecret: string | undefined;
 }
 
 export function loadEnv(source: Record<string, string | undefined> = process.env): AppEnv {
@@ -77,5 +84,7 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
       ...(raw.WEBSITE_ORIGIN?.split(',').map(o => o.trim()) ?? []),
       'http://localhost:4200',
     ].filter((o): o is string => typeof o === 'string' && o.length > 0),
+    auth0M2mClientId: raw.AUTH0_M2M_CLIENT_ID,
+    auth0M2mClientSecret: raw.AUTH0_M2M_CLIENT_SECRET,
   };
 }

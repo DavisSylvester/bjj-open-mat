@@ -67,4 +67,8 @@ export class UserRepository extends BaseRepository {
     await this.collection<UserDoc>(COLLECTIONS.users).insertOne({ ...user, _id: user.id });
     return user;
   }
+
+  public async remove(id: string): Promise<void> {
+    await this.collection<UserDoc>(COLLECTIONS.users).deleteOne({ _id: id });
+  }
 }

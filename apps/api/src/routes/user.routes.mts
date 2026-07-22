@@ -47,5 +47,14 @@ export function userRoutes(container: Container) {
       async ({ identity, body }) => data(await userFacade.updateSettings(requireId(identity).userId, body)),
       { requireAuth: true, body: UpdateSettingsRequest },
     )
-    .get("/api/v1/users/:id", async ({ params }) => data(await userFacade.getById(params.id)));
+    .get("/api/v1/users/:id", async ({ params }) => data(await userFacade.getById(params.id)))
+    .delete(
+      "/api/v1/users/me",
+      async ({ identity }) => {
+        const id = requireId(identity).userId;
+        await container.accountDeletionService.deleteAccount(id);
+        return data({ deleted: true });
+      },
+      { requireAuth: true },
+    );
 }

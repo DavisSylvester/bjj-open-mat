@@ -293,6 +293,11 @@ class AuthStateNotifier extends Notifier<AuthState> {
     state = const AuthState(status: AuthStatus.unauthenticated);
   }
 
+  Future<void> deleteAccount() async {
+    await _authService.deleteAccount();
+    state = const AuthState(status: AuthStatus.unauthenticated);
+  }
+
   Future<void> updateProfile(Map<String, dynamic> updates) async {
     final updated = await _authService.updateProfile(updates);
     if (updated != null) {
@@ -405,6 +410,14 @@ class AuthService {
       await _storage.deleteAll();
     }
     await apiClient.clearToken();
+  }
+
+  /// Deletes the user's account and owned data on the backend (which also
+  /// removes their Auth0 identity), then clears local session state the same
+  /// way [logout] does.
+  Future<void> deleteAccount() async {
+    await apiClient.delete(Endpoints.usersMe);
+    await logout();
   }
 
   Future<String?> getStoredToken() async {

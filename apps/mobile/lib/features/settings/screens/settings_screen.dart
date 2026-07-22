@@ -15,6 +15,47 @@ Widget _settingsBackButton(BuildContext context, AppTokens t) => GestureDetector
       child: Icon(LucideIcons.arrowLeft, color: t.text, size: 22),
     );
 
+/// Guideline 5.1.1(v): account creation must be paired with an in-app account
+/// deletion flow. Confirms intent (irreversible), then deletes the account and
+/// all owned data on the backend before signing out locally.
+Future<void> _confirmDeleteAccount(BuildContext context, WidgetRef ref, AppTokens t) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      backgroundColor: t.surface,
+      title: Text('Delete Account', style: t.h2Style),
+      content: Text(
+        'This will permanently delete your account and all associated data. This action cannot be undone.',
+        style: t.bodyStyle,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(true),
+          child: Text('Delete', style: TextStyle(color: t.red)),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true) return;
+
+  HapticFeedback.heavyImpact();
+  try {
+    await ref.read(authStateProvider.notifier).deleteAccount();
+  } catch (_) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not delete your account. Please try again.')),
+      );
+    }
+    return;
+  }
+  if (context.mounted) context.go('/login');
+}
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -128,6 +169,15 @@ class _GlassSettings extends StatelessWidget {
                     await ref.read(authStateProvider.notifier).logout();
                     if (context.mounted) context.go('/login');
                   },
+                ),
+                Divider(height: 1, color: t.border),
+                ListTile(
+                  leading: Icon(LucideIcons.trash2, color: t.red),
+                  title: Text(
+                    'Delete Account',
+                    style: t.bodyStyle.copyWith(color: t.red),
+                  ),
+                  onTap: () => _confirmDeleteAccount(context, ref, t),
                 ),
               ]),
             ),

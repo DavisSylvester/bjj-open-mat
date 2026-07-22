@@ -50,4 +50,8 @@ export class RsvpRepository extends BaseRepository {
     const docs = await cursor.toArray();
     return docs.map((d) => d.userId);
   }
+
+  public async deleteByUserId(userId: string): Promise<void> {
+    await this.collection<RsvpDoc>(COLLECTIONS.rsvps).deleteMany({ userId });
+  }
 }

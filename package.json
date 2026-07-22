@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "install:all": "node scripts/install-all.mjs",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "test": "turbo run test",

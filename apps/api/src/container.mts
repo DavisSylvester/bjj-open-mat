@@ -37,6 +37,12 @@ import { LeadFacade } from "./facades/lead.facade.mts";
 import { WaitlistLeadRepository } from "./repositories/waitlist-lead.repository.mts";
 import { GymLeadRepository } from "./repositories/gym-lead.repository.mts";
 import { SesEmailService, UnconfiguredEmailService, type EmailService } from "./services/email.service.mts";
+import {
+  HttpAuth0ManagementService,
+  UnconfiguredAuth0ManagementService,
+  type Auth0ManagementService,
+} from "./services/auth0-management.service.mts";
+import { AccountDeletionOrchestrator, type AccountDeletionService } from "./services/account-deletion.service.mts";
 
 export interface Container {
   readonly db: Db;
@@ -49,6 +55,7 @@ export interface Container {
   readonly notificationFacade: NotificationFacade;
   readonly reportFacade: ReportFacade;
   readonly leadFacade: LeadFacade;
+  readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
   readonly assetStorage: AssetStorage;
@@ -85,6 +92,10 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const transcription: TranscriptionService | null = env.openaiApiKey
     ? new WhisperTranscriptionService(env.openaiApiKey)
     : null;
+  const auth0Management: Auth0ManagementService =
+    env.auth0Domain && env.auth0M2mClientId && env.auth0M2mClientSecret
+      ? new HttpAuth0ManagementService(env.auth0Domain, env.auth0M2mClientId, env.auth0M2mClientSecret)
+      : new UnconfiguredAuth0ManagementService();
 
   return {
     db,
@@ -105,6 +116,14 @@ export function createContainer(db: Db, env: AppEnv): Container {
     notificationFacade: new NotificationFacade(notificationRepo, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
     leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
+    accountDeletionService: new AccountDeletionOrchestrator(
+      userRepo,
+      checkInRepo,
+      favoriteRepo,
+      rsvpRepo,
+      notificationRepo,
+      auth0Management,
+    ),
     env,
     geocoder,
     assetStorage,

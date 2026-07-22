@@ -41,4 +41,8 @@ export class NotificationRepository extends BaseRepository {
   public async markAllRead(userId: string): Promise<void> {
     await this.collection<NotificationDoc>(COLLECTIONS.notifications).updateMany({ userId, read: false }, { $set: { read: true } });
   }
+
+  public async deleteByUserId(userId: string): Promise<void> {
+    await this.collection<NotificationDoc>(COLLECTIONS.notifications).deleteMany({ userId });
+  }
 }
