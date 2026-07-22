@@ -1,0 +1,17 @@
+{
+  "name": "bjj-open-mat-marketing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone marketing-asset generators (not part of the app build).",
+  "scripts": {
+    "poster": "bun run build-poster.mts"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.65",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5"
+  }
+}
