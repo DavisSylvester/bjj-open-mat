@@ -25,6 +25,14 @@ Thumbs.db
 
 # AI working artifacts (screenshots, ui dumps)
 .docs/
+.ai/
+.superpowers/
+
+# Build artifacts dropped at the repo root (APKs, e2e screenshots/recordings)
+/build/
+
+# Stray local scratch files
+ipad-1-find-75495
 
 # Android keystore password (never commit)
 .android-password
