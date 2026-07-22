@@ -71,4 +71,8 @@ export class CheckInRepository extends BaseRepository {
     const docs = await this.collection<CheckInDoc>(COLLECTIONS.checkins).find(q).toArray();
     return docs.map((d) => stripId<CheckIn>(d) as CheckIn);
   }
+
+  public async deleteByUserId(userId: string): Promise<void> {
+    await this.collection<CheckInDoc>(COLLECTIONS.checkins).deleteMany({ userId });
+  }
 }

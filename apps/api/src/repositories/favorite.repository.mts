@@ -28,4 +28,8 @@ export class FavoriteRepository extends BaseRepository {
     const docs = await this.collection<Favorite>(COLLECTIONS.favorites).find({ userId }).toArray();
     return docs.map((d) => d.gymId);
   }
+
+  public async deleteByUserId(userId: string): Promise<void> {
+    await this.collection<Favorite>(COLLECTIONS.favorites).deleteMany({ userId });
+  }
 }

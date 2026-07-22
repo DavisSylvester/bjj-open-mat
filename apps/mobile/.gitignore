@@ -33,6 +33,9 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# FVM version cache (local SDK pointer, not shared config)
+.fvm/
+
 # Symbolication related
 app.*.symbols
 
