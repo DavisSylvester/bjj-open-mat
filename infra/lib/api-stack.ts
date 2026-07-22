@@ -22,7 +22,7 @@ const AI_ZONE_NAME = "dsylvester.ai";
 
 const SES_FROM = "no-reply@dsylvester.ai";
 const ADMIN_EMAIL = "davis.sylvester@davaco.com";
-const WEBSITE_ORIGIN = "https://bjj-open-mat.dsylvester.ai";
+const WEBSITE_ORIGIN = "https://bjj-open-mat.dsylvester.ai,https://bjjopenmat.app,https://www.bjjopenmat.app";
 
 // The Bun/Elysia API packaged as a Lambda container image (via the Lambda Web
 // Adapter), fronted by an API Gateway HTTP API on a custom domain. Sensitive values

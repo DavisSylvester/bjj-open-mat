@@ -73,8 +73,9 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     sesFrom: raw.SES_FROM,
     sesRegion: raw.SES_REGION ?? raw.ASSETS_REGION ?? "us-east-1",
     adminEmail: raw.ADMIN_EMAIL,
-    websiteOrigins: [raw.WEBSITE_ORIGIN, "http://localhost:4200"].filter(
-      (o): o is string => typeof o === "string" && o.length > 0,
-    ),
+    websiteOrigins: [
+      ...(raw.WEBSITE_ORIGIN?.split(',').map(o => o.trim()) ?? []),
+      'http://localhost:4200',
+    ].filter((o): o is string => typeof o === 'string' && o.length > 0),
   };
 }
