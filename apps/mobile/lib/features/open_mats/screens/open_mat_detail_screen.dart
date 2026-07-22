@@ -108,6 +108,18 @@ class _GlassDetail extends ConsumerWidget {
               const SizedBox(width: 10),
               _InfoCard(label: 'Fee', value: mat.feeLabel, icon: LucideIcons.dollarSign, t: t, valueColor: mat.feeLabel == 'Free' ? t.green : t.text),
             ]),
+            if (_locationText(mat) != null) ...[
+              const SizedBox(height: 14),
+              GestureDetector(
+                key: const Key('open-mat-location'),
+                onTap: () => openDirections(ref, context, gymId: mat.gymId, address: mat.address),
+                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Icon(LucideIcons.mapPin, size: 16, color: t.muted),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(_locationText(mat)!, style: t.bodyStyle.copyWith(color: t.muted))),
+                ]),
+              ),
+            ],
             const SizedBox(height: 14),
             GestureDetector(
               onTap: () => openDirections(ref, context, gymId: mat.gymId, address: mat.address),
@@ -264,6 +276,17 @@ class _ReviewCard extends StatelessWidget {
       ]),
     );
   }
+}
+
+/// The address string to show on the detail page: the full street address
+/// when present, otherwise the "City, State" label. Returns null when neither
+/// is available so the location row is hidden entirely.
+String? _locationText(OpenMat mat) {
+  final address = mat.address;
+  if (address != null && address.isNotEmpty) return address;
+  final label = mat.locationLabel;
+  if (label != null && label.isNotEmpty) return label;
+  return null;
 }
 
 String _relativeDate(String? iso) {
