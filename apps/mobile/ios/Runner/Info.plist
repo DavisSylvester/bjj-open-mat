@@ -72,6 +72,8 @@
 		<string>BJJ Open Mat needs access to your photos so you can choose a logo for your gym.</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>BJJ Open Mat uses the microphone so you can describe a bug or feature by voice.</string>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>BJJ Open Mat uses your location to find open mat sessions near you. No data is shared with third parties for advertising.</string>
 		<key>GMSApiKey</key>
 		<string>$(MAPS_API_KEY)</string>
 		<key>CFBundleURLTypes</key>
