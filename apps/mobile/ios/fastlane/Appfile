@@ -1,0 +1,5 @@
+app_identifier("com.davissylvester.bjjopenmat")
+
+# Team id is read from the IOS_TEAM_ID secret in CI; authentication uses the
+# App Store Connect API key (see the submit_review lane), not an Apple ID.
+team_id(ENV["IOS_TEAM_ID"]) if ENV["IOS_TEAM_ID"]

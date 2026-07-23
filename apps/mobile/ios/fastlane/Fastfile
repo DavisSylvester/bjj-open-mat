@@ -1,0 +1,70 @@
+default_platform(:ios)
+
+APP_IDENTIFIER = "com.davissylvester.bjjopenmat".freeze
+
+platform :ios do
+  desc "Promote an already-uploaded TestFlight build to App Store review."
+  desc "Params: submit:true|false (default false = dry run), build_number:<n> (blank = latest), auto_release:true|false"
+  lane :submit_review do |options|
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      key_content: ENV.fetch("ASC_API_KEY_P8_BASE64"),
+      is_key_content_base64: true,
+      in_house: false,
+    )
+
+    submit = truthy(options[:submit])
+    auto_release = truthy(options[:auto_release])
+    build_number = presence(options[:build_number])
+
+    # Confirm the target build actually exists on TestFlight before doing
+    # anything irreversible. Also proves auth works.
+    resolved = build_number || latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: APP_IDENTIFIER,
+    ).to_s
+    UI.message("Target build: #{resolved} (app #{APP_IDENTIFIER})")
+
+    unless submit
+      # Dry run: validate live metadata without submitting anything.
+      precheck(
+        api_key: api_key,
+        app_identifier: APP_IDENTIFIER,
+      )
+      UI.success("Dry run OK — auth, build lookup, and precheck passed. Re-run with submit:true to submit for review.")
+      next
+    end
+
+    deliver(
+      api_key: api_key,
+      app_identifier: APP_IDENTIFIER,
+      build_number: build_number,
+      skip_binary_upload: true,   # binary already on TestFlight (Stage 1)
+      skip_metadata: true,        # Phase 1: metadata managed manually in ASC
+      skip_screenshots: true,     # Phase 1: screenshots managed manually in ASC
+      force: true,                # non-interactive (no HTML preview prompt)
+      run_precheck_before_submit: true,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: true,
+      automatic_release: auto_release,
+      submission_information: {
+        # No third-party ad SDKs; ATT is used for tracking-consent correctness,
+        # not IDFA-based advertising.
+        add_id_info_uses_idfa: false,
+        # Standard HTTPS / OS-provided crypto only — export-compliance exempt.
+        export_compliance_uses_encryption: false,
+      },
+    )
+    UI.success("Submitted build #{resolved} for App Store review.")
+  end
+end
+
+def truthy(value)
+  value.to_s.strip.downcase == "true"
+end
+
+def presence(value)
+  s = value.to_s.strip
+  s.empty? ? nil : s
+end

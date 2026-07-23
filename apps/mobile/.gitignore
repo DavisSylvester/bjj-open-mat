@@ -70,3 +70,10 @@ app.*.map.json
 .env
 .env.*
 !.env.example
+
+# Fastlane generated output (App Store submission tooling lives in ios/fastlane)
+ios/fastlane/report.xml
+ios/fastlane/Preview.html
+ios/fastlane/screenshots/**/*.png
+ios/fastlane/test_output
+**/.bundle/
