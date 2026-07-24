@@ -1,0 +1,8 @@
+# Precheck rule configuration, honored by both the standalone dry-run precheck
+# and deliver's run_precheck_before_submit.
+#
+# The app's App Store description legitimately mentions "Google" (e.g. Google
+# Maps / Sign in with Google). precheck's other_platforms rule flags any such
+# mention as a potential problem; downgrade it to a warning so it surfaces in
+# the log without hard-failing the submit gate.
+other_platforms(level: :warn)
