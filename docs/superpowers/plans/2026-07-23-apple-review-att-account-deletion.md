@@ -173,19 +173,23 @@ Before responding to Apple:
 
 #### Task 10: Respond in App Store Connect Resolution Center
 
+**Note:** ATT was removed (the app does not track). 5.1.2(i) is resolved purely by
+correcting the App Privacy labels to "no tracking" and shipping a binary that no
+longer contains `NSUserTrackingUsageDescription`. Do NOT mention an ATT dialog.
+
 Draft response:
 
-> **Re: Guideline 5.1.2(i) — Tracking (ATT)**
+> **Re: Guideline 5.1.2(i) — Data Use and Sharing**
 >
-> We have corrected our App Privacy labels in App Store Connect — Precise Location and Name are now correctly marked as used for App Functionality (finding nearby open mat sessions), not for tracking across third-party apps or websites. In addition, starting in this build we display the system App Tracking Transparency dialog before requesting location access, as required by iOS 14+ guidelines.
+> We have corrected our App Privacy labels in App Store Connect. Precise Location and Name are now marked as used only for App Functionality (finding nearby open mat sessions and displaying the user's profile) and are not used for tracking. BJJ Open Mat does not track users: it collects no advertising identifiers, integrates no third-party ad SDKs, and shares no data with data brokers. This build also removes the tracking usage description from the binary, so the app and its privacy labels are now consistent — the app requests no tracking permission because it performs no tracking.
 >
 > **Re: Guideline 5.1.1(v) — Account Deletion**
 >
 > Account deletion is available in this build via two paths:
-> 1. Profile tab → scroll to the Account section → "Delete Account"
+> 1. Profile tab → Account section → "Delete Account"
 > 2. Profile tab → gear icon (top right) → Settings → Account → "Delete Account"
 >
-> Both paths show a confirmation dialog, then permanently delete all user data (check-ins, favorites, RSVPs, notifications, and the Auth0 identity) before signing the user out. We have attached a screen recording demonstrating the flow from login through deletion.
+> Both paths show a confirmation dialog, then permanently delete all user data (check-ins, favorites, RSVPs, notifications, and the Auth0 identity) before signing the user out. A screen recording demonstrating the flow from login through deletion is attached.
 
 Attach a screen recording of the deletion flow (required by Apple to accept 5.1.1(v) fixes).
 
