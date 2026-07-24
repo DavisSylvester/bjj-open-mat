@@ -1,0 +1,58 @@
+name: iOS App Store Submit
+
+# Stage 2 of the iOS release: promote an ALREADY-uploaded TestFlight build to
+# App Store review. This never rebuilds — the build/upload lives in the `ios`
+# job of mobile-release.yml. Manually triggered and gated by the
+# `appstore-production` environment (required reviewer).
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: 'TestFlight build number to submit (blank = latest processed build)'
+        required: false
+      submit:
+        description: 'Actually submit for review (true) or dry-run precheck only (false)'
+        type: boolean
+        default: false
+      auto_release:
+        description: 'Auto-release to the App Store after Apple approval'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-appstore-submit
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: macos-15
+    # Requires a reviewer configured on this environment in repo settings, so
+    # even a submit=true run blocks for a human approval before it proceeds.
+    environment: appstore-production
+    defaults:
+      run:
+        working-directory: apps/mobile/ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/mobile/ios
+
+      - name: Submit to App Store review
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_API_KEY_P8_BASE64: ${{ secrets.ASC_API_KEY_P8_BASE64 }}
+          IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+        run: |
+          bundle exec fastlane submit_review \
+            submit:${{ inputs.submit }} \
+            auto_release:${{ inputs.auto_release }} \
+            build_number:"${{ inputs.build_number }}"
