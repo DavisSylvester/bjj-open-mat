@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import '../privacy/att_service.dart';
 
 /// True when a GPS fix is a plausible real-world location. Emulators and cold
 /// GPS chips frequently report (0,0) (Null Island) or out-of-range/non-finite
@@ -34,7 +33,6 @@ class GeolocatorLocationService implements LocationService {
       if (!await Geolocator.isLocationServiceEnabled()) return _lastKnown();
       LocationPermission perm = await Geolocator.checkPermission();
       if (perm == LocationPermission.denied) {
-        await requestTrackingIfNeeded();
         perm = await Geolocator.requestPermission();
       }
       if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) return null;
