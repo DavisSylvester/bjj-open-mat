@@ -193,6 +193,28 @@ Draft response:
 
 Attach a screen recording of the deletion flow (required by Apple to accept 5.1.1(v) fixes).
 
+##### Final message posted to the Resolution Center (build 0.1.1 / 116, in review)
+
+> Hello, and thank you for the welcome.
+>
+> We've submitted a new build (0.1.1, build 116) that resolves both issues from the previous review.
+>
+> **Guideline 5.1.1(v) — Account Deletion**
+>
+> Account deletion is now available directly in the app via two paths:
+> 1. Profile tab → Account section → Delete Account
+> 2. Profile tab → gear icon (top right) → Settings → Account → Delete Account
+>
+> Both show a confirmation dialog and then permanently delete all of the user's data — check-ins, favorites, RSVPs, notifications, and the account identity itself — before signing the user out. A screen recording of the full flow, from sign-in through deletion, is attached.
+>
+> **Guideline 5.1.2(i) — Data Use and Sharing**
+>
+> We've corrected our App Privacy labels: Precise Location and Name are now declared as used only for App Functionality (finding nearby open mat sessions and displaying the user's profile), not for tracking. BJJ Open Mat does not track users — it collects no advertising identifiers, includes no third-party advertising SDKs, and shares no data with data brokers. This build also removes the tracking usage description from the binary, so the app and its privacy labels are now fully consistent: the app requests no tracking permission because it performs no tracking.
+>
+> Please let us know if you need anything further. Thank you for your time reviewing our app.
+
+Attach the account-deletion screen recording to this message (Simulator: `xcrun simctl io booted recordVideo ~/Desktop/delete-account.mov`, then walk Profile → Delete Account → confirm → login screen).
+
 ---
 
 ## File Change Summary
