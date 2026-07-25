@@ -69,7 +69,9 @@ async function mgmtToken(): Promise<string> {
 interface Conn { id: string; name: string; strategy: string; enabled_clients?: string[]; }
 
 async function findConn(token: string, strategy: string, name: string): Promise<Conn | null> {
-  const res = await fetch(`https://${DOMAIN}/api/v2/connections?strategy=${strategy}&fields=id,name,strategy,enabled_clients&include_fields=true`, {
+  // NB: do NOT use a `fields=` filter here — this tenant's API rejects
+  // `enabled_clients` as a selectable field. Fetch full objects and read it off.
+  const res = await fetch(`https://${DOMAIN}/api/v2/connections?strategy=${strategy}`, {
     headers: { authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error(`list ${strategy} failed ${res.status}: ${await res.text()}`);
