@@ -79,6 +79,18 @@ async function findConn(token: string, strategy: string, name: string): Promise<
   return conns.find((c) => c.name === name) ?? null;
 }
 
+// This tenant uses the newer connection-client association model, where the
+// deprecated `enabled_clients` field is always empty on read. The source of
+// truth for "is this app enabled on the connection" is /connections/{id}/clients.
+async function isClientEnabled(token: string, connId: string, clientId: string): Promise<boolean> {
+  const res = await fetch(`https://${DOMAIN}/api/v2/connections/${connId}/clients`, {
+    headers: { authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return false;
+  const body = (await res.json()) as { clients?: Array<{ client_id: string }> };
+  return (body.clients ?? []).some((c) => c.client_id === clientId);
+}
+
 async function main(): Promise<void> {
   const token = await mgmtToken();
   console.log(`Auth0 tenant: ${DOMAIN}  (mode: ${VERIFY ? 'verify' : COMMIT ? 'commit' : 'dry-run'})`);
@@ -87,7 +99,7 @@ async function main(): Promise<void> {
     const existing = await findConn(token, p.strategy, p.name);
 
     if (VERIFY) {
-      const enabled = existing?.enabled_clients?.includes(NATIVE_ID) ?? false;
+      const enabled = existing ? await isClientEnabled(token, existing.id, NATIVE_ID) : false;
       console.log(`${p.name}: ${existing ? 'EXISTS' : 'MISSING'}` + (existing ? `  native-enabled=${enabled}` : ''));
       continue;
     }
