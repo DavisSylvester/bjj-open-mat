@@ -112,6 +112,9 @@ async function main(): Promise<void> {
       ? `https://${DOMAIN}/api/v2/connections/${existing.id}`
       : `https://${DOMAIN}/api/v2/connections`;
     // PATCH must not include name/strategy; POST requires them.
+    // Auth0 PATCH replaces the entire `options` object (no deep merge): any option
+    // fields previously set on this connection in the dashboard will be dropped.
+    if (existing) console.warn(`${p.name}: PATCH replaces ALL connection options with client_id/client_secret/scope only (dashboard-set option fields will be lost).`);
     const payload = existing ? { options: body.options, enabled_clients: body.enabled_clients } : body;
     const res = await fetch(url, {
       method: existing ? 'PATCH' : 'POST',
