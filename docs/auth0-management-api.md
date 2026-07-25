@@ -31,7 +31,7 @@ Our backend already has an Auth0 client (`AUTH0_CLIENT_ID` / `AUTH0_CLIENT_SECRE
   ```
   bun run scripts/auth0/setup-social-connections.mts --verify
   ```
-- **If it prints the tenant line + a per-provider status table**, that client already has
+- **If it prints the tenant line + one status line per provider** (`EXISTS`/`MISSING` + `native-enabled`), that client already has
   Management grants — you are done with this step, skip to step 3.
 - **If it fails** with `token failed 403`, `access_denied`, or `Grant type not allowed`,
   the client is not authorized for the Management API. Continue to step 1.
