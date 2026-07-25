@@ -342,6 +342,8 @@ main().catch((e) => {
 });
 ```
 
+Note (post-implementation): the shipped `findConn` drops the `fields=`/`include_fields` query params shown above — this tenant's API rejects `enabled_clients` as a selectable field (400 `invalid_query_string`). Fetch full connection objects and read `enabled_clients` off them.
+
 Note on scopes: Auth0's Management-API option schema for `windowslive`/`amazon` can differ (some strategies use boolean scope flags rather than a `scope` array). The `--verify` step + a dashboard glance in Task 5 confirm the connection is correctly shaped; adjust the `scope` field only if the API rejects it.
 
 - [ ] **Step 4: Type-check the script**
