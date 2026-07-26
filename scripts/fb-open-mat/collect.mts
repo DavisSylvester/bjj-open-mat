@@ -36,7 +36,9 @@ async function ensureLoggedIn(ctx: BrowserContext): Promise<void> {
   await page.close();
 }
 
-async function collectGroup(ctx: BrowserContext, entry: GroupEntry, sinceMs: number): Promise<RawPost[]> {
+// `_sinceMs` is the timestamp floor for the scroll cutoff; wiring it requires
+// extracting each post's real timestamp from the live FB DOM (see collect notes).
+async function collectGroup(ctx: BrowserContext, entry: GroupEntry, _sinceMs: number): Promise<RawPost[]> {
   const page = await ctx.newPage();
   await page.goto(entry.url, { waitUntil: 'domcontentloaded' });
   const posts: RawPost[] = [];
