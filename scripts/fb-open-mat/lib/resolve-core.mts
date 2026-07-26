@@ -16,7 +16,9 @@ export type ResolvedSession = CreateOpenMatBody & { sourceUrl: string; gymNameFo
 function sessionExists(candidate: Candidate, existing: SessionRef[]): boolean {
   return existing.some((s) =>
     s.startTime === candidate.startTime &&
-    (candidate.specificDate ? s.specificDate === candidate.specificDate : s.dayOfWeek === candidate.dayOfWeek),
+    (candidate.specificDate
+      ? s.specificDate === candidate.specificDate
+      : candidate.dayOfWeek !== undefined && s.dayOfWeek === candidate.dayOfWeek),
   );
 }
 
