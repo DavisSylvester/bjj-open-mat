@@ -18,7 +18,9 @@ class LoginScreen extends ConsumerWidget {
         if (next.user?.role == null || (next.user?.role?.isEmpty ?? true)) {
           context.go('/role-select');
         } else {
-          context.go((next.user?.isGymOwner ?? false) ? '/owner/dashboard' : '/');
+          context.go(
+            (next.user?.isGymOwner ?? false) ? '/owner/dashboard' : '/',
+          );
         }
       }
     });
@@ -26,82 +28,156 @@ class LoginScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: StitchTokens.primary,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(StitchTokens.xl),
-          child: Column(
-            children: [
-              const Spacer(flex: 2),
-              Icon(Icons.sports_martial_arts, size: 72, color: StitchTokens.secondary),
-              const SizedBox(height: StitchTokens.lg),
-              Text(
-                'BJJ Open Mat',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
-              ),
-              const SizedBox(height: StitchTokens.sm),
-              Text(
-                'Discover open mats near you',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: StitchTokens.textSecondary),
-              ),
-              const Spacer(flex: 3),
+        child: LayoutBuilder(
+          builder:
+              (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Padding(
+                      padding: const EdgeInsets.all(StitchTokens.xl),
+                      child: Column(
+                        children: [
+                          const Spacer(flex: 2),
+                          Icon(
+                            Icons.sports_martial_arts,
+                            size: 72,
+                            color: StitchTokens.secondary,
+                          ),
+                          const SizedBox(height: StitchTokens.lg),
+                          Text(
+                            'BJJ Open Mat',
+                            style: Theme.of(context).textTheme.displayLarge
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          const SizedBox(height: StitchTokens.sm),
+                          Text(
+                            'Discover open mats near you',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: StitchTokens.textSecondary),
+                          ),
+                          const Spacer(flex: 3),
 
-              // Google login
-              _SocialLoginButton(
-                label: 'Continue with Google',
-                icon: Icons.g_mobiledata,
-                backgroundColor: Colors.white,
-                foregroundColor: StitchTokens.primary,
-                isLoading: isLoading,
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  ref.read(authStateProvider.notifier).loginWithGoogle();
-                },
-              ),
-              const SizedBox(height: StitchTokens.md),
+                          // Google login
+                          _SocialLoginButton(
+                            label: 'Continue with Google',
+                            icon: Icons.g_mobiledata,
+                            backgroundColor: Colors.white,
+                            foregroundColor: StitchTokens.primary,
+                            isLoading: isLoading,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              ref
+                                  .read(authStateProvider.notifier)
+                                  .loginWithGoogle();
+                            },
+                          ),
+                          const SizedBox(height: StitchTokens.md),
 
-              // Apple login
-              _SocialLoginButton(
-                label: 'Continue with Apple',
-                icon: Icons.apple,
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                isLoading: isLoading,
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  ref.read(authStateProvider.notifier).loginWithApple();
-                },
-              ),
-              const SizedBox(height: StitchTokens.md),
+                          // Apple login
+                          _SocialLoginButton(
+                            label: 'Continue with Apple',
+                            icon: Icons.apple,
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            isLoading: isLoading,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              ref
+                                  .read(authStateProvider.notifier)
+                                  .loginWithApple();
+                            },
+                          ),
+                          const SizedBox(height: StitchTokens.md),
 
-              // Email / password (Auth0 Universal Login)
-              _SocialLoginButton(
-                label: 'Continue with email',
-                icon: Icons.mail_outline,
-                backgroundColor: StitchTokens.secondary,
-                foregroundColor: Colors.white,
-                isLoading: isLoading,
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  ref.read(authStateProvider.notifier).loginWithEmail();
-                },
-              ),
+                          // Facebook login
+                          _SocialLoginButton(
+                            label: 'Continue with Facebook',
+                            icon: Icons.facebook,
+                            backgroundColor: const Color(0xFF1877F2),
+                            foregroundColor: Colors.white,
+                            isLoading: isLoading,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              ref
+                                  .read(authStateProvider.notifier)
+                                  .loginWithFacebook();
+                            },
+                          ),
+                          const SizedBox(height: StitchTokens.md),
 
-              if (authState.error != null) ...[
-                const SizedBox(height: StitchTokens.md),
-                Text(
-                  authState.error!,
-                  style: TextStyle(color: StitchTokens.error, fontSize: 14),
-                  textAlign: TextAlign.center,
+                          // Amazon login
+                          _SocialLoginButton(
+                            label: 'Continue with Amazon',
+                            icon: Icons.shopping_bag_outlined,
+                            backgroundColor: const Color(0xFFFF9900),
+                            foregroundColor: Colors.black,
+                            isLoading: isLoading,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              ref
+                                  .read(authStateProvider.notifier)
+                                  .loginWithAmazon();
+                            },
+                          ),
+                          const SizedBox(height: StitchTokens.md),
+
+                          // Microsoft login
+                          _SocialLoginButton(
+                            label: 'Continue with Microsoft',
+                            icon: Icons.window,
+                            backgroundColor: Colors.white,
+                            foregroundColor: StitchTokens.primary,
+                            isLoading: isLoading,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              ref
+                                  .read(authStateProvider.notifier)
+                                  .loginWithMicrosoft();
+                            },
+                          ),
+                          const SizedBox(height: StitchTokens.md),
+
+                          // Email / password (Auth0 Universal Login)
+                          _SocialLoginButton(
+                            label: 'Continue with email',
+                            icon: Icons.mail_outline,
+                            backgroundColor: StitchTokens.secondary,
+                            foregroundColor: Colors.white,
+                            isLoading: isLoading,
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              ref
+                                  .read(authStateProvider.notifier)
+                                  .loginWithEmail();
+                            },
+                          ),
+
+                          if (authState.error != null) ...[
+                            const SizedBox(height: StitchTokens.md),
+                            Text(
+                              authState.error!,
+                              style: TextStyle(
+                                color: StitchTokens.error,
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+
+                          const Spacer(),
+                          Text(
+                            'No passwords. Just tap and train.',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: StitchTokens.textSecondary),
+                          ),
+                          const SizedBox(height: StitchTokens.lg),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ],
-
-              const Spacer(),
-              Text(
-                'No passwords. Just tap and train.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: StitchTokens.textSecondary),
               ),
-              const SizedBox(height: StitchTokens.lg),
-            ],
-          ),
         ),
       ),
     );
@@ -132,14 +208,27 @@ class _SocialLoginButton extends StatelessWidget {
       height: 56,
       child: ElevatedButton.icon(
         onPressed: isLoading ? null : onPressed,
-        icon: isLoading
-            ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: foregroundColor))
-            : Icon(icon, size: 28),
-        label: Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        icon:
+            isLoading
+                ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: foregroundColor,
+                  ),
+                )
+                : Icon(icon, size: 28),
+        label: Text(
+          label,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(StitchTokens.radiusMd)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(StitchTokens.radiusMd),
+          ),
         ),
       ),
     );

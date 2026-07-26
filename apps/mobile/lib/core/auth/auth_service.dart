@@ -261,6 +261,9 @@ class AuthStateNotifier extends Notifier<AuthState> {
 
   Future<void> loginWithGoogle() async => _socialLogin('google-oauth2');
   Future<void> loginWithApple() async => _socialLogin('apple');
+  Future<void> loginWithFacebook() async => _socialLogin('facebook');
+  Future<void> loginWithAmazon() async => _socialLogin('amazon');
+  Future<void> loginWithMicrosoft() async => _socialLogin('windowslive');
   // Universal Login (shows the email/password Database form + any social).
   Future<void> loginWithEmail() async => _socialLogin(null);
 
