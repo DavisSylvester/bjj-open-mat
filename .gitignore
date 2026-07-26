@@ -55,6 +55,7 @@ website/*.png
 # Facebook open-mat scraper runtime artifacts (contain scraped PII / secrets)
 docs/open-mats/raw/
 docs/open-mats/xlsx/
+docs/open-mats/flyers/
 docs/open-mats/found-*.json
 docs/open-mats/new-*.json
 docs/open-mats/inserted-*.json
