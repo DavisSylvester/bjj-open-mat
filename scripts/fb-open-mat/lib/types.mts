@@ -9,11 +9,14 @@ export interface GroupEntry {
 
 // A single Facebook post captured by Stage 1 (collect).
 export interface RawPost {
-  readonly sourceUrl: string;   // permalink to the post
+  readonly sourceUrl: string;   // permalink to the post (best-effort; group URL if none)
   readonly groupUrl: string;
   readonly author: string;
-  readonly postedAt: string;    // ISO timestamp of the post
+  readonly postedAt: string;    // ISO timestamp captured at scrape time
   readonly text: string;
+  // Flyer/announcement image URL, if present. Open-mat details are frequently in
+  // the image rather than the text, so Stage 2 reads it via vision.
+  readonly imageUrl?: string | null;
 }
 
 // A structured open-mat candidate produced by Stage 2 (parse).

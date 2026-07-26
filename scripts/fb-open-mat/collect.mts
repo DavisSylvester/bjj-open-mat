@@ -36,36 +36,65 @@ async function ensureLoggedIn(ctx: BrowserContext): Promise<void> {
   await page.close();
 }
 
-// `_sinceMs` is the timestamp floor for the scroll cutoff; wiring it requires
-// extracting each post's real timestamp from the live FB DOM (see collect notes).
+// Extracts top-level posts from a group. Validated against the live FB DOM
+// (2026): posts are the children of `div[role="feed"]` (comments are nested
+// `div[role="article"]` and are intentionally NOT matched here); post body is the
+// longest `div[dir="auto"]`; the flyer is the largest content `<img>` (avatars /
+// emoji / static chrome filtered out); the permalink is a best-effort `/posts/`
+// or `/permalink/` anchor. FB virtualizes the feed (only a few posts in the DOM
+// at once), so we accumulate across scroll passes, deduped by permalink/text/img.
+//
+// `_sinceMs` is the intended time floor; FB does not expose a reliable absolute
+// post timestamp in the feed DOM, so the window is currently bounded by scroll
+// depth (INITIAL vs daily) rather than a hard date cutoff.
 async function collectGroup(ctx: BrowserContext, entry: GroupEntry, _sinceMs: number): Promise<RawPost[]> {
   const page = await ctx.newPage();
   await page.goto(entry.url, { waitUntil: 'domcontentloaded' });
-  const posts: RawPost[] = [];
-  // Scroll with throttling until we pass `sinceMs` or hit the year cap. Extract
-  // each article's text, author, permalink, timestamp. (Selectors are FB-version
-  // specific; validate against the live DOM and adjust the article/permalink/
-  // timestamp locators here.)
-  let lastCount = -1;
-  for (let i = 0; i < (INITIAL ? 400 : 40); i += 1) {
-    const articles = await page.locator('div[role="article"]').all();
-    for (const a of articles.slice(posts.length)) {
-      const text = (await a.innerText().catch(() => '')).trim();
-      if (!/open\s*mat/i.test(text)) continue;
-      const permalink = await a.locator('a[href*="/posts/"], a[href*="/permalink/"]').first().getAttribute('href').catch(() => null);
-      const author = (await a.locator('strong, h3 a, h4 a').first().innerText().catch(() => '')).trim();
-      posts.push({
-        sourceUrl: permalink ? new URL(permalink, 'https://www.facebook.com').toString() : entry.url,
-        groupUrl: entry.url, author, postedAt: new Date().toISOString(), text,
+  await page.waitForTimeout(4000);
+
+  const seen = new Map<string, RawPost>();
+  const grab = (): Promise<Array<{ text: string; img: string | null; permalink: string | null; author: string }>> =>
+    page.evaluate(() => {
+      const feed = document.querySelector('div[role="feed"]');
+      if (!feed) return [];
+      const out: Array<{ text: string; img: string | null; permalink: string | null; author: string }> = [];
+      for (const c of Array.from(feed.children)) {
+        const text = Array.from(c.querySelectorAll('div[dir="auto"]'))
+          .map((e) => (e as HTMLElement).innerText)
+          .filter(Boolean)
+          .sort((a, b) => b.length - a.length)[0] || '';
+        const img = Array.from(c.querySelectorAll('img'))
+          .map((im) => ({ src: (im as HTMLImageElement).currentSrc || im.src, w: (im as HTMLImageElement).naturalWidth || im.width }))
+          .filter((x) => x.src && x.src.startsWith('http') && x.w >= 130 && !/static\.xx|emoji|\/rsrc\.php/.test(x.src))
+          .sort((a, b) => b.w - a.w)[0]?.src || null;
+        const permalink = (Array.from(c.querySelectorAll('a[href]'))
+          .map((a) => a.getAttribute('href'))
+          .find((h) => /\/(posts|permalink)\//.test(h || '')) || '').split('?')[0] || null;
+        const author = ((c.querySelector('h2 a, h3 a, h4 a, strong a') as HTMLElement | null)?.innerText || '').trim();
+        if (text.length > 20 || img) out.push({ text: text.replace(/\s+/g, ' ').trim(), img, permalink, author });
+      }
+      return out;
+    });
+
+  let stagnant = 0;
+  for (let i = 0; i < (INITIAL ? 300 : 40); i += 1) {
+    const before = seen.size;
+    for (const p of await grab()) {
+      const key = p.permalink || p.text.slice(0, 100) || p.img || '';
+      if (!key || seen.has(key)) continue;
+      seen.set(key, {
+        sourceUrl: p.permalink ? new URL(p.permalink, 'https://www.facebook.com').toString() : entry.url,
+        groupUrl: entry.url, author: p.author, postedAt: new Date().toISOString(),
+        text: p.text, imageUrl: p.img,
       });
     }
-    if (articles.length === lastCount) break; // no new content
-    lastCount = articles.length;
-    await page.mouse.wheel(0, 3000);
-    await page.waitForTimeout(1500 + Math.floor(Math.random() * 1500)); // throttle
+    stagnant = seen.size === before ? stagnant + 1 : 0;
+    if (stagnant >= 4) break; // no new posts across several passes → end of feed
+    await page.mouse.wheel(0, 2500);
+    await page.waitForTimeout(1300 + Math.floor(Math.random() * 1200)); // throttle
   }
   await page.close();
-  return posts;
+  return [...seen.values()];
 }
 
 async function main(): Promise<void> {
