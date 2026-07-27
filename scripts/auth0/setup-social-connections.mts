@@ -27,6 +27,12 @@ function loadEnv(path: string): void {
 loadEnv(join(import.meta.dir, '.env'));
 loadEnv(join(import.meta.dir, '..', '..', 'apps', 'api', '.env'));
 
+// Apple's signing key (.p8) is multi-line, which the line-based .env loader can't
+// hold — point APPLE_PRIVATE_KEY_FILE at the downloaded AuthKey_<kid>.p8 instead.
+if (!process.env.APPLE_PRIVATE_KEY && process.env.APPLE_PRIVATE_KEY_FILE && existsSync(process.env.APPLE_PRIVATE_KEY_FILE)) {
+  process.env.APPLE_PRIVATE_KEY = readFileSync(process.env.APPLE_PRIVATE_KEY_FILE, 'utf8');
+}
+
 const DOMAIN = process.env.AUTH0_DOMAIN;
 const MGMT_ID = process.env.AUTH0_MGMT_CLIENT_ID;
 const MGMT_SECRET = process.env.AUTH0_MGMT_CLIENT_SECRET;
@@ -43,12 +49,18 @@ interface ProviderCfg {
   readonly clientId?: string;
   readonly clientSecret?: string;
   readonly scope: string[];
+  // Apple (Sign in with Apple) authenticates with a signing key, not a static
+  // client secret: options are { client_id=<Services ID>, team_id, kid, app_secret=<.p8> }.
+  readonly teamId?: string;
+  readonly kid?: string;
+  readonly appSecret?: string; // contents of the AuthKey_<kid>.p8 private key
 }
 
 const PROVIDERS: ProviderCfg[] = [
   { name: 'facebook', strategy: 'facebook', clientId: process.env.FACEBOOK_CLIENT_ID, clientSecret: process.env.FACEBOOK_CLIENT_SECRET, scope: ['public_profile', 'email'] },
   { name: 'amazon', strategy: 'amazon', clientId: process.env.AMAZON_CLIENT_ID, clientSecret: process.env.AMAZON_CLIENT_SECRET, scope: ['profile'] },
   { name: 'windowslive', strategy: 'windowslive', clientId: process.env.MICROSOFT_CLIENT_ID, clientSecret: process.env.MICROSOFT_CLIENT_SECRET, scope: ['openid', 'profile', 'email'] },
+  { name: 'apple', strategy: 'apple', clientId: process.env.APPLE_CLIENT_ID, teamId: process.env.APPLE_TEAM_ID, kid: process.env.APPLE_KEY_ID, appSecret: process.env.APPLE_PRIVATE_KEY, scope: ['name', 'email'] },
 ];
 
 async function mgmtToken(): Promise<string> {
@@ -104,16 +116,20 @@ async function main(): Promise<void> {
       continue;
     }
 
-    if (!p.clientId || !p.clientSecret) {
+    const secretMaterial = p.clientSecret ?? p.appSecret;
+    if (!p.clientId || !secretMaterial || (p.strategy === 'apple' && (!p.teamId || !p.kid))) {
       console.log(`${p.name}: SKIP (no client id/secret in env)`);
       continue;
     }
 
     const enabledClients = Array.from(new Set([...(existing?.enabled_clients ?? []), NATIVE_ID]));
+    const options = p.strategy === 'apple'
+      ? { client_id: p.clientId, team_id: p.teamId, kid: p.kid, app_secret: p.appSecret, scope: p.scope }
+      : { client_id: p.clientId, client_secret: p.clientSecret, scope: p.scope };
     const body = {
       name: p.name,
       strategy: p.strategy,
-      options: { client_id: p.clientId, client_secret: p.clientSecret, scope: p.scope },
+      options,
       enabled_clients: enabledClients,
     };
 
