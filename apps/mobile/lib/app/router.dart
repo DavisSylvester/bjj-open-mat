@@ -35,6 +35,8 @@ import '../features/admin/screens/admin_review_screen.dart';
 import '../features/membership/screens/roster_screen.dart';
 import '../features/membership/screens/my_memberships_screen.dart';
 import '../features/classes/screens/class_schedule_screen.dart';
+import '../features/classes/screens/class_occurrence_screen.dart';
+import '../features/classes/models/scheduled_class.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -102,6 +104,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                     GoRoute(
                       path: 'schedule',
                       builder: (context, state) => ClassScheduleScreen(gymId: state.pathParameters['id']!),
+                      routes: [
+                        GoRoute(
+                          path: 'occurrence',
+                          builder: (context, state) => ClassOccurrenceScreen(
+                            classId: state.uri.queryParameters['classId'] ?? '',
+                            date: state.uri.queryParameters['date'] ?? '',
+                            scheduled: state.extra as ScheduledClass?,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

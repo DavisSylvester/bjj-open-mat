@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../data/class_repository.dart';
@@ -99,6 +100,7 @@ class _ClassScheduleScreenState extends ConsumerState<ClassScheduleScreen> {
               return _DaySection(
                 date: day,
                 classes: grouped[day]!,
+                gymId: widget.gymId,
                 t: t,
               );
             },
@@ -170,11 +172,13 @@ class _WeekPager extends StatelessWidget {
 class _DaySection extends StatelessWidget {
   final String date;
   final List<ScheduledClass> classes;
+  final String gymId;
   final AppTokens t;
 
   const _DaySection({
     required this.date,
     required this.classes,
+    required this.gymId,
     required this.t,
   });
 
@@ -198,7 +202,7 @@ class _DaySection extends StatelessWidget {
           child: Text(_dayLabel(date), style: t.labelStyle.copyWith(color: t.muted, fontSize: 12)),
         ),
         for (final cls in classes)
-          _ClassRow(cls: cls, t: t),
+          _ClassRow(cls: cls, gymId: gymId, t: t),
       ],
     );
   }
@@ -208,13 +212,20 @@ class _DaySection extends StatelessWidget {
 
 class _ClassRow extends StatelessWidget {
   final ScheduledClass cls;
+  final String gymId;
   final AppTokens t;
 
-  const _ClassRow({required this.cls, required this.t});
+  const _ClassRow({required this.cls, required this.gymId, required this.t});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+      onTap: () => context.push(
+        '/gym/$gymId/schedule/occurrence?classId=${cls.classId}&date=${cls.date}',
+        extra: cls,
+      ),
+      borderRadius: BorderRadius.circular(t.cardRadius),
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -294,6 +305,7 @@ class _ClassRow extends StatelessWidget {
             ),
           ],
         ],
+      ),
       ),
     );
   }
