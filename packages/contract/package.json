@@ -9,7 +9,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "echo \"(no contract tests yet)\""
+    "test": "bun test"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.0"

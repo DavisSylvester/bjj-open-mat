@@ -58,4 +58,12 @@ class Endpoints {
   static String gymMemberPromotions(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId/promotions';
   static String userPromotions(String userId) => '/api/v1/users/$userId/promotions';
   static const String myMemberships = '/api/v1/users/me/memberships';
+
+  // Classes
+  static String gymClasses(String gymId) => '/api/v1/gyms/$gymId/classes';
+  static String gymSchedule(String gymId) => '/api/v1/gyms/$gymId/schedule';
+  static String classById(String classId) => '/api/v1/classes/$classId';
+  static String classOccurrence(String classId, String date) => '/api/v1/classes/$classId/occurrences/$date';
+  static String classRsvp(String classId) => '/api/v1/classes/$classId/rsvp';
+  static String classAttendees(String classId) => '/api/v1/classes/$classId/attendees';
 }

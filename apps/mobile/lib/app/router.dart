@@ -34,6 +34,11 @@ import '../features/admin/screens/attendance_screen.dart';
 import '../features/admin/screens/admin_review_screen.dart';
 import '../features/membership/screens/roster_screen.dart';
 import '../features/membership/screens/my_memberships_screen.dart';
+import '../features/classes/screens/class_schedule_screen.dart';
+import '../features/classes/screens/class_occurrence_screen.dart';
+import '../features/classes/screens/class_edit_screen.dart';
+import '../features/classes/models/gym_class.dart';
+import '../features/classes/models/scheduled_class.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -97,6 +102,28 @@ final routerProvider = Provider<GoRouter>((ref) {
                     GoRoute(
                       path: 'roster',
                       builder: (context, state) => RosterScreen(gymId: state.pathParameters['id']!),
+                    ),
+                    GoRoute(
+                      path: 'schedule',
+                      builder: (context, state) => ClassScheduleScreen(gymId: state.pathParameters['id']!),
+                      routes: [
+                        GoRoute(
+                          path: 'occurrence',
+                          builder: (context, state) => ClassOccurrenceScreen(
+                            classId: state.uri.queryParameters['classId'] ?? '',
+                            date: state.uri.queryParameters['date'] ?? '',
+                            scheduled: state.extra as ScheduledClass?,
+                            gymId: state.pathParameters['id'] ?? '',
+                          ),
+                        ),
+                      ],
+                    ),
+                    GoRoute(
+                      path: 'class-edit',
+                      builder: (context, state) => ClassEditScreen(
+                        gymId: state.pathParameters['id']!,
+                        existing: state.extra as GymClass?,
+                      ),
                     ),
                   ],
                 ),

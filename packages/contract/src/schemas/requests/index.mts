@@ -7,3 +7,4 @@ export * from "./report-requests.mts";
 export * from "./auth-sync-request.mts";
 export * from "./lead-requests.mts";
 export * from "./membership-requests.mts";
+export * from "./class-requests.mts";

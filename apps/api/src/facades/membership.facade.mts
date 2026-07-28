@@ -11,6 +11,7 @@ import type {
   UserRole,
 } from '@bjj/contract';
 import { AppError } from '../http/errors.mts';
+import { assertCanManageGym } from './gym-authz.mts';
 import type { MembershipRepository } from '../repositories/membership.repository.mts';
 import type { PromotionRepository } from '../repositories/promotion.repository.mts';
 import type { GymRepository } from '../repositories/gym.repository.mts';
@@ -156,13 +157,6 @@ export class MembershipFacade {
   }
 
   private async assertCanManage(callerId: string, gymId: string, callerRole: UserRole): Promise<void> {
-    if (callerRole === 'admin') return;
-    const gym: Gym | null = await this.gyms.findById(gymId);
-    if (!gym) throw new AppError('not_found', `Gym ${gymId} not found`);
-    if (gym.ownerId === callerId) return;
-    const membership: GymMembership | null = await this.memberships.find(gymId, callerId);
-    const role: string = membership?.gymRole ?? 'member';
-    if (membership && membership.status === 'active' && (role === 'coach' || role === 'owner')) return;
-    throw new AppError('forbidden', 'Requires gym owner or coach');
+    await assertCanManageGym({ gyms: this.gyms, memberships: this.memberships }, callerId, gymId, callerRole);
   }
 }
