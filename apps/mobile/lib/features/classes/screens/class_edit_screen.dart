@@ -35,7 +35,7 @@ const _kSkillLevels = [
   ('advanced', 'Advanced'),
 ];
 
-const _kDayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const _kDayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
@@ -68,7 +68,7 @@ class _ClassEditScreenState extends ConsumerState<ClassEditScreen> {
   String _giType = 'gi';
   String _skillLevel = 'all';
   bool _isRecurring = true;
-  int? _dayOfWeek; // 0=Mon … 6=Sun for recurring
+  int? _dayOfWeek = 1; // 0=Sun … 6=Sat (matches JS getUTCDay()); default 1=Mon
   TimeOfDay _startTime = const TimeOfDay(hour: 6, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 7, minute: 30);
   DateTime? _specificDate; // one-off date
@@ -93,7 +93,7 @@ class _ClassEditScreenState extends ConsumerState<ClassEditScreen> {
       _skillLevel = e.skillLevel;
       _isRecurring = e.isRecurring;
       if (e.dayOfWeek != null) {
-        _dayOfWeek = int.tryParse(e.dayOfWeek!);
+        _dayOfWeek = e.dayOfWeek;
       }
       _startTime = _parseTime(e.startTime) ?? _startTime;
       _endTime = _parseTime(e.endTime) ?? _endTime;

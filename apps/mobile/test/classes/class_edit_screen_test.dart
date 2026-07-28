@@ -189,8 +189,8 @@ void main() {
     await tester.tap(find.text('Gi').last);
     await tester.pumpAndSettle();
 
-    // In recurring mode (default), pick a day of week — Mon (index 0).
-    await tester.tap(find.byKey(const Key('class_edit_day_0')));
+    // In recurring mode (default), pick a day of week — Mon (index 1 in 0=Sun convention).
+    await tester.tap(find.byKey(const Key('class_edit_day_1')));
     await tester.pump();
 
     // Save should now be enabled.
@@ -208,7 +208,7 @@ void main() {
     expect(call.gymId, equals('g1'));
     expect(call.body['title'], equals('Morning Gi'));
     expect(call.body['classType'], equals('gi'));
-    expect(call.body['dayOfWeek'], equals(0));
+    expect(call.body['dayOfWeek'], equals(1));
     expect(call.body['isRecurring'], isTrue);
     expect(call.body['startTime'], isNotNull);
     expect(call.body['endTime'], isNotNull);

@@ -10,7 +10,7 @@ class GymClass {
   final String? instructorUserId;
   final String? instructorName;
   final bool isRecurring;
-  final String? dayOfWeek;
+  final int? dayOfWeek;
   final String startTime;
   final String endTime;
   final String? specificDate;
@@ -51,7 +51,7 @@ class GymClass {
         instructorUserId: json['instructorUserId'] as String?,
         instructorName: json['instructorName'] as String?,
         isRecurring: json['isRecurring'] as bool,
-        dayOfWeek: json['dayOfWeek'] as String?,
+        dayOfWeek: json['dayOfWeek'] as int?,
         startTime: json['startTime'] as String,
         endTime: json['endTime'] as String,
         specificDate: json['specificDate'] as String?,
