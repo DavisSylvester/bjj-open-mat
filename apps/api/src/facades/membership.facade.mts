@@ -151,6 +151,10 @@ export class MembershipFacade {
     return this.promotions.listByUser(userId);
   }
 
+  public async listMyMemberships(userId: string): Promise<GymMembership[]> {
+    return this.memberships.listByUser(userId);
+  }
+
   private async assertCanManage(callerId: string, gymId: string, callerRole: UserRole): Promise<void> {
     if (callerRole === 'admin') return;
     const gym: Gym | null = await this.gyms.findById(gymId);
