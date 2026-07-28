@@ -248,8 +248,17 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
                       style: t.labelStyle.copyWith(color: t.muted, fontSize: 12),
                     ),
                   ),
-                  for (final entry in visible)
-                    _SharedNoteCard(entry: entry, t: t),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 180),
+                    child: ListView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      children: [
+                        for (final entry in visible)
+                          _SharedNoteCard(entry: entry, t: t),
+                      ],
+                    ),
+                  ),
                 ],
               );
             },
