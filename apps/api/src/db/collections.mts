@@ -11,6 +11,9 @@ export const COLLECTIONS = {
   gymLeads: "gymLeads",
   gymMemberships: "gymMemberships",
   beltPromotions: "beltPromotions",
+  gymClasses: "gymClasses",
+  classOccurrences: "classOccurrences",
+  classRsvps: "classRsvps",
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
