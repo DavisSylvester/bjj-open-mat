@@ -18,5 +18,6 @@ export * from "./favorite.mts";
 export * from "./notification.mts";
 export * from "./report.mts";
 export * from "./lead.mts";
+export * from "./class-journal-entry.mts";
 export * from "./requests/index.mts";
 export * from "./responses/index.mts";
