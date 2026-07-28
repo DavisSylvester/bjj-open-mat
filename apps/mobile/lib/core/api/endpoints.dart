@@ -50,4 +50,12 @@ class Endpoints {
 
   // Health
   static const String health = '/health';
+
+  // Membership
+  static String gymMembers(String gymId) => '/api/v1/gyms/$gymId/members';
+  static String gymMemberMe(String gymId) => '/api/v1/gyms/$gymId/members/me';
+  static String gymMember(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId';
+  static String gymMemberPromotions(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId/promotions';
+  static String userPromotions(String userId) => '/api/v1/users/$userId/promotions';
+  static const String myMemberships = '/api/v1/users/me/memberships';
 }
