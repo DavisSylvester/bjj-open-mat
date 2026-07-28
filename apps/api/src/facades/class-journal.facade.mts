@@ -83,8 +83,9 @@ export class ClassJournalFacade {
     };
   }
 
-  public async rateInstructor(userId: string, classId: string, req: UpsertInstructorRatingRequest, _role: UserRole): Promise<InstructorRating> {
+  public async rateInstructor(userId: string, classId: string, req: UpsertInstructorRatingRequest, role: UserRole): Promise<InstructorRating> {
     const cls = await this.getClassOr404(classId);
+    await assertActiveMember(this.authzDeps(), userId, cls.gymId, role);
     if (!occursOn(cls, req.date)) throw new AppError('bad_request', `${req.date} is not an occurrence of class ${classId}`);
     const occ = await this.occurrences.find(classId, req.date);
     const instructor = this.resolveInstructor(cls, occ);

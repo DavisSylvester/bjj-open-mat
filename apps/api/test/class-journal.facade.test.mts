@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 import { ClassJournalFacade } from "../src/facades/class-journal.facade.mts";
 import type { ClassJournalEntry, InstructorRating, GymClass, ClassOccurrence, Gym, GymMembership, User } from "@bjj/contract";
 
-function facade(seed?: { cls?: GymClass; occ?: ClassOccurrence; membership?: GymMembership; users?: User[] }): { f: ClassJournalFacade; ratings: InstructorRating[] } {
+function facade(seed?: { cls?: GymClass; occ?: ClassOccurrence; membership?: GymMembership; memberships?: GymMembership[]; users?: User[] }): { f: ClassJournalFacade; ratings: InstructorRating[] } {
   const journals = new Map<string, ClassJournalEntry>();
   const ratings: InstructorRating[] = [];
   const cls: GymClass = seed?.cls ?? {
@@ -13,7 +13,12 @@ function facade(seed?: { cls?: GymClass; occ?: ClassOccurrence; membership?: Gym
   };
   const occ = seed?.occ ?? null;
   const memberships = new Map<string, GymMembership>();
-  if (seed?.membership) memberships.set(`${seed.membership.gymId}:${seed.membership.userId}`, seed.membership);
+  // Support either a single membership shorthand or an explicit multi-membership list.
+  const allMemberships: GymMembership[] = [
+    ...(seed?.membership ? [seed.membership] : []),
+    ...(seed?.memberships ?? []),
+  ];
+  for (const m of allMemberships) memberships.set(`${m.gymId}:${m.userId}`, m);
   const users = new Map<string, User>();
   (seed?.users ?? []).forEach((u) => users.set(u.id, u));
   const gyms = new Map<string, Gym>([["g1", { id: "g1", name: "A", address: "x", amenities: [], isVerified: true }]]);
@@ -79,13 +84,23 @@ describe("ClassJournalFacade", () => {
     expect(ratings[0]?.instructorUserId).toBe("sub-coach");
   });
 
+  it("non-member cannot rate an instructor (authz gate)", async () => {
+    const { f } = facade(); // no memberships seeded
+    await expect(f.rateInstructor("stranger", "c1", { date: "2026-08-03", stars: 5 }, "practitioner"))
+      .rejects.toMatchObject({ code: "forbidden" });
+  });
+
   it("gym feedback hides the name when anonymous", async () => {
+    // u1 must be an active member so the assertActiveMember gate in rateInstructor passes.
+    // owner1 must have gymRole "owner" so assertCanManageGym passes for gymInstructorFeedback.
     const { f } = facade({
-      membership: { ...activeMember("owner1"), gymRole: "owner" },
+      memberships: [
+        activeMember("u1"),
+        { ...activeMember("owner1"), gymRole: "owner" },
+      ],
       users: [{ id: "u1", email: "u@x.co", displayName: "Alice" }],
     });
     await f.rateInstructor("u1", "c1", { date: "2026-08-03", stars: 4, anonymous: true }, "practitioner");
-    // owner1 is a member here; make them the caller with owner gymRole so assertCanManageGym passes.
     const items = await f.gymInstructorFeedback("owner1", "g1", undefined, undefined, undefined, "practitioner");
     expect(items[0]?.anonymous).toBe(true);
     expect(items[0]?.ratedByName).toBeUndefined();
