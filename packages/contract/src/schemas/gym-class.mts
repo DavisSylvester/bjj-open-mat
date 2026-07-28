@@ -15,7 +15,7 @@ export const GymClass = t.Object(
     skillLevel: SkillLevel,
     instructorUserId: t.Optional(t.String()),
     instructorName: t.Optional(t.String()),
-    isRecurring: t.Boolean({ default: true }),
+    isRecurring: t.Optional(t.Boolean({ default: true })),
     dayOfWeek: t.Optional(t.Integer({ minimum: 0, maximum: 6 })),
     startTime: t.String({ description: "24h HH:mm" }),
     endTime: t.String({ description: "24h HH:mm" }),

@@ -1,29 +1,8 @@
 import { type Static, Type as t } from "@sinclair/typebox";
-import { ClassType } from "../../enums/class-type.mts";
-import { GiType } from "../../enums/gi-type.mts";
-import { SkillLevel } from "../../enums/skill-level.mts";
+import { GymClass } from "../gym-class.mts";
 
 // CreateClassRequest = GymClass minus id, gymId, status, createdAt
-// with isRecurring made optional instead of defaulted
-export const CreateClassRequest = t.Object(
-  {
-    title: t.String({ minLength: 1 }),
-    classType: ClassType,
-    classTypeLabel: t.Optional(t.String()),
-    description: t.Optional(t.String()),
-    giType: GiType,
-    skillLevel: SkillLevel,
-    instructorUserId: t.Optional(t.String()),
-    instructorName: t.Optional(t.String()),
-    isRecurring: t.Optional(t.Boolean()),
-    dayOfWeek: t.Optional(t.Integer({ minimum: 0, maximum: 6 })),
-    startTime: t.String({ description: "24h HH:mm" }),
-    endTime: t.String({ description: "24h HH:mm" }),
-    specificDate: t.Optional(t.String({ description: "ISO YYYY-MM-DD (one-off)" })),
-    capacity: t.Optional(t.Integer({ minimum: 0 })),
-  },
-  { $id: "CreateClassRequest" },
-);
+export const CreateClassRequest = t.Omit(GymClass, ["id", "gymId", "status", "createdAt"], { $id: "CreateClassRequest" });
 export type CreateClassRequest = Static<typeof CreateClassRequest>;
 
 export const UpdateClassRequest = t.Partial(CreateClassRequest, { $id: "UpdateClassRequest" });
