@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
 import '../data/membership_repository.dart';
@@ -52,8 +53,9 @@ class RosterScreen extends ConsumerWidget {
               ? members.where((m) => m.userId == myId).firstOrNull
               : null;
           final myGymRole = myMember?.gymRole;
+          final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
           final canManage =
-              myGymRole == 'owner' || myGymRole == 'coach';
+              isAdmin || myGymRole == 'owner' || myGymRole == 'coach';
 
           return members.isEmpty
               ? Center(child: Text('No members yet.', style: t.bodyStyle.copyWith(color: t.muted)))
@@ -183,7 +185,7 @@ class _RosterCell extends ConsumerWidget {
           // Manage affordance — only visible to owners/coaches.
           if (canManage) ...[
             const SizedBox(height: 6),
-            _ManageRow(t: t, member: member, gymId: gymId, ref: ref),
+            _ManageRow(t: t, member: member, gymId: gymId),
           ],
         ],
       ),
@@ -203,25 +205,23 @@ class _RosterCell extends ConsumerWidget {
 }
 
 /// Row of small action buttons shown under each member cell when the viewer
-/// has manage rights (owner or coach gymRole).
-class _ManageRow extends StatefulWidget {
+/// has manage rights (owner or coach gymRole, or global admin).
+class _ManageRow extends ConsumerStatefulWidget {
   final AppTokens t;
   final RosterMember member;
   final String gymId;
-  final WidgetRef ref;
 
   const _ManageRow({
     required this.t,
     required this.member,
     required this.gymId,
-    required this.ref,
   });
 
   @override
-  State<_ManageRow> createState() => _ManageRowState();
+  ConsumerState<_ManageRow> createState() => _ManageRowState();
 }
 
-class _ManageRowState extends State<_ManageRow> {
+class _ManageRowState extends ConsumerState<_ManageRow> {
   bool _busy = false;
 
   Future<void> _runAction(Future<void> Function() action) async {
@@ -229,7 +229,7 @@ class _ManageRowState extends State<_ManageRow> {
     setState(() => _busy = true);
     try {
       await action();
-      widget.ref.invalidate(rosterProvider(widget.gymId));
+      ref.invalidate(rosterProvider(widget.gymId));
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -242,7 +242,7 @@ class _ManageRowState extends State<_ManageRow> {
   }
 
   Future<void> _confirmMember() => _runAction(() async {
-        await widget.ref.read(membershipRepositoryProvider).manageMember(
+        await ref.read(membershipRepositoryProvider).manageMember(
               widget.gymId,
               widget.member.userId,
               verifiedMember: true,
@@ -250,7 +250,7 @@ class _ManageRowState extends State<_ManageRow> {
       });
 
   Future<void> _makeCoach() => _runAction(() async {
-        await widget.ref.read(membershipRepositoryProvider).manageMember(
+        await ref.read(membershipRepositoryProvider).manageMember(
               widget.gymId,
               widget.member.userId,
               gymRole: 'coach',
