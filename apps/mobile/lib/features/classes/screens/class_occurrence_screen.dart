@@ -12,6 +12,7 @@ import '../data/class_repository.dart';
 import '../models/class_attendee.dart';
 import '../models/scheduled_class.dart';
 import '../widgets/class_type_chip.dart';
+import 'class_journal_form_screen.dart';
 
 /// Detail screen for a single class occurrence (classId + date).
 ///
@@ -94,6 +95,27 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
     return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
   }
 
+  // ── Journal gate ──────────────────────────────────────────────────────────
+  // Any authenticated gym member (any gymRole) may journal a class.
+
+  bool _deriveCanJournal(WidgetRef ref) {
+    final myId = ref.watch(currentUserIdProvider);
+    if (myId == null) return false;
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    if (isAdmin) return true;
+    final gymOwnerId = ref
+        .watch(gymByIdProvider(widget.gymId))
+        .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+    final isOwner = gymOwnerId != null && gymOwnerId == myId;
+    if (isOwner) return true;
+    final rosterAsync = ref.watch(rosterProvider(widget.gymId));
+    final isMember = rosterAsync.maybeWhen(
+      data: (members) => members.any((m) => m.userId == myId),
+      orElse: () => false,
+    );
+    return isMember;
+  }
+
   // ── Per-occurrence manage sheet ───────────────────────────────────────────
 
   void _showManageSheet(BuildContext context, AppTokens t) {
@@ -123,6 +145,7 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
     final scheduled = widget.scheduled;
     final isCancelled = scheduled?.isCancelled ?? false;
     final canManage = _deriveCanManage(ref);
+    final canJournal = _deriveCanJournal(ref);
 
     return Scaffold(
       backgroundColor: t.bg,
@@ -139,6 +162,20 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
           style: t.h2Style,
         ),
         actions: [
+          if (canJournal)
+            IconButton(
+              icon: Icon(LucideIcons.bookOpen, color: t.text),
+              tooltip: 'Journal this class',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => ClassJournalFormScreen(
+                    classId: widget.classId,
+                    gymId: widget.gymId,
+                    date: widget.date,
+                  ),
+                ),
+              ),
+            ),
           if (canManage)
             IconButton(
               icon: Icon(LucideIcons.settings2, color: t.text),
