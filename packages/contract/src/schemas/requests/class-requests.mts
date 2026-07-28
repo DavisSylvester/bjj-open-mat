@@ -30,5 +30,5 @@ export const ScheduleQuery = t.Object(
 );
 export type ScheduleQuery = Static<typeof ScheduleQuery>;
 
-export const AttendeesQuery = t.Object({ date: t.String() }, { $id: "AttendeesQuery" });
-export type AttendeesQuery = Static<typeof AttendeesQuery>;
+export const ClassAttendeesQuery = t.Object({ date: t.String() }, { $id: "ClassAttendeesQuery" });
+export type ClassAttendeesQuery = Static<typeof ClassAttendeesQuery>;
