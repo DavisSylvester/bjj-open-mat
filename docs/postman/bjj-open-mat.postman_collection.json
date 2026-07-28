@@ -368,6 +368,97 @@
       ]
     },
     {
+      "name": "Gym Membership",
+      "item": [
+        {
+          "name": "Join gym",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/members"
+          }
+        },
+        {
+          "name": "Leave gym",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/members/me"
+          }
+        },
+        {
+          "name": "Gym roster",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/members?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Update my membership preferences",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"visibleInRoster\": true,\n  \"isHome\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/members/me"
+          }
+        },
+        {
+          "name": "Update member (admin/owner)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"verifiedMember\": true,\n  \"gymRole\": \"coach\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/members/USER_ID"
+          }
+        },
+        {
+          "name": "Record belt promotion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"beltRank\": \"blue\",\n  \"beltStripes\": 0,\n  \"note\": \"Awarded at promotion ceremony\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/gym-atos/members/USER_ID/promotions"
+          }
+        },
+        {
+          "name": "Belt promotion history (user)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/USER_ID/promotions"
+          }
+        },
+        {
+          "name": "My memberships",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/me/memberships"
+          }
+        }
+      ]
+    },
+    {
       "name": "Notifications",
       "item": [
         {

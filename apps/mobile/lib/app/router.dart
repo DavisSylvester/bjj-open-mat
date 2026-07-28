@@ -32,6 +32,8 @@ import '../features/admin/screens/session_admin_screen.dart';
 import '../features/admin/screens/create_session_screen.dart';
 import '../features/admin/screens/attendance_screen.dart';
 import '../features/admin/screens/admin_review_screen.dart';
+import '../features/membership/screens/roster_screen.dart';
+import '../features/membership/screens/my_memberships_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -91,6 +93,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'gym/:id',
                   builder: (context, state) => GymDetailScreen(gymId: state.pathParameters['id']!),
+                  routes: [
+                    GoRoute(
+                      path: 'roster',
+                      builder: (context, state) => RosterScreen(gymId: state.pathParameters['id']!),
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: 'open-mat/:id',
@@ -138,6 +146,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'training',
                   builder: (context, state) => const MyTrainingScreen(),
+                ),
+                GoRoute(
+                  path: 'memberships',
+                  builder: (context, state) => const MyMembershipsScreen(),
                 ),
               ],
             ),

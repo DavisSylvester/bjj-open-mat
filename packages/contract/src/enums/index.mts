@@ -9,3 +9,6 @@ export * from "./check-in-location-status.mts";
 export * from "./gender.mts";
 export * from "./weight-division.mts";
 export * from "./report-type.mts";
+export * from "./gym-role.mts";
+export * from "./membership-status.mts";
+export * from "./join-method.mts";

@@ -25,9 +25,12 @@ import {
   HttpGitHubIssueService,
   type GitHubIssueService,
 } from "./services/github-issue.service.mts";
+import { MembershipFacade } from "./facades/membership.facade.mts";
 import { CheckInRepository } from "./repositories/check-in.repository.mts";
 import { FavoriteRepository } from "./repositories/favorite.repository.mts";
 import { GymRepository } from "./repositories/gym.repository.mts";
+import { MembershipRepository } from "./repositories/membership.repository.mts";
+import { PromotionRepository } from "./repositories/promotion.repository.mts";
 import { NotificationRepository } from "./repositories/notification.repository.mts";
 import { OpenMatRepository } from "./repositories/open-mat.repository.mts";
 import { ReportRepository } from "./repositories/report.repository.mts";
@@ -55,6 +58,7 @@ export interface Container {
   readonly notificationFacade: NotificationFacade;
   readonly reportFacade: ReportFacade;
   readonly leadFacade: LeadFacade;
+  readonly membershipFacade: MembershipFacade;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
@@ -74,6 +78,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const reportRepo = new ReportRepository(db);
   const waitlistLeadRepo = new WaitlistLeadRepository(db);
   const gymLeadRepo = new GymLeadRepository(db);
+  const membershipRepo = new MembershipRepository(db);
+  const promotionRepo = new PromotionRepository(db);
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -116,6 +122,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     notificationFacade: new NotificationFacade(notificationRepo, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
     leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
+    membershipFacade: new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id),
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
       checkInRepo,
@@ -140,6 +147,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
         reportRepo.ensureIndexes(),
         waitlistLeadRepo.ensureIndexes(),
         gymLeadRepo.ensureIndexes(),
+        membershipRepo.ensureIndexes(),
+        promotionRepo.ensureIndexes(),
       ]);
     },
   };
