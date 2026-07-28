@@ -1,6 +1,6 @@
 // apps/api/src/facades/class.facade.mts
 import type {
-  ClassOccurrence, CreateClassRequest, GymClass, OccurrenceOverrideRequest,
+  ClassAttendee, ClassOccurrence, CreateClassRequest, GymClass, OccurrenceOverrideRequest,
   ScheduledClass, UpdateClassRequest, UserRole,
 } from '@bjj/contract';
 import { AppError } from '../http/errors.mts';
@@ -19,15 +19,6 @@ type RsvpRepo = Pick<ClassRsvpRepository, 'add' | 'remove' | 'count' | 'countsFo
 type MemberRepo = Pick<MembershipRepository, 'find'>;
 type GymRepo = Pick<GymRepository, 'findById'>;
 type UserRepo = Pick<UserRepository, 'findById'>;
-
-export interface ClassAttendee {
-  userId: string;
-  isMember: boolean;
-  name: string;
-  beltRank?: string;
-  avatarUrl?: string;
-  hasProfile: boolean;
-}
 
 // Weekday (0=Sun..6=Sat) for an ISO YYYY-MM-DD date, in UTC.
 function weekdayOf(date: string): number {

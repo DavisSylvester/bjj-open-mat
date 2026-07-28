@@ -10,6 +10,7 @@ export * from "./gym-membership.mts";
 export * from "./gym-class.mts";
 export * from "./class-occurrence.mts";
 export * from "./class-rsvp.mts";
+export * from "./class-attendee.mts";
 export * from "./scheduled-class.mts";
 export * from "./belt-promotion.mts";
 export * from "./roster-member.mts";
