@@ -28,7 +28,7 @@ export const User = t.Object(
   {
     id: t.String(),
     auth0Id: t.Optional(t.String()),
-    email: t.String(),
+    email: t.String({ format: "email" }),
     displayName: t.String(),
     role: t.Optional(UserRole),
     beltRank: t.Optional(BeltRank),
