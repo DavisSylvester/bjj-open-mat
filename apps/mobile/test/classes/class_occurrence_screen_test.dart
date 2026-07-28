@@ -8,6 +8,11 @@ import 'package:bjj_open_mat/features/classes/models/class_attendee.dart';
 import 'package:bjj_open_mat/features/classes/models/gym_class.dart';
 import 'package:bjj_open_mat/features/classes/models/scheduled_class.dart';
 import 'package:bjj_open_mat/features/classes/screens/class_occurrence_screen.dart';
+import 'package:bjj_open_mat/core/auth/auth_service.dart';
+import 'package:bjj_open_mat/features/gyms/data/gym_repository.dart';
+import 'package:bjj_open_mat/features/gyms/models/gym.dart';
+import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
+import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
 import 'package:bjj_open_mat/features/membership/widgets/join_gym_button.dart';
 
 // ── Fake repository ───────────────────────────────────────────────────────────
@@ -54,6 +59,13 @@ class _FakeClassRepo implements ClassRepository {
   @override
   Future<void> overrideOccurrence(String classId, String date, Map<String, dynamic> body) async =>
       throw UnimplementedError();
+}
+
+// ── Fake auth notifier (no-op; returns unauthenticated state) ─────────────────
+
+class _FakeAuthNotifier extends AuthStateNotifier {
+  @override
+  AuthState build() => const AuthState(status: AuthStatus.unauthenticated);
 }
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -110,6 +122,12 @@ Future<_FakeClassRepo> _pump(
         classAttendeesProvider(
           (classId: 'c1', date: '2026-08-03'),
         ).overrideWith((_) async => [_member, _visitor]),
+        // Stub out providers used by the manage-gate so no network calls are made.
+        authStateProvider.overrideWith(() => _FakeAuthNotifier()),
+        gymByIdProvider('g1').overrideWith(
+          (_) async => const Gym(id: 'g1', name: 'Test Gym', address: '123 Main St'),
+        ),
+        rosterProvider('g1').overrideWith((_) async => <RosterMember>[]),
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
@@ -117,6 +135,7 @@ Future<_FakeClassRepo> _pump(
           classId: 'c1',
           date: '2026-08-03',
           scheduled: scheduled ?? _scheduled,
+          gymId: 'g1',
         ),
       ),
     ),

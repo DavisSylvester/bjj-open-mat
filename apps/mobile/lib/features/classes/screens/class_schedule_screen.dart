@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
+import '../../gyms/data/gym_repository.dart';
+import '../../membership/data/membership_repository.dart';
+import '../../membership/widgets/join_gym_button.dart';
 import '../data/class_repository.dart';
 import '../models/scheduled_class.dart';
 import '../widgets/class_type_chip.dart';
@@ -52,6 +56,23 @@ class _ClassScheduleScreenState extends ConsumerState<ClassScheduleScreen> {
   void _prevWeek() => setState(() => _weekAnchor = _weekAnchor.subtract(const Duration(days: 7)));
   void _nextWeek() => setState(() => _weekAnchor = _weekAnchor.add(const Duration(days: 7)));
 
+  bool _deriveCanManage(WidgetRef ref) {
+    final myId = ref.watch(currentUserIdProvider);
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    final gymOwnerId = ref
+        .watch(gymByIdProvider(widget.gymId))
+        .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+    final isOwner = gymOwnerId != null && gymOwnerId == myId;
+    final rosterAsync = ref.watch(rosterProvider(widget.gymId));
+    final myGymRole = rosterAsync.maybeWhen(
+      data: (members) => myId != null
+          ? members.where((m) => m.userId == myId).firstOrNull?.gymRole
+          : null,
+      orElse: () => null,
+    );
+    return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
@@ -60,9 +81,21 @@ class _ClassScheduleScreenState extends ConsumerState<ClassScheduleScreen> {
     final schedAsync = ref.watch(
       scheduleProvider((gymId: widget.gymId, from: from, to: to)),
     );
+    final canManage = _deriveCanManage(ref);
 
     return Scaffold(
       backgroundColor: t.bg,
+      floatingActionButton: canManage
+          ? FloatingActionButton(
+              onPressed: () => context.push(
+                '/gym/${widget.gymId}/class-edit',
+              ),
+              backgroundColor: t.primary,
+              foregroundColor: Colors.white,
+              tooltip: 'Add class',
+              child: const Icon(Icons.add),
+            )
+          : null,
       appBar: AppBar(
         backgroundColor: t.bg2,
         foregroundColor: t.text,

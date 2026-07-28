@@ -3,9 +3,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bjj_open_mat/core/design/app_theme.dart';
+import 'package:bjj_open_mat/core/auth/auth_service.dart';
 import 'package:bjj_open_mat/features/classes/data/class_repository.dart';
 import 'package:bjj_open_mat/features/classes/models/scheduled_class.dart';
 import 'package:bjj_open_mat/features/classes/screens/class_schedule_screen.dart';
+import 'package:bjj_open_mat/features/gyms/data/gym_repository.dart';
+import 'package:bjj_open_mat/features/gyms/models/gym.dart';
+import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
+import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
+import 'package:bjj_open_mat/features/membership/widgets/join_gym_button.dart';
+
+// ── Fake auth notifier ────────────────────────────────────────────────────────
+
+class _FakeAuthNotifier extends AuthStateNotifier {
+  @override
+  AuthState build() => const AuthState(status: AuthStatus.unauthenticated);
+}
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -52,6 +65,13 @@ Future<void> _pump(WidgetTester tester) async {
         scheduleProvider.overrideWith(
           (ref, arg) async => [_morningGi, _eveningNoGi],
         ),
+        // Stub manage-gate providers so no network calls are made.
+        authStateProvider.overrideWith(() => _FakeAuthNotifier()),
+        gymByIdProvider('g1').overrideWith(
+          (_) async => const Gym(id: 'g1', name: 'Test Gym', address: '123 Main St'),
+        ),
+        rosterProvider('g1').overrideWith((_) async => <RosterMember>[]),
+        currentUserIdProvider.overrideWith((ref) => null),
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
