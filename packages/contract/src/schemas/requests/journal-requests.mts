@@ -26,3 +26,24 @@ export const OccurrenceJournalQuery = t.Object(
   { $id: "OccurrenceJournalQuery" },
 );
 export type OccurrenceJournalQuery = Static<typeof OccurrenceJournalQuery>;
+
+export const UpsertInstructorRatingRequest = t.Object(
+  {
+    date: t.String(),
+    stars: t.Integer({ minimum: 1, maximum: 5 }),
+    comment: t.Optional(t.String()),
+    anonymous: t.Optional(t.Boolean()),
+  },
+  { $id: "UpsertInstructorRatingRequest" },
+);
+export type UpsertInstructorRatingRequest = Static<typeof UpsertInstructorRatingRequest>;
+
+export const InstructorFeedbackQuery = t.Object(
+  {
+    instructorUserId: t.Optional(t.String()),
+    from: t.Optional(t.String()),
+    to: t.Optional(t.String()),
+  },
+  { $id: "InstructorFeedbackQuery" },
+);
+export type InstructorFeedbackQuery = Static<typeof InstructorFeedbackQuery>;
