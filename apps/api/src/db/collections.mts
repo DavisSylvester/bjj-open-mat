@@ -14,6 +14,8 @@ export const COLLECTIONS = {
   gymClasses: "gymClasses",
   classOccurrences: "classOccurrences",
   classRsvps: "classRsvps",
+  classJournals: "classJournals",
+  instructorRatings: "instructorRatings",
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
