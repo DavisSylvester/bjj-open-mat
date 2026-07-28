@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bjj_open_mat/core/auth/auth_service.dart';
 import 'package:bjj_open_mat/core/design/app_theme.dart';
+import 'package:bjj_open_mat/features/gyms/data/gym_repository.dart';
+import 'package:bjj_open_mat/features/gyms/models/gym.dart';
 import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
 import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
 import 'package:bjj_open_mat/features/membership/screens/roster_screen.dart';
@@ -33,6 +35,15 @@ class _AdminUserNotifier extends AuthStateNotifier {
 }
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
+
+/// A stub gym with no ownerId so the base tests are not affected by the
+/// gym-owner arm of canManage.
+final _stubGym = Gym(
+  id: 'g1',
+  ownerId: null,
+  name: 'Test Gym',
+  address: '123 Main St',
+);
 
 final _coach = RosterMember(
   userId: 'u1',
@@ -70,6 +81,7 @@ Future<void> _pump(WidgetTester tester) async {
         rosterProvider('g1').overrideWith(
           (ref) async => [_coach, _member],
         ),
+        gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
@@ -136,6 +148,7 @@ void main() {
           currentUserIdProvider.overrideWith((ref) => 'admin-user'),
           rosterProvider('g1')
               .overrideWith((ref) async => [adminMember, _member]),
+          gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
         ],
         child: MaterialApp(
           theme: AppTheme.glass(),
@@ -167,6 +180,7 @@ void main() {
           rosterProvider('g1').overrideWith(
             (ref) async => [_coach, _member],
           ),
+          gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
         ],
         child: MaterialApp(
           theme: AppTheme.glass(),
@@ -181,5 +195,60 @@ void main() {
     expect(find.byIcon(Icons.military_tech), findsNothing);
     expect(find.byIcon(Icons.verified_user), findsNothing);
     expect(find.byIcon(Icons.sports_martial_arts), findsNothing);
+  });
+
+  testWidgets(
+      'gym owner via ownerId sees manage affordance even as plain member gymRole',
+      (tester) async {
+    // The current user ('owner-user') is on the roster as a plain 'member'
+    // and has no global admin role, but gym 'g1' has ownerId == 'owner-user'.
+    // The fix in roster_screen.dart watches gymByIdProvider and grants
+    // canManage=true via the isOwner arm.
+    const ownerUserId = 'owner-user';
+
+    final ownerMember = RosterMember(
+      userId: ownerUserId,
+      name: 'Gym Owner',
+      beltRank: 'purple',
+      beltStripes: 0,
+      gymRole: 'member',
+      verifiedMember: true,
+      hasProfile: true,
+    );
+
+    final gym = Gym(
+      id: 'g1',
+      ownerId: ownerUserId,
+      name: 'Test Gym',
+      address: '123 Main St',
+    );
+
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(_NoUserNotifier.new),
+          currentUserIdProvider.overrideWith((ref) => ownerUserId),
+          rosterProvider('g1').overrideWith(
+            (ref) async => [ownerMember, _member],
+          ),
+          gymByIdProvider('g1').overrideWith((ref) async => gym),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.glass(),
+          home: const RosterScreen(gymId: 'g1'),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    // The promote-belt icon is the always-visible manage affordance; it must
+    // appear because the user owns the gym via ownerId even though their
+    // RosterMember.gymRole is only 'member'.
+    expect(find.byIcon(Icons.military_tech), findsWidgets);
   });
 }

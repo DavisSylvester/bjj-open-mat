@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
+import '../../gyms/data/gym_repository.dart';
 import '../data/membership_repository.dart';
 import '../models/roster_member.dart';
 import '../widgets/join_gym_button.dart';
@@ -48,14 +49,20 @@ class RosterScreen extends ConsumerWidget {
         ),
         data: (members) {
           // Compute canManage: true when the current user is a system admin,
-          // or when their own RosterMember entry has gymRole 'owner' or 'coach'.
+          // when their own RosterMember entry has gymRole 'owner' or 'coach',
+          // or when they are the gym's owner via gym.ownerId (no membership row
+          // required — covers gym owners who never created a membership record).
           final myMember = myId != null
               ? members.where((m) => m.userId == myId).firstOrNull
               : null;
           final myGymRole = myMember?.gymRole;
           final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+          final gymOwnerId = ref
+              .watch(gymByIdProvider(gymId))
+              .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+          final isOwner = gymOwnerId != null && gymOwnerId == myId;
           final canManage =
-              isAdmin || myGymRole == 'owner' || myGymRole == 'coach';
+              isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
 
           return members.isEmpty
               ? Center(child: Text('No members yet.', style: t.bodyStyle.copyWith(color: t.muted)))

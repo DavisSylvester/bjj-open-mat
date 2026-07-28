@@ -145,7 +145,7 @@ class _MembershipCard extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  membership.isHome ? LucideIcons.home : LucideIcons.home,
+                  LucideIcons.home,
                   size: 16,
                   color: membership.isHome ? t.primary : t.faint,
                 ),
