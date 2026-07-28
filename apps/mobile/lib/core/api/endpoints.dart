@@ -66,4 +66,11 @@ class Endpoints {
   static String classOccurrence(String classId, String date) => '/api/v1/classes/$classId/occurrences/$date';
   static String classRsvp(String classId) => '/api/v1/classes/$classId/rsvp';
   static String classAttendees(String classId) => '/api/v1/classes/$classId/attendees';
+
+  // Class Journal & Ratings
+  static String classJournal(String classId) => '/api/v1/classes/$classId/journal';
+  static const String myJournal = '/api/v1/users/me/journal';
+  static String classInstructorRating(String classId) => '/api/v1/classes/$classId/instructor-rating';
+  static String userInstructorRating(String userId) => '/api/v1/users/$userId/instructor-rating';
+  static String gymInstructorFeedback(String gymId) => '/api/v1/gyms/$gymId/instructor-feedback';
 }

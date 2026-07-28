@@ -50,6 +50,9 @@ import {
   type Auth0ManagementService,
 } from "./services/auth0-management.service.mts";
 import { AccountDeletionOrchestrator, type AccountDeletionService } from "./services/account-deletion.service.mts";
+import { ClassJournalRepository } from "./repositories/class-journal.repository.mts";
+import { InstructorRatingRepository } from "./repositories/instructor-rating.repository.mts";
+import { ClassJournalFacade } from "./facades/class-journal.facade.mts";
 
 export interface Container {
   readonly db: Db;
@@ -64,6 +67,7 @@ export interface Container {
   readonly leadFacade: LeadFacade;
   readonly membershipFacade: MembershipFacade;
   readonly classFacade: ClassFacade;
+  readonly classJournalFacade: ClassJournalFacade;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
@@ -88,6 +92,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const classRepo = new ClassRepository(db);
   const classOccurrenceRepo = new ClassOccurrenceRepository(db);
   const classRsvpRepo = new ClassRsvpRepository(db);
+  const classJournalRepo = new ClassJournalRepository(db);
+  const instructorRatingRepo = new InstructorRatingRepository(db);
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -132,6 +138,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
     membershipFacade: new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id),
     classFacade: new ClassFacade(classRepo, classOccurrenceRepo, classRsvpRepo, membershipRepo, gymRepo, userRepo, id),
+    classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
       checkInRepo,
@@ -161,6 +168,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
         classRepo.ensureIndexes(),
         classOccurrenceRepo.ensureIndexes(),
         classRsvpRepo.ensureIndexes(),
+        classJournalRepo.ensureIndexes(),
+        instructorRatingRepo.ensureIndexes(),
       ]);
     },
   };

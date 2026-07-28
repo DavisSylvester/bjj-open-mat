@@ -5,6 +5,8 @@ import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/error_state.dart' show ErrorState;
 import '../../checkins/models/checkin.dart';
+import '../../classes/data/class_journal_repository.dart';
+import '../../classes/models/class_journal_entry.dart';
 import '../data/training_provider.dart';
 import '../data/training_stats.dart';
 
@@ -49,48 +51,60 @@ class MyTrainingScreen extends ConsumerWidget {
   }
 }
 
-class _TrainingBody extends StatelessWidget {
+class _TrainingBody extends ConsumerWidget {
   final AppTokens t;
   final TrainingHistory history;
   const _TrainingBody({required this.t, required this.history});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final now = DateTime.now();
+    final from = now.subtract(const Duration(days: 90)).toIso8601String().substring(0, 10);
+    final to = now.toIso8601String().substring(0, 10);
+    final journalAsync = ref.watch(myJournalProvider((from: from, to: to)));
+
     final stats = computeTrainingStats(history.items, totalMats: history.total);
     if (history.items.isEmpty) {
-      return const EmptyState(
-        icon: LucideIcons.calendarCheck,
-        title: 'No sessions yet',
-        subtitle: 'Check in at an open mat to start your training log.',
+      return SingleChildScrollView(
+        child: Column(children: [
+          const EmptyState(
+            icon: LucideIcons.calendarCheck,
+            title: 'No sessions yet',
+            subtitle: 'Check in at an open mat to start your training log.',
+          ),
+          _JournalSection(t: t, journalAsync: journalAsync),
+        ]),
       );
     }
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: t.border),
-            boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+    return SingleChildScrollView(
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: t.border),
+              boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+            ),
+            child: Row(children: [
+              _TrainingStatCell(label: 'Mats', value: '${stats.mats}', t: t, borderRight: true),
+              _TrainingStatCell(label: 'Gyms', value: '${stats.gyms}', t: t, borderRight: true),
+              _TrainingStatCell(label: 'Rounds', value: '${stats.rounds}', t: t, borderRight: true),
+              _TrainingStatCell(label: 'Streak', value: '${stats.streakWeeks}w', t: t, borderRight: false),
+            ]),
           ),
-          child: Row(children: [
-            _TrainingStatCell(label: 'Mats', value: '${stats.mats}', t: t, borderRight: true),
-            _TrainingStatCell(label: 'Gyms', value: '${stats.gyms}', t: t, borderRight: true),
-            _TrainingStatCell(label: 'Rounds', value: '${stats.rounds}', t: t, borderRight: true),
-            _TrainingStatCell(label: 'Streak', value: '${stats.streakWeeks}w', t: t, borderRight: false),
-          ]),
         ),
-      ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Session History', style: t.h2Style),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Session History', style: t.h2Style),
+          ),
         ),
-      ),
-      Expanded(
-        child: ListView.builder(
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
           itemCount: history.items.length,
           itemBuilder: (_, i) => Padding(
@@ -98,8 +112,128 @@ class _TrainingBody extends StatelessWidget {
             child: _CheckInRow(t: t, c: history.items[i]),
           ),
         ),
+        _JournalSection(t: t, journalAsync: journalAsync),
+      ]),
+    );
+  }
+}
+
+class _JournalSection extends StatelessWidget {
+  final AppTokens t;
+  final AsyncValue<List<ClassJournalEntry>> journalAsync;
+
+  const _JournalSection({required this.t, required this.journalAsync});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+          child: Text('Class journal', style: t.h2Style),
+        ),
+        journalAsync.when(
+          loading: () => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (e, _) => Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+            child: Text('Failed to load class journal', style: TextStyle(color: t.muted)),
+          ),
+          data: (entries) {
+            if (entries.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                child: Text(
+                  'No class journal entries yet',
+                  style: t.miniStyle.copyWith(color: t.muted),
+                ),
+              );
+            }
+            final sorted = [...entries]..sort((a, b) => b.date.compareTo(a.date));
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+              itemCount: sorted.length,
+              itemBuilder: (_, i) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _JournalEntryRow(t: t, entry: sorted[i]),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _JournalEntryRow extends StatelessWidget {
+  final AppTokens t;
+  final ClassJournalEntry entry;
+
+  const _JournalEntryRow({required this.t, required this.entry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.border),
+        boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
       ),
-    ]);
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            formatSessionDate(entry.date),
+            style: t.miniStyle.copyWith(color: t.muted, fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            entry.whatWasTaught ?? '—',
+            style: t.h2Style.copyWith(fontSize: 15),
+          ),
+          if (entry.techniqueTags.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: entry.techniqueTags
+                  .map((tag) => _TechniqueChip(t: t, tag: tag))
+                  .toList(),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _TechniqueChip extends StatelessWidget {
+  final AppTokens t;
+  final String tag;
+
+  const _TechniqueChip({required this.t, required this.tag});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: t.faint,
+        borderRadius: BorderRadius.circular(t.badgeRadius),
+        border: Border.all(color: t.border),
+      ),
+      child: Text(
+        tag,
+        style: t.miniStyle.copyWith(fontSize: 11, color: t.body),
+      ),
+    );
   }
 }
 

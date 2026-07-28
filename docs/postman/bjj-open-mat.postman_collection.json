@@ -601,6 +601,73 @@
           }
         }
       ]
+    },
+    {
+      "name": "Class Journal & Ratings",
+      "item": [
+        {
+          "name": "Upsert journal entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-07-28\",\n  \"whatWasTaught\": \"Arm bar from guard\",\n  \"techniqueTags\": [\"arm-bar\", \"guard\"],\n  \"rounds\": 5,\n  \"intensity\": 3,\n  \"partners\": 2,\n  \"note\": \"Good drilling session\",\n  \"shared\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/journal"
+          }
+        },
+        {
+          "name": "List shared journal entries for occurrence",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/journal?date=2026-07-28"
+          }
+        },
+        {
+          "name": "My journal (date range)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/me/journal?from=2026-07-01&to=2026-07-31"
+          }
+        },
+        {
+          "name": "Submit instructor rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-07-28\",\n  \"stars\": 5,\n  \"comment\": \"Great class!\",\n  \"anonymous\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/instructor-rating"
+          }
+        },
+        {
+          "name": "Instructor rating summary (public)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/users/USER_ID/instructor-rating"
+          }
+        },
+        {
+          "name": "Gym instructor feedback (admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/instructor-feedback?from=2026-07-01&to=2026-07-31"
+          }
+        }
+      ]
     }
   ]
 }

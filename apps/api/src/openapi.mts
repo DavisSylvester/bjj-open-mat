@@ -8,6 +8,7 @@ import {
   CheckInLocationStatus,
   ClassAttendee,
   ClassAttendeesQuery,
+  ClassJournalEntry,
   ClassOccurrence,
   ClassRsvp,
   ClassRsvpRequest,
@@ -25,12 +26,18 @@ import {
   GymMembership,
   GymRole,
   HealthResponse,
+  InstructorFeedbackItem,
+  InstructorFeedbackQuery,
+  InstructorRating,
+  InstructorRatingSummary,
   JoinMethod,
+  JournalRangeQuery,
   LeadResponse,
   ListMeta,
   MembershipStatus,
   Notification,
   NotificationType,
+  OccurrenceJournalQuery,
   OccurrenceOverrideRequest,
   OpenMat,
   OpenMatDetail,
@@ -48,6 +55,8 @@ import {
   UpdateMyMembershipRequest,
   UpdateOpenMatRequest,
   UpdateUserRequest,
+  UpsertInstructorRatingRequest,
+  UpsertJournalRequest,
   User,
   UserRole,
   UserSettings,
@@ -316,6 +325,59 @@ export function buildOpenApiDocument(): Record<string, unknown> {
           responses: ok(listOf("ClassAttendee")),
         },
       },
+      "/api/v1/classes/{id}/journal": {
+        post: {
+          summary: "Upsert class journal entry for an occurrence",
+          parameters: classIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpsertJournalRequest") } } },
+          responses: ok(dataOf("ClassJournalEntry")),
+        },
+        get: {
+          summary: "List shared journal entries for a class occurrence",
+          parameters: [
+            ...classIdParam,
+            { name: "date", in: "query", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+          ],
+          responses: ok(listOf("ClassJournalEntry")),
+        },
+      },
+      "/api/v1/users/me/journal": {
+        get: {
+          summary: "List my journal entries for a date range",
+          parameters: [
+            { name: "from", in: "query", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+            { name: "to", in: "query", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+          ],
+          responses: ok(listOf("ClassJournalEntry")),
+        },
+      },
+      "/api/v1/classes/{id}/instructor-rating": {
+        post: {
+          summary: "Submit or update an instructor rating for a class occurrence",
+          parameters: classIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpsertInstructorRatingRequest") } } },
+          responses: ok(dataOf("InstructorRating")),
+        },
+      },
+      "/api/v1/users/{id}/instructor-rating": {
+        get: {
+          summary: "Public instructor rating summary for a user",
+          parameters: userIdParam,
+          responses: ok(dataOf("InstructorRatingSummary")),
+        },
+      },
+      "/api/v1/gyms/{id}/instructor-feedback": {
+        get: {
+          summary: "List instructor feedback for a gym (admin/owner)",
+          parameters: [
+            ...gymIdParam,
+            { name: "instructorUserId", in: "query", required: false, description: "Filter by instructor user ID", schema: { type: "string" } },
+            { name: "from", in: "query", required: false, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+            { name: "to", in: "query", required: false, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+          ],
+          responses: ok(listOf("InstructorFeedbackItem")),
+        },
+      },
       "/api/v1/waitlist": {
         post: {
           summary: "Join the founding waitlist (public)",
@@ -386,6 +448,15 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         ClassRsvpRequest,
         ScheduleQuery,
         ClassAttendeesQuery,
+        ClassJournalEntry,
+        InstructorRating,
+        InstructorRatingSummary,
+        InstructorFeedbackItem,
+        UpsertJournalRequest,
+        UpsertInstructorRatingRequest,
+        JournalRangeQuery,
+        OccurrenceJournalQuery,
+        InstructorFeedbackQuery,
       },
     },
   };
