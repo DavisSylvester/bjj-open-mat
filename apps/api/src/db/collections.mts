@@ -9,6 +9,8 @@ export const COLLECTIONS = {
   reports: "reports",
   waitlistLeads: "waitlistLeads",
   gymLeads: "gymLeads",
+  gymMemberships: "gymMemberships",
+  beltPromotions: "beltPromotions",
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
