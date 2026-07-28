@@ -98,6 +98,16 @@ describe("MembershipFacade", () => {
       .rejects.toMatchObject({ code: "not_found" });
   });
 
+  it("manage actions return not_found for a non-existent gym", async () => {
+    const { f } = facade({ gymOwnerId: "owner1" });
+    await expect(
+      f.promote("owner1", "ghost-gym", "student", { beltRank: "blue", beltStripes: 0 }, "practitioner"),
+    ).rejects.toMatchObject({ code: "not_found" });
+    await expect(
+      f.updateMembership("owner1", "ghost-gym", "student", { verifiedMember: true }, "practitioner"),
+    ).rejects.toMatchObject({ code: "not_found" });
+  });
+
   it("setting a home gym updates User.homeGymId and demotes others", async () => {
     const { f, memberships, users } = facade({
       memberships: [member("g1", "u1", { isHome: true }), member("gB", "u1")],
