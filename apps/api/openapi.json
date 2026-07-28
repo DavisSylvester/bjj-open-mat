@@ -1310,6 +1310,365 @@
         }
       }
     },
+    "/api/v1/gyms/{id}/classes": {
+      "post": {
+        "summary": "Create class definition for a gym",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClassRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/GymClass"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List class definitions for a gym",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GymClass"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gyms/{id}/schedule": {
+      "get": {
+        "summary": "Get gym schedule (expanded occurrences) for a date range",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "ISO YYYY-MM-DD",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "ISO YYYY-MM-DD",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ScheduledClass"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{id}": {
+      "patch": {
+        "summary": "Update a class definition",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Class ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClassRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/GymClass"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archive (soft-delete) a class definition",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Class ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{id}/occurrences/{date}": {
+      "put": {
+        "summary": "Override a single occurrence of a class",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Class ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "description": "ISO YYYY-MM-DD",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OccurrenceOverrideRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ClassOccurrence"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{id}/rsvp": {
+      "post": {
+        "summary": "RSVP to a class occurrence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Class ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassRsvpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel RSVP for a class occurrence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Class ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassRsvpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/classes/{id}/attendees": {
+      "get": {
+        "summary": "List attendees for a class occurrence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Class ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "ISO YYYY-MM-DD",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ClassRsvp"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/waitlist": {
       "post": {
         "summary": "Join the founding waitlist (public)",
@@ -3827,6 +4186,789 @@
             "type": "integer"
           },
           "note": {
+            "type": "string"
+          }
+        }
+      },
+      "ClassType": {
+        "$id": "ClassType",
+        "anyOf": [
+          {
+            "const": "fundamentals",
+            "type": "string"
+          },
+          {
+            "const": "all_levels",
+            "type": "string"
+          },
+          {
+            "const": "advanced",
+            "type": "string"
+          },
+          {
+            "const": "gi",
+            "type": "string"
+          },
+          {
+            "const": "nogi",
+            "type": "string"
+          },
+          {
+            "const": "kids",
+            "type": "string"
+          },
+          {
+            "const": "womens",
+            "type": "string"
+          },
+          {
+            "const": "competition",
+            "type": "string"
+          },
+          {
+            "const": "private",
+            "type": "string"
+          },
+          {
+            "const": "other",
+            "type": "string"
+          }
+        ]
+      },
+      "GymClass": {
+        "$id": "GymClass",
+        "type": "object",
+        "required": [
+          "id",
+          "gymId",
+          "title",
+          "classType",
+          "giType",
+          "skillLevel",
+          "startTime",
+          "endTime"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "classType": {
+            "$id": "ClassType",
+            "anyOf": [
+              {
+                "const": "fundamentals",
+                "type": "string"
+              },
+              {
+                "const": "all_levels",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              },
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "kids",
+                "type": "string"
+              },
+              {
+                "const": "womens",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "private",
+                "type": "string"
+              },
+              {
+                "const": "other",
+                "type": "string"
+              }
+            ]
+          },
+          "classTypeLabel": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "giType": {
+            "$id": "GiType",
+            "anyOf": [
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "both",
+                "type": "string"
+              }
+            ]
+          },
+          "skillLevel": {
+            "$id": "SkillLevel",
+            "anyOf": [
+              {
+                "const": "all",
+                "type": "string"
+              },
+              {
+                "const": "beginner",
+                "type": "string"
+              },
+              {
+                "const": "intermediate",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              }
+            ]
+          },
+          "instructorUserId": {
+            "type": "string"
+          },
+          "instructorName": {
+            "type": "string"
+          },
+          "isRecurring": {
+            "default": true,
+            "type": "boolean"
+          },
+          "dayOfWeek": {
+            "minimum": 0,
+            "maximum": 6,
+            "type": "integer"
+          },
+          "startTime": {
+            "description": "24h HH:mm",
+            "type": "string"
+          },
+          "endTime": {
+            "description": "24h HH:mm",
+            "type": "string"
+          },
+          "specificDate": {
+            "description": "ISO YYYY-MM-DD (one-off)",
+            "type": "string"
+          },
+          "capacity": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "status": {
+            "default": "active",
+            "anyOf": [
+              {
+                "const": "active",
+                "type": "string"
+              },
+              {
+                "const": "archived",
+                "type": "string"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ClassOccurrence": {
+        "$id": "ClassOccurrence",
+        "type": "object",
+        "required": [
+          "id",
+          "classId",
+          "gymId",
+          "date"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "classId": {
+            "type": "string"
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "date": {
+            "description": "ISO YYYY-MM-DD",
+            "type": "string"
+          },
+          "status": {
+            "default": "scheduled",
+            "anyOf": [
+              {
+                "const": "scheduled",
+                "type": "string"
+              },
+              {
+                "const": "cancelled",
+                "type": "string"
+              }
+            ]
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "instructorUserId": {
+            "type": "string"
+          },
+          "instructorName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "ClassRsvp": {
+        "$id": "ClassRsvp",
+        "type": "object",
+        "required": [
+          "classId",
+          "date",
+          "userId",
+          "rsvpAt",
+          "isMember"
+        ],
+        "properties": {
+          "classId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "rsvpAt": {
+            "type": "string"
+          },
+          "isMember": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ScheduledClass": {
+        "$id": "ScheduledClass",
+        "type": "object",
+        "required": [
+          "classId",
+          "gymId",
+          "date",
+          "title",
+          "classType",
+          "giType",
+          "skillLevel",
+          "startTime",
+          "endTime",
+          "status",
+          "goingCount"
+        ],
+        "properties": {
+          "classId": {
+            "type": "string"
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "classType": {
+            "$id": "ClassType",
+            "anyOf": [
+              {
+                "const": "fundamentals",
+                "type": "string"
+              },
+              {
+                "const": "all_levels",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              },
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "kids",
+                "type": "string"
+              },
+              {
+                "const": "womens",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "private",
+                "type": "string"
+              },
+              {
+                "const": "other",
+                "type": "string"
+              }
+            ]
+          },
+          "classTypeLabel": {
+            "type": "string"
+          },
+          "giType": {
+            "$id": "GiType",
+            "anyOf": [
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "both",
+                "type": "string"
+              }
+            ]
+          },
+          "skillLevel": {
+            "$id": "SkillLevel",
+            "anyOf": [
+              {
+                "const": "all",
+                "type": "string"
+              },
+              {
+                "const": "beginner",
+                "type": "string"
+              },
+              {
+                "const": "intermediate",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              }
+            ]
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "instructorUserId": {
+            "type": "string"
+          },
+          "instructorName": {
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "const": "scheduled",
+                "type": "string"
+              },
+              {
+                "const": "cancelled",
+                "type": "string"
+              }
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "capacity": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "goingCount": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        }
+      },
+      "CreateClassRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "classType",
+          "giType",
+          "skillLevel",
+          "startTime",
+          "endTime"
+        ],
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "classType": {
+            "$id": "ClassType",
+            "anyOf": [
+              {
+                "const": "fundamentals",
+                "type": "string"
+              },
+              {
+                "const": "all_levels",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              },
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "kids",
+                "type": "string"
+              },
+              {
+                "const": "womens",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "private",
+                "type": "string"
+              },
+              {
+                "const": "other",
+                "type": "string"
+              }
+            ]
+          },
+          "classTypeLabel": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "giType": {
+            "$id": "GiType",
+            "anyOf": [
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "both",
+                "type": "string"
+              }
+            ]
+          },
+          "skillLevel": {
+            "$id": "SkillLevel",
+            "anyOf": [
+              {
+                "const": "all",
+                "type": "string"
+              },
+              {
+                "const": "beginner",
+                "type": "string"
+              },
+              {
+                "const": "intermediate",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              }
+            ]
+          },
+          "instructorUserId": {
+            "type": "string"
+          },
+          "instructorName": {
+            "type": "string"
+          },
+          "isRecurring": {
+            "default": true,
+            "type": "boolean"
+          },
+          "dayOfWeek": {
+            "minimum": 0,
+            "maximum": 6,
+            "type": "integer"
+          },
+          "startTime": {
+            "description": "24h HH:mm",
+            "type": "string"
+          },
+          "endTime": {
+            "description": "24h HH:mm",
+            "type": "string"
+          },
+          "specificDate": {
+            "description": "ISO YYYY-MM-DD (one-off)",
+            "type": "string"
+          },
+          "capacity": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "$id": "CreateClassRequest"
+      },
+      "UpdateClassRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "classType": {
+            "$id": "ClassType",
+            "anyOf": [
+              {
+                "const": "fundamentals",
+                "type": "string"
+              },
+              {
+                "const": "all_levels",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              },
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "kids",
+                "type": "string"
+              },
+              {
+                "const": "womens",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "private",
+                "type": "string"
+              },
+              {
+                "const": "other",
+                "type": "string"
+              }
+            ]
+          },
+          "classTypeLabel": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "giType": {
+            "$id": "GiType",
+            "anyOf": [
+              {
+                "const": "gi",
+                "type": "string"
+              },
+              {
+                "const": "nogi",
+                "type": "string"
+              },
+              {
+                "const": "both",
+                "type": "string"
+              }
+            ]
+          },
+          "skillLevel": {
+            "$id": "SkillLevel",
+            "anyOf": [
+              {
+                "const": "all",
+                "type": "string"
+              },
+              {
+                "const": "beginner",
+                "type": "string"
+              },
+              {
+                "const": "intermediate",
+                "type": "string"
+              },
+              {
+                "const": "advanced",
+                "type": "string"
+              }
+            ]
+          },
+          "instructorUserId": {
+            "type": "string"
+          },
+          "instructorName": {
+            "type": "string"
+          },
+          "isRecurring": {
+            "default": true,
+            "type": "boolean"
+          },
+          "dayOfWeek": {
+            "minimum": 0,
+            "maximum": 6,
+            "type": "integer"
+          },
+          "startTime": {
+            "description": "24h HH:mm",
+            "type": "string"
+          },
+          "endTime": {
+            "description": "24h HH:mm",
+            "type": "string"
+          },
+          "specificDate": {
+            "description": "ISO YYYY-MM-DD (one-off)",
+            "type": "string"
+          },
+          "capacity": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "$id": "UpdateClassRequest"
+      },
+      "OccurrenceOverrideRequest": {
+        "$id": "OccurrenceOverrideRequest",
+        "type": "object",
+        "properties": {
+          "status": {
+            "anyOf": [
+              {
+                "const": "scheduled",
+                "type": "string"
+              },
+              {
+                "const": "cancelled",
+                "type": "string"
+              }
+            ]
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "instructorUserId": {
+            "type": "string"
+          },
+          "instructorName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "ClassRsvpRequest": {
+        "$id": "ClassRsvpRequest",
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "properties": {
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "ScheduleQuery": {
+        "$id": "ScheduleQuery",
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "description": "ISO YYYY-MM-DD",
+            "type": "string"
+          },
+          "to": {
+            "description": "ISO YYYY-MM-DD",
+            "type": "string"
+          }
+        }
+      },
+      "ClassAttendeesQuery": {
+        "$id": "ClassAttendeesQuery",
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "properties": {
+          "date": {
             "type": "string"
           }
         }

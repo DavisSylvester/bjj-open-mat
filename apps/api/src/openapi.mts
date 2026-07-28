@@ -6,13 +6,20 @@ import {
   CategoryRatings,
   CheckIn,
   CheckInLocationStatus,
+  ClassAttendeesQuery,
+  ClassOccurrence,
+  ClassRsvp,
+  ClassRsvpRequest,
+  ClassType,
   CreateCheckInRequest,
+  CreateClassRequest,
   CreateGymRequest,
   CreateOpenMatRequest,
   ErrorResponse,
   Favorite,
   Gym,
   GiType,
+  GymClass,
   GymLeadRequest,
   GymMembership,
   GymRole,
@@ -23,6 +30,7 @@ import {
   MembershipStatus,
   Notification,
   NotificationType,
+  OccurrenceOverrideRequest,
   OpenMat,
   OpenMatDetail,
   PromoteBeltRequest,
@@ -30,7 +38,10 @@ import {
   ReviewRequest,
   RosterMember,
   RsvpRequest,
+  ScheduledClass,
+  ScheduleQuery,
   SkillLevel,
+  UpdateClassRequest,
   UpdateGymRequest,
   UpdateMembershipRequest,
   UpdateMyMembershipRequest,
@@ -61,6 +72,11 @@ export function buildOpenApiDocument(): Record<string, unknown> {
   const memberUserIdParam = [
     { name: "id", in: "path", required: true, description: "Gym ID", schema: { type: "string" } },
     { name: "userId", in: "path", required: true, description: "Member User ID", schema: { type: "string" } },
+  ];
+  const classIdParam = [{ name: "id", in: "path", required: true, description: "Class ID", schema: { type: "string" } }];
+  const classOccurrenceParams = [
+    { name: "id", in: "path", required: true, description: "Class ID", schema: { type: "string" } },
+    { name: "date", in: "path", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
   ];
 
   return {
@@ -230,6 +246,75 @@ export function buildOpenApiDocument(): Record<string, unknown> {
           responses: ok(listOf("GymMembership")),
         },
       },
+      "/api/v1/gyms/{id}/classes": {
+        post: {
+          summary: "Create class definition for a gym",
+          parameters: gymIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("CreateClassRequest") } } },
+          responses: ok(dataOf("GymClass")),
+        },
+        get: {
+          summary: "List class definitions for a gym",
+          parameters: gymIdParam,
+          responses: ok(listOf("GymClass")),
+        },
+      },
+      "/api/v1/gyms/{id}/schedule": {
+        get: {
+          summary: "Get gym schedule (expanded occurrences) for a date range",
+          parameters: [
+            ...gymIdParam,
+            { name: "from", in: "query", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+            { name: "to", in: "query", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+          ],
+          responses: ok(listOf("ScheduledClass")),
+        },
+      },
+      "/api/v1/classes/{id}": {
+        patch: {
+          summary: "Update a class definition",
+          parameters: classIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpdateClassRequest") } } },
+          responses: ok(dataOf("GymClass")),
+        },
+        delete: {
+          summary: "Archive (soft-delete) a class definition",
+          parameters: classIdParam,
+          responses: { "200": { description: "OK" } },
+        },
+      },
+      "/api/v1/classes/{id}/occurrences/{date}": {
+        put: {
+          summary: "Override a single occurrence of a class",
+          parameters: classOccurrenceParams,
+          requestBody: { required: true, content: { "application/json": { schema: ref("OccurrenceOverrideRequest") } } },
+          responses: ok(dataOf("ClassOccurrence")),
+        },
+      },
+      "/api/v1/classes/{id}/rsvp": {
+        post: {
+          summary: "RSVP to a class occurrence",
+          parameters: classIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("ClassRsvpRequest") } } },
+          responses: { "200": { description: "OK" } },
+        },
+        delete: {
+          summary: "Cancel RSVP for a class occurrence",
+          parameters: classIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("ClassRsvpRequest") } } },
+          responses: { "200": { description: "OK" } },
+        },
+      },
+      "/api/v1/classes/{id}/attendees": {
+        get: {
+          summary: "List attendees for a class occurrence",
+          parameters: [
+            ...classIdParam,
+            { name: "date", in: "query", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
+          ],
+          responses: ok(listOf("ClassRsvp")),
+        },
+      },
       "/api/v1/waitlist": {
         post: {
           summary: "Join the founding waitlist (public)",
@@ -288,6 +373,17 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         UpdateMembershipRequest,
         UpdateMyMembershipRequest,
         PromoteBeltRequest,
+        ClassType,
+        GymClass,
+        ClassOccurrence,
+        ClassRsvp,
+        ScheduledClass,
+        CreateClassRequest,
+        UpdateClassRequest,
+        OccurrenceOverrideRequest,
+        ClassRsvpRequest,
+        ScheduleQuery,
+        ClassAttendeesQuery,
       },
     },
   };

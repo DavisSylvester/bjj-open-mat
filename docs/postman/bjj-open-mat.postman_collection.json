@@ -459,6 +459,124 @@
       ]
     },
     {
+      "name": "Gym Classes",
+      "item": [
+        {
+          "name": "Create class",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Morning Fundamentals\",\n  \"classType\": \"fundamentals\",\n  \"giType\": \"gi\",\n  \"skillLevel\": \"beginner\",\n  \"isRecurring\": true,\n  \"dayOfWeek\": 1,\n  \"startTime\": \"09:00\",\n  \"endTime\": \"10:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/classes"
+          }
+        },
+        {
+          "name": "List classes",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/classes"
+          }
+        },
+        {
+          "name": "Get gym schedule",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/schedule?from=2026-07-28&to=2026-08-04"
+          }
+        },
+        {
+          "name": "Update class",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Evening Fundamentals\",\n  \"startTime\": \"18:00\",\n  \"endTime\": \"19:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID"
+          }
+        },
+        {
+          "name": "Archive class",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID"
+          }
+        },
+        {
+          "name": "Override occurrence",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"cancelled\",\n  \"note\": \"Instructor unavailable\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/occurrences/2026-08-01"
+          }
+        },
+        {
+          "name": "RSVP to class",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-08-01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/rsvp"
+          }
+        },
+        {
+          "name": "Cancel RSVP",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-08-01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/rsvp"
+          }
+        },
+        {
+          "name": "List class attendees",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/classes/CLASS_ID/attendees?date=2026-08-01"
+          }
+        }
+      ]
+    },
+    {
       "name": "Notifications",
       "item": [
         {
