@@ -5,6 +5,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
 import '../../gyms/data/gym_repository.dart';
+import '../../membership/data/membership_repository.dart';
 import '../data/profile_stats.dart';
 
 const _kMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -244,4 +245,116 @@ class ProfileMetaRow extends StatelessWidget {
       trailing: Text(value, style: t.bodyStyle.copyWith(color: t.muted)),
     );
   }
+}
+
+String _fmtPromotedAt(String iso) {
+  final d = DateTime.tryParse(iso);
+  if (d == null) return iso;
+  return '${_kMonths[d.month - 1]} ${d.day}, ${d.year}';
+}
+
+/// Verified rank + belt history card sourced from [userPromotionsProvider].
+/// Returns null (renders nothing) when the user has no promotions.
+Widget? profileVerifiedRankCard(BuildContext context, WidgetRef ref, AppTokens t, String userId) {
+  final promotionsAsync = ref.watch(userPromotionsProvider(userId));
+
+  return promotionsAsync.maybeWhen(
+    data: (promotions) {
+      if (promotions.isEmpty) return null;
+      final current = promotions.first;
+      final history = promotions.skip(1).toList();
+      final gymNameCurrent = ref
+          .watch(gymByIdProvider(current.gymId))
+          .maybeWhen(data: (g) => g.name, orElse: () => '…');
+
+      final rows = <Widget>[
+        // Current verified rank row
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  BeltIcon(rank: current.beltRank, stripes: current.beltStripes, size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      '${_cap(current.beltRank)} belt · ${current.beltStripes} stripe${current.beltStripes == 1 ? '' : 's'}',
+                      style: t.bodyStyle.copyWith(fontWeight: FontWeight.w700, color: t.text),
+                    ),
+                  ),
+                  Icon(LucideIcons.badgeCheck, size: 16, color: t.green),
+                  const SizedBox(width: 4),
+                  Text('Verified', style: t.miniStyle.copyWith(color: t.green, fontWeight: FontWeight.w700)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Promoted at $gymNameCurrent on ${_fmtPromotedAt(current.promotedAt)}',
+                style: t.miniStyle.copyWith(color: t.muted),
+              ),
+            ],
+          ),
+        ),
+      ];
+
+      // History rows
+      for (final p in history) {
+        final gymName = ref
+            .watch(gymByIdProvider(p.gymId))
+            .maybeWhen(data: (g) => g.name, orElse: () => '…');
+        rows.add(Divider(height: 1, color: t.border));
+        rows.add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+            child: Row(
+              children: [
+                BeltIcon(rank: p.beltRank, stripes: p.beltStripes, size: 18),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${_cap(p.beltRank)} belt · ${p.beltStripes} stripe${p.beltStripes == 1 ? '' : 's'}',
+                        style: t.miniStyle.copyWith(fontWeight: FontWeight.w600, color: t.text),
+                      ),
+                      Text(
+                        '$gymName · ${_fmtPromotedAt(p.promotedAt)}',
+                        style: t.miniStyle.copyWith(color: t.muted),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: t.border),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF14151A).withValues(alpha: 0.06),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rows,
+          ),
+        ),
+      );
+    },
+    orElse: () => null,
+  );
 }

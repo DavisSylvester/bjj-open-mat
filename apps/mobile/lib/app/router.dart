@@ -33,6 +33,7 @@ import '../features/admin/screens/create_session_screen.dart';
 import '../features/admin/screens/attendance_screen.dart';
 import '../features/admin/screens/admin_review_screen.dart';
 import '../features/membership/screens/roster_screen.dart';
+import '../features/membership/screens/my_memberships_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -145,6 +146,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'training',
                   builder: (context, state) => const MyTrainingScreen(),
+                ),
+                GoRoute(
+                  path: 'memberships',
+                  builder: (context, state) => const MyMembershipsScreen(),
                 ),
               ],
             ),

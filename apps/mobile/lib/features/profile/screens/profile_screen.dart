@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../membership/widgets/join_gym_button.dart';
 import '../../settings/role_toggle.dart';
 import '../../../core/design/tokens.dart';
 import '../data/profile_stats.dart';
@@ -157,6 +158,14 @@ class _GlassProfile extends StatelessWidget {
             const SizedBox(height: 14),
             // Metadata: age, home gym, member since
             profileMetaCard(context, ref, t, effectiveUser),
+            // Verified rank + belt history (only shown when promotions exist)
+            Builder(builder: (ctx) {
+              final myId = ref.watch(currentUserIdProvider);
+              if (myId == null || myId.isEmpty) return const SizedBox.shrink();
+              final rankCard = profileVerifiedRankCard(context, ref, t, myId);
+              if (rankCard == null) return const SizedBox.shrink();
+              return Column(children: [const SizedBox(height: 14), rankCard]);
+            }),
             const SizedBox(height: 22),
             // Settings
             Padding(
@@ -173,6 +182,13 @@ class _GlassProfile extends StatelessWidget {
                   boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
                 ),
                 child: Column(children: [
+                  ListTile(
+                    leading: Icon(LucideIcons.store, color: t.muted),
+                    title: Text('My Gyms', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () => context.push('/profile/memberships'),
+                  ),
+                  Divider(height: 1, color: t.border),
                   ListTile(
                     leading: Icon(LucideIcons.dumbbell, color: t.muted),
                     title: Text('My Training', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
