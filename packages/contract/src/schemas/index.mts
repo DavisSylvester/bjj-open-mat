@@ -6,6 +6,8 @@ export * from "./open-mat-detail.mts";
 export * from "./attendee.mts";
 export * from "./review.mts";
 export * from "./check-in.mts";
+export * from "./gym-membership.mts";
+export * from "./belt-promotion.mts";
 export * from "./favorite.mts";
 export * from "./notification.mts";
 export * from "./report.mts";
