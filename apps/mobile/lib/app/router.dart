@@ -39,6 +39,7 @@ import '../features/classes/screens/class_occurrence_screen.dart';
 import '../features/classes/screens/class_edit_screen.dart';
 import '../features/classes/models/gym_class.dart';
 import '../features/classes/models/scheduled_class.dart';
+import '../features/classes/screens/instructor_feedback_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -123,6 +124,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                       builder: (context, state) => ClassEditScreen(
                         gymId: state.pathParameters['id']!,
                         existing: state.extra as GymClass?,
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'instructor-feedback',
+                      builder: (context, state) => InstructorFeedbackScreen(
+                        gymId: state.pathParameters['id']!,
                       ),
                     ),
                   ],

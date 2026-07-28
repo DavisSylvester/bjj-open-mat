@@ -159,3 +159,9 @@ final instructorSummaryProvider =
   (ref, id) =>
       ref.read(classJournalRepositoryProvider).instructorSummary(id),
 );
+
+final gymInstructorFeedbackProvider =
+    FutureProvider.family<List<InstructorFeedbackItem>, String>(
+  (ref, gymId) =>
+      ref.read(classJournalRepositoryProvider).gymInstructorFeedback(gymId),
+);
