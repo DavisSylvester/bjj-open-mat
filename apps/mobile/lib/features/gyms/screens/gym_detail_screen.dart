@@ -6,6 +6,7 @@ import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../favorites/data/favorite_repository.dart';
+import '../../membership/widgets/join_gym_button.dart';
 import '../data/gym_repository.dart';
 import '../data/gym_sessions_provider.dart';
 import '../data/directions.dart';
@@ -142,6 +143,8 @@ class _GlassGymDetail extends ConsumerWidget {
                 ]),
               ),
             ),
+            const SizedBox(height: 12),
+            JoinGymButton(gymId: gym.id),
             const SizedBox(height: 20),
             Text('Open Mats', style: t.h2Style),
             const SizedBox(height: 8),
