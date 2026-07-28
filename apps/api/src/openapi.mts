@@ -2,6 +2,7 @@ import {
   Attendee,
   AuthSyncRequest,
   BeltRank,
+  BeltPromotion,
   CategoryRatings,
   CheckIn,
   CheckInLocationStatus,
@@ -13,18 +14,26 @@ import {
   Gym,
   GiType,
   GymLeadRequest,
+  GymMembership,
+  GymRole,
   HealthResponse,
+  JoinMethod,
   LeadResponse,
   ListMeta,
+  MembershipStatus,
   Notification,
   NotificationType,
   OpenMat,
   OpenMatDetail,
+  PromoteBeltRequest,
   ReadyResponse,
   ReviewRequest,
+  RosterMember,
   RsvpRequest,
   SkillLevel,
   UpdateGymRequest,
+  UpdateMembershipRequest,
+  UpdateMyMembershipRequest,
   UpdateOpenMatRequest,
   UpdateUserRequest,
   User,
@@ -47,6 +56,12 @@ export function buildOpenApiDocument(): Record<string, unknown> {
     "200": { description: "OK", content: { "application/json": { schema } } },
   });
   const idParam = [{ name: "id", in: "path", required: true, schema: { type: "string" } }];
+  const gymIdParam = [{ name: "id", in: "path", required: true, description: "Gym ID", schema: { type: "string" } }];
+  const userIdParam = [{ name: "id", in: "path", required: true, description: "User ID", schema: { type: "string" } }];
+  const memberUserIdParam = [
+    { name: "id", in: "path", required: true, description: "Gym ID", schema: { type: "string" } },
+    { name: "userId", in: "path", required: true, description: "Member User ID", schema: { type: "string" } },
+  ];
 
   return {
     openapi: "3.1.0",
@@ -161,6 +176,60 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         post: { summary: "Mark read", parameters: idParam, responses: ok(dataOf("Notification")) },
       },
       "/api/v1/notifications/read-all": { post: { summary: "Mark all read", responses: ok(dataOf("Notification")) } },
+      "/api/v1/gyms/{id}/members": {
+        post: {
+          summary: "Join gym (self-enroll)",
+          parameters: gymIdParam,
+          responses: ok(dataOf("GymMembership")),
+        },
+        get: {
+          summary: "List gym roster",
+          parameters: gymIdParam,
+          responses: ok(listOf("RosterMember")),
+        },
+      },
+      "/api/v1/gyms/{id}/members/me": {
+        delete: {
+          summary: "Leave gym",
+          parameters: gymIdParam,
+          responses: { "204": { description: "No Content" } },
+        },
+        patch: {
+          summary: "Update my membership preferences (roster visibility, home gym)",
+          parameters: gymIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpdateMyMembershipRequest") } } },
+          responses: ok(dataOf("GymMembership")),
+        },
+      },
+      "/api/v1/gyms/{id}/members/{userId}": {
+        patch: {
+          summary: "Update member (admin/owner — verify, change role)",
+          parameters: memberUserIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpdateMembershipRequest") } } },
+          responses: ok(dataOf("GymMembership")),
+        },
+      },
+      "/api/v1/gyms/{id}/members/{userId}/promotions": {
+        post: {
+          summary: "Record belt promotion for member",
+          parameters: memberUserIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("PromoteBeltRequest") } } },
+          responses: ok(dataOf("BeltPromotion")),
+        },
+      },
+      "/api/v1/users/{id}/promotions": {
+        get: {
+          summary: "Belt promotion history for a user",
+          parameters: userIdParam,
+          responses: ok(listOf("BeltPromotion")),
+        },
+      },
+      "/api/v1/users/me/memberships": {
+        get: {
+          summary: "My gym memberships",
+          responses: ok(listOf("GymMembership")),
+        },
+      },
       "/api/v1/waitlist": {
         post: {
           summary: "Join the founding waitlist (public)",
@@ -210,6 +279,15 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         WaitlistLeadRequest,
         GymLeadRequest,
         LeadResponse,
+        GymRole,
+        MembershipStatus,
+        JoinMethod,
+        GymMembership,
+        RosterMember,
+        BeltPromotion,
+        UpdateMembershipRequest,
+        UpdateMyMembershipRequest,
+        PromoteBeltRequest,
       },
     },
   };
