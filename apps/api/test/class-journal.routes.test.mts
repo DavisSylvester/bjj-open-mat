@@ -5,6 +5,7 @@ import type { ClassJournalEntry, InstructorRating, InstructorRatingSummary, Inst
 import { classJournalRoutes } from "../src/routes/class-journal.routes.mts";
 import type { Container } from "../src/container.mts";
 import type { AuthIdentity } from "../src/auth/auth.types.mts";
+import { registerErrorHandler } from "../src/http/error-handler.mts";
 
 function testApp(identity: AuthIdentity | null): { app: Elysia; calls: string[] } {
   const calls: string[] = [];
@@ -21,7 +22,8 @@ function testApp(identity: AuthIdentity | null): { app: Elysia; calls: string[] 
     roleLookup: async (): Promise<"practitioner"> => "practitioner",
     classJournalFacade,
   } as unknown as Container;
-  return { app: new Elysia().use(classJournalRoutes(container)), calls };
+  const app = registerErrorHandler(new Elysia(), { warn: (): void => undefined, error: (): void => undefined }).use(classJournalRoutes(container));
+  return { app, calls };
 }
 const id: AuthIdentity = { userId: "u1", role: "practitioner", email: "u@x.co", viaBypass: true };
 

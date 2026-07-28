@@ -9,7 +9,7 @@ import {
 import type { AuthIdentity } from "../auth/auth.types.mts";
 import { authPlugin } from "../auth/auth.middleware.mts";
 import type { Container } from "../container.mts";
-import { AppError, httpStatusFor } from "../http/errors.mts";
+import { AppError } from "../http/errors.mts";
 import { data, list } from "../http/envelope.mts";
 
 function requireId(identity: AuthIdentity | null): AuthIdentity {
@@ -92,12 +92,6 @@ export function classJournalRoutes(container: Container) {
     );
 
   return new Elysia()
-    .onError(({ error, set }) => {
-      if (error instanceof AppError) {
-        set.status = httpStatusFor(error.code);
-        return { error: { code: error.code, message: error.message } };
-      }
-    })
     .use(classJournalDetailRoutes)
     .use(userJournalRoutes)
     .use(gymFeedbackRoutes);
