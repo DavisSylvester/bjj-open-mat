@@ -11,6 +11,8 @@ import 'package:bjj_open_mat/features/gyms/models/gym.dart';
 import 'package:bjj_open_mat/features/gyms/screens/gym_detail_screen.dart';
 import 'package:bjj_open_mat/features/favorites/data/favorite_repository.dart';
 import 'package:bjj_open_mat/features/open_mats/models/open_mat.dart';
+import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
+import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
 
 // These tests lock in the navigation-back contract fixed in the audit:
 // list -> detail is a push, so the detail back arrow returns to the list;
@@ -26,6 +28,7 @@ Widget _app(GoRouter router) => ProviderScope(
         gymByIdProvider.overrideWith((ref, id) async => _testGym),
         gymSessionsProvider.overrideWith((ref, id) async => <OpenMat>[]),
         myFavoritesProvider.overrideWith((ref) async => <Gym>[]),
+        rosterProvider.overrideWith((ref, id) async => <RosterMember>[]),
       ],
       child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
     );
