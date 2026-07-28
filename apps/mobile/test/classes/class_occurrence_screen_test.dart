@@ -14,6 +14,9 @@ import 'package:bjj_open_mat/features/gyms/models/gym.dart';
 import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
 import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
 import 'package:bjj_open_mat/features/membership/widgets/join_gym_button.dart';
+import 'package:bjj_open_mat/features/classes/data/class_journal_repository.dart';
+import 'package:bjj_open_mat/features/classes/models/class_journal_entry.dart';
+import 'package:bjj_open_mat/features/classes/models/instructor_rating_summary.dart';
 
 // ── Fake repository ───────────────────────────────────────────────────────────
 
@@ -128,6 +131,17 @@ Future<_FakeClassRepo> _pump(
           (_) async => const Gym(id: 'g1', name: 'Test Gym', address: '123 Main St'),
         ),
         rosterProvider('g1').overrideWith((_) async => <RosterMember>[]),
+        // Stub journal providers so no network calls are made (Task 12).
+        sharedNotesProvider(
+          (classId: 'c1', date: '2026-08-03'),
+        ).overrideWith((_) async => <ClassJournalEntry>[]),
+        instructorSummaryProvider('inst1').overrideWith(
+          (_) async => const InstructorRatingSummary(
+            instructorUserId: 'inst1',
+            avg: 0,
+            count: 0,
+          ),
+        ),
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),

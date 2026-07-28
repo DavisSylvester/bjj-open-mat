@@ -8,8 +8,11 @@ import '../../../shared/widgets/belt_icon.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../membership/data/membership_repository.dart';
 import '../../membership/widgets/join_gym_button.dart';
+import '../data/class_journal_repository.dart';
 import '../data/class_repository.dart';
 import '../models/class_attendee.dart';
+import '../models/class_journal_entry.dart';
+import '../models/instructor_rating_summary.dart';
 import '../models/scheduled_class.dart';
 import '../widgets/class_type_chip.dart';
 import 'class_journal_form_screen.dart';
@@ -147,6 +150,17 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
     final canManage = _deriveCanManage(ref);
     final canJournal = _deriveCanJournal(ref);
 
+    // ── Shared notes ──────────────────────────────────────────────────────────
+    final sharedNotesAsync = ref.watch(
+      sharedNotesProvider((classId: widget.classId, date: widget.date)),
+    );
+
+    // ── Instructor aggregate ──────────────────────────────────────────────────
+    final instructorUserId = scheduled?.instructorUserId;
+    final instructorSummaryAsync = instructorUserId != null
+        ? ref.watch(instructorSummaryProvider(instructorUserId))
+        : null;
+
     return Scaffold(
       backgroundColor: t.bg,
       appBar: AppBar(
@@ -188,7 +202,12 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // ── Header card ──────────────────────────────────────────────────
-          _OccurrenceHeader(scheduled: scheduled, date: widget.date, t: t),
+          _OccurrenceHeader(
+            scheduled: scheduled,
+            date: widget.date,
+            t: t,
+            instructorSummaryAsync: instructorSummaryAsync,
+          ),
 
           // ── RSVP toggle ──────────────────────────────────────────────────
           if (!isCancelled && currentUserId != null)
@@ -209,6 +228,33 @@ class _ClassOccurrenceScreenState extends ConsumerState<ClassOccurrenceScreen> {
                 );
               },
             ),
+
+          // ── Shared notes ──────────────────────────────────────────────────
+          sharedNotesAsync.maybeWhen(
+            data: (notes) {
+              final visible = notes
+                  .where((e) =>
+                      (e.whatWasTaught != null && e.whatWasTaught!.isNotEmpty) ||
+                      e.techniqueTags.isNotEmpty)
+                  .toList();
+              if (visible.isEmpty) return const SizedBox.shrink();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                    child: Text(
+                      'Shared notes',
+                      style: t.labelStyle.copyWith(color: t.muted, fontSize: 12),
+                    ),
+                  ),
+                  for (final entry in visible)
+                    _SharedNoteCard(entry: entry, t: t),
+                ],
+              );
+            },
+            orElse: () => const SizedBox.shrink(),
+          ),
 
           // ── Attendee grid ─────────────────────────────────────────────────
           Padding(
@@ -593,11 +639,13 @@ class _OccurrenceHeader extends StatelessWidget {
   final ScheduledClass? scheduled;
   final String date;
   final AppTokens t;
+  final AsyncValue<InstructorRatingSummary>? instructorSummaryAsync;
 
   const _OccurrenceHeader({
     required this.scheduled,
     required this.date,
     required this.t,
+    this.instructorSummaryAsync,
   });
 
   @override
@@ -667,7 +715,7 @@ class _OccurrenceHeader extends StatelessWidget {
               ),
             ],
           ),
-          // Instructor.
+          // Instructor + aggregate rating.
           if (s.instructorName != null) ...[
             const SizedBox(height: 6),
             Row(
@@ -678,6 +726,16 @@ class _OccurrenceHeader extends StatelessWidget {
                   s.instructorName!,
                   style: t.miniStyle.copyWith(color: t.muted),
                 ),
+                if (instructorSummaryAsync != null) ...[
+                  const SizedBox(width: 8),
+                  instructorSummaryAsync!.maybeWhen(
+                    data: (summary) {
+                      if (summary.count == 0) return const SizedBox.shrink();
+                      return _InstructorRatingBadge(summary: summary, t: t);
+                    },
+                    orElse: () => const SizedBox.shrink(),
+                  ),
+                ],
               ],
             ),
           ],
@@ -791,6 +849,89 @@ class _AttendeeCell extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ── Shared note card ──────────────────────────────────────────────────────────
+
+class _SharedNoteCard extends StatelessWidget {
+  final ClassJournalEntry entry;
+  final AppTokens t;
+
+  const _SharedNoteCard({required this.entry, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.cardRadius),
+        border: Border.all(color: t.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (entry.whatWasTaught != null && entry.whatWasTaught!.isNotEmpty)
+            Text(
+              entry.whatWasTaught!,
+              style: t.bodyStyle.copyWith(fontSize: 13),
+            ),
+          if (entry.techniqueTags.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                for (final tag in entry.techniqueTags)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: t.primary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: t.primary.withValues(alpha: 0.25)),
+                    ),
+                    child: Text(
+                      tag,
+                      style: t.miniStyle.copyWith(
+                        color: t.primary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── Instructor rating badge ───────────────────────────────────────────────────
+
+class _InstructorRatingBadge extends StatelessWidget {
+  final InstructorRatingSummary summary;
+  final AppTokens t;
+
+  const _InstructorRatingBadge({required this.summary, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    final avgStr = summary.avg.toStringAsFixed(1);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(LucideIcons.star, size: 11, color: t.primary),
+        const SizedBox(width: 3),
+        Text(
+          '$avgStr (${summary.count})',
+          style: t.miniStyle.copyWith(color: t.primary, fontSize: 11),
+        ),
+      ],
     );
   }
 }
