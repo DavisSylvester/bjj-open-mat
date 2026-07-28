@@ -34,6 +34,7 @@ import '../features/admin/screens/attendance_screen.dart';
 import '../features/admin/screens/admin_review_screen.dart';
 import '../features/membership/screens/roster_screen.dart';
 import '../features/membership/screens/my_memberships_screen.dart';
+import '../features/classes/screens/class_schedule_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -97,6 +98,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                     GoRoute(
                       path: 'roster',
                       builder: (context, state) => RosterScreen(gymId: state.pathParameters['id']!),
+                    ),
+                    GoRoute(
+                      path: 'schedule',
+                      builder: (context, state) => ClassScheduleScreen(gymId: state.pathParameters['id']!),
                     ),
                   ],
                 ),

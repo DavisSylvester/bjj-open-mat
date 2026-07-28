@@ -163,6 +163,24 @@ class _GlassGymDetail extends ConsumerWidget {
                 ]),
               ),
             ),
+            const SizedBox(height: 12),
+            GestureDetector(
+              onTap: () => context.push('/gym/${gym.id}/schedule'),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: t.border),
+                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.calendar_month_outlined, size: 16, color: t.text),
+                  const SizedBox(width: 8),
+                  Text('Class schedule', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                ]),
+              ),
+            ),
             const SizedBox(height: 20),
             Text('Open Mats', style: t.h2Style),
             const SizedBox(height: 8),
