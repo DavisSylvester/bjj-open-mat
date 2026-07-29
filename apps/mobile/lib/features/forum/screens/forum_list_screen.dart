@@ -76,8 +76,12 @@ class _ForumListScreenState extends ConsumerState<ForumListScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       itemCount: questions.length,
                       separatorBuilder: (context, index) => const SizedBox(height: 8),
-                      itemBuilder: (context, index) =>
-                          _QuestionTile(question: questions[index], t: t),
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () => context.push(
+                          '/gym/${widget.gymId}/forum/${questions[index].id}',
+                        ),
+                        child: _QuestionTile(question: questions[index], t: t),
+                      ),
                     ),
             ),
           ),
