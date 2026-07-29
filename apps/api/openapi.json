@@ -1948,6 +1948,340 @@
         }
       }
     },
+    "/api/v1/gyms/{id}/forum/questions": {
+      "post": {
+        "summary": "Post a question to a gym forum",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuestionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ForumQuestion"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List forum questions for a gym",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "description": "Filter by category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ForumQuestion"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/forum/questions/{id}": {
+      "get": {
+        "summary": "Get forum question detail (with answers)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Question ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ForumQuestionDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a forum question",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Question ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuestionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ForumQuestion"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a forum question",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Question ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/forum/questions/{id}/answers": {
+      "post": {
+        "summary": "Post an answer to a forum question",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Question ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAnswerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ForumAnswer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/forum/answers/{id}": {
+      "patch": {
+        "summary": "Update a forum answer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Answer ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAnswerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ForumAnswer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a forum answer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Answer ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/forum/questions/{id}/accept": {
+      "post": {
+        "summary": "Mark an answer as accepted",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Question ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptAnswerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/waitlist": {
       "post": {
         "summary": "Join the founding waitlist (public)",
@@ -2112,6 +2446,14 @@
           },
           {
             "const": "system",
+            "type": "string"
+          },
+          {
+            "const": "forum_answer",
+            "type": "string"
+          },
+          {
+            "const": "forum_accepted",
             "type": "string"
           }
         ]
@@ -3152,6 +3494,14 @@
               },
               {
                 "const": "system",
+                "type": "string"
+              },
+              {
+                "const": "forum_answer",
+                "type": "string"
+              },
+              {
+                "const": "forum_accepted",
                 "type": "string"
               }
             ]
@@ -5584,6 +5934,479 @@
           },
           "to": {
             "type": "string"
+          }
+        }
+      },
+      "ForumCategory": {
+        "$id": "ForumCategory",
+        "anyOf": [
+          {
+            "const": "technique",
+            "type": "string"
+          },
+          {
+            "const": "rules",
+            "type": "string"
+          },
+          {
+            "const": "competition",
+            "type": "string"
+          },
+          {
+            "const": "schedule",
+            "type": "string"
+          },
+          {
+            "const": "gear",
+            "type": "string"
+          },
+          {
+            "const": "general",
+            "type": "string"
+          }
+        ]
+      },
+      "ForumQuestion": {
+        "$id": "ForumQuestion",
+        "type": "object",
+        "required": [
+          "id",
+          "gymId",
+          "authorId",
+          "category",
+          "title",
+          "body",
+          "pinned",
+          "locked",
+          "answerCount"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "category": {
+            "$id": "ForumCategory",
+            "anyOf": [
+              {
+                "const": "technique",
+                "type": "string"
+              },
+              {
+                "const": "rules",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "schedule",
+                "type": "string"
+              },
+              {
+                "const": "gear",
+                "type": "string"
+              },
+              {
+                "const": "general",
+                "type": "string"
+              }
+            ]
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "pinned": {
+            "default": false,
+            "type": "boolean"
+          },
+          "locked": {
+            "default": false,
+            "type": "boolean"
+          },
+          "acceptedAnswerId": {
+            "type": "string"
+          },
+          "answerCount": {
+            "minimum": 0,
+            "default": 0,
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ForumAnswer": {
+        "$id": "ForumAnswer",
+        "type": "object",
+        "required": [
+          "id",
+          "questionId",
+          "gymId",
+          "authorId",
+          "body",
+          "accepted"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "questionId": {
+            "type": "string"
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "accepted": {
+            "default": false,
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ForumQuestionDetail": {
+        "$id": "ForumQuestionDetail",
+        "type": "object",
+        "required": [
+          "question",
+          "answers"
+        ],
+        "properties": {
+          "question": {
+            "$id": "ForumQuestion",
+            "type": "object",
+            "required": [
+              "id",
+              "gymId",
+              "authorId",
+              "category",
+              "title",
+              "body",
+              "pinned",
+              "locked",
+              "answerCount"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "gymId": {
+                "type": "string"
+              },
+              "authorId": {
+                "type": "string"
+              },
+              "category": {
+                "$id": "ForumCategory",
+                "anyOf": [
+                  {
+                    "const": "technique",
+                    "type": "string"
+                  },
+                  {
+                    "const": "rules",
+                    "type": "string"
+                  },
+                  {
+                    "const": "competition",
+                    "type": "string"
+                  },
+                  {
+                    "const": "schedule",
+                    "type": "string"
+                  },
+                  {
+                    "const": "gear",
+                    "type": "string"
+                  },
+                  {
+                    "const": "general",
+                    "type": "string"
+                  }
+                ]
+              },
+              "title": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "body": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "pinned": {
+                "default": false,
+                "type": "boolean"
+              },
+              "locked": {
+                "default": false,
+                "type": "boolean"
+              },
+              "acceptedAnswerId": {
+                "type": "string"
+              },
+              "answerCount": {
+                "minimum": 0,
+                "default": 0,
+                "type": "integer"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            }
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "$id": "ForumAnswer",
+              "type": "object",
+              "required": [
+                "id",
+                "questionId",
+                "gymId",
+                "authorId",
+                "body",
+                "accepted"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "questionId": {
+                  "type": "string"
+                },
+                "gymId": {
+                  "type": "string"
+                },
+                "authorId": {
+                  "type": "string"
+                },
+                "body": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "accepted": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateQuestionRequest": {
+        "$id": "CreateQuestionRequest",
+        "type": "object",
+        "required": [
+          "category",
+          "title",
+          "body"
+        ],
+        "properties": {
+          "category": {
+            "$id": "ForumCategory",
+            "anyOf": [
+              {
+                "const": "technique",
+                "type": "string"
+              },
+              {
+                "const": "rules",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "schedule",
+                "type": "string"
+              },
+              {
+                "const": "gear",
+                "type": "string"
+              },
+              {
+                "const": "general",
+                "type": "string"
+              }
+            ]
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "UpdateQuestionRequest": {
+        "$id": "UpdateQuestionRequest",
+        "type": "object",
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "category": {
+            "$id": "ForumCategory",
+            "anyOf": [
+              {
+                "const": "technique",
+                "type": "string"
+              },
+              {
+                "const": "rules",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "schedule",
+                "type": "string"
+              },
+              {
+                "const": "gear",
+                "type": "string"
+              },
+              {
+                "const": "general",
+                "type": "string"
+              }
+            ]
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "locked": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateAnswerRequest": {
+        "$id": "CreateAnswerRequest",
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "UpdateAnswerRequest": {
+        "$id": "UpdateAnswerRequest",
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "AcceptAnswerRequest": {
+        "$id": "AcceptAnswerRequest",
+        "type": "object",
+        "required": [
+          "answerId"
+        ],
+        "properties": {
+          "answerId": {
+            "type": "string"
+          }
+        }
+      },
+      "ForumListQuery": {
+        "$id": "ForumListQuery",
+        "type": "object",
+        "properties": {
+          "category": {
+            "$id": "ForumCategory",
+            "anyOf": [
+              {
+                "const": "technique",
+                "type": "string"
+              },
+              {
+                "const": "rules",
+                "type": "string"
+              },
+              {
+                "const": "competition",
+                "type": "string"
+              },
+              {
+                "const": "schedule",
+                "type": "string"
+              },
+              {
+                "const": "gear",
+                "type": "string"
+              },
+              {
+                "const": "general",
+                "type": "string"
+              }
+            ]
+          },
+          "page": {
+            "minimum": 1,
+            "default": 1,
+            "type": "integer"
+          },
+          "limit": {
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20,
+            "type": "integer"
           }
         }
       }

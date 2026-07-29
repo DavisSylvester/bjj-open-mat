@@ -668,6 +668,124 @@
           }
         }
       ]
+    },
+    {
+      "name": "Gym Forum",
+      "item": [
+        {
+          "name": "Post question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"technique\",\n  \"title\": \"Best guard to learn first?\",\n  \"body\": \"I am a white belt — should I focus on closed guard or half guard first?\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/forum/questions"
+          }
+        },
+        {
+          "name": "List questions",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/forum/questions?category=technique&page=1&limit=20"
+          }
+        },
+        {
+          "name": "Question detail",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/forum/questions/QUESTION_ID"
+          }
+        },
+        {
+          "name": "Update question",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Best guard for small players?\",\n  \"pinned\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/forum/questions/QUESTION_ID"
+          }
+        },
+        {
+          "name": "Delete question",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/forum/questions/QUESTION_ID"
+          }
+        },
+        {
+          "name": "Post answer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Closed guard is the foundation — it teaches frames, control, and hip movement that carry over everywhere.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/forum/questions/QUESTION_ID/answers"
+          }
+        },
+        {
+          "name": "Update answer",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Closed guard is the foundation — hip escapes and frames learned here apply everywhere.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/forum/answers/ANSWER_ID"
+          }
+        },
+        {
+          "name": "Delete answer",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/forum/answers/ANSWER_ID"
+          }
+        },
+        {
+          "name": "Accept answer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answerId\": \"ANSWER_ID\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/forum/questions/QUESTION_ID/accept"
+          }
+        }
+      ]
     }
   ]
 }
