@@ -218,12 +218,13 @@ export class MessagingFacade {
     const conv = await this.conversations.findById(conversationId);
     if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
     if (conv.kind !== "group") throw new AppError("bad_request", "Only group conversations take participants");
+    if (!conv.gymId) throw new AppError("not_found", "Group has no gym association");
     const caller = await this.participants.find(conversationId, userId);
     if (!caller || caller.role !== "admin" || caller.leftAt) throw new AppError("forbidden", "Only a group admin can add members");
     const rows: ConversationParticipant[] = [];
     for (const uid of [...new Set(req.userIds)]) {
       if (await this.participants.find(conversationId, uid)) continue;
-      const mem = await this.memberships.find(conv.gymId as string, uid);
+      const mem = await this.memberships.find(conv.gymId, uid);
       if (!mem || mem.status !== "active") throw new AppError("forbidden", `User ${uid} is not a member of this gym`);
       rows.push({ id: this.newId(), conversationId, userId: uid, role: "member", muted: false });
     }

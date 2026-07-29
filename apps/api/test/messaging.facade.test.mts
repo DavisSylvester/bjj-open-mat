@@ -207,7 +207,7 @@ describe("MessagingFacade — edit/delete/participants/leave/mute", () => {
     const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
     const [ch] = await owner.f.listChannels("u1", "g1", "practitioner");
     const m = await owner.f.sendMessage("u2", ch.id, { body: "member msg" }, "practitioner");
-    await expect(owner.f.deleteMessage("u2b", m.id, "practitioner")).rejects.toBeDefined();
+    await expect(owner.f.deleteMessage("u2b", m.id, "practitioner")).rejects.toMatchObject({ code: "forbidden" });
     await owner.f.deleteMessage("u1", m.id, "practitioner"); // owner (manager)
     expect(owner.messages.get(m.id)?.deletedAt).toBeDefined();
   });
@@ -226,5 +226,64 @@ describe("MessagingFacade — edit/delete/participants/leave/mute", () => {
     await owner.f.leaveConversation("u1", g.id, "practitioner");
     const list = await owner.f.listConversations("u1", "practitioner", 1, 20);
     expect(list.items.some((s) => s.conversation.id === g.id)).toBe(false);
+  });
+
+  it("leaveConversation on a gym_channel mutes/hides it in listConversations", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
+    const [channel] = await owner.f.listChannels("u1", "g1", "practitioner");
+    // before leave: channel visible and not muted for u2
+    const before = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    const beforeSummary = before.items.find((s) => s.conversation.id === channel.id);
+    expect(beforeSummary?.muted).toBe(false);
+    // leave the channel (gym_channel path → upsertMuted(true))
+    await owner.f.leaveConversation("u2", channel.id, "practitioner");
+    const after = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    const afterSummary = after.items.find((s) => s.conversation.id === channel.id);
+    expect(afterSummary?.muted).toBe(true);
+  });
+
+  it("setMuted on a gym_channel marks it muted in listConversations", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
+    const [channel] = await owner.f.listChannels("u1", "g1", "practitioner");
+    await owner.f.setMuted("u2", channel.id, true, "practitioner");
+    const list = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    const summary = list.items.find((s) => s.conversation.id === channel.id);
+    expect(summary?.muted).toBe(true);
+    // unmute restores it
+    await owner.f.setMuted("u2", channel.id, false, "practitioner");
+    const list2 = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    expect(list2.items.find((s) => s.conversation.id === channel.id)?.muted).toBe(false);
+  });
+
+  it("setMuted on a direct/group marks the participant row muted", async () => {
+    const { f, participants } = facade({ memberships: [member("u1"), member("u2")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    await f.setMuted("u1", conv.id, true, "practitioner");
+    expect(participants.get(`${conv.id}:u1`)?.muted).toBe(true);
+    await f.setMuted("u1", conv.id, false, "practitioner");
+    expect(participants.get(`${conv.id}:u1`)?.muted).toBe(false);
+  });
+
+  it("markRead sets unreadCount to 0 for a direct conversation", async () => {
+    const { f } = facade({ memberships: [member("u1"), member("u2")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    await f.sendMessage("u1", conv.id, { body: "msg1" }, "practitioner");
+    await f.sendMessage("u1", conv.id, { body: "msg2" }, "practitioner");
+    const before = await f.listConversations("u2", "practitioner", 1, 20);
+    expect(before.items.find((s) => s.conversation.id === conv.id)?.unreadCount).toBe(2);
+    await f.markRead("u2", conv.id, "practitioner");
+    const after = await f.listConversations("u2", "practitioner", 1, 20);
+    expect(after.items.find((s) => s.conversation.id === conv.id)?.unreadCount).toBe(0);
+  });
+
+  it("markRead sets unreadCount to 0 for a gym_channel", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
+    const [channel] = await owner.f.listChannels("u1", "g1", "practitioner");
+    await owner.f.sendMessage("u1", channel.id, { body: "announce" }, "practitioner");
+    const before = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    expect(before.items.find((s) => s.conversation.id === channel.id)?.unreadCount).toBe(1);
+    await owner.f.markRead("u2", channel.id, "practitioner");
+    const after = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    expect(after.items.find((s) => s.conversation.id === channel.id)?.unreadCount).toBe(0);
   });
 });
