@@ -1,7 +1,7 @@
 // apps/api/src/facades/messaging.facade.mts
 import type {
-  Conversation, ConversationParticipant, ConversationSummary, CreateChannelRequest, CreateGroupRequest,
-  Gym, GymMembership, Message, MessageListQuery, SendMessageRequest, UserRole,
+  AddParticipantsRequest, Conversation, ConversationParticipant, ConversationSummary, CreateChannelRequest, CreateGroupRequest,
+  EditMessageRequest, Gym, GymMembership, Message, MessageListQuery, SendMessageRequest, UserRole,
 } from "@bjj/contract";
 import { AppError } from "../http/errors.mts";
 import { assertActiveMember, assertCanManageGym } from "./gym-authz.mts";
@@ -194,5 +194,67 @@ export class MessagingFacade {
     await this.messages.insert(message);
     await this.conversations.updateLastMessage(conversationId, now, req.body.slice(0, 140));
     return message;
+  }
+
+  public async editMessage(userId: string, messageId: string, req: EditMessageRequest, _role: UserRole): Promise<Message> {
+    const m = await this.messages.findById(messageId);
+    if (!m) throw new AppError("not_found", `Message ${messageId} not found`);
+    if (m.authorId !== userId) throw new AppError("forbidden", "Only the author can edit");
+    return (await this.messages.update(messageId, { body: req.body, editedAt: new Date().toISOString() })) as Message;
+  }
+
+  public async deleteMessage(userId: string, messageId: string, role: UserRole): Promise<void> {
+    const m = await this.messages.findById(messageId);
+    if (!m) throw new AppError("not_found", `Message ${messageId} not found`);
+    if (m.authorId !== userId) {
+      const conv = await this.conversations.findById(m.conversationId);
+      if (!conv || conv.kind === "direct" || !conv.gymId) throw new AppError("forbidden", "Cannot delete this message");
+      await assertCanManageGym(this.authzDeps(), userId, conv.gymId, role);
+    }
+    await this.messages.softDelete(messageId, new Date().toISOString());
+  }
+
+  public async addParticipants(userId: string, conversationId: string, req: AddParticipantsRequest, _role: UserRole): Promise<void> {
+    const conv = await this.conversations.findById(conversationId);
+    if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
+    if (conv.kind !== "group") throw new AppError("bad_request", "Only group conversations take participants");
+    const caller = await this.participants.find(conversationId, userId);
+    if (!caller || caller.role !== "admin" || caller.leftAt) throw new AppError("forbidden", "Only a group admin can add members");
+    const rows: ConversationParticipant[] = [];
+    for (const uid of [...new Set(req.userIds)]) {
+      if (await this.participants.find(conversationId, uid)) continue;
+      const mem = await this.memberships.find(conv.gymId as string, uid);
+      if (!mem || mem.status !== "active") throw new AppError("forbidden", `User ${uid} is not a member of this gym`);
+      rows.push({ id: this.newId(), conversationId, userId: uid, role: "member", muted: false });
+    }
+    await this.participants.insertMany(rows);
+  }
+
+  public async leaveConversation(userId: string, conversationId: string, role: UserRole): Promise<void> {
+    const conv = await this.conversations.findById(conversationId);
+    if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
+    if (conv.kind === "gym_channel") {
+      await this.channelReads.upsertMuted(conversationId, userId, true, this.newId());
+      return;
+    }
+    await this.assertAccess(userId, conv, role);
+    await this.participants.setLeftAt(conversationId, userId, new Date().toISOString());
+  }
+
+  public async setMuted(userId: string, conversationId: string, muted: boolean, role: UserRole): Promise<void> {
+    const conv = await this.conversations.findById(conversationId);
+    if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
+    if (conv.kind === "gym_channel") { await this.channelReads.upsertMuted(conversationId, userId, muted, this.newId()); return; }
+    await this.assertAccess(userId, conv, role);
+    await this.participants.setMuted(conversationId, userId, muted);
+  }
+
+  public async markRead(userId: string, conversationId: string, role: UserRole): Promise<void> {
+    const conv = await this.conversations.findById(conversationId);
+    if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
+    await this.assertAccess(userId, conv, role);
+    const now: string = new Date().toISOString();
+    if (conv.kind === "gym_channel") await this.channelReads.upsertLastReadAt(conversationId, userId, now, this.newId());
+    else await this.participants.setLastReadAt(conversationId, userId, now);
   }
 }

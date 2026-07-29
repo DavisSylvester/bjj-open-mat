@@ -2,7 +2,7 @@
 import { describe, expect, it } from "bun:test";
 import { MessagingFacade } from "../src/facades/messaging.facade.mts";
 import type { Conversation, ConversationParticipant, Gym, GymMembership, Message, UserBlock, MessageReport, ChannelReadState } from "@bjj/contract";
-import type { MessageListQuery } from "@bjj/contract";
+import type { MessageListQuery, AddParticipantsRequest, EditMessageRequest } from "@bjj/contract";
 
 interface Seed {
   gymOwnerId?: string;
@@ -190,5 +190,41 @@ describe("MessagingFacade — read + send", () => {
     blocks.set("b1", { id: "b1", blockerId: "u1", blockedId: "u2" });
     const seen = await f.getMessages("u1", g.id, {}, "practitioner");
     expect(seen.map((m) => m.body)).toEqual(["from u3"]);
+  });
+});
+
+describe("MessagingFacade — edit/delete/participants/leave/mute", () => {
+  it("author edits; non-author cannot", async () => {
+    const { f, messages } = facade({ memberships: [member("u1"), member("u2")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    const m = await f.sendMessage("u1", conv.id, { body: "orig" }, "practitioner");
+    await f.editMessage("u1", m.id, { body: "edited" }, "practitioner");
+    expect(messages.get(m.id)?.body).toBe("edited");
+    await expect(f.editMessage("u2", m.id, { body: "hax" }, "practitioner")).rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("manager deletes any message in a channel; plain member cannot delete others'", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
+    const [ch] = await owner.f.listChannels("u1", "g1", "practitioner");
+    const m = await owner.f.sendMessage("u2", ch.id, { body: "member msg" }, "practitioner");
+    await expect(owner.f.deleteMessage("u2b", m.id, "practitioner")).rejects.toBeDefined();
+    await owner.f.deleteMessage("u1", m.id, "practitioner"); // owner (manager)
+    expect(owner.messages.get(m.id)?.deletedAt).toBeDefined();
+  });
+
+  it("addParticipants requires an admin caller + member targets", async () => {
+    const { f, participants } = facade({ memberships: [member("u1"), member("u2"), member("u3")] });
+    const g = await f.createGroup("u1", "g1", { gymId: "g1", title: "S", participantIds: ["u2"] }, "practitioner");
+    await expect(f.addParticipants("u2", g.id, { userIds: ["u3"] }, "practitioner")).rejects.toMatchObject({ code: "forbidden" });
+    await f.addParticipants("u1", g.id, { userIds: ["u3"] }, "practitioner");
+    expect(participants.get(`${g.id}:u3`)?.role).toBe("member");
+  });
+
+  it("leave: group sets leftAt (drops from list); channel mutes", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
+    const g = await owner.f.createGroup("u2", "g1", { gymId: "g1", title: "S", participantIds: ["u1"] }, "practitioner");
+    await owner.f.leaveConversation("u1", g.id, "practitioner");
+    const list = await owner.f.listConversations("u1", "practitioner", 1, 20);
+    expect(list.items.some((s) => s.conversation.id === g.id)).toBe(false);
   });
 });
