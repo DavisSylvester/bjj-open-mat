@@ -13,3 +13,4 @@ export * from "./gym-role.mts";
 export * from "./membership-status.mts";
 export * from "./join-method.mts";
 export * from "./class-type.mts";
+export * from "./forum-category.mts";
