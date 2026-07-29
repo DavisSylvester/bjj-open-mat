@@ -19,6 +19,10 @@ import '../widgets/forum_category_chip.dart';
 ///
 /// The "Accept" control on each non-accepted answer is visible when the
 /// current user is the question author OR a manager (owner/coach/admin).
+///
+/// Managers (owner/coach/admin) additionally see Pin/Unpin, Lock/Unlock, and
+/// Delete in an AppBar overflow menu.  Answer authors see Edit/Delete on their
+/// own answers; managers can delete any answer.
 class ForumQuestionScreen extends ConsumerStatefulWidget {
   final String questionId;
   final String gymId;
@@ -36,6 +40,7 @@ class ForumQuestionScreen extends ConsumerStatefulWidget {
 class _ForumQuestionScreenState extends ConsumerState<ForumQuestionScreen> {
   final TextEditingController _bodyCtrl = TextEditingController();
   bool _posting = false;
+  bool _moderating = false;
 
   @override
   void dispose() {
@@ -99,6 +104,154 @@ class _ForumQuestionScreenState extends ConsumerState<ForumQuestionScreen> {
     }
   }
 
+  // ── Moderation: pin/lock/delete question ──────────────────────────────────
+
+  Future<void> _togglePin(ForumQuestion question) async {
+    if (_moderating) return;
+    setState(() => _moderating = true);
+    try {
+      await ref
+          .read(forumRepositoryProvider)
+          .updateQuestion(widget.questionId, {'pinned': !question.pinned});
+      ref.invalidate(forumQuestionDetailProvider(widget.questionId));
+      ref.invalidate(
+        forumQuestionsProvider((gymId: widget.gymId, category: null)),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Couldn't update pin: $e")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _moderating = false);
+    }
+  }
+
+  Future<void> _toggleLock(ForumQuestion question) async {
+    if (_moderating) return;
+    setState(() => _moderating = true);
+    try {
+      await ref
+          .read(forumRepositoryProvider)
+          .updateQuestion(widget.questionId, {'locked': !question.locked});
+      ref.invalidate(forumQuestionDetailProvider(widget.questionId));
+      ref.invalidate(
+        forumQuestionsProvider((gymId: widget.gymId, category: null)),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Couldn't update lock: $e")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _moderating = false);
+    }
+  }
+
+  Future<void> _deleteQuestion() async {
+    if (_moderating) return;
+    setState(() => _moderating = true);
+    try {
+      await ref.read(forumRepositoryProvider).deleteQuestion(widget.questionId);
+      ref.invalidate(
+        forumQuestionsProvider((gymId: widget.gymId, category: null)),
+      );
+      if (mounted) {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Couldn't delete question: $e")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _moderating = false);
+    }
+  }
+
+  // ── Answer actions: delete / edit ─────────────────────────────────────────
+
+  Future<void> _deleteAnswer(String answerId) async {
+    try {
+      await ref.read(forumRepositoryProvider).deleteAnswer(answerId);
+      ref.invalidate(forumQuestionDetailProvider(widget.questionId));
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Couldn't delete answer: $e")),
+        );
+      }
+    }
+  }
+
+  Future<void> _editAnswer(String answerId, String currentBody) async {
+    final ctrl = TextEditingController(text: currentBody);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Edit Answer'),
+        content: TextField(
+          controller: ctrl,
+          minLines: 2,
+          maxLines: 6,
+          decoration: const InputDecoration(hintText: 'Update your answer…'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, ctrl.text.trim()),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    if (result == null || result.isEmpty) return;
+    try {
+      await ref.read(forumRepositoryProvider).updateAnswer(answerId, result);
+      ref.invalidate(forumQuestionDetailProvider(widget.questionId));
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Couldn't update answer: $e")),
+        );
+      }
+    }
+  }
+
+  // ── Confirm delete dialog ─────────────────────────────────────────────────
+
+  Future<bool> _confirmDelete(String message) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    return confirmed == true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
@@ -117,6 +270,51 @@ class _ForumQuestionScreenState extends ConsumerState<ForumQuestionScreen> {
           child: Icon(Icons.arrow_back, color: t.text),
         ),
         title: Text('Question', style: t.h2Style),
+        actions: detailAsync.maybeWhen(
+          data: (detail) {
+            final question = detail.question;
+            final isAuthor =
+                myId != null && myId == question.authorId;
+            // Show menu if manager OR if author (author can delete their own)
+            if (!canManage && !isAuthor) return null;
+            return [
+              PopupMenuButton<_QuestionAction>(
+                icon: const Icon(Icons.more_vert),
+                enabled: !_moderating,
+                onSelected: (action) async {
+                  switch (action) {
+                    case _QuestionAction.pin:
+                      await _togglePin(question);
+                    case _QuestionAction.lock:
+                      await _toggleLock(question);
+                    case _QuestionAction.delete:
+                      final ok = await _confirmDelete(
+                        'Delete this question and all its answers?',
+                      );
+                      if (ok) await _deleteQuestion();
+                  }
+                },
+                itemBuilder: (_) => [
+                  if (canManage) ...[
+                    PopupMenuItem(
+                      value: _QuestionAction.pin,
+                      child: Text(question.pinned ? 'Unpin' : 'Pin'),
+                    ),
+                    PopupMenuItem(
+                      value: _QuestionAction.lock,
+                      child: Text(question.locked ? 'Unlock' : 'Lock'),
+                    ),
+                  ],
+                  const PopupMenuItem(
+                    value: _QuestionAction.delete,
+                    child: Text('Delete Question'),
+                  ),
+                ],
+              ),
+            ];
+          },
+          orElse: () => null,
+        ),
       ),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -155,7 +353,17 @@ class _ForumQuestionScreenState extends ConsumerState<ForumQuestionScreen> {
                           child: _AnswerCard(
                             answer: answer,
                             canAccept: canAccept && !answer.accepted,
+                            canEdit: myId != null && myId == answer.authorId,
+                            canDelete: canManage ||
+                                (myId != null && myId == answer.authorId),
                             onAccept: () => _acceptAnswer(answer.id),
+                            onEdit: () => _editAnswer(answer.id, answer.body),
+                            onDelete: () async {
+                              final ok = await _confirmDelete(
+                                'Delete this answer?',
+                              );
+                              if (ok) await _deleteAnswer(answer.id);
+                            },
                             t: t,
                           ),
                         ),
@@ -188,6 +396,10 @@ class _ForumQuestionScreenState extends ConsumerState<ForumQuestionScreen> {
     );
   }
 }
+
+// ── Question action enum ──────────────────────────────────────────────────────
+
+enum _QuestionAction { pin, lock, delete }
 
 // ── Question header ───────────────────────────────────────────────────────────
 
@@ -255,13 +467,21 @@ class _QuestionHeader extends StatelessWidget {
 class _AnswerCard extends StatelessWidget {
   final ForumAnswer answer;
   final bool canAccept;
+  final bool canEdit;
+  final bool canDelete;
   final VoidCallback onAccept;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
   final AppTokens t;
 
   const _AnswerCard({
     required this.answer,
     required this.canAccept,
+    required this.canEdit,
+    required this.canDelete,
     required this.onAccept,
+    required this.onEdit,
+    required this.onDelete,
     required this.t,
   });
 
@@ -311,28 +531,64 @@ class _AnswerCard extends StatelessWidget {
             style: t.bodyStyle.copyWith(color: t.text),
           ),
 
-          // Accept control (only on non-accepted answers for eligible users).
-          if (canAccept) ...[
+          // Action row: accept + edit/delete buttons.
+          if (canAccept || canEdit || canDelete) ...[
             const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: onAccept,
-                icon: Icon(Icons.check, size: 14, color: t.green),
-                label: Text(
-                  'Accept',
-                  style: t.miniStyle.copyWith(
-                    color: t.green,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (canEdit)
+                  Tooltip(
+                    message: 'Edit answer',
+                    child: IconButton(
+                      icon: const Icon(Icons.edit_outlined, size: 18),
+                      onPressed: onEdit,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      visualDensity: VisualDensity.compact,
+                    ),
                   ),
-                ),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
+                if (canDelete) ...[
+                  if (canEdit) const SizedBox(width: 4),
+                  Tooltip(
+                    message: 'Delete answer',
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.delete_outline,
+                        size: 18,
+                        color: t.muted,
+                      ),
+                      onPressed: onDelete,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ],
+                if (canAccept) ...[
+                  if (canEdit || canDelete) const SizedBox(width: 8),
+                  TextButton.icon(
+                    onPressed: onAccept,
+                    icon: Icon(Icons.check, size: 14, color: t.green),
+                    label: Text(
+                      'Accept',
+                      style: t.miniStyle.copyWith(
+                        color: t.green,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ],
         ],
@@ -381,7 +637,8 @@ class _AnswerComposer extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Write an answer…',
                 hintStyle: t.bodyStyle.copyWith(color: t.muted),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 filled: true,
                 fillColor: t.bg,
                 border: OutlineInputBorder(
@@ -406,7 +663,9 @@ class _AnswerComposer extends StatelessWidget {
               backgroundColor: t.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: posting
                 ? const SizedBox(
