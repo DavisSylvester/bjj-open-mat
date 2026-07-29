@@ -287,3 +287,26 @@ describe("MessagingFacade — edit/delete/participants/leave/mute", () => {
     expect(after.items.find((s) => s.conversation.id === channel.id)?.unreadCount).toBe(0);
   });
 });
+
+describe("MessagingFacade — blocks + reports", () => {
+  it("block is idempotent + listable; report to a shared gym is manager-reviewable", async () => {
+    const { f, reports } = facade({ gymOwnerId: "owner", memberships: [member("owner", "g1", { gymRole: "owner" }), member("u1"), member("u2")] });
+    await f.blockUser("u1", "u2");
+    await f.blockUser("u1", "u2"); // idempotent
+    expect(await f.listBlocks("u1")).toEqual(["u2"]);
+    const r = await f.reportMessage("u1", { reportedUserId: "u2", reason: "harassment" });
+    expect(r.gymId).toBe("g1");
+    // manager can list + resolve
+    const open = await f.listReports("owner", "g1", "open", "practitioner");
+    expect(open.map((x) => x.id)).toContain(r.id);
+    await f.resolveReport("owner", r.id, { status: "reviewed" }, "practitioner");
+    expect(reports.find((x) => x.id === r.id)?.status).toBe("reviewed");
+    // non-manager cannot list
+    await expect(f.listReports("u1", "g1", undefined, "practitioner")).rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("report with no shared gym is bad_request", async () => {
+    const { f } = facade({ memberships: [member("u1", "g1"), member("u2", "g2")] });
+    await expect(f.reportMessage("u1", { reportedUserId: "u2", reason: "spam" })).rejects.toMatchObject({ code: "bad_request" });
+  });
+});

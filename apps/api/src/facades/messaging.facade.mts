@@ -1,7 +1,8 @@
 // apps/api/src/facades/messaging.facade.mts
 import type {
   AddParticipantsRequest, Conversation, ConversationParticipant, ConversationSummary, CreateChannelRequest, CreateGroupRequest,
-  EditMessageRequest, Gym, GymMembership, Message, MessageListQuery, SendMessageRequest, UserRole,
+  EditMessageRequest, Gym, GymMembership, Message, MessageListQuery, MessageReport, MessageReportStatus,
+  ReportMessageRequest, ResolveReportRequest, SendMessageRequest, UserRole,
 } from "@bjj/contract";
 import { AppError } from "../http/errors.mts";
 import { assertActiveMember, assertCanManageGym } from "./gym-authz.mts";
@@ -257,5 +258,56 @@ export class MessagingFacade {
     const now: string = new Date().toISOString();
     if (conv.kind === "gym_channel") await this.channelReads.upsertLastReadAt(conversationId, userId, now, this.newId());
     else await this.participants.setLastReadAt(conversationId, userId, now);
+  }
+
+  public async blockUser(userId: string, targetId: string): Promise<void> {
+    if (userId === targetId) throw new AppError("bad_request", "Cannot block yourself");
+    if (await this.blocks.existsEitherWay(userId, targetId)) return;
+    await this.blocks.insert({ id: this.newId(), blockerId: userId, blockedId: targetId, createdAt: new Date().toISOString() });
+  }
+
+  public async unblockUser(userId: string, blockId: string): Promise<void> {
+    await this.blocks.delete(blockId, userId);
+  }
+
+  public async listBlocks(userId: string): Promise<string[]> {
+    return this.blocks.listBlockedBy(userId);
+  }
+
+  private async firstSharedActiveGym(a: string, b: string): Promise<string | null> {
+    const [am, bm] = await Promise.all([this.memberships.listByUser(a), this.memberships.listByUser(b)]);
+    const bActive = new Set(bm.filter((m) => m.status === "active").map((m) => m.gymId));
+    const hit = am.find((m) => m.status === "active" && bActive.has(m.gymId));
+    return hit?.gymId ?? null;
+  }
+
+  public async reportMessage(userId: string, req: ReportMessageRequest): Promise<MessageReport> {
+    let gymId: string | null = null;
+    if (req.messageId) {
+      const m = await this.messages.findById(req.messageId);
+      const conv = m ? await this.conversations.findById(m.conversationId) : null;
+      gymId = conv?.gymId ?? (await this.firstSharedActiveGym(userId, req.reportedUserId));
+    } else {
+      gymId = await this.firstSharedActiveGym(userId, req.reportedUserId);
+    }
+    if (!gymId) throw new AppError("bad_request", "No shared gym to route this report");
+    const report: MessageReport = {
+      id: this.newId(), messageId: req.messageId, reportedUserId: req.reportedUserId, reporterId: userId,
+      gymId, reason: req.reason, note: req.note, status: "open", createdAt: new Date().toISOString(),
+    };
+    await this.reports.insert(report);
+    return report;
+  }
+
+  public async listReports(userId: string, gymId: string, status: MessageReportStatus | undefined, role: UserRole): Promise<MessageReport[]> {
+    await assertCanManageGym(this.authzDeps(), userId, gymId, role);
+    return this.reports.listByGym(gymId, status);
+  }
+
+  public async resolveReport(userId: string, reportId: string, req: ResolveReportRequest, role: UserRole): Promise<void> {
+    const report = await this.reports.findById(reportId);
+    if (!report) throw new AppError("not_found", `Report ${reportId} not found`);
+    await assertCanManageGym(this.authzDeps(), userId, report.gymId, role);
+    await this.reports.updateStatus(reportId, req.status, new Date().toISOString());
   }
 }
