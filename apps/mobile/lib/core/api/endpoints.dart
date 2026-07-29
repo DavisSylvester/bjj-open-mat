@@ -73,4 +73,11 @@ class Endpoints {
   static String classInstructorRating(String classId) => '/api/v1/classes/$classId/instructor-rating';
   static String userInstructorRating(String userId) => '/api/v1/users/$userId/instructor-rating';
   static String gymInstructorFeedback(String gymId) => '/api/v1/gyms/$gymId/instructor-feedback';
+
+  // Forum
+  static String gymForumQuestions(String gymId) => '/api/v1/gyms/$gymId/forum/questions';
+  static String forumQuestion(String questionId) => '/api/v1/forum/questions/$questionId';
+  static String forumQuestionAnswers(String questionId) => '/api/v1/forum/questions/$questionId/answers';
+  static String forumQuestionAccept(String questionId) => '/api/v1/forum/questions/$questionId/accept';
+  static String forumAnswer(String answerId) => '/api/v1/forum/answers/$answerId';
 }
