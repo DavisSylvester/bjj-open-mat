@@ -19,7 +19,9 @@ export function facade(seed?: Seed) {
   const participants = new Map<string, ConversationParticipant>();
   (seed?.participants ?? []).forEach((p) => participants.set(`${p.conversationId}:${p.userId}`, p));
   const messages = new Map<string, Message>();
-  (seed?.messages ?? []).forEach((m) => messages.set(m.id, m));
+  const msgInsertIndex = new Map<string, number>();
+  let msgInsertCounter = 0;
+  (seed?.messages ?? []).forEach((m) => { messages.set(m.id, m); msgInsertIndex.set(m.id, msgInsertCounter++); });
   const blocks = new Map<string, UserBlock>();
   (seed?.blocks ?? []).forEach((b) => blocks.set(b.id, b));
   const channelReads = new Map<string, ChannelReadState>();
@@ -39,11 +41,17 @@ export function facade(seed?: Seed) {
     update: async (id: string, patch: Partial<Conversation>) => { const c = conversations.get(id); if (!c) return null; const n = { ...c, ...patch }; Object.keys(patch).forEach((k) => { if ((patch as Record<string, unknown>)[k] === undefined) delete (n as Record<string, unknown>)[k]; }); conversations.set(id, n); return n; },
     delete: async (id: string) => { conversations.delete(id); },
   };
+  const msgCmpDesc = (a: Message, b: Message): number => {
+    const tCmp = (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
+    if (tCmp !== 0) return tCmp;
+    // tie-break by insertion order (later insert = higher index = "newer")
+    return (msgInsertIndex.get(b.id) ?? 0) - (msgInsertIndex.get(a.id) ?? 0);
+  };
   const msgRepo = {
-    insert: async (m: Message) => { messages.set(m.id, m); return m; },
+    insert: async (m: Message) => { messages.set(m.id, m); msgInsertIndex.set(m.id, msgInsertCounter++); return m; },
     findById: async (id: string) => messages.get(id) ?? null,
-    listByConversation: async (cid: string, before: string | undefined, limit: number) => [...messages.values()].filter((m) => m.conversationId === cid && (before === undefined || (m.createdAt ?? "") < before)).sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? "")).slice(0, limit),
-    latestForConversation: async (cid: string) => [...messages.values()].filter((m) => m.conversationId === cid).sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""))[0] ?? null,
+    listByConversation: async (cid: string, before: string | undefined, limit: number) => [...messages.values()].filter((m) => m.conversationId === cid && (before === undefined || (m.createdAt ?? "") < before)).sort(msgCmpDesc).slice(0, limit),
+    latestForConversation: async (cid: string) => [...messages.values()].filter((m) => m.conversationId === cid).sort(msgCmpDesc)[0] ?? null,
     countAfter: async (cid: string, after: string | undefined) => [...messages.values()].filter((m) => m.conversationId === cid && !m.deletedAt && (after === undefined || (m.createdAt ?? "") > after)).length,
     softDelete: async (id: string, at: string) => { const m = messages.get(id); if (m) { m.deletedAt = at; m.body = ""; } },
     update: async (id: string, patch: Partial<Message>) => { const m = messages.get(id); if (!m) return null; const n = { ...m, ...patch }; messages.set(id, n); return n; },

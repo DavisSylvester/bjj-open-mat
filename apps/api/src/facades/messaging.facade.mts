@@ -16,12 +16,6 @@ import type { GymRepository } from "../repositories/gym.repository.mts";
 
 type IdFactory = () => string;
 
-let _lastNow = 0;
-function monotonicIso(): string {
-  const t = Date.now();
-  _lastNow = t > _lastNow ? t : _lastNow + 1;
-  return new Date(_lastNow).toISOString();
-}
 type ConvRepo = Pick<ConversationRepository, "insert" | "findById" | "findDirectByPairKey" | "listChannelsByGym" | "updateLastMessage" | "update" | "delete">;
 type MsgRepo = Pick<MessageRepository, "insert" | "findById" | "listByConversation" | "latestForConversation" | "countAfter" | "softDelete" | "update">;
 type PartRepo = Pick<ConversationParticipantRepository, "insertMany" | "find" | "listByConversation" | "listActiveForUser" | "setLastReadAt" | "setMuted" | "setLeftAt">;
@@ -117,7 +111,8 @@ export class MessagingFacade {
 
   private async assertAccess(userId: string, conv: Conversation, role: UserRole): Promise<void> {
     if (conv.kind === "gym_channel") {
-      await assertActiveMember(this.authzDeps(), userId, conv.gymId as string, role);
+      if (!conv.gymId) throw new AppError("not_found", "gym_channel missing gymId");
+      await assertActiveMember(this.authzDeps(), userId, conv.gymId, role);
       return;
     }
     const p = await this.participants.find(conv.id, userId);
@@ -180,7 +175,7 @@ export class MessagingFacade {
     const blocked = new Set(await this.blocks.listBlockedBy(userId));
     const visible = list.filter((m) => !blocked.has(m.authorId));
     // mark read
-    const now: string = monotonicIso();
+    const now: string = new Date().toISOString();
     if (conv.kind === "gym_channel") await this.channelReads.upsertLastReadAt(conversationId, userId, now, this.newId());
     else await this.participants.setLastReadAt(conversationId, userId, now);
     return visible;
@@ -194,7 +189,7 @@ export class MessagingFacade {
       const other = (await this.participants.listByConversation(conversationId)).map((p) => p.userId).find((u) => u !== userId);
       if (other && await this.blocks.existsEitherWay(userId, other)) throw new AppError("forbidden", "Messaging is blocked");
     }
-    const now: string = monotonicIso();
+    const now: string = new Date().toISOString();
     const message: Message = { id: this.newId(), conversationId, authorId: userId, body: req.body, createdAt: now };
     await this.messages.insert(message);
     await this.conversations.updateLastMessage(conversationId, now, req.body.slice(0, 140));
