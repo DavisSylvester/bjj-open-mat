@@ -1,6 +1,7 @@
 // apps/api/src/facades/messaging.facade.mts
 import type {
-  Conversation, ConversationParticipant, CreateChannelRequest, CreateGroupRequest, Gym, GymMembership, UserRole,
+  Conversation, ConversationParticipant, ConversationSummary, CreateChannelRequest, CreateGroupRequest,
+  Gym, GymMembership, Message, MessageListQuery, SendMessageRequest, UserRole,
 } from "@bjj/contract";
 import { AppError } from "../http/errors.mts";
 import { assertActiveMember, assertCanManageGym } from "./gym-authz.mts";
@@ -14,6 +15,13 @@ import type { MembershipRepository } from "../repositories/membership.repository
 import type { GymRepository } from "../repositories/gym.repository.mts";
 
 type IdFactory = () => string;
+
+let _lastNow = 0;
+function monotonicIso(): string {
+  const t = Date.now();
+  _lastNow = t > _lastNow ? t : _lastNow + 1;
+  return new Date(_lastNow).toISOString();
+}
 type ConvRepo = Pick<ConversationRepository, "insert" | "findById" | "findDirectByPairKey" | "listChannelsByGym" | "updateLastMessage" | "update" | "delete">;
 type MsgRepo = Pick<MessageRepository, "insert" | "findById" | "listByConversation" | "latestForConversation" | "countAfter" | "softDelete" | "update">;
 type PartRepo = Pick<ConversationParticipantRepository, "insertMany" | "find" | "listByConversation" | "listActiveForUser" | "setLastReadAt" | "setMuted" | "setLeftAt">;
@@ -105,5 +113,91 @@ export class MessagingFacade {
       channels = [general];
     }
     return channels;
+  }
+
+  private async assertAccess(userId: string, conv: Conversation, role: UserRole): Promise<void> {
+    if (conv.kind === "gym_channel") {
+      await assertActiveMember(this.authzDeps(), userId, conv.gymId as string, role);
+      return;
+    }
+    const p = await this.participants.find(conv.id, userId);
+    if (!p || p.leftAt) throw new AppError("forbidden", "You are not a participant");
+  }
+
+  private async unreadFor(userId: string, conv: Conversation): Promise<number> {
+    if (conv.kind === "gym_channel") {
+      const state = await this.channelReads.find(conv.id, userId);
+      return this.messages.countAfter(conv.id, state?.lastReadAt);
+    }
+    const p = await this.participants.find(conv.id, userId);
+    return this.messages.countAfter(conv.id, p?.lastReadAt);
+  }
+
+  private async otherParticipantIds(userId: string, conv: Conversation): Promise<string[]> {
+    if (conv.kind === "gym_channel") return [];
+    const rows = await this.participants.listByConversation(conv.id);
+    return rows.filter((p) => p.userId !== userId).map((p) => p.userId);
+  }
+
+  public async listConversations(
+    userId: string, role: UserRole, page: number, limit: number,
+  ): Promise<{ items: ConversationSummary[]; total: number }> {
+    const partRows = await this.participants.listActiveForUser(userId);
+    const direct: Conversation[] = [];
+    for (const row of partRows) {
+      const c = await this.conversations.findById(row.conversationId);
+      if (c) direct.push(c);
+    }
+    // gym channels for gyms where the user is an active member
+    const memberships = await this.memberships.listByUser(userId);
+    const activeGymIds = memberships.filter((m) => m.status === "active").map((m) => m.gymId);
+    const channels: Conversation[] = [];
+    for (const gymId of activeGymIds) {
+      const list = await this.conversations.listChannelsByGym(gymId);
+      channels.push(...list);
+    }
+    const all = [...direct, ...channels];
+    const summaries = await Promise.all(all.map(async (conv) => {
+      const [unreadCount, lastMessage] = await Promise.all([this.unreadFor(userId, conv), this.messages.latestForConversation(conv.id)]);
+      let muted = false;
+      if (conv.kind === "gym_channel") muted = (await this.channelReads.find(conv.id, userId))?.muted ?? false;
+      else muted = (await this.participants.find(conv.id, userId))?.muted ?? false;
+      const others = await this.otherParticipantIds(userId, conv);
+      return { conversation: conv, unreadCount, muted, lastMessage: lastMessage ?? undefined, otherParticipantIds: others };
+    }));
+    summaries.sort((a, b) => (b.conversation.lastMessageAt ?? "").localeCompare(a.conversation.lastMessageAt ?? ""));
+    const total = summaries.length;
+    const startIdx = (page - 1) * limit;
+    return { items: summaries.slice(startIdx, startIdx + limit), total };
+  }
+
+  public async getMessages(userId: string, conversationId: string, req: MessageListQuery, role: UserRole): Promise<Message[]> {
+    const conv = await this.conversations.findById(conversationId);
+    if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
+    await this.assertAccess(userId, conv, role);
+    const limit: number = req.limit ?? 30;
+    const list = await this.messages.listByConversation(conversationId, req.before, limit);
+    const blocked = new Set(await this.blocks.listBlockedBy(userId));
+    const visible = list.filter((m) => !blocked.has(m.authorId));
+    // mark read
+    const now: string = monotonicIso();
+    if (conv.kind === "gym_channel") await this.channelReads.upsertLastReadAt(conversationId, userId, now, this.newId());
+    else await this.participants.setLastReadAt(conversationId, userId, now);
+    return visible;
+  }
+
+  public async sendMessage(userId: string, conversationId: string, req: SendMessageRequest, role: UserRole): Promise<Message> {
+    const conv = await this.conversations.findById(conversationId);
+    if (!conv) throw new AppError("not_found", `Conversation ${conversationId} not found`);
+    await this.assertAccess(userId, conv, role);
+    if (conv.kind === "direct") {
+      const other = (await this.participants.listByConversation(conversationId)).map((p) => p.userId).find((u) => u !== userId);
+      if (other && await this.blocks.existsEitherWay(userId, other)) throw new AppError("forbidden", "Messaging is blocked");
+    }
+    const now: string = monotonicIso();
+    const message: Message = { id: this.newId(), conversationId, authorId: userId, body: req.body, createdAt: now };
+    await this.messages.insert(message);
+    await this.conversations.updateLastMessage(conversationId, now, req.body.slice(0, 140));
+    return message;
   }
 }

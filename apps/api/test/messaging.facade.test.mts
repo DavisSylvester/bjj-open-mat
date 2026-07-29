@@ -2,6 +2,7 @@
 import { describe, expect, it } from "bun:test";
 import { MessagingFacade } from "../src/facades/messaging.facade.mts";
 import type { Conversation, ConversationParticipant, Gym, GymMembership, Message, UserBlock, MessageReport, ChannelReadState } from "@bjj/contract";
+import type { MessageListQuery } from "@bjj/contract";
 
 interface Seed {
   gymOwnerId?: string;
@@ -133,5 +134,53 @@ describe("MessagingFacade — creation + gating", () => {
     const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" })] });
     const channels = await owner.f.listChannels("u1", "g1", "practitioner");
     expect(channels.some((c) => c.title === "General")).toBe(true);
+  });
+});
+
+describe("MessagingFacade — read + send", () => {
+  it("send + list: unread counts, last message, access", async () => {
+    const { f, conversations, participants } = facade({ memberships: [member("u1"), member("u2")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    await f.sendMessage("u1", conv.id, { body: "hey" }, "practitioner");
+    await f.sendMessage("u1", conv.id, { body: "you there?" }, "practitioner");
+    // u2 has never read -> unread 2
+    const u2list = await f.listConversations("u2", "practitioner", 1, 20);
+    const summary = u2list.items.find((s) => s.conversation.id === conv.id);
+    expect(summary?.unreadCount).toBe(2);
+    expect(summary?.lastMessage?.body).toBe("you there?");
+    expect(summary?.otherParticipantIds).toEqual(["u1"]);
+    // u2 reads -> unread 0
+    await f.getMessages("u2", conv.id, { }, "practitioner");
+    const after = await f.listConversations("u2", "practitioner", 1, 20);
+    expect(after.items.find((s) => s.conversation.id === conv.id)?.unreadCount).toBe(0);
+    expect(conversations.get(conv.id)?.lastMessagePreview).toBe("you there?");
+    expect(participants.get(`${conv.id}:u2`)?.lastReadAt).toBeDefined();
+  });
+
+  it("non-participant cannot read a direct conversation", async () => {
+    const { f } = facade({ memberships: [member("u1"), member("u2"), member("u3")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    await expect(f.getMessages("u3", conv.id, {}, "practitioner")).rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("channel: any active member reads + posts; unread via channel read-state", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2")] });
+    const [channel] = await owner.f.listChannels("u1", "g1", "practitioner");
+    await owner.f.sendMessage("u1", channel.id, { body: "welcome" }, "practitioner");
+    // u2 is a plain member -> can read + post
+    const msgs = await owner.f.getMessages("u2", channel.id, {}, "practitioner");
+    expect(msgs.length).toBe(1);
+    await owner.f.sendMessage("u2", channel.id, { body: "thanks coach" }, "practitioner");
+    expect((await owner.f.getMessages("u2", channel.id, {}, "practitioner")).length).toBe(2);
+  });
+
+  it("blocked author's messages are hidden from the blocker in a group", async () => {
+    const { f, blocks } = facade({ memberships: [member("u1"), member("u2"), member("u3")] });
+    const g = await f.createGroup("u1", "g1", { gymId: "g1", title: "Squad", participantIds: ["u2", "u3"] }, "practitioner");
+    await f.sendMessage("u2", g.id, { body: "from u2" }, "practitioner");
+    await f.sendMessage("u3", g.id, { body: "from u3" }, "practitioner");
+    blocks.set("b1", { id: "b1", blockerId: "u1", blockedId: "u2" });
+    const seen = await f.getMessages("u1", g.id, {}, "practitioner");
+    expect(seen.map((m) => m.body)).toEqual(["from u3"]);
   });
 });
