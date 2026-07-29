@@ -18,6 +18,12 @@ export const COLLECTIONS = {
   instructorRatings: "instructorRatings",
   forumQuestions: "forumQuestions",
   forumAnswers: "forumAnswers",
+  conversations: "conversations",
+  messages: "messages",
+  conversationParticipants: "conversationParticipants",
+  channelReadStates: "channelReadStates",
+  userBlocks: "userBlocks",
+  messageReports: "messageReports",
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
