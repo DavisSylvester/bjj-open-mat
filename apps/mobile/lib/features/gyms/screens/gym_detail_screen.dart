@@ -61,11 +61,25 @@ class _GlassGymDetail extends ConsumerWidget {
     return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
   }
 
+  bool _deriveCanAccessForum(WidgetRef ref) {
+    final myId = ref.watch(currentUserIdProvider);
+    if (myId == null) return false;
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    final isOwner = gym.ownerId == myId;
+    final rosterAsync = ref.watch(rosterProvider(gym.id));
+    final isMember = rosterAsync.maybeWhen(
+      data: (members) => members.any((m) => m.userId == myId),
+      orElse: () => false,
+    );
+    return isAdmin || isOwner || isMember;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(gymSessionsProvider(gym.id));
     final favoritesAsync = ref.watch(myFavoritesProvider);
     final canManage = _deriveCanManage(ref);
+    final canAccessForum = _deriveCanAccessForum(ref);
     final isFavorite = favoritesAsync.maybeWhen(
       data: (gyms) => gyms.any((g) => g.id == gym.id),
       orElse: () => false,
@@ -198,6 +212,26 @@ class _GlassGymDetail extends ConsumerWidget {
                 ]),
               ),
             ),
+            if (canAccessForum) ...[
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => context.push('/gym/${gym.id}/forum'),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Icon(Icons.forum_outlined, size: 16, color: t.text),
+                    const SizedBox(width: 8),
+                    Text('Forum', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                  ]),
+                ),
+              ),
+            ],
             if (canManage) ...[
               const SizedBox(height: 12),
               GestureDetector(

@@ -1,4 +1,5 @@
 import {
+  AcceptAnswerRequest,
   Attendee,
   AuthSyncRequest,
   BeltRank,
@@ -13,12 +14,19 @@ import {
   ClassRsvp,
   ClassRsvpRequest,
   ClassType,
+  CreateAnswerRequest,
   CreateCheckInRequest,
   CreateClassRequest,
   CreateGymRequest,
   CreateOpenMatRequest,
+  CreateQuestionRequest,
   ErrorResponse,
   Favorite,
+  ForumAnswer,
+  ForumCategory,
+  ForumListQuery,
+  ForumQuestion,
+  ForumQuestionDetail,
   Gym,
   GiType,
   GymClass,
@@ -49,11 +57,13 @@ import {
   ScheduledClass,
   ScheduleQuery,
   SkillLevel,
+  UpdateAnswerRequest,
   UpdateClassRequest,
   UpdateGymRequest,
   UpdateMembershipRequest,
   UpdateMyMembershipRequest,
   UpdateOpenMatRequest,
+  UpdateQuestionRequest,
   UpdateUserRequest,
   UpsertInstructorRatingRequest,
   UpsertJournalRequest,
@@ -88,6 +98,8 @@ export function buildOpenApiDocument(): Record<string, unknown> {
     { name: "id", in: "path", required: true, description: "Class ID", schema: { type: "string" } },
     { name: "date", in: "path", required: true, description: "ISO YYYY-MM-DD", schema: { type: "string" } },
   ];
+  const questionIdParam = [{ name: "id", in: "path", required: true, description: "Question ID", schema: { type: "string" } }];
+  const answerIdParam = [{ name: "id", in: "path", required: true, description: "Answer ID", schema: { type: "string" } }];
 
   return {
     openapi: "3.1.0",
@@ -378,6 +390,71 @@ export function buildOpenApiDocument(): Record<string, unknown> {
           responses: ok(listOf("InstructorFeedbackItem")),
         },
       },
+      "/api/v1/gyms/{id}/forum/questions": {
+        post: {
+          summary: "Post a question to a gym forum",
+          parameters: gymIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("CreateQuestionRequest") } } },
+          responses: ok(dataOf("ForumQuestion")),
+        },
+        get: {
+          summary: "List forum questions for a gym",
+          parameters: [
+            ...gymIdParam,
+            { name: "category", in: "query", required: false, description: "Filter by category", schema: { type: "string" } },
+            { name: "page", in: "query", required: false, schema: { type: "integer" } },
+            { name: "limit", in: "query", required: false, schema: { type: "integer" } },
+          ],
+          responses: ok(listOf("ForumQuestion")),
+        },
+      },
+      "/api/v1/forum/questions/{id}": {
+        get: {
+          summary: "Get forum question detail (with answers)",
+          parameters: questionIdParam,
+          responses: ok(dataOf("ForumQuestionDetail")),
+        },
+        patch: {
+          summary: "Update a forum question",
+          parameters: questionIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpdateQuestionRequest") } } },
+          responses: ok(dataOf("ForumQuestion")),
+        },
+        delete: {
+          summary: "Delete a forum question",
+          parameters: questionIdParam,
+          responses: { "200": { description: "OK" } },
+        },
+      },
+      "/api/v1/forum/questions/{id}/answers": {
+        post: {
+          summary: "Post an answer to a forum question",
+          parameters: questionIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("CreateAnswerRequest") } } },
+          responses: ok(dataOf("ForumAnswer")),
+        },
+      },
+      "/api/v1/forum/answers/{id}": {
+        patch: {
+          summary: "Update a forum answer",
+          parameters: answerIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpdateAnswerRequest") } } },
+          responses: ok(dataOf("ForumAnswer")),
+        },
+        delete: {
+          summary: "Delete a forum answer",
+          parameters: answerIdParam,
+          responses: { "200": { description: "OK" } },
+        },
+      },
+      "/api/v1/forum/questions/{id}/accept": {
+        post: {
+          summary: "Mark an answer as accepted",
+          parameters: questionIdParam,
+          requestBody: { required: true, content: { "application/json": { schema: ref("AcceptAnswerRequest") } } },
+          responses: { "200": { description: "OK" } },
+        },
+      },
       "/api/v1/waitlist": {
         post: {
           summary: "Join the founding waitlist (public)",
@@ -457,6 +534,16 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         JournalRangeQuery,
         OccurrenceJournalQuery,
         InstructorFeedbackQuery,
+        ForumCategory,
+        ForumQuestion,
+        ForumAnswer,
+        ForumQuestionDetail,
+        CreateQuestionRequest,
+        UpdateQuestionRequest,
+        CreateAnswerRequest,
+        UpdateAnswerRequest,
+        AcceptAnswerRequest,
+        ForumListQuery,
       },
     },
   };
