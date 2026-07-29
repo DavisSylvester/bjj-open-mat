@@ -8,6 +8,7 @@ import '../../gyms/data/gym_repository.dart';
 import '../../gyms/data/gym_requests.dart';
 import '../../gyms/models/gym.dart';
 import 'my_gyms_screen.dart';
+import '../../../core/api/friendly_error.dart';
 
 final gymDetailProvider = FutureProvider.family<Gym, String>((ref, id) async {
   return ref.read(gymRepositoryProvider).getById(id);
@@ -105,7 +106,7 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
               error: (e, _) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Text(e.toString(), textAlign: TextAlign.center, style: t.bodyStyle.copyWith(color: t.red)),
+                  child: Text(friendlyErrorMessage(e), textAlign: TextAlign.center, style: t.bodyStyle.copyWith(color: t.red)),
                 ),
               ),
               data: (gym) {

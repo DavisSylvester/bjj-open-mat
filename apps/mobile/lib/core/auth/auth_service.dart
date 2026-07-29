@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../api/api_client.dart';
 import '../api/endpoints.dart';
+import '../api/friendly_error.dart';
 
 // Auth0 config (supplied via --dart-define). Domain/clientId/audience are
 // public client values; the audience must match the Auth0 API identifier.
@@ -250,7 +251,17 @@ class AuthStateNotifier extends Notifier<AuthState> {
       // unauthenticated so the app always leaves the splash and lands on /login,
       // but keep the reason so the login screen and console can show it.
       debugPrint('checkAuth failed: $e');
-      state = AuthState(status: AuthStatus.unauthenticated, error: e.toString());
+      if (isUnauthorized(e)) {
+        // The stored token was rejected (expired, revoked, or left over from a
+        // previous install — the iOS Keychain outlives the app). That is the
+        // normal "your session ended" path, not an error worth showing: drop the
+        // dead credentials so the next launch skips the request entirely, and
+        // land on /login with a clean screen.
+        await _authService.clearStoredSession();
+        state = const AuthState(status: AuthStatus.unauthenticated);
+        return;
+      }
+      state = AuthState(status: AuthStatus.unauthenticated, error: friendlyErrorMessage(e));
     }
   }
 
@@ -284,10 +295,20 @@ class AuthStateNotifier extends Notifier<AuthState> {
         final user = await _authService.getOrCreateProfile();
         state = state.copyWith(status: AuthStatus.authenticated, user: user);
       } else {
-        state = state.copyWith(status: AuthStatus.unauthenticated, error: 'Login cancelled');
+        // No credentials came back — the user backed out of the hosted login.
+        state = state.copyWith(status: AuthStatus.unauthenticated);
       }
     } catch (e) {
-      state = state.copyWith(status: AuthStatus.unauthenticated, error: e.toString());
+      debugPrint('login failed: $e');
+      if (isUserCancelledLogin(e)) {
+        // Dismissing the sign-in sheet is a deliberate choice, not a failure.
+        // Return to the login screen silently. (`copyWith` assigns `error`
+        // directly rather than falling back to the previous value, so omitting
+        // it clears any message left over from an earlier attempt.)
+        state = state.copyWith(status: AuthStatus.unauthenticated);
+        return;
+      }
+      state = state.copyWith(status: AuthStatus.unauthenticated, error: friendlyErrorMessage(e));
     }
   }
 
@@ -421,6 +442,16 @@ class AuthService {
   Future<void> deleteAccount() async {
     await apiClient.delete(Endpoints.usersMe);
     await logout();
+  }
+
+  /// Drops locally stored credentials without contacting Auth0.
+  ///
+  /// Unlike [logout] this never opens the hosted logout page, so it is safe to
+  /// call during startup when a stored token turns out to be dead.
+  Future<void> clearStoredSession() async {
+    await _storage.delete(key: 'access_token');
+    await _storage.delete(key: 'refresh_token');
+    await apiClient.clearToken();
   }
 
   Future<String?> getStoredToken() async {
