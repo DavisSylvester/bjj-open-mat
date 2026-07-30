@@ -1,0 +1,4 @@
+[test]
+# Forces tests onto a local database regardless of any exported MONGODB_URI.
+# See test/setup.mts for why.
+preload = ["./test/setup.mts"]
