@@ -57,6 +57,13 @@ Future<void> _pump(WidgetTester tester, _FakeReportRepository fake) async {
 void main() {
   setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
 
+  testWidgets('renders a back affordance since Report is now a pushed top-level route', (tester) async {
+    final fake = _FakeReportRepository();
+    await _pump(tester, fake);
+
+    expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+  });
+
   testWidgets('submit is disabled with empty fields and does not call create', (tester) async {
     final fake = _FakeReportRepository();
     await _pump(tester, fake);

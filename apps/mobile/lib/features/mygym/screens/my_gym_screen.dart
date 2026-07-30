@@ -6,6 +6,7 @@ import '../../../core/design/tokens.dart';
 import '../../classes/data/class_repository.dart';
 import '../../forum/data/forum_repository.dart';
 import '../../forum/models/forum_question.dart';
+import '../../gyms/data/gym_permissions.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../gyms/models/gym.dart';
 import '../data/home_gym_provider.dart';
@@ -269,13 +270,18 @@ class _NextUp extends ConsumerWidget {
 
 // ── Quick actions ────────────────────────────────────────────────────────────
 
-class _QuickActions extends StatelessWidget {
+class _QuickActions extends ConsumerWidget {
   final AppTokens t;
   final String gymId;
   const _QuickActions({required this.t, required this.gymId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final gymAsync = ref.watch(gymByIdProvider(gymId));
+    final ownerId = gymAsync.maybeWhen(data: (gym) => gym.ownerId, orElse: () => null);
+    final canManage = deriveCanManageGym(ref, gymId: gymId, ownerId: ownerId);
+    final canAccessForum = deriveCanAccessForumGym(ref, gymId: gymId, ownerId: ownerId);
+
     final actions = <_QuickAction>[
       _QuickAction(
         key: 'mygym-action-schedule',
@@ -289,18 +295,20 @@ class _QuickActions extends StatelessWidget {
         label: 'Roster',
         path: '/gym/$gymId/roster',
       ),
-      _QuickAction(
-        key: 'mygym-action-forum',
-        icon: LucideIcons.messageSquare,
-        label: 'Forum',
-        path: '/gym/$gymId/forum',
-      ),
-      _QuickAction(
-        key: 'mygym-action-instructor-feedback',
-        icon: LucideIcons.star,
-        label: 'Feedback',
-        path: '/gym/$gymId/instructor-feedback',
-      ),
+      if (canAccessForum)
+        _QuickAction(
+          key: 'mygym-action-forum',
+          icon: LucideIcons.messageSquare,
+          label: 'Forum',
+          path: '/gym/$gymId/forum',
+        ),
+      if (canManage)
+        _QuickAction(
+          key: 'mygym-action-instructor-feedback',
+          icon: LucideIcons.star,
+          label: 'Feedback',
+          path: '/gym/$gymId/instructor-feedback',
+        ),
     ];
 
     return GridView.count(
