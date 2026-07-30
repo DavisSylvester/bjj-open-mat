@@ -4,12 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
-import '../../../shared/widgets/session_row.dart';
 import '../../favorites/data/favorite_repository.dart';
 import '../../membership/widgets/join_gym_button.dart';
 import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
-import '../data/gym_sessions_provider.dart';
 import '../data/directions.dart';
 import '../models/gym.dart';
 
@@ -48,7 +46,6 @@ class _GlassGymDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sessionsAsync = ref.watch(gymSessionsProvider(gym.id));
     final favoritesAsync = ref.watch(myFavoritesProvider);
     final canManage = deriveCanManageGym(ref, gymId: gym.id, ownerId: gym.ownerId);
     final canAccessForum = deriveCanAccessForumGym(ref, gymId: gym.id, ownerId: gym.ownerId);
@@ -150,6 +147,24 @@ class _GlassGymDetail extends ConsumerWidget {
             JoinGymButton(gymId: gym.id),
             const SizedBox(height: 12),
             GestureDetector(
+              onTap: () => context.push('/gym/${gym.id}/open-mats'),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: t.border),
+                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.event_available_outlined, size: 16, color: t.text),
+                  const SizedBox(width: 8),
+                  Text('Open Mats', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                ]),
+              ),
+            ),
+            const SizedBox(height: 12),
+            GestureDetector(
               onTap: () => context.push('/gym/${gym.id}/roster'),
               child: Container(
                 width: double.infinity,
@@ -224,25 +239,6 @@ class _GlassGymDetail extends ConsumerWidget {
                 ),
               ),
             ],
-            const SizedBox(height: 20),
-            Text('Open Mats', style: t.h2Style),
-            const SizedBox(height: 8),
-            sessionsAsync.when(
-              loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
-              error: (e, _) => Text("Couldn't load sessions", style: t.bodyStyle.copyWith(color: t.muted)),
-              data: (mats) => mats.isEmpty
-                  ? Text('No open mats posted yet.', style: t.bodyStyle.copyWith(color: t.muted))
-                  : Column(children: [
-                      for (final m in mats)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: SessionRow(
-                            session: sessionRowFromOpenMat(m),
-                            onTap: () => context.push('/open-mat/${m.id}'),
-                          ),
-                        ),
-                    ]),
-            ),
             if (gym.description != null && gym.description!.isNotEmpty) ...[
               const SizedBox(height: 20),
               Text('About', style: t.h2Style),
