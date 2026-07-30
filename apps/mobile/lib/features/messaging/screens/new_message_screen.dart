@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../membership/data/membership_repository.dart';
@@ -119,6 +120,7 @@ class _NewMessageScreenState extends ConsumerState<NewMessageScreen>
         _selectedGroupMemberIds.toList(),
       );
       ref.invalidate(conversationsProvider);
+      ref.invalidate(gymChannelsProvider(widget.gymId));
       if (mounted) _openThread(conv);
     } catch (e) {
       if (mounted) {
@@ -153,8 +155,15 @@ class _NewMessageScreenState extends ConsumerState<NewMessageScreen>
   }
 
   void _openThread(Conversation conv) {
-    // Pop back to conversations list first, then push thread.
-    Navigator.of(context).pop();
+    // Navigate to the thread. Replace current route so the new-message screen
+    // is not on the back stack (go replaces, push would stack it behind thread).
+    context.go(
+      '/messages/${conv.id}',
+      extra: <String, dynamic>{
+        'gymId': conv.gymId ?? widget.gymId,
+        'kind': conv.kind,
+      },
+    );
   }
 
   // ── Build ──────────────────────────────────────────────────────────────────

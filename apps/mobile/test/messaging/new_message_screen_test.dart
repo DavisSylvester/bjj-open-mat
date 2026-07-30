@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bjj_open_mat/core/design/app_theme.dart';
 import 'package:bjj_open_mat/core/auth/auth_service.dart';
@@ -22,8 +23,9 @@ class _FakeMessagingRepository implements MessagingRepository {
   final List<({String gymId, String title})> createChannelCalls = [];
 
   Conversation _makeConversation(String kind) => Conversation(
-        id: 'conv-1',
+        id: 'conv-123',
         kind: kind,
+        gymId: 'g1',
         createdBy: 'u1',
       );
 
@@ -122,9 +124,21 @@ final _fakeMembers = <RosterMember>[
   ),
 ];
 
+// ── Navigation spy ────────────────────────────────────────────────────────────
+
+class _SpyNavigatorObserver extends NavigatorObserver {
+  final List<String?> pushedRoutes = [];
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    pushedRoutes.add(route.settings.name);
+  }
+}
+
 // ── Pump helpers ──────────────────────────────────────────────────────────────
 
 _FakeMessagingRepository _fakeRepo = _FakeMessagingRepository();
+_SpyNavigatorObserver _navObserver = _SpyNavigatorObserver();
 
 Future<void> _pump(
   WidgetTester tester, {
@@ -132,6 +146,7 @@ Future<void> _pump(
   String currentUserId = 'user-me',
 }) async {
   _fakeRepo = _FakeMessagingRepository();
+  _navObserver = _SpyNavigatorObserver();
 
   tester.view.physicalSize = const Size(1080, 1920);
   tester.view.devicePixelRatio = 1.0;
@@ -144,6 +159,24 @@ Future<void> _pump(
     role: isManager ? 'admin' : 'practitioner',
   );
 
+  // Use GoRouter so context.push('/messages/conv-123') is handled correctly.
+  final router = GoRouter(
+    navigatorKey: GlobalKey<NavigatorState>(),
+    observers: [_navObserver],
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const NewMessageScreen(gymId: 'g1'),
+      ),
+      GoRoute(
+        path: '/messages/:conversationId',
+        builder: (context, state) => Scaffold(
+          body: Text('thread-${state.pathParameters['conversationId']}'),
+        ),
+      ),
+    ],
+  );
+
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -152,9 +185,9 @@ Future<void> _pump(
         currentUserIdProvider.overrideWithValue(currentUserId),
         authStateProvider.overrideWith(() => _FakeAuthNotifier(userProfile)),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: AppTheme.glass(),
-        home: const NewMessageScreen(gymId: 'g1'),
+        routerConfig: router,
       ),
     ),
   );
@@ -210,6 +243,9 @@ void main() {
       // Assert startDirect was called with Alice's userId
       expect(_fakeRepo.startDirectCalls, hasLength(1));
       expect(_fakeRepo.startDirectCalls.first, 'user-alice');
+
+      // Assert navigation pushed to the thread route for conv-123
+      expect(find.text('thread-conv-123'), findsOneWidget);
     });
   });
 
@@ -240,6 +276,9 @@ void main() {
       expect(call.gymId, 'g1');
       expect(call.title, 'Team Alpha');
       expect(call.participantIds, contains('user-bob'));
+
+      // Assert navigation pushed to the thread route for conv-123
+      expect(find.text('thread-conv-123'), findsOneWidget);
     });
 
     testWidgets('Create button is disabled when title is empty', (tester) async {
@@ -289,6 +328,9 @@ void main() {
       final call = _fakeRepo.createChannelCalls.first;
       expect(call.gymId, 'g1');
       expect(call.title, 'Announcements');
+
+      // Assert navigation pushed to the thread route for conv-123
+      expect(find.text('thread-conv-123'), findsOneWidget);
     });
   });
 }

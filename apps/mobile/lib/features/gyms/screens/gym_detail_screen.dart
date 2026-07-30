@@ -231,6 +231,8 @@ class _GlassGymDetail extends ConsumerWidget {
                   ]),
                 ),
               ),
+            ],
+            if (canAccessForum) ...[
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () => context.push('/gym/${gym.id}/channels'),
