@@ -101,4 +101,20 @@ void main() {
     expect(find.byKey(const Key('mygym-action-forum')), findsOneWidget);
     expect(find.byKey(const Key('mygym-action-instructor-feedback')), findsOneWidget);
   });
+
+  testWidgets('open mats tile is shown even to a non-member', (tester) async {
+    // Open mats have no membership requirement server-side, unlike Forum and
+    // Feedback. Gating this tile would repeat the 403 defect those two had.
+    await _pump(tester, homeGymId: 'g1', currentUserId: 'stranger', roster: const []);
+    expect(find.byKey(const Key('mygym-action-open-mats')), findsOneWidget);
+    expect(find.byKey(const Key('mygym-action-forum')), findsNothing);
+    expect(find.byKey(const Key('mygym-action-instructor-feedback')), findsNothing);
+  });
+
+  testWidgets('open mats tile sits alongside the other ungated tiles', (tester) async {
+    await _pump(tester, homeGymId: 'g1', currentUserId: 'stranger', roster: const []);
+    expect(find.byKey(const Key('mygym-action-open-mats')), findsOneWidget);
+    expect(find.byKey(const Key('mygym-action-schedule')), findsOneWidget);
+    expect(find.byKey(const Key('mygym-action-roster')), findsOneWidget);
+  });
 }

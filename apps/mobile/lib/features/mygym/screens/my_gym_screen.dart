@@ -284,6 +284,12 @@ class _QuickActions extends ConsumerWidget {
 
     final actions = <_QuickAction>[
       _QuickAction(
+        key: 'mygym-action-open-mats',
+        icon: LucideIcons.calendarDays,
+        label: 'Open Mats',
+        path: '/gym/$gymId/open-mats',
+      ),
+      _QuickAction(
         key: 'mygym-action-schedule',
         icon: LucideIcons.calendar,
         label: 'Schedule',
