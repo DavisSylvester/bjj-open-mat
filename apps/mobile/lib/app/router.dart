@@ -44,6 +44,7 @@ import '../features/forum/screens/forum_list_screen.dart';
 import '../features/forum/screens/ask_question_screen.dart';
 import '../features/forum/screens/forum_question_screen.dart';
 import '../features/messaging/screens/conversations_screen.dart';
+import '../features/messaging/data/messaging_repository.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -323,14 +324,24 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-class _ScaffoldWithNavBar extends StatelessWidget {
+class _ScaffoldWithNavBar extends ConsumerWidget {
   final StatefulNavigationShell shell;
   final bool isOwner;
 
   const _ScaffoldWithNavBar({required this.shell, required this.isOwner});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Aggregate unread count across non-muted conversations for the nav badge.
+    final int messagesUnread = isOwner
+        ? 0
+        : ref.watch(conversationsProvider).maybeWhen(
+            data: (convs) => convs
+                .where((c) => !c.muted)
+                .fold<int>(0, (sum, c) => sum + c.unreadCount),
+            orElse: () => 0,
+          );
+
     return Scaffold(
       body: shell,
       bottomNavigationBar: isOwner
@@ -347,6 +358,7 @@ class _ScaffoldWithNavBar extends StatelessWidget {
                 shell.goBranch(idx, initialLocation: idx == shell.currentIndex);
               },
               onAdd: () => context.push('/add-session'),
+              messagesUnreadCount: messagesUnread,
             ),
     );
   }
