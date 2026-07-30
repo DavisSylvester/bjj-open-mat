@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
+import '../data/attendance_repository.dart';
+import '../data/gym_review_link_repository.dart';
 import '../data/review_repository.dart';
 
 class ReviewScreen extends ConsumerStatefulWidget {
@@ -75,6 +78,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       if (widget.sessionId != null) {
         ref.invalidate(openMatReviewsProvider(widget.sessionId!));
       }
+      await _maybeOfferGoogleReview();
       if (mounted) {
         if (context.canPop()) {
           context.pop(true);
@@ -92,6 +96,51 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         });
       }
     }
+  }
+
+  /// Offers the Google hand-off when the gym has a Google link, to every
+  /// reviewer regardless of score. Every failure path here is silent — the review is already
+  /// saved, and nothing about the hand-off is worth an error message.
+  Future<void> _maybeOfferGoogleReview() async {
+    final sessionId = widget.sessionId;
+    if (sessionId == null) return;
+    try {
+      final session = await ref.read(sessionByIdProvider(sessionId).future);
+      if (!mounted) return;
+      final uri = await ref.read(gymReviewLinkProvider(session.gymId).future);
+      if (!mounted) return;
+      if (!shouldOfferGoogleReview(writeAReviewUri: uri)) return;
+      await _offerGoogleReview(uri!);
+    } catch (_) {
+      // No hand-off. The in-app review is saved either way.
+    }
+  }
+
+  Future<void> _offerGoogleReview(String uri) async {
+    final t = Theme.of(context).extension<AppTokens>()!;
+    final share = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: t.surface,
+        title: Text('Thanks for the review', style: t.h2Style),
+        content: Text(
+          'Want to share it on Google too? It opens Google Maps so you can post it there.',
+          style: t.bodyStyle,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Not now'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Share on Google'),
+          ),
+        ],
+      ),
+    );
+    if (share != true) return;
+    await launchUrl(Uri.parse(uri), mode: LaunchMode.externalApplication);
   }
 
   @override
