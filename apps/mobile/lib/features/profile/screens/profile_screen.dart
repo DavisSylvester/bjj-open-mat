@@ -217,6 +217,13 @@ class _GlassProfile extends StatelessWidget {
                     onTap: () => context.push('/profile/edit'),
                   ),
                   Divider(height: 1, color: t.border),
+                  ListTile(
+                    leading: Icon(LucideIcons.flag, color: t.muted),
+                    title: Text('Report a problem', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                    trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                    onTap: () => context.push('/report'),
+                  ),
+                  Divider(height: 1, color: t.border),
                   Builder(builder: (ctx) {
                     final role = ref.watch(authStateProvider).user?.role;
                     final toggle = roleToggle(role);

@@ -13,6 +13,7 @@ import '../features/search/screens/search_screen.dart';
 import '../features/training/screens/my_training_screen.dart';
 import '../features/report/screens/report_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
+import '../features/mygym/screens/my_gym_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
 import '../features/notifications/screens/notifications_screen.dart';
 import '../features/open_mats/screens/open_mat_detail_screen.dart';
@@ -80,6 +81,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/report',
+        builder: (context, state) => const ReportScreen(),
       ),
       GoRoute(
         path: '/role-select',
@@ -186,6 +191,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
+              path: '/my-gym',
+              builder: (context, state) => const MyGymScreen(),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
               path: '/profile',
               builder: (context, state) => const ProfileScreen(),
               routes: [
@@ -210,12 +221,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(
               path: '/user/:id',
               builder: (context, state) => PublicProfileScreen(userId: state.pathParameters['id']!),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: '/report',
-              builder: (context, state) => const ReportScreen(),
             ),
           ]),
         ],

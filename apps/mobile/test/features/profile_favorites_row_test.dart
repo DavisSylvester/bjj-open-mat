@@ -17,4 +17,11 @@ void main() {
     expect(router, contains("path: 'favorites'"));
     expect(router, contains('FavoritesScreen'));
   });
+
+  test('profile settings wires a Report row to /report', () {
+    final source = File('lib/features/profile/screens/profile_screen.dart').readAsStringSync();
+    expect(source, contains("Text('Report a problem'"),
+        reason: 'Report left the tab bar and must remain reachable from Profile');
+    expect(source, contains("context.push('/report')"));
+  });
 }
