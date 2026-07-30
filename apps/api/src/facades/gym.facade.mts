@@ -88,19 +88,26 @@ export class GymFacade {
   /// not an error — the client simply omits the Google hand-off.
   public async reviewLink(id: string): Promise<{ writeAReviewUri: string | null }> {
     const gym = await this.getById(id);
-    if (gym.googleReviewUri) return { writeAReviewUri: gym.googleReviewUri };
+    // A cached value is a hit either way: a non-empty string is the link
+    // itself, and "" is the sentinel for a definitive "no link" result — both
+    // skip Places. Only the absence of `googleReviewUri` triggers a lookup.
+    if (gym.googleReviewUri !== undefined) {
+      return { writeAReviewUri: gym.googleReviewUri || null };
+    }
     if (!gym.googlePlaceId) return { writeAReviewUri: null };
 
     let uri: string | null = null;
     try {
       uri = await this.places.writeAReviewUri(gym.googlePlaceId);
     } catch {
+      // Transient outage — do not cache, so the next request retries Places.
       return { writeAReviewUri: null };
     }
-    if (!uri) return { writeAReviewUri: null };
 
     // These links are stable, so cache to keep this one Places call per gym.
-    await this.gyms.update(id, { googleReviewUri: uri });
+    // A definitive null is cached too (as "") to avoid re-hitting the paid,
+    // unauthenticated Places API on every request for a gym with no review link.
+    await this.gyms.update(id, { googleReviewUri: uri ?? "" });
     return { writeAReviewUri: uri };
   }
 

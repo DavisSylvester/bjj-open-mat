@@ -4,8 +4,22 @@ import type { PlacesClient } from "../src/services/places-client.mts";
 
 interface StubGym {
   readonly id: string;
+  readonly name: string;
+  readonly address: string;
+  readonly amenities: string[];
+  readonly isVerified: boolean;
   readonly googlePlaceId?: string;
   readonly googleReviewUri?: string;
+}
+
+function makeGym(overrides: Partial<StubGym> & { id: string }): StubGym {
+  return {
+    name: "Test Gym",
+    address: "123 Main St",
+    amenities: [],
+    isVerified: false,
+    ...overrides,
+  };
 }
 
 function makeFacade(
@@ -45,7 +59,7 @@ describe("GymFacade.reviewLink", () => {
       },
     };
     const { facade } = makeFacade(
-      { id: "g1", googlePlaceId: "p1", googleReviewUri: "https://cached" },
+      makeGym({ id: "g1", googlePlaceId: "p1", googleReviewUri: "https://cached" }),
       places,
     );
 
@@ -57,7 +71,7 @@ describe("GymFacade.reviewLink", () => {
     const places: PlacesClient = {
       writeAReviewUri: async (): Promise<string | null> => "https://fetched",
     };
-    const { facade, updates } = makeFacade({ id: "g1", googlePlaceId: "p1" }, places);
+    const { facade, updates } = makeFacade(makeGym({ id: "g1", googlePlaceId: "p1" }), places);
 
     expect(await facade.reviewLink("g1")).toEqual({ writeAReviewUri: "https://fetched" });
     expect(updates).toEqual([{ googleReviewUri: "https://fetched" }]);
@@ -71,7 +85,7 @@ describe("GymFacade.reviewLink", () => {
         return "x";
       },
     };
-    const { facade } = makeFacade({ id: "g1" }, places);
+    const { facade } = makeFacade(makeGym({ id: "g1" }), places);
 
     expect(await facade.reviewLink("g1")).toEqual({ writeAReviewUri: null });
     expect(called).toBe(false);
@@ -83,8 +97,48 @@ describe("GymFacade.reviewLink", () => {
         throw new Error("places down");
       },
     };
-    const { facade } = makeFacade({ id: "g1", googlePlaceId: "p1" }, places);
+    const { facade } = makeFacade(makeGym({ id: "g1", googlePlaceId: "p1" }), places);
 
     expect(await facade.reviewLink("g1")).toEqual({ writeAReviewUri: null });
+  });
+
+  test("caches a definitive null result as the empty-string sentinel", async () => {
+    const places: PlacesClient = {
+      writeAReviewUri: async (): Promise<string | null> => null,
+    };
+    const { facade, updates } = makeFacade(makeGym({ id: "g1", googlePlaceId: "p1" }), places);
+
+    expect(await facade.reviewLink("g1")).toEqual({ writeAReviewUri: null });
+    expect(updates).toEqual([{ googleReviewUri: "" }]);
+  });
+
+  test("a cached empty-string sentinel returns null without calling Places", async () => {
+    let called = false;
+    const places: PlacesClient = {
+      writeAReviewUri: async (): Promise<string | null> => {
+        called = true;
+        return "https://should-not-be-used";
+      },
+    };
+    const { facade, updates } = makeFacade(
+      makeGym({ id: "g1", googlePlaceId: "p1", googleReviewUri: "" }),
+      places,
+    );
+
+    expect(await facade.reviewLink("g1")).toEqual({ writeAReviewUri: null });
+    expect(called).toBe(false);
+    expect(updates).toEqual([]);
+  });
+
+  test("does not cache when the Places call throws", async () => {
+    const places: PlacesClient = {
+      writeAReviewUri: async (): Promise<string | null> => {
+        throw new Error("places down");
+      },
+    };
+    const { facade, updates } = makeFacade(makeGym({ id: "g1", googlePlaceId: "p1" }), places);
+
+    await facade.reviewLink("g1");
+    expect(updates).toEqual([]);
   });
 });
