@@ -8,19 +8,31 @@ interface GeoPoint {
   coordinates: [number, number];
 }
 
-interface GymDoc extends Omit<Gym, "location" | "distanceKm"> {
+/**
+ * Stored shape of a gym. The identifier lives in `_id`; `id` is not stored.
+ *
+ * Historically [insert] also persisted a redundant `id` alongside `_id`, so a
+ * handful of API-created gyms carry both. Scraper-created gyms have only `_id`,
+ * which is why the mapper must derive `id` from `_id` rather than relying on
+ * the field surviving a spread.
+ */
+export interface GymDoc extends Omit<Gym, "id" | "location" | "distanceKm"> {
   _id: string;
   geo?: GeoPoint;
+  /** Legacy duplicate of `_id` on older API-created documents. `_id` wins. */
+  id?: string;
 }
 
 function toGeo(loc: Gym["location"]): GeoPoint | undefined {
   return loc ? { type: "Point", coordinates: [loc.lng, loc.lat] } : undefined;
 }
 
-function fromDoc(doc: (GymDoc & { distanceMeters?: number }) | null): Gym | null {
+export function fromDoc(doc: (GymDoc & { distanceMeters?: number }) | null): Gym | null {
   if (!doc) return null;
-  const { _id, geo, distanceMeters, ...rest } = doc;
-  const gym: Gym = { ...(rest as unknown as Gym) };
+  // `id` is pulled out of `rest` and re-derived from `_id`: the stored copy is
+  // absent on scraper-created gyms and could be stale where it does exist.
+  const { _id, geo, distanceMeters, id: _legacyId, ...rest } = doc;
+  const gym: Gym = { ...(rest as unknown as Omit<Gym, "id">), id: _id };
   if (geo) gym.location = { lng: geo.coordinates[0], lat: geo.coordinates[1] };
   if (typeof distanceMeters === "number") gym.distanceKm = distanceMeters / 1000;
   return gym;
