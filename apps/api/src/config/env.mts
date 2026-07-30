@@ -33,6 +33,9 @@ const EnvSchema = t.Object({
   // only removes app data and logs a no-op for the Auth0 side.
   AUTH0_M2M_CLIENT_ID: t.Optional(t.String()),
   AUTH0_M2M_CLIENT_SECRET: t.Optional(t.String()),
+  // Optional: Google Places API (New) key used for the gym review hand-off
+  // link. Absent in local dev — the review link is then simply omitted.
+  GOOGLE_PLACES_API_KEY: t.Optional(t.String()),
 });
 
 type RawEnv = Static<typeof EnvSchema>;
@@ -58,6 +61,7 @@ export interface AppEnv {
   readonly websiteOrigins: string[];
   readonly auth0M2mClientId: string | undefined;
   readonly auth0M2mClientSecret: string | undefined;
+  readonly googlePlacesApiKey: string | undefined;
 }
 
 export function loadEnv(source: Record<string, string | undefined> = process.env): AppEnv {
@@ -86,5 +90,6 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     ].filter((o): o is string => typeof o === 'string' && o.length > 0),
     auth0M2mClientId: raw.AUTH0_M2M_CLIENT_ID,
     auth0M2mClientSecret: raw.AUTH0_M2M_CLIENT_SECRET,
+    googlePlacesApiKey: raw.GOOGLE_PLACES_API_KEY,
   };
 }

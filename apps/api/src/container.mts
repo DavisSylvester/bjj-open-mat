@@ -10,6 +10,7 @@ import { OpenMatFacade } from "./facades/open-mat.facade.mts";
 import { ReportFacade } from "./facades/report.facade.mts";
 import { UserFacade } from "./facades/user.facade.mts";
 import { ZipcodesGeocoder, type Geocoder } from "./services/geocoder.mts";
+import { GooglePlacesClient, NullPlacesClient, type PlacesClient } from "./services/places-client.mts";
 import {
   S3AssetStorage,
   UnconfiguredAssetStorage,
@@ -73,6 +74,7 @@ export interface Container {
   readonly geocoder: Geocoder;
   readonly assetStorage: AssetStorage;
   readonly audioStorage: AudioStorage;
+  readonly placesClient: PlacesClient;
   ensureIndexes(): Promise<void>;
 }
 
@@ -116,6 +118,9 @@ export function createContainer(db: Db, env: AppEnv): Container {
     env.auth0Domain && env.auth0M2mClientId && env.auth0M2mClientSecret
       ? new HttpAuth0ManagementService(env.auth0Domain, env.auth0M2mClientId, env.auth0M2mClientSecret)
       : new UnconfiguredAuth0ManagementService();
+  const placesClient: PlacesClient = env.googlePlacesApiKey
+    ? new GooglePlacesClient(env.googlePlacesApiKey)
+    : new NullPlacesClient();
 
   return {
     db,
@@ -130,7 +135,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
       return user?.role ?? null;
     },
     userFacade: new UserFacade(userRepo),
-    gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder),
+    gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder, placesClient),
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
@@ -151,6 +156,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     geocoder,
     assetStorage,
     audioStorage,
+    placesClient,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),

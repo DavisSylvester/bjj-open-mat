@@ -3,6 +3,7 @@ import { AppError } from "../http/errors.mts";
 import type { FavoriteRepository } from "../repositories/favorite.repository.mts";
 import type { GymRepository } from "../repositories/gym.repository.mts";
 import type { Geocoder } from "../services/geocoder.mts";
+import type { PlacesClient } from "../services/places-client.mts";
 
 type IdFactory = () => string;
 
@@ -20,6 +21,7 @@ export class GymFacade {
     private readonly favorites: Pick<FavoriteRepository, "add" | "remove" | "listGymIds">,
     private readonly newId: IdFactory,
     private readonly geocoder: Pick<Geocoder, "lookupZip">,
+    private readonly places: PlacesClient,
   ) {}
 
   public async create(ownerId: string, req: CreateGymRequest): Promise<Gym> {
@@ -79,6 +81,27 @@ export class GymFacade {
       address: gym.address,
       mapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
     };
+  }
+
+  /// Returns the Google Maps "write a review" link for a gym, or null when the
+  /// gym has no Google place or Places yields nothing. Null is a normal result,
+  /// not an error — the client simply omits the Google hand-off.
+  public async reviewLink(id: string): Promise<{ writeAReviewUri: string | null }> {
+    const gym = await this.getById(id);
+    if (gym.googleReviewUri) return { writeAReviewUri: gym.googleReviewUri };
+    if (!gym.googlePlaceId) return { writeAReviewUri: null };
+
+    let uri: string | null = null;
+    try {
+      uri = await this.places.writeAReviewUri(gym.googlePlaceId);
+    } catch {
+      return { writeAReviewUri: null };
+    }
+    if (!uri) return { writeAReviewUri: null };
+
+    // These links are stable, so cache to keep this one Places call per gym.
+    await this.gyms.update(id, { googleReviewUri: uri });
+    return { writeAReviewUri: uri };
   }
 
   public async favorite(userId: string, gymId: string): Promise<void> {
