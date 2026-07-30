@@ -146,14 +146,16 @@ submission; the user composes and submits in Google Maps.
 step: "Thanks — want to share this on Google?" with a button opening the Maps review
 composer via `url_launcher` in `LaunchMode.externalApplication`.
 
-**Gates.** The Google step appears only when both hold:
+**Gate.** The Google step appears when the gym has a `googlePlaceId` (already on the
+model, `gym.dart:12`, and in `packages/contract`) and the backend returned a usable URI.
 
-- the gym has a `googlePlaceId` (already on the model, `gym.dart:12`, and in
-  `packages/contract`), and the backend returned a usable URI; and
-- the submitted **overall** rating is 4 or higher.
-
-A 2-star reviewer must not be routed toward the gym's public Google profile. Everyone
-else sees the normal confirmation, unchanged.
+**It is offered to every reviewer regardless of score.** An earlier draft of this spec
+gated it at 4+ stars. That is review gating: Google's Maps user-generated content policy
+prohibits "discouraging or prohibiting negative reviews, or selectively soliciting
+positive reviews from customers," and the FTC's review-suppression rule (effective
+October 2024) reaches the same conduct with penalties up to $51,744 per violation.
+Enforcement risk falls on the gyms' profiles as well as the app. Ask everyone the same
+way.
 
 **Link source.** The legacy `search.google.com/local/writereview?placeid=` URL is
 reported returning 400s in 2026 and is not used. The supported field is
@@ -182,8 +184,8 @@ must not surface a message.
 - Backend: service returns cached URI without calling Places; calls Places on cache
   miss and persists; returns null for a gym with no `googlePlaceId`; returns null when
   Places errors (must not 500 the endpoint).
-- Mobile: Google step hidden when rating is below 4; hidden when the URI is null;
-  shown and launches the URI when both gates pass.
+- Mobile: Google step hidden when the URI is null; shown and launches the URI when a
+  link exists; explicitly independent of the rating.
 
 ---
 
@@ -216,8 +218,8 @@ better shot at a chart position at current scale.
 starts charging, the endpoint returns null and the app degrades to hiding the Google
 step — no user-visible breakage. Acceptable.
 
-**Review-gating optics.** Showing the Google hand-off only to 4+ raters is deliberate
-and applies to *Google*, not to the in-app review, which is always recorded in full
-regardless of score. The App Store prompt (item C) uses Apple's own
-`requestReview()` and is not conditioned on sentiment, which keeps it within Apple's
-rules.
+**Review solicitation compliance.** Neither prompt is conditioned on sentiment. The
+Google hand-off is offered to every reviewer (see item E), and the App Store prompt
+(item C) uses Apple's own `requestReview()`, which Apple forbids gating on predicted
+sentiment. Any future change that shows either prompt selectively to happy users
+reintroduces a policy violation.

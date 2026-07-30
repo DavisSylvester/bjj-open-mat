@@ -534,6 +534,11 @@ Returns the Google Maps "write a review" URI for a gym. Google forbids programma
 
 **Interfaces:**
 - Consumes: `GymRepository` methods `findById` and `update`; `AppError` from `../http/errors.mts`; `data()` from `../http/envelope.mts`
+
+**No `any` in this test.** The Global Constraint holds in test files too. Type the
+stubs to satisfy the exact `Pick<>` shapes `GymFacade`'s constructor declares — read
+those `Pick<>` types first and mirror them. If a stub will not typecheck, widen the
+stub's type properly; never reach for `as any` or an eslint-disable.
 - Produces:
   - `interface PlacesClient { writeAReviewUri(placeId: string): Promise<string | null> }`
   - `class GooglePlacesClient implements PlacesClient`
@@ -587,8 +592,7 @@ function makeFacade(
   };
   const geocoder = { lookupZip: (): null => null };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const facade = new GymFacade(gyms as any, favorites as any, () => "id", geocoder as any, places);
+  const facade = new GymFacade(gyms, favorites, (): string => "id", geocoder, places);
   return { facade, updates };
 }
 
@@ -783,7 +787,7 @@ Add `placesClient` to the returned container object. Import both classes and the
 - [ ] **Step 8: Run tests and lint**
 
 Run: `cd apps/api && bunx eslint --fix src/services/places-client.mts src/facades/gym.facade.mts src/routes/gym.routes.mts src/container.mts src/config/env.mts && bun test`
-Expected: lint clean; all API tests pass including the 4 new ones. Existing `gym.facade.test.mts` constructs `GymFacade` — update those call sites to pass a `NullPlacesClient()` as the fifth argument.
+Expected: lint clean; all API tests pass including the 4 new ones. Existing `gym.facade.test.mts` constructs `GymFacade` — update those call sites to pass a `NullPlacesClient()` as the fifth argument. Do not introduce `any` there either.
 
 - [ ] **Step 9: Document the new env var**
 
@@ -820,7 +824,7 @@ yields null, which the client treats as 'no Google step'."
 **Interfaces:**
 - Consumes: `GET /api/v1/gyms/:id/review-link` returning `{ data: { writeAReviewUri: string | null } }` from Task 4; `apiClientProvider`; `url_launcher`
 - Produces:
-  - `bool shouldOfferGoogleReview({required int overallRating, required String? writeAReviewUri})`
+  - `bool shouldOfferGoogleReview({required String? writeAReviewUri})`
   - `gymReviewLinkProvider` — `FutureProvider.family<String?, String>` keyed by gym id
 
 - [ ] **Step 1: Add the endpoint constant**
@@ -843,19 +847,20 @@ void main() {
   group('shouldOfferGoogleReview', () {
     const uri = 'https://maps.google.com/write';
 
-    test('offers Google only for a positive rating', () {
-      expect(shouldOfferGoogleReview(overallRating: 5, writeAReviewUri: uri), isTrue);
-      expect(shouldOfferGoogleReview(overallRating: 4, writeAReviewUri: uri), isTrue);
-    });
-
-    test('never routes an unhappy reviewer to the public profile', () {
-      expect(shouldOfferGoogleReview(overallRating: 3, writeAReviewUri: uri), isFalse);
-      expect(shouldOfferGoogleReview(overallRating: 1, writeAReviewUri: uri), isFalse);
+    test('offered whenever the gym has a Google link', () {
+      expect(shouldOfferGoogleReview(writeAReviewUri: uri), isTrue);
     });
 
     test('hidden when the gym has no Google link', () {
-      expect(shouldOfferGoogleReview(overallRating: 5, writeAReviewUri: null), isFalse);
-      expect(shouldOfferGoogleReview(overallRating: 5, writeAReviewUri: ''), isFalse);
+      expect(shouldOfferGoogleReview(writeAReviewUri: null), isFalse);
+      expect(shouldOfferGoogleReview(writeAReviewUri: ''), isFalse);
+    });
+
+    test('does not depend on the rating — gating positive reviewers only is '
+        'review gating, which Google prohibits', () {
+      // Deliberately no rating parameter. If a future change reintroduces one,
+      // this test should be the thing that argues against it.
+      expect(shouldOfferGoogleReview(writeAReviewUri: uri), isTrue);
     });
   });
 }
@@ -875,16 +880,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/endpoints.dart';
 
-/// Minimum overall rating before the Google hand-off is offered.
-const int kGoogleReviewMinRating = 4;
-
 /// Whether to offer the Google Maps hand-off after an in-app review.
 ///
-/// The in-app review is always recorded in full regardless of score; this gate
-/// governs only whether we point the user at the gym's public Google profile.
-bool shouldOfferGoogleReview({required int overallRating, required String? writeAReviewUri}) {
-  if (writeAReviewUri == null || writeAReviewUri.isEmpty) return false;
-  return overallRating >= kGoogleReviewMinRating;
+/// Offered to every reviewer regardless of score. Showing it only to happy
+/// reviewers is review gating, which Google's Maps user-generated content
+/// policy prohibits ("selectively soliciting positive reviews") and which the
+/// FTC's review-suppression rule also reaches. The only condition is whether
+/// the gym has a usable Google link.
+bool shouldOfferGoogleReview({required String? writeAReviewUri}) {
+  return writeAReviewUri != null && writeAReviewUri.isNotEmpty;
 }
 
 /// Google Maps "write a review" URI for a gym, or null when unavailable.
@@ -921,8 +925,8 @@ Add both methods to the state class. The gym id is derived from `sessionId` via
 `OpenMat` carrying `gymId`:
 
 ```dart
-  /// Offers the Google hand-off when the review was positive and the gym has a
-  /// Google link. Every failure path here is silent — the review is already
+  /// Offers the Google hand-off when the gym has a Google link, to every
+  /// reviewer regardless of score. Every failure path here is silent — the review is already
   /// saved, and nothing about the hand-off is worth an error message.
   Future<void> _maybeOfferGoogleReview() async {
     final sessionId = widget.sessionId;
@@ -932,8 +936,7 @@ Add both methods to the state class. The gym id is derived from `sessionId` via
       if (!mounted) return;
       final uri = await ref.read(gymReviewLinkProvider(session.gymId).future);
       if (!mounted) return;
-      final overall = _ratings['Overall']!.round();
-      if (!shouldOfferGoogleReview(overallRating: overall, writeAReviewUri: uri)) return;
+      if (!shouldOfferGoogleReview(writeAReviewUri: uri)) return;
       await _offerGoogleReview(uri!);
     } catch (_) {
       // No hand-off. The in-app review is saved either way.
@@ -985,11 +988,11 @@ Expected: analyze clean; all tests pass (208 total).
 
 ```bash
 git add apps/mobile/lib/core/api/endpoints.dart apps/mobile/lib/features/checkins/data/gym_review_link_repository.dart apps/mobile/lib/features/checkins/screens/review_screen.dart apps/mobile/test/gym_review_link_test.dart
-git commit -m "feat(mobile): offer Google Maps hand-off after a positive gym review
+git commit -m "feat(mobile): offer Google Maps hand-off after a gym review
 
 Google forbids in-app review submission, so open the Maps composer.
-Shown only at 4+ stars and only when the gym has a Google link — an
-unhappy reviewer is never routed to the public profile."
+Offered to every reviewer regardless of score — showing it only to happy
+reviewers is review gating, which Google policy and the FTC rule forbid."
 ```
 
 ---
