@@ -18,12 +18,20 @@ export class GooglePlacesClient implements PlacesClient {
     // Place Details (New) takes an unprefixed field mask. The `places.`-prefixed
     // form belongs to Text/Nearby Search responses and is rejected here.
     const url = `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`;
-    const res = await fetch(url, {
-      headers: {
-        "X-Goog-Api-Key": this.apiKey,
-        "X-Goog-FieldMask": "googleMapsLinks.writeAReviewUri",
-      },
-    });
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        headers: {
+          "X-Goog-Api-Key": this.apiKey,
+          "X-Goog-FieldMask": "googleMapsLinks.writeAReviewUri",
+        },
+        signal: AbortSignal.timeout(5000),
+      });
+    } catch {
+      // Network failure or timeout (AbortSignal.timeout aborts the fetch,
+      // which rejects it) — treat the same as "no link available".
+      return null;
+    }
     if (!res.ok) return null;
     const body = (await res.json()) as PlaceDetailsResponse;
     return body.googleMapsLinks?.writeAReviewUri ?? null;

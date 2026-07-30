@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -105,15 +107,19 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     final sessionId = widget.sessionId;
     if (sessionId == null) return;
     try {
-      final session = await ref.read(sessionByIdProvider(sessionId).future);
-      if (!mounted) return;
-      final uri = await ref.read(gymReviewLinkProvider(session.gymId).future);
+      final uri = await _lookupGoogleReviewUri(sessionId).timeout(const Duration(seconds: 5));
       if (!mounted) return;
       if (!shouldOfferGoogleReview(writeAReviewUri: uri)) return;
       await _offerGoogleReview(uri!);
     } catch (_) {
-      // No hand-off. The in-app review is saved either way.
+      // No hand-off (including a timed-out lookup). The in-app review is saved either way.
     }
+  }
+
+  Future<String?> _lookupGoogleReviewUri(String sessionId) async {
+    final session = await ref.read(sessionByIdProvider(sessionId).future);
+    if (!mounted) return null;
+    return ref.read(gymReviewLinkProvider(session.gymId).future);
   }
 
   Future<void> _offerGoogleReview(String uri) async {
