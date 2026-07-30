@@ -56,6 +56,13 @@ import { ClassJournalFacade } from "./facades/class-journal.facade.mts";
 import { ForumFacade } from "./facades/forum.facade.mts";
 import { ForumQuestionRepository } from "./repositories/forum-question.repository.mts";
 import { ForumAnswerRepository } from "./repositories/forum-answer.repository.mts";
+import { MessagingFacade } from "./facades/messaging.facade.mts";
+import { ConversationRepository } from "./repositories/conversation.repository.mts";
+import { MessageRepository } from "./repositories/message.repository.mts";
+import { ConversationParticipantRepository } from "./repositories/conversation-participant.repository.mts";
+import { ChannelReadStateRepository } from "./repositories/channel-read-state.repository.mts";
+import { UserBlockRepository } from "./repositories/user-block.repository.mts";
+import { MessageReportRepository } from "./repositories/message-report.repository.mts";
 
 export interface Container {
   readonly db: Db;
@@ -72,6 +79,7 @@ export interface Container {
   readonly classFacade: ClassFacade;
   readonly classJournalFacade: ClassJournalFacade;
   readonly forumFacade: ForumFacade;
+  readonly messagingFacade: MessagingFacade;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
@@ -100,6 +108,12 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const instructorRatingRepo = new InstructorRatingRepository(db);
   const forumQuestionRepo = new ForumQuestionRepository(db);
   const forumAnswerRepo = new ForumAnswerRepository(db);
+  const conversationRepo = new ConversationRepository(db);
+  const messageRepo = new MessageRepository(db);
+  const conversationParticipantRepo = new ConversationParticipantRepository(db);
+  const channelReadStateRepo = new ChannelReadStateRepository(db);
+  const userBlockRepo = new UserBlockRepository(db);
+  const messageReportRepo = new MessageReportRepository(db);
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -146,6 +160,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     classFacade: new ClassFacade(classRepo, classOccurrenceRepo, classRsvpRepo, membershipRepo, gymRepo, userRepo, id),
     classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
     forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, id),
+    messagingFacade: new MessagingFacade(conversationRepo, messageRepo, conversationParticipantRepo, channelReadStateRepo, userBlockRepo, messageReportRepo, membershipRepo, gymRepo, id),
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
       checkInRepo,
@@ -179,6 +194,12 @@ export function createContainer(db: Db, env: AppEnv): Container {
         instructorRatingRepo.ensureIndexes(),
         forumQuestionRepo.ensureIndexes(),
         forumAnswerRepo.ensureIndexes(),
+        conversationRepo.ensureIndexes(),
+        messageRepo.ensureIndexes(),
+        conversationParticipantRepo.ensureIndexes(),
+        channelReadStateRepo.ensureIndexes(),
+        userBlockRepo.ensureIndexes(),
+        messageReportRepo.ensureIndexes(),
       ]);
     },
   };

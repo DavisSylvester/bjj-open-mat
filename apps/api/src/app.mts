@@ -14,6 +14,7 @@ import { membershipRoutes } from "./routes/membership.routes.mts";
 import { classRoutes } from "./routes/class.routes.mts";
 import { classJournalRoutes } from "./routes/class-journal.routes.mts";
 import { forumRoutes } from "./routes/forum.routes.mts";
+import { messagingRoutes } from "./routes/messaging.routes.mts";
 import { notificationRoutes } from "./routes/notification.routes.mts";
 import { openMatRoutes } from "./routes/open-mat.routes.mts";
 import { reportRoutes } from "./routes/report.routes.mts";
@@ -48,5 +49,6 @@ export function buildApp(container: Container) {
     .use(membershipRoutes(container))
     .use(classRoutes(container))
     .use(classJournalRoutes(container))
-    .use(forumRoutes(container));
+    .use(forumRoutes(container))
+    .use(messagingRoutes(container));
 }
