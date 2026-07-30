@@ -102,6 +102,10 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
                     return GestureDetector(
                       onTap: () => context.push(
                         '/messages/${summary.conversation.id}',
+                        extra: <String, dynamic>{
+                          'gymId': summary.conversation.gymId,
+                          'kind': summary.conversation.kind,
+                        },
                       ),
                       child: _ConversationTile(summary: summary, t: t),
                     );

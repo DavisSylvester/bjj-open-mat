@@ -44,6 +44,7 @@ import '../features/forum/screens/forum_list_screen.dart';
 import '../features/forum/screens/ask_question_screen.dart';
 import '../features/forum/screens/forum_question_screen.dart';
 import '../features/messaging/screens/conversations_screen.dart';
+import '../features/messaging/screens/conversation_screen.dart';
 import '../features/messaging/data/messaging_repository.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -225,10 +226,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/messages',
               builder: (context, state) => const ConversationsScreen(),
               routes: [
-                // Task 19: thread screen — route registered for forward-compatibility.
                 GoRoute(
                   path: ':conversationId',
-                  builder: (context, state) => const ConversationsScreen(),
+                  builder: (context, state) {
+                    final extra = state.extra as Map<String, dynamic>? ?? {};
+                    return ConversationScreen(
+                      conversationId: state.pathParameters['conversationId']!,
+                      gymId: extra['gymId'] as String?,
+                      kind: extra['kind'] as String? ?? 'direct',
+                    );
+                  },
                 ),
               ],
             ),
