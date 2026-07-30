@@ -105,6 +105,39 @@ Future<void> _pump(
   await tester.pump(const Duration(milliseconds: 50));
 }
 
+Future<void> _pumpWithRosterError(
+  WidgetTester tester, {
+  required _FakeMembershipRepo repo,
+  String? currentUserId = 'user-1',
+}) async {
+  tester.view.physicalSize = const Size(1080, 1920);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
+
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        membershipRepositoryProvider.overrideWithValue(repo),
+        // Riverpod 3's default retry policy retries on any error that isn't
+        // a Dart `Error`, which would leave the provider stuck in `loading`
+        // for several seconds during the test. Throwing a `StateError`
+        // short-circuits the retry so the provider settles into `AsyncError`
+        // immediately.
+        rosterProvider('g1').overrideWith((_) async => throw StateError('boom')),
+        currentUserIdProvider.overrideWithValue(currentUserId),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.glass(),
+        home: const Scaffold(
+          body: Center(child: JoinGymButton(gymId: 'g1')),
+        ),
+      ),
+    ),
+  );
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 50));
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -166,14 +199,28 @@ void main() {
   });
 
   group('JoinGymButton — unauthenticated', () {
-    testWidgets('Join button is disabled when not authenticated', (tester) async {
+    testWidgets('shows sign-in prompt when not authenticated', (tester) async {
       final repo = _FakeMembershipRepo();
       // Pass null for currentUserId to simulate an unauthenticated user.
       await _pump(tester, repo: repo, roster: [], currentUserId: null);
 
-      // Button should be visible but disabled (onPressed == null).
-      final btn = tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'Join'));
-      expect(btn.onPressed, isNull);
+      expect(find.text('Sign in to join'), findsOneWidget);
+      expect(find.text('Join'), findsNothing);
+
+      final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+      expect(button.onPressed, isNotNull, reason: 'must be tappable so the user can reach login');
+    });
+  });
+
+  group('JoinGymButton — roster error', () {
+    testWidgets('shows Retry when the roster fails to load', (tester) async {
+      final repo = _FakeMembershipRepo();
+      await _pumpWithRosterError(tester, repo: repo);
+
+      expect(find.text('Retry'), findsOneWidget);
+
+      final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+      expect(button.onPressed, isNotNull);
     });
   });
 }
