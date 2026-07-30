@@ -1,7 +1,32 @@
 import 'dart:io';
 
-import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:auth0_flutter/auth0_flutter.dart' hide ApiException;
 import 'package:dio/dio.dart';
+
+import '../data/api_exception.dart';
+
+/// Maps an HTTP status code to the same user-facing message used for the
+/// equivalent `DioException` badResponse case. Returns null when there is no
+/// specific mapping for [status], leaving the caller to fall back to
+/// something else (e.g. the exception's own message).
+String? _statusMessage(int status) {
+  if (status == 401) {
+    return 'Your session has expired. Please sign in again.';
+  }
+  if (status == 403) {
+    return 'You don\'t have permission to do that.';
+  }
+  if (status == 404) {
+    return 'We couldn\'t find what you were looking for.';
+  }
+  if (status == 429) {
+    return 'Too many requests. Please wait a moment and try again.';
+  }
+  if (status >= 500) {
+    return 'BJJ Open Mat is having trouble right now. Please try again shortly.';
+  }
+  return null;
+}
 
 /// Translates a thrown error into a message that is safe to show a user.
 ///
@@ -13,6 +38,14 @@ import 'package:dio/dio.dart';
 /// retry, check their connection, or sign in again, without exposing endpoints,
 /// status codes, or stack detail.
 String friendlyErrorMessage(Object error) {
+  if (error is ApiException) {
+    final status = error.status;
+    final mapped = status == null ? null : _statusMessage(status);
+    if (mapped != null) return mapped;
+    if (error.message.isNotEmpty) return error.message;
+    return 'Something went wrong. Please try again.';
+  }
+
   if (error is! DioException) {
     return 'Something went wrong. Please try again.';
   }
@@ -40,22 +73,7 @@ String friendlyErrorMessage(Object error) {
 
     case DioExceptionType.badResponse:
       final status = error.response?.statusCode ?? 0;
-      if (status == 401) {
-        return 'Your session has expired. Please sign in again.';
-      }
-      if (status == 403) {
-        return 'You don\'t have permission to do that.';
-      }
-      if (status == 404) {
-        return 'We couldn\'t find what you were looking for.';
-      }
-      if (status == 429) {
-        return 'Too many requests. Please wait a moment and try again.';
-      }
-      if (status >= 500) {
-        return 'BJJ Open Mat is having trouble right now. Please try again shortly.';
-      }
-      return 'Something went wrong. Please try again.';
+      return _statusMessage(status) ?? 'Something went wrong. Please try again.';
   }
 }
 

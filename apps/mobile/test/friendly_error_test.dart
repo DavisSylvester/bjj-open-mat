@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:auth0_flutter/auth0_flutter.dart' hide ApiException;
 import 'package:bjj_open_mat/core/api/friendly_error.dart';
+import 'package:bjj_open_mat/core/data/api_exception.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -83,6 +84,41 @@ void main() {
 
     test('unknown failures fall back to a generic but polite message', () {
       expect(friendlyErrorMessage(Exception('boom')).toLowerCase(), contains('something went wrong'));
+    });
+
+    test('ApiException status codes map to the same strings as their Dio equivalents', () {
+      const statuses = [401, 403, 404, 429, 500];
+      for (final status in statuses) {
+        final dioMessage = friendlyErrorMessage(_response(status));
+        final apiMessage = friendlyErrorMessage(
+          ApiException(code: 'error', message: 'server message', status: status),
+        );
+        expect(apiMessage, equals(dioMessage));
+      }
+    });
+
+    test('ApiException with an unmapped status surfaces its own message', () {
+      final message = friendlyErrorMessage(
+        const ApiException(code: 'validation_error', message: 'That gym name is already taken.', status: 400),
+      );
+      expect(message, equals('That gym name is already taken.'));
+    });
+
+    test('ApiException never leaks DioException internals to the user', () {
+      final messages = <String>[
+        friendlyErrorMessage(const ApiException(code: 'error', message: '', status: 401)),
+        friendlyErrorMessage(const ApiException(code: 'error', message: '', status: 403)),
+        friendlyErrorMessage(const ApiException(code: 'error', message: '', status: 404)),
+        friendlyErrorMessage(const ApiException(code: 'error', message: '', status: 429)),
+        friendlyErrorMessage(const ApiException(code: 'error', message: '', status: 500)),
+      ];
+
+      for (final m in messages) {
+        expect(m, isNot(contains('DioException')));
+        expect(m, isNot(contains('RequestOptions')));
+        expect(m, isNot(contains('validateStatus')));
+        expect(m, isNot(contains('status code')));
+      }
     });
   });
 
