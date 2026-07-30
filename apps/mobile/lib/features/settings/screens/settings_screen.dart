@@ -7,7 +7,6 @@ import '../../../core/design/tokens.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../shared/widgets/glass_form.dart';
 import '../role_toggle.dart';
-import '../../messaging/screens/blocked_users_screen.dart';
 
 /// Back affordance for the full-screen settings route (falls back to /profile
 /// if there is nothing to pop).
@@ -115,7 +114,6 @@ class _GlassSettings extends StatelessWidget {
                   onTap: () => context.push('/notifications'),
                 ),
                 Divider(height: 1, color: t.border),
-                Divider(height: 1, color: t.border),
                 ListTile(
                   leading: Icon(LucideIcons.shield, color: t.muted),
                   title: Text('Privacy', style: t.bodyStyle),
@@ -127,11 +125,7 @@ class _GlassSettings extends StatelessWidget {
                   leading: Icon(LucideIcons.userX, color: t.muted),
                   title: Text('Blocked users', style: t.bodyStyle),
                   trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const BlockedUsersScreen(),
-                    ),
-                  ),
+                  onTap: () => context.push('/settings/blocked-users'),
                 ),
               ]),
             ),
