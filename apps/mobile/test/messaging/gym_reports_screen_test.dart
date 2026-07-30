@@ -81,17 +81,6 @@ class _FakeMessagingRepo implements MessagingRepository {
   Future<void> unblockUser(String blockedId) async {}
 }
 
-// ── Fixture: one open report ──────────────────────────────────────────────────
-
-const _openReport = MessageReport(
-  id: 'r1',
-  reportedUserId: 'u2',
-  reporterId: 'u1',
-  gymId: 'g1',
-  reason: 'spam',
-  status: 'open',
-);
-
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {

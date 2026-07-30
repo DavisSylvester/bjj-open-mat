@@ -1,7 +1,7 @@
-/// Widget tests for the aggregate unread badge on the Messages nav destination.
-///
-/// Tests pump [AppBottomNav] in isolation with a ProviderScope that overrides
-/// [conversationsProvider], then assert badge presence/absence.
+// Widget tests for the aggregate unread badge on the Messages nav destination.
+//
+// Tests pump [AppBottomNav] in isolation with a ProviderScope that overrides
+// [conversationsProvider], then assert badge presence/absence.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
