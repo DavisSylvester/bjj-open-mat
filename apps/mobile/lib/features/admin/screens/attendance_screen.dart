@@ -6,6 +6,7 @@ import '../../../shared/widgets/shimmer_loader.dart';
 import '../../checkins/data/attendance_repository.dart';
 import '../../checkins/models/checkin.dart';
 import '../../open_mats/data/rsvp_repository.dart';
+import '../../../core/api/friendly_error.dart';
 
 final attendanceProvider = FutureProvider.family<List<CheckIn>, AttendanceQuery>((ref, query) async {
   return ref.read(attendanceRepositoryProvider).forSession(query.sessionId, date: query.date);
@@ -98,7 +99,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
           Expanded(
             child: checkinsAsync.when(
               loading: () => const ShimmerList(),
-              error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(attendanceProvider(_query))),
+              error: (e, _) => ErrorState(message: friendlyErrorMessage(e), onRetry: () => ref.invalidate(attendanceProvider(_query))),
               data: (checkins) {
                 if (checkins.isEmpty) return const EmptyState(title: 'No check-ins', subtitle: 'Nobody checked in on this date', icon: Icons.people_outline);
                 return ListView.builder(

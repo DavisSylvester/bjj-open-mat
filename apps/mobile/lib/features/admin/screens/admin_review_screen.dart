@@ -5,6 +5,7 @@ import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
 import '../../open_mats/data/session_repository.dart';
 import '../../open_mats/models/open_mat.dart';
+import '../../../core/api/friendly_error.dart';
 
 final adminUnverifiedProvider = FutureProvider<List<OpenMat>>((ref) async {
   return ref.read(sessionRepositoryProvider).listUnverified();
@@ -23,7 +24,7 @@ class AdminReviewScreen extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(adminUnverifiedProvider),
         child: sessionsAsync.when(
           loading: () => const ShimmerList(),
-          error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(adminUnverifiedProvider)),
+          error: (e, _) => ErrorState(message: friendlyErrorMessage(e), onRetry: () => ref.invalidate(adminUnverifiedProvider)),
           data: (sessions) {
             if (sessions.isEmpty) {
               return const EmptyState(
