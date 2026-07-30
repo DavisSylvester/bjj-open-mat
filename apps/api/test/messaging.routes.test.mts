@@ -22,7 +22,7 @@ function testApp(identity: AuthIdentity | null) {
     editMessage: async () => ({ id: "m1", conversationId: "c1", authorId: "u1", body: "e" }),
     deleteMessage: async (): Promise<void> => { calls.push("delmsg"); },
     reportMessage: async () => ({ id: "r1", reportedUserId: "u2", reporterId: "u1", gymId: "g1", reason: "spam", status: "open" }),
-    listReports: async () => [],
+    listReports: async (u: string, g: string, s: string | undefined) => { calls.push(`reports:${g}:${s}`); return []; },
     resolveReport: async (): Promise<void> => { calls.push("resolve"); },
     listBlocks: async () => [],
     blockUser: async (): Promise<void> => { calls.push("block"); },
@@ -69,5 +69,18 @@ describe("messaging routes", () => {
     }));
     expect(res.status).toBe(200);
     expect(calls).toContain("channel:u1:g1");
+  });
+  it("GET /:id/message-reports requires auth", async () => {
+    const { app } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/message-reports?status=open"));
+    expect(res.status).toBe(401);
+  });
+  it("GET /:id/message-reports passes gymId and status to facade", async () => {
+    const { app, calls } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/message-reports?status=open", {
+      headers: { authorization: "Bearer t" },
+    }));
+    expect(res.status).toBe(200);
+    expect(calls).toContain("reports:g1:open");
   });
 });

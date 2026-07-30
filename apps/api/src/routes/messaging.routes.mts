@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import {
   AddParticipantsRequest,
   BlockUserRequest,
@@ -55,7 +55,7 @@ export function messagingRoutes(container: Container) {
         const items = await messagingFacade.listReports(caller.userId, params.id, query.status, caller.role);
         return list(items, { page: 1, limit: items.length, total: items.length });
       },
-      { requireAuth: true, query: MessageReportStatus },
+      { requireAuth: true, query: t.Object({ status: t.Optional(MessageReportStatus) }) },
     );
 
   // Messaging-scoped routes: direct, groups, conversations, messages, blocks, reports
