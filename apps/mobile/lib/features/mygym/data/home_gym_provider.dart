@@ -32,13 +32,11 @@ String? resolveHomeGymId({
 /// empty state ("find your gym") is a better outcome than an error screen.
 final homeGymIdProvider = FutureProvider<String?>((ref) async {
   final profileHomeGymId = ref.watch(authStateProvider).user?.homeGymId;
-  if (profileHomeGymId != null && profileHomeGymId.isNotEmpty) {
-    return profileHomeGymId;
-  }
+  List<GymMembership> memberships;
   try {
-    final memberships = await ref.watch(myMembershipsProvider.future);
-    return resolveHomeGymId(profileHomeGymId: profileHomeGymId, memberships: memberships);
+    memberships = await ref.watch(myMembershipsProvider.future);
   } catch (_) {
-    return null;
+    memberships = const [];
   }
+  return resolveHomeGymId(profileHomeGymId: profileHomeGymId, memberships: memberships);
 });
