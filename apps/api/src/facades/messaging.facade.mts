@@ -21,7 +21,7 @@ type ConvRepo = Pick<ConversationRepository, "insert" | "findById" | "findDirect
 type MsgRepo = Pick<MessageRepository, "insert" | "findById" | "listByConversation" | "latestForConversation" | "countAfter" | "softDelete" | "update">;
 type PartRepo = Pick<ConversationParticipantRepository, "insertMany" | "find" | "listByConversation" | "listActiveForUser" | "setLastReadAt" | "setMuted" | "setLeftAt">;
 type ReadRepo = Pick<ChannelReadStateRepository, "find" | "upsertLastReadAt" | "upsertMuted">;
-type BlockRepo = Pick<UserBlockRepository, "insert" | "existsEitherWay" | "listBlockedBy" | "delete">;
+type BlockRepo = Pick<UserBlockRepository, "insert" | "existsEitherWay" | "listBlockedBy" | "deleteByBlocked">;
 type ReportRepo = Pick<MessageReportRepository, "insert" | "findById" | "listByGym" | "updateStatus">;
 type MemberRepo = Pick<MembershipRepository, "find" | "listByUser">;
 type GymRepo = Pick<GymRepository, "findById">;
@@ -266,8 +266,8 @@ export class MessagingFacade {
     await this.blocks.insert({ id: this.newId(), blockerId: userId, blockedId: targetId, createdAt: new Date().toISOString() });
   }
 
-  public async unblockUser(userId: string, blockId: string): Promise<void> {
-    await this.blocks.delete(blockId, userId);
+  public async unblockUser(userId: string, blockedId: string): Promise<void> {
+    await this.blocks.deleteByBlocked(userId, blockedId);
   }
 
   public async listBlocks(userId: string): Promise<string[]> {

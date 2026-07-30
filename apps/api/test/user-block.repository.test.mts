@@ -15,7 +15,14 @@ describe("UserBlockRepository", () => {
     expect(await repo.existsEitherWay("u2", "u1")).toBe(true);
     expect(await repo.existsEitherWay("u1", "u9")).toBe(false);
     expect(await repo.listBlockedBy("u1")).toEqual(["u2"]);
-    await repo.delete("b1", "u1");
-    expect(await repo.existsEitherWay("u1", "u2")).toBe(false);
+  });
+
+  it("deleteByBlocked removes the block by blockerId + blockedId", async () => {
+    const repo = new UserBlockRepository(db);
+    await repo.ensureIndexes();
+    await repo.insert({ id: "b2", blockerId: "u3", blockedId: "u4" });
+    expect(await repo.existsEitherWay("u3", "u4")).toBe(true);
+    await repo.deleteByBlocked("u3", "u4");
+    expect(await repo.existsEitherWay("u3", "u4")).toBe(false);
   });
 });

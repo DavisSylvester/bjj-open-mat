@@ -74,7 +74,7 @@ export function facade(seed?: Seed) {
     insert: async (b: UserBlock) => { blocks.set(b.id, b); return b; },
     existsEitherWay: async (a: string, b: string) => [...blocks.values()].some((x) => (x.blockerId === a && x.blockedId === b) || (x.blockerId === b && x.blockedId === a)),
     listBlockedBy: async (uid: string) => [...blocks.values()].filter((x) => x.blockerId === uid).map((x) => x.blockedId),
-    delete: async (id: string, blockerId: string) => { const b = blocks.get(id); if (b && b.blockerId === blockerId) blocks.delete(id); },
+    deleteByBlocked: async (blockerId: string, blockedId: string) => { const entry = [...blocks.entries()].find(([, b]) => b.blockerId === blockerId && b.blockedId === blockedId); if (entry) blocks.delete(entry[0]); },
   };
   const reportRepo = {
     insert: async (r: MessageReport) => { reports.push(r); return r; },
@@ -289,6 +289,14 @@ describe("MessagingFacade — edit/delete/participants/leave/mute", () => {
 });
 
 describe("MessagingFacade — blocks + reports", () => {
+  it("unblockUser by blocked-user id removes the block", async () => {
+    const { f } = facade({ memberships: [member("u1"), member("u2")] });
+    await f.blockUser("u1", "u2");
+    expect(await f.listBlocks("u1")).toEqual(["u2"]);
+    await f.unblockUser("u1", "u2");
+    expect(await f.listBlocks("u1")).toEqual([]);
+  });
+
   it("block is idempotent + listable; report to a shared gym is manager-reviewable", async () => {
     const { f, reports } = facade({ gymOwnerId: "owner", memberships: [member("owner", "g1", { gymRole: "owner" }), member("u1"), member("u2")] });
     await f.blockUser("u1", "u2");

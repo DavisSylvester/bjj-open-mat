@@ -34,7 +34,7 @@ export class UserBlockRepository extends BaseRepository {
     return docs.map((d) => d.blockedId);
   }
 
-  public async delete(id: string, blockerId: string): Promise<void> {
-    await this.collection<BlockDoc>(COLLECTIONS.userBlocks).deleteOne({ _id: id, blockerId });
+  public async deleteByBlocked(blockerId: string, blockedId: string): Promise<void> {
+    await this.collection<BlockDoc>(COLLECTIONS.userBlocks).deleteOne({ blockerId, blockedId });
   }
 }
