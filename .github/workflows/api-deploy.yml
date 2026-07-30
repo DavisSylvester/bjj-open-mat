@@ -42,19 +42,35 @@ jobs:
         working-directory: infra
         run: npx cdk deploy BjjGithubOidcStack BjjApiStack --require-approval never
 
-      # Keep the OpenAI key (voice transcription) in the app secret that the
-      # Lambda overlays onto process.env at cold start (config/secrets.mts).
-      # Sourced from the GitHub secret so it is never committed. Skipped if the
-      # secret isn't configured. Requires secretsmanager Get/PutSecretValue on
-      # the bjj-github-deploy role.
-      - name: Sync OPENAI_API_KEY into app secret
+      # Keep runtime API keys in the app secret that the Lambda overlays onto
+      # process.env at cold start (config/secrets.mts). Sourced from GitHub
+      # secrets so they are never committed. Requires secretsmanager
+      # Get/PutSecretValue on the bjj-github-deploy role.
+      #
+      # To add another key: add it to `env:` below and to the jq object. Only
+      # keys with a non-empty value are written, so an unconfigured GitHub
+      # secret can never blank an existing value in Secrets Manager.
+      #
+      # Key names are logged; values never are.
+      - name: Sync runtime API keys into app secret
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
         run: |
           set -euo pipefail
-          if [ -z "$OPENAI_API_KEY" ]; then echo "OPENAI_API_KEY not set; skipping"; exit 0; fi
+          PATCH=$(jq -n \
+            --arg openai "${OPENAI_API_KEY:-}" \
+            --arg places "${GOOGLE_PLACES_API_KEY:-}" \
+            '{OPENAI_API_KEY: $openai, GOOGLE_PLACES_API_KEY: $places}
+             | with_entries(select(.value != ""))')
+          if [ "$(printf '%s' "$PATCH" | jq 'length')" -eq 0 ]; then
+            echo "No runtime API keys configured; skipping"
+            exit 0
+          fi
+          echo "Syncing: $(printf '%s' "$PATCH" | jq -r 'keys | join(", ")')"
           CUR=$(aws secretsmanager get-secret-value --secret-id bjj-open-mat/app --region us-east-1 --query SecretString --output text)
           # jq failure (e.g. malformed secret) aborts the step via pipefail rather
           # than writing an empty string over the secret.
-          NEW=$(printf '%s' "$CUR" | jq --arg k "$OPENAI_API_KEY" '. + {OPENAI_API_KEY: $k}')
+          NEW=$(printf '%s' "$CUR" | jq --argjson patch "$PATCH" '. + $patch')
           aws secretsmanager put-secret-value --secret-id bjj-open-mat/app --region us-east-1 --secret-string "$NEW"
+          echo "Secret keys after sync: $(printf '%s' "$NEW" | jq -r 'keys | join(", ")')"
