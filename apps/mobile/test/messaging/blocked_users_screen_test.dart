@@ -19,8 +19,8 @@ class _FakeMessagingRepo implements MessagingRepository {
   Future<List<String>> listBlocks() async => ['u2'];
 
   @override
-  Future<void> unblockUser(String blockId) async {
-    unblockCalls.add(blockId);
+  Future<void> unblockUser(String blockedId) async {
+    unblockCalls.add(blockedId);
   }
 
   @override

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
+import '../../gyms/data/gym_repository.dart';
+import '../../membership/data/membership_repository.dart';
+import '../../membership/widgets/join_gym_button.dart';
 import '../data/messaging_repository.dart';
 import '../models/message_report.dart';
 
@@ -10,9 +14,48 @@ class GymReportsScreen extends ConsumerWidget {
 
   const GymReportsScreen({super.key, required this.gymId});
 
+  // ── Manager gate (mirrors ConversationScreen._deriveCanManage) ───────────
+  bool _deriveCanManage(WidgetRef ref) {
+    final myId = ref.watch(currentUserIdProvider);
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    final gymOwnerId = ref
+        .watch(gymByIdProvider(gymId))
+        .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+    final isOwner = gymOwnerId != null && gymOwnerId == myId;
+    final rosterAsync = ref.watch(rosterProvider(gymId));
+    final myGymRole = rosterAsync.maybeWhen(
+      data: (members) => myId != null
+          ? members.where((m) => m.userId == myId).firstOrNull?.gymRole
+          : null,
+      orElse: () => null,
+    );
+    return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
+    final canManage = _deriveCanManage(ref);
+
+    if (!canManage) {
+      return Scaffold(
+        backgroundColor: t.bg,
+        appBar: AppBar(
+          backgroundColor: t.bg,
+          foregroundColor: t.text,
+          elevation: 0,
+          title: Text('Message Reports', style: t.h2Style),
+        ),
+        body: Center(
+          child: Text(
+            "You don't have access to this page.",
+            style: t.bodyStyle.copyWith(color: t.muted),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     final reportsAsync = ref.watch(gymMessageReportsProvider((gymId: gymId, status: 'open')));
 
     return Scaffold(

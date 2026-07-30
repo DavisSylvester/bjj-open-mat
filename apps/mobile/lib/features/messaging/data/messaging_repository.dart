@@ -41,7 +41,8 @@ abstract class MessagingRepository {
   Future<void> resolveReport(String reportId, String status);
   Future<List<String>> listBlocks();
   Future<void> blockUser(String userId);
-  Future<void> unblockUser(String blockId);
+  /// Removes the block on [blockedId] (the blocked user's id).
+  Future<void> unblockUser(String blockedId);
 }
 
 class ApiMessagingRepository implements MessagingRepository {
@@ -311,9 +312,9 @@ class ApiMessagingRepository implements MessagingRepository {
   }
 
   @override
-  Future<void> unblockUser(String blockId) async {
+  Future<void> unblockUser(String blockedId) async {
     try {
-      await _dio.delete(Endpoints.messagingBlock(blockId));
+      await _dio.delete(Endpoints.messagingBlock(blockedId));
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
     }
