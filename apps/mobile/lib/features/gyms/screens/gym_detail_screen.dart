@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../favorites/data/favorite_repository.dart';
-import '../../membership/data/membership_repository.dart';
 import '../../membership/widgets/join_gym_button.dart';
+import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
 import '../data/gym_sessions_provider.dart';
 import '../data/directions.dart';
@@ -47,39 +46,12 @@ class _GlassGymDetail extends ConsumerWidget {
   final Gym gym;
   const _GlassGymDetail({required this.t, required this.gym});
 
-  bool _deriveCanManage(WidgetRef ref) {
-    final myId = ref.watch(currentUserIdProvider);
-    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-    final isOwner = gym.ownerId == myId && myId != null;
-    final rosterAsync = ref.watch(rosterProvider(gym.id));
-    final myGymRole = rosterAsync.maybeWhen(
-      data: (members) => myId != null
-          ? members.where((m) => m.userId == myId).firstOrNull?.gymRole
-          : null,
-      orElse: () => null,
-    );
-    return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
-  }
-
-  bool _deriveCanAccessForum(WidgetRef ref) {
-    final myId = ref.watch(currentUserIdProvider);
-    if (myId == null) return false;
-    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-    final isOwner = gym.ownerId == myId;
-    final rosterAsync = ref.watch(rosterProvider(gym.id));
-    final isMember = rosterAsync.maybeWhen(
-      data: (members) => members.any((m) => m.userId == myId),
-      orElse: () => false,
-    );
-    return isAdmin || isOwner || isMember;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(gymSessionsProvider(gym.id));
     final favoritesAsync = ref.watch(myFavoritesProvider);
-    final canManage = _deriveCanManage(ref);
-    final canAccessForum = _deriveCanAccessForum(ref);
+    final canManage = deriveCanManageGym(ref, gymId: gym.id, ownerId: gym.ownerId);
+    final canAccessForum = deriveCanAccessForumGym(ref, gymId: gym.id, ownerId: gym.ownerId);
     final isFavorite = favoritesAsync.maybeWhen(
       data: (gyms) => gyms.any((g) => g.id == gym.id),
       orElse: () => false,
