@@ -47,6 +47,8 @@ import '../features/messaging/screens/gym_channels_screen.dart';
 import '../features/messaging/screens/conversations_screen.dart';
 import '../features/messaging/screens/conversation_screen.dart';
 import '../features/messaging/screens/new_message_screen.dart';
+import '../features/messaging/screens/blocked_users_screen.dart';
+import '../features/messaging/screens/gym_reports_screen.dart';
 import '../features/messaging/data/messaging_repository.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -143,6 +145,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                     GoRoute(
                       path: 'channels',
                       builder: (context, state) => GymChannelsScreen(gymId: state.pathParameters['id']!),
+                    ),
+                    GoRoute(
+                      path: 'message-reports',
+                      builder: (context, state) => GymReportsScreen(gymId: state.pathParameters['id']!),
                     ),
                     GoRoute(
                       path: 'forum',
@@ -329,6 +335,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/blocked-users',
+        builder: (context, state) => const BlockedUsersScreen(),
       ),
       GoRoute(
         path: '/notifications',
