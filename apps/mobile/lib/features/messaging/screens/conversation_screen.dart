@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
+import '../../../features/gyms/data/gym_repository.dart';
+import '../../../features/membership/data/membership_repository.dart';
 import '../../../features/membership/widgets/join_gym_button.dart';
 import '../data/messaging_repository.dart';
 import '../models/message.dart';
@@ -45,6 +47,27 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     _composer.dispose();
     _composerFocus.dispose();
     super.dispose();
+  }
+
+  // ── Manager gate (mirrors ForumQuestionScreen._deriveCanManage) ──────────
+  // When gymId is null (e.g. direct thread with no gym context) only global
+  // admins qualify — which is the isAdmin fallback.
+  bool _deriveCanManage(WidgetRef ref) {
+    final myId = ref.watch(currentUserIdProvider);
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    if (widget.gymId == null) return isAdmin;
+    final gymOwnerId = ref
+        .watch(gymByIdProvider(widget.gymId!))
+        .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+    final isOwner = gymOwnerId != null && gymOwnerId == myId;
+    final rosterAsync = ref.watch(rosterProvider(widget.gymId!));
+    final myGymRole = rosterAsync.maybeWhen(
+      data: (members) => myId != null
+          ? members.where((m) => m.userId == myId).firstOrNull?.gymRole
+          : null,
+      orElse: () => null,
+    );
+    return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
   }
 
   void _startPolling() {
@@ -138,9 +161,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                if (selectedReason != null) Navigator.pop(ctx);
-              },
+              onPressed: selectedReason != null ? () => Navigator.pop(ctx) : null,
               child: const Text('Report'),
             ),
           ],
@@ -186,9 +207,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     BuildContext context,
     Message message,
     bool isOwnMessage,
-    bool isAdmin,
+    bool canManage,
   ) {
-    final canDelete = (isOwnMessage || isAdmin) && !message.isDeleted;
+    final canDelete = (isOwnMessage || canManage) && !message.isDeleted;
     final canEdit = isOwnMessage && !message.isDeleted;
 
     showModalBottomSheet<void>(
@@ -234,8 +255,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final myId = ref.watch(currentUserIdProvider);
-    final isAdmin =
-        ref.watch(authStateProvider).user?.role == 'admin';
+    final canManage = _deriveCanManage(ref);
     final messagesAsync = ref.watch(messagesProvider(widget.conversationId));
 
     // For direct conversations: other participant is the first message author
@@ -294,6 +314,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   );
                 }
                 return ListView.builder(
+                  reverse: true,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
@@ -312,7 +333,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                                 context,
                                 message,
                                 isOwn,
-                                isAdmin,
+                                canManage,
                               ),
                     );
                   },

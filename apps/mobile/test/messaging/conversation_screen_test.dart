@@ -19,6 +19,7 @@ class _FakeMessagingRepo implements MessagingRepository {
   final List<String> deleteMessageCalls = [];
   final List<Map<String, String>> blockUserCalls = [];
   final List<Map<String, String?>> reportMessageCalls = [];
+  final List<Map<String, String>> editMessageCalls = [];
 
   @override
   Future<Message> sendMessage(String conversationId, String body) async {
@@ -57,8 +58,15 @@ class _FakeMessagingRepo implements MessagingRepository {
   }
 
   @override
-  Future<Message> editMessage(String messageId, String body) async =>
-      throw UnimplementedError();
+  Future<Message> editMessage(String messageId, String body) async {
+    editMessageCalls.add({'messageId': messageId, 'body': body});
+    return Message(
+      id: messageId,
+      conversationId: 'c1',
+      authorId: _kCurrentUserId,
+      body: body,
+    );
+  }
 
   @override
   Future<List<ConversationSummary>> listConversations({
@@ -254,4 +262,85 @@ void main() {
 
     expect(find.text('No messages yet. Say hello!'), findsOneWidget);
   });
+
+  testWidgets(
+      'block: tapping Block action calls blockUser(otherUserId) and pops screen',
+      (tester) async {
+    // Messages: one from u2 (the other user), one from u1 (current user).
+    final directMessages = [
+      Message(
+        id: 'msg-a',
+        conversationId: 'c1',
+        authorId: 'u2',
+        body: 'Hey there',
+      ),
+      Message(
+        id: 'msg-b',
+        conversationId: 'c1',
+        authorId: 'u1',
+        body: 'Hi u2',
+      ),
+    ];
+
+    final repo = _FakeMessagingRepo();
+
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    // Use a NavigatorObserver to detect pop.
+    final observer = _TestNavigatorObserver();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          messagingRepositoryProvider.overrideWithValue(repo),
+          currentUserIdProvider.overrideWith((ref) => 'u1'),
+          authStateProvider.overrideWith(() => _FakeAuthNotifier()),
+          messagesProvider('c1').overrideWith((_) async => directMessages),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.glass(),
+          navigatorObservers: [observer],
+          home: ConversationScreen(
+            conversationId: 'c1',
+            gymId: null,
+            kind: 'direct',
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    // Tap the Block icon in the AppBar.
+    final blockButton = find.widgetWithIcon(IconButton, Icons.block);
+    expect(blockButton, findsOneWidget);
+    await tester.tap(blockButton);
+    await tester.pumpAndSettle();
+
+    // Confirm dialog should appear — tap the Block confirm button.
+    final confirmBlock = find.widgetWithText(TextButton, 'Block');
+    expect(confirmBlock, findsOneWidget);
+    await tester.tap(confirmBlock);
+    await tester.pumpAndSettle();
+
+    // blockUser('u2') must have been called.
+    expect(repo.blockUserCalls, hasLength(1));
+    expect(repo.blockUserCalls.first['userId'], equals('u2'));
+
+    // Screen must have popped.
+    expect(observer.didPopCount, greaterThan(0));
+  });
+}
+
+// ── NavigatorObserver for pop detection ──────────────────────────────────────
+
+class _TestNavigatorObserver extends NavigatorObserver {
+  int didPopCount = 0;
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    didPopCount++;
+  }
 }
