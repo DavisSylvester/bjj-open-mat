@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
+import '../../../core/rating/app_rating_service.dart';
+import '../../profile/data/profile_stats.dart';
 
-class CheckinSuccessScreen extends StatefulWidget {
+class CheckinSuccessScreen extends ConsumerStatefulWidget {
   final String openMatId;
   final String? locationStatus;
   const CheckinSuccessScreen({super.key, required this.openMatId, this.locationStatus});
 
   @override
-  State<CheckinSuccessScreen> createState() => _CheckinSuccessScreenState();
+  ConsumerState<CheckinSuccessScreen> createState() => _CheckinSuccessScreenState();
 }
 
-class _CheckinSuccessScreenState extends State<CheckinSuccessScreen> with SingleTickerProviderStateMixin {
+class _CheckinSuccessScreenState extends ConsumerState<CheckinSuccessScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scale;
 
@@ -23,6 +26,19 @@ class _CheckinSuccessScreenState extends State<CheckinSuccessScreen> with Single
     _controller = AnimationController(vsync: this, duration: StitchTokens.durationSlow);
     _scale = CurvedAnimation(parent: _controller, curve: StitchTokens.curveBounce);
     _controller.forward();
+
+    // Fire after the frame so the success screen is on-screen first; a prompt
+    // over a half-built screen reads as a glitch.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final stats = await ref.read(myStatsProvider.future);
+        if (!mounted) return;
+        await ref.read(appRatingServiceProvider).maybePrompt(stats.checkIns);
+      } catch (_) {
+        // Offline or otherwise unavailable — a missed prompt is cheaper than
+        // surfacing an error over the success screen.
+      }
+    });
   }
 
   @override
