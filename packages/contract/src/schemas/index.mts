@@ -20,5 +20,8 @@ export * from "./report.mts";
 export * from "./lead.mts";
 export * from "./class-journal-entry.mts";
 export * from "./instructor-rating.mts";
+export * from "./forum-question.mts";
+export * from "./forum-answer.mts";
+export * from "./forum-question-detail.mts";
 export * from "./requests/index.mts";
 export * from "./responses/index.mts";

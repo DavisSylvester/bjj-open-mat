@@ -54,6 +54,9 @@ import { AccountDeletionOrchestrator, type AccountDeletionService } from "./serv
 import { ClassJournalRepository } from "./repositories/class-journal.repository.mts";
 import { InstructorRatingRepository } from "./repositories/instructor-rating.repository.mts";
 import { ClassJournalFacade } from "./facades/class-journal.facade.mts";
+import { ForumFacade } from "./facades/forum.facade.mts";
+import { ForumQuestionRepository } from "./repositories/forum-question.repository.mts";
+import { ForumAnswerRepository } from "./repositories/forum-answer.repository.mts";
 
 export interface Container {
   readonly db: Db;
@@ -69,6 +72,7 @@ export interface Container {
   readonly membershipFacade: MembershipFacade;
   readonly classFacade: ClassFacade;
   readonly classJournalFacade: ClassJournalFacade;
+  readonly forumFacade: ForumFacade;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
@@ -96,6 +100,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const classRsvpRepo = new ClassRsvpRepository(db);
   const classJournalRepo = new ClassJournalRepository(db);
   const instructorRatingRepo = new InstructorRatingRepository(db);
+  const forumQuestionRepo = new ForumQuestionRepository(db);
+  const forumAnswerRepo = new ForumAnswerRepository(db);
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -144,6 +150,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     membershipFacade: new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id),
     classFacade: new ClassFacade(classRepo, classOccurrenceRepo, classRsvpRepo, membershipRepo, gymRepo, userRepo, id),
     classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
+    forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, id),
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
       checkInRepo,
@@ -176,6 +183,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
         classRsvpRepo.ensureIndexes(),
         classJournalRepo.ensureIndexes(),
         instructorRatingRepo.ensureIndexes(),
+        forumQuestionRepo.ensureIndexes(),
+        forumAnswerRepo.ensureIndexes(),
       ]);
     },
   };

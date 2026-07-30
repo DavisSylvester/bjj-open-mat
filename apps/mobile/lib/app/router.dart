@@ -40,6 +40,9 @@ import '../features/classes/screens/class_edit_screen.dart';
 import '../features/classes/models/gym_class.dart';
 import '../features/classes/models/scheduled_class.dart';
 import '../features/classes/screens/instructor_feedback_screen.dart';
+import '../features/forum/screens/forum_list_screen.dart';
+import '../features/forum/screens/ask_question_screen.dart';
+import '../features/forum/screens/forum_question_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -131,6 +134,23 @@ final routerProvider = Provider<GoRouter>((ref) {
                       builder: (context, state) => InstructorFeedbackScreen(
                         gymId: state.pathParameters['id']!,
                       ),
+                    ),
+                    GoRoute(
+                      path: 'forum',
+                      builder: (context, state) => ForumListScreen(gymId: state.pathParameters['id']!),
+                      routes: [
+                        GoRoute(
+                          path: 'ask',
+                          builder: (context, state) => AskQuestionScreen(gymId: state.pathParameters['id']!),
+                        ),
+                        GoRoute(
+                          path: ':questionId',
+                          builder: (context, state) => ForumQuestionScreen(
+                            questionId: state.pathParameters['questionId']!,
+                            gymId: state.pathParameters['id']!,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
