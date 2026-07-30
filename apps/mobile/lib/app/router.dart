@@ -43,8 +43,10 @@ import '../features/classes/screens/instructor_feedback_screen.dart';
 import '../features/forum/screens/forum_list_screen.dart';
 import '../features/forum/screens/ask_question_screen.dart';
 import '../features/forum/screens/forum_question_screen.dart';
+import '../features/messaging/screens/gym_channels_screen.dart';
 import '../features/messaging/screens/conversations_screen.dart';
 import '../features/messaging/screens/conversation_screen.dart';
+import '../features/messaging/screens/new_message_screen.dart';
 import '../features/messaging/data/messaging_repository.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -139,6 +141,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                       ),
                     ),
                     GoRoute(
+                      path: 'channels',
+                      builder: (context, state) => GymChannelsScreen(gymId: state.pathParameters['id']!),
+                    ),
+                    GoRoute(
                       path: 'forum',
                       builder: (context, state) => ForumListScreen(gymId: state.pathParameters['id']!),
                       routes: [
@@ -226,6 +232,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/messages',
               builder: (context, state) => const ConversationsScreen(),
               routes: [
+                GoRoute(
+                  path: 'new',
+                  builder: (context, state) {
+                    final gymId = state.uri.queryParameters['gymId'] ?? '';
+                    return NewMessageScreen(gymId: gymId);
+                  },
+                ),
                 GoRoute(
                   path: ':conversationId',
                   builder: (context, state) {

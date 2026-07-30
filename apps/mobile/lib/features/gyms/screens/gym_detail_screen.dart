@@ -231,6 +231,24 @@ class _GlassGymDetail extends ConsumerWidget {
                   ]),
                 ),
               ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => context.push('/gym/${gym.id}/channels'),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Icon(Icons.tag, size: 16, color: t.text),
+                    const SizedBox(width: 8),
+                    Text('Channels', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                  ]),
+                ),
+              ),
             ],
             if (canManage) ...[
               const SizedBox(height: 12),
