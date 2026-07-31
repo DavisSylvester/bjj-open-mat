@@ -51,18 +51,19 @@ Future<void> _pump(
 }
 
 void main() {
-  testWidgets('renders a row per open mat, headlined with the gym name', (tester) async {
-    // SessionRow renders sessionRowFromOpenMat's `gymName`, not `title` --
-    // the fixtures below carry distinct gymNames so each row is
-    // independently verifiable, matching what production actually shows.
+  testWidgets('renders a row per open mat, headlined with the session title (showGymName: false)', (tester) async {
+    // On a gym-scoped screen every row belongs to the same gym, so SessionRow
+    // is rendered with showGymName: false. The session's own title becomes the
+    // headline; the gym name is omitted to avoid redundancy.
     await _pump(tester, sessions: () async => [
           _mat(id: 'm1', title: 'Sunday No-Gi', gymName: 'Downtown BJJ'),
           _mat(id: 'm2', title: 'Friday Rolls', gymName: 'Westside Grappling'),
         ]);
-    expect(find.text('Downtown BJJ'), findsOneWidget);
-    expect(find.text('Westside Grappling'), findsOneWidget);
-    expect(find.text('Sunday No-Gi'), findsNothing);
-    expect(find.text('Friday Rolls'), findsNothing);
+    expect(find.text('Sunday No-Gi'), findsOneWidget);
+    expect(find.text('Friday Rolls'), findsOneWidget);
+    // Gym names must not appear when showGymName is false.
+    expect(find.text('Downtown BJJ'), findsNothing);
+    expect(find.text('Westside Grappling'), findsNothing);
     expect(find.byKey(const Key('gym-open-mats-empty')), findsNothing);
   });
 

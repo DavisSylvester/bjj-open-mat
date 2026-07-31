@@ -11,7 +11,9 @@ import '../../open_mats/data/session_requests.dart';
 import 'session_mgmt_screen.dart';
 
 class CreateSessionScreen extends ConsumerStatefulWidget {
-  const CreateSessionScreen({super.key});
+  final String? initialGymId;
+
+  const CreateSessionScreen({super.key, this.initialGymId});
 
   @override
   ConsumerState<CreateSessionScreen> createState() => _CreateSessionScreenState();
@@ -33,6 +35,14 @@ class _CreateSessionScreenState extends ConsumerState<CreateSessionScreen> {
   String? _error;
   String? _gymId;
   bool _addingNewGym = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialGymId != null) {
+      _gymId = widget.initialGymId;
+    }
+  }
   final _gymNameCtrl = TextEditingController();
   final _gymAddrCtrl = TextEditingController();
   final _gymCityCtrl = TextEditingController();

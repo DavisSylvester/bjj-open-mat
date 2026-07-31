@@ -50,7 +50,7 @@ class GymOpenMatsScreen extends ConsumerWidget {
                 ? _EmptyState(
                     t: t,
                     onPost: () async {
-                      await context.push('/add-session');
+                      await context.push('/add-session', extra: gymId);
                       ref.invalidate(gymSessionsProvider(gymId));
                     },
                   )
@@ -64,6 +64,7 @@ class GymOpenMatsScreen extends ConsumerWidget {
                         child: SessionRow(
                           session: sessionRowFromOpenMat(m),
                           onTap: () => context.push('/open-mat/${m.id}'),
+                          showGymName: false,
                         ),
                       );
                     },

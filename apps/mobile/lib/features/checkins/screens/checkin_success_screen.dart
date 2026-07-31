@@ -31,6 +31,9 @@ class _CheckinSuccessScreenState extends ConsumerState<CheckinSuccessScreen> wit
     // over a half-built screen reads as a glitch.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
+        // Invalidate the cached stats so we read the server count that already
+        // includes the check-in that just completed, not a stale value.
+        ref.invalidate(myStatsProvider);
         final stats = await ref.read(myStatsProvider.future);
         if (!mounted) return;
         await ref.read(appRatingServiceProvider).maybePrompt(stats.checkIns);

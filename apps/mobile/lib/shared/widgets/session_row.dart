@@ -7,6 +7,7 @@ import 'exp_badge.dart';
 class SessionRowData {
   final String? id; // open-mat session id, used for navigation to the detail page
   final String gymName;
+  final String? title; // open mat's own title (e.g. 'Sunday No-Gi')
   final String giType; // 'gi', 'nogi', 'both'
   final String expLevel; // 'all', 'beg', 'int', 'adv'
   final String time; // '7:00 PM'
@@ -19,6 +20,7 @@ class SessionRowData {
   const SessionRowData({
     this.id,
     required this.gymName,
+    this.title,
     required this.giType,
     required this.expLevel,
     required this.time,
@@ -34,12 +36,17 @@ class SessionRow extends StatelessWidget {
   final SessionRowData session;
   final VoidCallback? onTap;
 
-  const SessionRow({super.key, required this.session, this.onTap});
+  /// When `false`, the gym name is omitted from the card. Pass `false` on
+  /// gym-scoped screens where every row belongs to the same gym and the name
+  /// would be redundant. Defaults to `true` (global / discover behavior).
+  final bool showGymName;
+
+  const SessionRow({super.key, required this.session, this.onTap, this.showGymName = true});
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    return _GlassCard(session: session, onTap: onTap, t: t);
+    return _GlassCard(session: session, onTap: onTap, t: t, showGymName: showGymName);
   }
 }
 
@@ -47,8 +54,17 @@ class _GlassCard extends StatelessWidget {
   final SessionRowData session;
   final VoidCallback? onTap;
   final AppTokens t;
+  final bool showGymName;
 
-  const _GlassCard({required this.session, required this.onTap, required this.t});
+  const _GlassCard({required this.session, required this.onTap, required this.t, required this.showGymName});
+
+  /// The primary headline for the card: the open mat's own title if set,
+  /// otherwise falls back to the day + time descriptor.
+  String get _headline {
+    final title = session.title;
+    if (title != null && title.isNotEmpty) return title;
+    return '${session.day} · ${session.time}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +125,14 @@ class _GlassCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            Text(session.gymName, style: t.h2Style.copyWith(fontSize: 18)),
+            Text(
+              _headline,
+              style: t.h2Style.copyWith(fontSize: 18),
+            ),
+            if (showGymName) ...[
+              const SizedBox(height: 2),
+              Text(session.gymName, style: t.miniStyle.copyWith(fontSize: 12, color: t.muted)),
+            ],
             const SizedBox(height: 10),
             Row(
               children: [

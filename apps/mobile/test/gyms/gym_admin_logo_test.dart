@@ -11,6 +11,8 @@ import 'package:bjj_open_mat/features/gyms/widgets/gym_logo_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// A controllable fake so tests can (a) assert the exact request sent to
 /// `update` and (b) hold an upload open to observe the Save button's state
@@ -136,5 +138,54 @@ void main() {
     );
     final decoration = container.decoration as BoxDecoration;
     expect(decoration.color, t.gi);
+  });
+
+  testWidgets('back arrow pops when the route stack can pop', (tester) async {
+    final repo = _FakeGymRepository(const Gym(id: 'g1', ownerId: 'u1', name: 'Test Gym', address: '123 St'));
+
+    final router = GoRouter(
+      initialLocation: '/start',
+      routes: [
+        GoRoute(
+          path: '/start',
+          builder: (context, state) => Scaffold(
+            body: Builder(
+              builder: (ctx) => TextButton(
+                onPressed: () => ctx.push('/admin/g1'),
+                child: const Text('go'),
+              ),
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/admin/g1',
+          builder: (context, state) => ProviderScope(
+            overrides: [gymRepositoryProvider.overrideWithValue(repo)],
+            child: const GymAdminScreen(gymId: 'g1'),
+          ),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(
+      theme: AppTheme.glass(),
+      routerConfig: router,
+    ));
+    await tester.pumpAndSettle();
+
+    // Navigate to the admin screen so the stack has a previous route (canPop == true).
+    await tester.tap(find.text('go'));
+    await tester.pumpAndSettle();
+
+    // Confirm we are on the admin screen.
+    expect(find.byIcon(LucideIcons.arrowLeft), findsOneWidget);
+
+    // Tap the back arrow — it should pop back to /start, not hard-navigate.
+    await tester.tap(find.byIcon(LucideIcons.arrowLeft));
+    await tester.pumpAndSettle();
+
+    // After popping, the "go" button on /start should be visible again.
+    expect(find.text('go'), findsOneWidget,
+        reason: 'back arrow must pop to the previous route when canPop is true');
   });
 }

@@ -93,7 +93,7 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
             padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
             child: Row(children: [
               GestureDetector(
-                onTap: () => context.go('/owner/gyms'),
+                onTap: () => context.canPop() ? context.pop() : context.go('/owner/gyms'),
                 child: Icon(LucideIcons.arrowLeft, size: 20, color: t.text),
               ),
               const SizedBox(width: 12),

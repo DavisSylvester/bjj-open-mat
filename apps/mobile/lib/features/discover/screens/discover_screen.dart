@@ -31,6 +31,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   SessionRowData _toRow(OpenMat mat) {
     return SessionRowData(
       id: mat.id,
+      title: mat.title,
       gymName: mat.gymName ?? mat.title,
       giType: mat.giType,
       expLevel: _expLevel(mat.skillLevel),

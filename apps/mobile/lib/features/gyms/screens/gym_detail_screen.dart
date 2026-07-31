@@ -149,53 +149,64 @@ class _GlassGymDetail extends ConsumerWidget {
             const SizedBox(height: 12),
             JoinGymButton(gymId: gym.id),
             GymClaimEntry(gymId: gym.id, ownerId: gym.ownerId),
-            if (shouldShowLogoBanner(
-              logoUrl: gym.logoUrl,
-              isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
-              ownsThisGym: gym.ownerId != null && gym.ownerId == ref.watch(currentUserIdProvider),
-              dismissed: ref.watch(logoBannerDismissedProvider(gym.id)).value ?? false,
-            )) ...[
-              const SizedBox(height: 12),
-              Container(
-                key: const Key('gym-logo-banner'),
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: t.surface,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: t.border),
-                ),
-                child: Row(
+            ref.watch(logoBannerDismissedProvider(gym.id)).when(
+              loading: () => const SizedBox.shrink(),
+              error: (err, _) => const SizedBox.shrink(),
+              data: (dismissed) {
+                final show = shouldShowLogoBanner(
+                  logoUrl: gym.logoUrl,
+                  isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
+                  ownsThisGym: gym.ownerId != null && gym.ownerId == ref.watch(currentUserIdProvider),
+                  dismissed: dismissed,
+                );
+                if (!show) return const SizedBox.shrink();
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 12),
+                    Container(
+                      key: const Key('gym-logo-banner'),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: t.surface,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: t.border),
+                      ),
+                      child: Row(
                         children: [
-                          Text("Add your gym's logo",
-                              style: t.labelStyle.copyWith(fontWeight: FontWeight.w700, color: t.text)),
-                          const SizedBox(height: 4),
-                          Text('Gyms with a logo stand out in search and on open mats.',
-                              style: t.miniStyle.copyWith(color: t.muted)),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Add your gym's logo",
+                                    style: t.labelStyle.copyWith(fontWeight: FontWeight.w700, color: t.text)),
+                                const SizedBox(height: 4),
+                                Text('Gyms with a logo stand out in search and on open mats.',
+                                    style: t.miniStyle.copyWith(color: t.muted)),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            key: const Key('gym-logo-banner-add'),
+                            onPressed: () => context.push('/owner/gyms/${gym.id}'),
+                            child: const Text('Add'),
+                          ),
+                          IconButton(
+                            key: const Key('gym-logo-banner-dismiss'),
+                            icon: Icon(Icons.close, size: 18, color: t.muted),
+                            onPressed: () async {
+                              await dismissLogoBanner(gym.id);
+                              ref.invalidate(logoBannerDismissedProvider(gym.id));
+                            },
+                          ),
                         ],
                       ),
                     ),
-                    TextButton(
-                      key: const Key('gym-logo-banner-add'),
-                      onPressed: () => context.push('/owner/gyms/${gym.id}'),
-                      child: const Text('Add'),
-                    ),
-                    IconButton(
-                      key: const Key('gym-logo-banner-dismiss'),
-                      icon: Icon(Icons.close, size: 18, color: t.muted),
-                      onPressed: () async {
-                        await dismissLogoBanner(gym.id);
-                        ref.invalidate(logoBannerDismissedProvider(gym.id));
-                      },
-                    ),
                   ],
-                ),
-              ),
-            ],
+                );
+              },
+            ),
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => context.push('/gym/${gym.id}/open-mats'),

@@ -315,7 +315,9 @@ final routerProvider = Provider<GoRouter>((ref) {
               routes: [
                 GoRoute(
                   path: 'create',
-                  builder: (context, state) => const CreateSessionScreen(),
+                  builder: (context, state) => CreateSessionScreen(
+                    initialGymId: state.extra as String?,
+                  ),
                 ),
                 GoRoute(
                   path: ':id',
@@ -348,7 +350,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Add session (shared — any authenticated role)
       GoRoute(
         path: '/add-session',
-        builder: (context, state) => const CreateSessionScreen(),
+        builder: (context, state) => CreateSessionScreen(
+          initialGymId: state.extra as String?,
+        ),
       ),
 
       // Settings (shared)
