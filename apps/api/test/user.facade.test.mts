@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { UserFacade } from "../src/facades/user.facade.mts";
+import type { MembershipFacade } from "../src/facades/membership.facade.mts";
 import type { UserRepository } from "../src/repositories/user.repository.mts";
 import type { User } from "@bjj/contract";
 
@@ -69,5 +70,24 @@ describe("UserFacade", () => {
     const a = await facade.getOrCreate({ userId: "google-oauth2|111", role: "practitioner", email: "", viaBypass: false });
     const b = await facade.getOrCreate({ userId: "google-oauth2|222", role: "practitioner", email: "", viaBypass: false });
     expect(a.email).not.toBe(b.email);
+  });
+
+  it("updateProfile on a missing user throws not_found and writes no membership", async () => {
+    // A valid access token for a since-deleted user: findById returns null,
+    // so `current?.homeGymId` used to be `undefined` — different from
+    // nextHomeGymId — which wrote an orphan membership before the 404 on
+    // update(). The guard must throw before any write happens.
+    const repo = fakeRepo([]);
+    let ensureHomeCalls = 0;
+    const spyMemberships: Pick<MembershipFacade, "ensureHome"> = {
+      ensureHome: async (): Promise<void> => {
+        ensureHomeCalls += 1;
+      },
+    };
+    const facade = new UserFacade(repo, spyMemberships);
+    await expect(facade.updateProfile("ghost-user", { homeGymId: "gym-1" })).rejects.toThrow(
+      "User ghost-user not found",
+    );
+    expect(ensureHomeCalls).toBe(0);
   });
 });

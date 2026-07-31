@@ -71,7 +71,12 @@ export class UserFacade {
     const nextHomeGymId: string | undefined = effective.homeGymId;
     if (nextHomeGymId !== undefined && nextHomeGymId !== "") {
       const current: User | null = await this.users.findById(id);
-      if (current?.homeGymId !== nextHomeGymId) {
+      // A missing user (a valid token for a deleted user) must throw before
+      // any write — otherwise `current?.homeGymId` is `undefined`, differs
+      // from `nextHomeGymId`, and ensureHome writes an orphan membership for
+      // a user that update() below is about to 404 on anyway.
+      if (!current) throw new AppError("not_found", `User ${id} not found`);
+      if (current.homeGymId !== nextHomeGymId) {
         await this.memberships.ensureHome(id, nextHomeGymId);
       }
     }
