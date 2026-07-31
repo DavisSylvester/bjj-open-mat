@@ -18,6 +18,11 @@ class Endpoints {
   static String gymDirections(String id) => '/api/v1/gyms/$id/directions';
   static String gymReviewLink(String id) => '/api/v1/gyms/$id/review-link';
   static String gymFavorite(String id) => '/api/v1/gyms/$id/favorite';
+  static String gymClaims(String gymId) => '/api/v1/gyms/$gymId/claims';
+  static String gymClaimMine(String gymId) => '/api/v1/gyms/$gymId/claims/me';
+  static const String adminGymClaims = '/api/v1/admin/gym-claims';
+  static String adminGymClaimApprove(String claimId) => '/api/v1/admin/gym-claims/$claimId/approve';
+  static String adminGymClaimReject(String claimId) => '/api/v1/admin/gym-claims/$claimId/reject';
 
   // Open Mats
   static const String openMats = '/api/v1/open-mats';
