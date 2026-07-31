@@ -6,6 +6,7 @@
  * Dry run by default. Pass --commit to write, matching the gate used by
  * scripts/fb-open-mat/insert.mts.
  */
+import type { Collection } from "mongodb";
 import type { GymMembership } from "@bjj/contract";
 
 /// Mirrors `MembershipDoc` in membership.repository.mts:7-9 — the driver
@@ -95,6 +96,34 @@ export async function applyBackfill(plan: BackfillPlan, writer: MembershipWriter
   }
 }
 
+/// Builds the real `MembershipWriter` against a live `gymMemberships`
+/// collection. Extracted so tests can exercise the exact upsert logic used at
+/// `--commit` time (via a real Mongo connection) instead of re-implementing
+/// it in a fake and only proving the fake is self-consistent.
+export function createMongoMembershipWriter(membershipsCol: Collection<MembershipDoc>): MembershipWriter {
+  return {
+    clearOtherHomes: async (userId: string, gymId: string): Promise<void> => {
+      // Mirrors MembershipRepository.setHome (membership.repository.mts:60-64):
+      // clear isHome on this user's other memberships before the new one is
+      // inserted, so we never leave two gyms simultaneously marked home.
+      await membershipsCol.updateMany({ userId, gymId: { $ne: gymId } }, { $set: { isHome: false } });
+    },
+    insertMembership: async (doc: MembershipDoc): Promise<void> => {
+      // Upsert, not insertOne: the API stays up during the backfill, so a
+      // user can save their profile and create this exact {gymId, userId}
+      // pair (unique-indexed in membership.repository.mts:19) between the
+      // plan read and this write. `$setOnInsert` is required — a `$set`
+      // would clobber a membership the user legitimately created in the
+      // meantime (gymRole, joinedAt, etc.).
+      await membershipsCol.updateOne(
+        { gymId: doc.gymId, userId: doc.userId },
+        { $setOnInsert: doc },
+        { upsert: true },
+      );
+    },
+  };
+}
+
 const isMain: boolean = import.meta.main === true;
 
 if (isMain) {
@@ -147,17 +176,7 @@ if (isMain) {
   } else {
     const now: string = new Date().toISOString();
     const membershipsCol = db.collection<MembershipDoc>("gymMemberships");
-    const writer: MembershipWriter = {
-      clearOtherHomes: async (userId: string, gymId: string): Promise<void> => {
-        // Mirrors MembershipRepository.setHome (membership.repository.mts:60-64):
-        // clear isHome on this user's other memberships before the new one is
-        // inserted, so we never leave two gyms simultaneously marked home.
-        await membershipsCol.updateMany({ userId, gymId: { $ne: gymId } }, { $set: { isHome: false } });
-      },
-      insertMembership: async (doc: MembershipDoc): Promise<void> => {
-        await membershipsCol.insertOne(doc);
-      },
-    };
+    const writer: MembershipWriter = createMongoMembershipWriter(membershipsCol);
     await applyBackfill(plan, writer, now);
     console.log(`\nWrote ${plan.toCreate.length} membership(s).`);
   }

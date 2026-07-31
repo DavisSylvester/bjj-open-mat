@@ -1,6 +1,8 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
+import { MongoClient, type Collection } from "mongodb";
 import {
   applyBackfill,
+  createMongoMembershipWriter,
   planBackfill,
   type BackfillPlan,
   type MembershipDoc,
@@ -98,5 +100,68 @@ describe("applyBackfill", () => {
     await applyBackfill(plan, writer, "2026-01-01T00:00:00.000Z");
 
     expect(calls).toEqual(["clear:u1:g1", "insert:u1:g1", "clear:u2:g2", "insert:u2:g2"]);
+  });
+});
+
+describe("createMongoMembershipWriter", () => {
+  // Proves the fix for the mid-run E11000 abort: the API stays up during the
+  // backfill, so a user can save their profile and create this exact
+  // {gymId, userId} pair (unique-indexed in membership.repository.mts:19)
+  // between the plan read and this write. insertMembership must be an upsert
+  // that neither throws nor clobbers the concurrently-created document.
+  const client = new MongoClient(process.env["MONGODB_URI"] ?? "mongodb://localhost:27017", { timeoutMS: 4000 });
+  const db = client.db("bjj_test_backfill_writer");
+  afterAll(async () => {
+    await db.dropDatabase();
+    await client.close();
+  });
+
+  test("a concurrently-created pair does not throw and is not overwritten", async () => {
+    const col: Collection<MembershipDoc> = db.collection<MembershipDoc>("gymMemberships");
+    await col.createIndex({ gymId: 1, userId: 1 }, { unique: true });
+
+    // Simulates the concurrent write: a user joins for real (via the app's
+    // own path) between the backfill's plan read and its write, with a
+    // gymRole/joinedAt the backfill must not clobber.
+    const concurrentlyCreated: MembershipDoc = {
+      _id: "concurrent-1",
+      id: "concurrent-1",
+      gymId: "g1",
+      userId: "u1",
+      status: "active",
+      verifiedMember: true,
+      gymRole: "coach",
+      isHome: true,
+      visibleInRoster: true,
+      joinMethod: "self",
+      joinedAt: "2020-01-01T00:00:00.000Z",
+      createdAt: "2020-01-01T00:00:00.000Z",
+    };
+    await col.insertOne(concurrentlyCreated);
+
+    const writer: MembershipWriter = createMongoMembershipWriter(col);
+
+    await expect(
+      writer.insertMembership({
+        _id: "backfill-1",
+        id: "backfill-1",
+        gymId: "g1",
+        userId: "u1",
+        status: "active",
+        verifiedMember: false,
+        gymRole: "member",
+        isHome: true,
+        visibleInRoster: true,
+        joinMethod: "self",
+        joinedAt: "2026-07-30T00:00:00.000Z",
+        createdAt: "2026-07-30T00:00:00.000Z",
+      }),
+    ).resolves.toBeUndefined();
+
+    const docs = await col.find({ gymId: "g1", userId: "u1" }).toArray();
+    expect(docs).toHaveLength(1);
+    expect(docs[0]?.id).toBe("concurrent-1");
+    expect(docs[0]?.gymRole).toBe("coach");
+    expect(docs[0]?.joinedAt).toBe("2020-01-01T00:00:00.000Z");
   });
 });
