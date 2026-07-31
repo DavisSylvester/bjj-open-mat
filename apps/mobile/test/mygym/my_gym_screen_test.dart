@@ -11,6 +11,7 @@ import 'package:bjj_open_mat/features/mygym/screens/my_gym_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 const _testGym = Gym(id: 'g1', name: 'Test Gym', address: '123 Main St', ownerId: 'owner-1');
 
@@ -116,5 +117,56 @@ void main() {
     expect(find.byKey(const Key('mygym-action-open-mats')), findsOneWidget);
     expect(find.byKey(const Key('mygym-action-schedule')), findsOneWidget);
     expect(find.byKey(const Key('mygym-action-roster')), findsOneWidget);
+  });
+
+  testWidgets('open mats tile navigates to the correct gym-scoped route', (tester) async {
+    // _QuickAction.path is just data consumed by context.push -- a typo in
+    // the literal (e.g. '/gym/$gymId/open-mat') would ship silently and only
+    // 404 at runtime. Drive real navigation and assert the resulting
+    // location instead of only checking the tile renders.
+    final router = GoRouter(
+      initialLocation: '/',
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (c, s) => const MyGymScreen(),
+        ),
+        GoRoute(
+          path: '/gym/:id',
+          builder: (c, s) => Scaffold(
+            body: Center(child: Text('GYM DETAIL FOR ${s.pathParameters['id']}')),
+          ),
+        ),
+        GoRoute(
+          path: '/gym/:id/open-mats',
+          builder: (c, s) => Scaffold(
+            body: Center(child: Text('OPEN MATS FOR ${s.pathParameters['id']}')),
+          ),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          homeGymIdProvider.overrideWith((ref) async => 'g1'),
+          gymByIdProvider.overrideWith((ref, id) async => _testGym),
+          rosterProvider.overrideWith((ref, id) async => const []),
+          scheduleProvider.overrideWith((ref, a) async => []),
+          forumQuestionsProvider.overrideWith((ref, a) async => []),
+          currentUserIdProvider.overrideWithValue('stranger'),
+        ],
+        child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byKey(const Key('mygym-action-open-mats')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('mygym-action-open-mats')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('OPEN MATS FOR g1'), findsOneWidget);
+    expect(find.byType(MyGymScreen), findsNothing);
   });
 }
