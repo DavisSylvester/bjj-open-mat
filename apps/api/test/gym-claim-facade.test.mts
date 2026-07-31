@@ -238,3 +238,16 @@ describe("GymClaimFacade — approve", () => {
     expect(code).toBe("conflict");
   });
 });
+
+describe("GymClaimFacade — admin enrichment", () => {
+  it("enriches pending claims with gym name/phone/website + claimant email", async () => {
+    const { facade, users } = makeFakes({ phone: "555-1212", website: "alliance.com" });
+    users.set("u1", { id: "u1", email: "me@gym.com", displayName: "Me", role: "practitioner" } as never);
+    await facade.submit("u1", "g1", { relationship: "owner", contact: "me@gym.com", message: "mine" });
+    const views = await facade.listForAdminEnriched("pending");
+    expect(views).toHaveLength(1);
+    expect(views[0]?.gymName).toBe("Alliance");
+    expect(views[0]?.gymPhone).toBe("555-1212");
+    expect(views[0]?.claimantEmail).toBe("me@gym.com");
+  });
+});

@@ -51,8 +51,8 @@ export function gymClaimRoutes(container: Container) {
     .get(
       "/gym-claims",
       async ({ query }) => {
-        const claims = await gymClaimFacade.listForAdmin(query.status ?? "pending");
-        return list(claims, { page: 1, limit: claims.length, total: claims.length });
+        const views = await gymClaimFacade.listForAdminEnriched(query.status ?? "pending");
+        return list(views, { page: 1, limit: views.length, total: views.length });
       },
       { requireAdmin: true, query: AdminGymClaimsQuery },
     )

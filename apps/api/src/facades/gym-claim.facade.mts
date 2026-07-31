@@ -12,6 +12,14 @@ import type { UserRepository } from "../repositories/user.repository.mts";
 import type { MembershipRepository } from "../repositories/membership.repository.mts";
 import type { NotificationRepository } from "../repositories/notification.repository.mts";
 
+export interface AdminGymClaimView {
+  readonly claim: GymClaim;
+  readonly gymName: string;
+  readonly gymPhone?: string;
+  readonly gymWebsite?: string;
+  readonly claimantEmail?: string;
+}
+
 type IdFactory = () => string;
 
 type ClaimRepo = Pick<
@@ -227,5 +235,23 @@ export class GymClaimFacade {
 
   public async listForAdmin(status: GymClaimStatus): Promise<GymClaim[]> {
     return this.claims.listByStatus(status);
+  }
+
+  public async listForAdminEnriched(status: GymClaimStatus): Promise<AdminGymClaimView[]> {
+    const claims = await this.claims.listByStatus(status);
+    return Promise.all(
+      claims.map(async (claim): Promise<AdminGymClaimView> => {
+        const gym = await this.gyms.findById(claim.gymId);
+        const claimant = await this.users.findById(claim.claimantId);
+        const view: AdminGymClaimView = {
+          claim,
+          gymName: gym?.name ?? "Gym",
+          gymPhone: gym?.phone,
+          gymWebsite: gym?.website,
+          claimantEmail: claimant?.email,
+        };
+        return view;
+      }),
+    );
   }
 }
