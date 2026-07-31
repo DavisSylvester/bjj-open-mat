@@ -128,6 +128,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
     ? new GooglePlacesClient(env.googlePlacesApiKey)
     : new NullPlacesClient();
 
+  const membershipFacade = new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id);
+
   return {
     db,
     verifier: new JwtVerifier({
@@ -140,14 +142,14 @@ export function createContainer(db: Db, env: AppEnv): Container {
       const user = await userRepo.findById(userId);
       return user?.role ?? null;
     },
-    userFacade: new UserFacade(userRepo),
+    userFacade: new UserFacade(userRepo, membershipFacade),
     gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder, placesClient),
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
     leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
-    membershipFacade: new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id),
+    membershipFacade,
     classFacade: new ClassFacade(classRepo, classOccurrenceRepo, classRsvpRepo, membershipRepo, gymRepo, userRepo, id),
     classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
     forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, id),

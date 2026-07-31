@@ -31,10 +31,12 @@ function fakeRepo(seed: User[]): FakeUserRepo {
   };
 }
 
+const memberships = { ensureHome: async (): Promise<void> => {} };
+
 describe("UserFacade preferences", () => {
   it("persists search preferences through update and read-back", async () => {
     const repo = fakeRepo([{ id: "u-1", email: "a@b.dev", displayName: "A", role: "practitioner" }]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
 
     const updated = await facade.updateProfile("u-1", {
       preferences: { defaultWhen: "this_week", defaultWithinMi: 25 },

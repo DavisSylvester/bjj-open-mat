@@ -26,24 +26,26 @@ function fakeRepo(seed: User[]): FakeUserRepo {
   };
 }
 
+const memberships = { ensureHome: async (): Promise<void> => {} };
+
 describe("UserFacade", () => {
   it("getOrCreate returns existing user", async () => {
     const repo = fakeRepo([{ id: "u-1", email: "a@b.dev", displayName: "A", role: "practitioner" }]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     const u = await facade.getOrCreate({ userId: "u-1", role: "practitioner", email: "a@b.dev", viaBypass: true });
     expect(u.id).toBe("u-1");
   });
 
   it("updateProfile applies a patch", async () => {
     const repo = fakeRepo([{ id: "u-1", email: "a@b.dev", displayName: "A", role: "practitioner" }]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     const u = await facade.updateProfile("u-1", { displayName: "B" });
     expect(u.displayName).toBe("B");
   });
 
   it("getOrCreate synthesizes a valid email when the token carries none", async () => {
     const repo = fakeRepo([]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     // Social access tokens don't include the `email` claim, so identity.email is "".
     const u = await facade.getOrCreate({ userId: "google-oauth2|123", role: "practitioner", email: "", viaBypass: false });
     expect(u.email).not.toBe("");
@@ -63,7 +65,7 @@ describe("UserFacade", () => {
       },
       findById: async (): Promise<User | null> => null,
     };
-    const facade = new UserFacade(uniqueEmailRepo);
+    const facade = new UserFacade(uniqueEmailRepo, memberships);
     const a = await facade.getOrCreate({ userId: "google-oauth2|111", role: "practitioner", email: "", viaBypass: false });
     const b = await facade.getOrCreate({ userId: "google-oauth2|222", role: "practitioner", email: "", viaBypass: false });
     expect(a.email).not.toBe(b.email);

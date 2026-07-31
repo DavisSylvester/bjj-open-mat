@@ -24,11 +24,13 @@ function stubUsers(stored: User): UsersStub {
   return { repo, getPatch: (): Partial<User> | null => lastPatch };
 }
 
+const memberships = { ensureHome: async (): Promise<void> => {} };
+
 describe("UserFacade.updateProfile", () => {
   it("forwards city/state/gender/weight fields to the repository", async () => {
     const base: User = { id: "u1", email: "a@b.co", displayName: "A" };
     const { repo, getPatch } = stubUsers(base);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     const patch: UpdateUserRequest = {
       city: "Austin",
       state: "TX",
