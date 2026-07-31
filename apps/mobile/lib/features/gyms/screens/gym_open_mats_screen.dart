@@ -38,28 +38,37 @@ class GymOpenMatsScreen extends ConsumerWidget {
         title: Text('Open Mats', style: t.h2Style),
       ),
       body: SafeArea(
-        child: sessionsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => ErrorState(
-            message: friendlyErrorMessage(e),
-            onRetry: () => ref.invalidate(gymSessionsProvider(gymId)),
+        child: RefreshIndicator(
+          onRefresh: () async => ref.invalidate(gymSessionsProvider(gymId)),
+          child: sessionsAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => ErrorState(
+              message: friendlyErrorMessage(e),
+              onRetry: () => ref.invalidate(gymSessionsProvider(gymId)),
+            ),
+            data: (mats) => mats.isEmpty
+                ? _EmptyState(
+                    t: t,
+                    onPost: () async {
+                      await context.push('/add-session');
+                      ref.invalidate(gymSessionsProvider(gymId));
+                    },
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: mats.length,
+                    itemBuilder: (context, i) {
+                      final m = mats[i];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: SessionRow(
+                          session: sessionRowFromOpenMat(m),
+                          onTap: () => context.push('/open-mat/${m.id}'),
+                        ),
+                      );
+                    },
+                  ),
           ),
-          data: (mats) => mats.isEmpty
-              ? _EmptyState(t: t)
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: mats.length,
-                  itemBuilder: (context, i) {
-                    final m = mats[i];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: SessionRow(
-                        session: sessionRowFromOpenMat(m),
-                        onTap: () => context.push('/open-mat/${m.id}'),
-                      ),
-                    );
-                  },
-                ),
         ),
       ),
     );
@@ -68,7 +77,8 @@ class GymOpenMatsScreen extends ConsumerWidget {
 
 class _EmptyState extends StatelessWidget {
   final AppTokens t;
-  const _EmptyState({required this.t});
+  final VoidCallback onPost;
+  const _EmptyState({required this.t, required this.onPost});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +99,7 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               key: const Key('gym-open-mats-post-button'),
-              onPressed: () => context.push('/add-session'),
+              onPressed: onPost,
               child: const Text('Post an open mat'),
             ),
           ],
