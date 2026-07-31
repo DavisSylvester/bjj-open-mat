@@ -10,8 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 class _FakeGymRepository implements GymRepository {
   _FakeGymRepository({this.uploadResult, this.uploadError});
 
-  final String? uploadResult;
-  final Object? uploadError;
+  String? uploadResult;
+  Object? uploadError;
   int uploadCalls = 0;
   String? lastContentType;
 
@@ -102,5 +102,50 @@ void main() {
     expect(error, isNotNull);
     expect(uploadingStates, [true, false],
         reason: 'uploading must be cleared on failure or the parent stays disabled forever');
+  });
+
+  testWidgets(
+      'a retry after a failed upload signals uploading-start again, so a '
+      'caller that clears its error on that signal ends up with no stale error',
+      (tester) async {
+    // Mirrors the add_gym_screen.dart call site pattern:
+    //   onUploadingChanged: (up) => setState(() {
+    //     _uploadingLogo = up;
+    //     if (up) _error = null;
+    //   }),
+    //   onError: (m) => setState(() => _error = m),
+    // A caller that clears its own error flag whenever `up == true` must end
+    // up with no visible error after a failed attempt is followed by a
+    // successful retry.
+    final repo = _FakeGymRepository(uploadError: StateError('nope'));
+    String? uploaded;
+    String? error;
+    await _pump(
+      tester,
+      repo: repo,
+      onUploaded: (u) => uploaded = u,
+      onUploadingChanged: (up) {
+        if (up) error = null;
+      },
+      onError: (m) => error = m,
+    );
+
+    final state = tester.state<GymLogoPickerState>(find.byType(GymLogoPicker));
+
+    // First attempt fails: error is set.
+    await state.uploadBytes(Uint8List.fromList([1, 2, 3]));
+    await tester.pump();
+    expect(error, isNotNull, reason: 'sanity check: the first attempt must fail');
+
+    // Retry succeeds: the widget must signal uploading=true again at the
+    // start of the new attempt, giving the caller its chance to clear the
+    // stale error before the success callback lands.
+    repo.uploadError = null;
+    repo.uploadResult = 'https://cdn/logo2.jpg';
+    await state.uploadBytes(Uint8List.fromList([4, 5, 6]));
+    await tester.pump();
+
+    expect(uploaded, 'https://cdn/logo2.jpg');
+    expect(error, isNull, reason: 'a stale error from a prior failed attempt must not survive a successful retry');
   });
 }

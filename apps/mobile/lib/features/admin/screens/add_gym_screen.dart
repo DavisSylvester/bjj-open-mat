@@ -115,7 +115,12 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
                   children: [
                     GymLogoPicker(
                       onUploaded: (url) => setState(() => _logoUrl = url),
-                      onUploadingChanged: (up) => setState(() => _uploadingLogo = up),
+                      onUploadingChanged: (up) => setState(() {
+                        _uploadingLogo = up;
+                        // Clear any stale error from a prior failed attempt
+                        // as soon as a new upload starts.
+                        if (up) _error = null;
+                      }),
                       onError: (m) => setState(() => _error = m),
                     ),
                     Padding(
