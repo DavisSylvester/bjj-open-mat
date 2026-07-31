@@ -18,3 +18,6 @@ export * from "./conversation-kind.mts";
 export * from "./participant-role.mts";
 export * from "./message-report-reason.mts";
 export * from "./message-report-status.mts";
+export * from "./gym-claim-status.mts";
+export * from "./gym-claim-kind.mts";
+export * from "./claimant-relationship.mts";
