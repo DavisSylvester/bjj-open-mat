@@ -3,23 +3,35 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../core/design/tokens.dart';
 
 /// Practitioner bottom-nav tab ids, in branch/index order.
-const List<String> kPracTabs = ['home', 'search', 'mygym', 'profile'];
+const List<String> kPracTabs = ['home', 'search', 'mygym', 'profile', 'messages'];
 
 class AppBottomNav extends StatelessWidget {
-  final String active; // 'home', 'search', 'mygym', 'profile'
+  final String active; // 'home', 'search', 'mygym', 'profile', 'messages'
   final void Function(String tab) onTap;
   final VoidCallback? onAdd;
 
-  const AppBottomNav({super.key, required this.active, required this.onTap, this.onAdd});
+  /// Aggregate unread message count for the Messages tab badge.
+  /// When > 0 a small badge is rendered over the Messages icon.
+  /// Capped at 99+ in display. 0 means no badge.
+  final int messagesUnreadCount;
+
+  const AppBottomNav({
+    super.key,
+    required this.active,
+    required this.onTap,
+    this.onAdd,
+    this.messagesUnreadCount = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final tabs = [
-      (id: 'home',    icon: LucideIcons.home,   label: 'Home'),
-      (id: 'search',  icon: LucideIcons.search, label: 'Find'),
-      (id: 'mygym',   icon: LucideIcons.store,  label: 'My Gym'),
-      (id: 'profile', icon: LucideIcons.user,   label: 'Profile'),
+      (id: 'home',     icon: LucideIcons.home,          label: 'Home'),
+      (id: 'search',   icon: LucideIcons.search,        label: 'Find'),
+      (id: 'mygym',    icon: LucideIcons.store,         label: 'My Gym'),
+      (id: 'profile',  icon: LucideIcons.user,          label: 'Profile'),
+      (id: 'messages', icon: LucideIcons.messageCircle, label: 'Messages'),
     ];
 
     return Container(
@@ -78,9 +90,11 @@ class AppBottomNav extends StatelessWidget {
                   child: const Icon(Icons.add, color: Colors.white, size: 28),
                 ),
               ),
-              // Right two tabs
+              // Right three tabs (mygym, profile, messages)
               ...tabs.sublist(2).map((tab) {
                 final on = tab.id == active;
+                final showBadge = tab.id == 'messages' && messagesUnreadCount > 0;
+                final badgeLabel = messagesUnreadCount > 99 ? '99+' : messagesUnreadCount.toString();
                 return Expanded(
                   child: GestureDetector(
                     onTap: () => onTap(tab.id),
@@ -94,7 +108,35 @@ class AppBottomNav extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(tab.icon, size: 22, color: on ? t.primary : t.faint),
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Icon(tab.icon, size: 22, color: on ? t.primary : t.faint),
+                              if (showBadge)
+                                Positioned(
+                                  right: -8,
+                                  top: -6,
+                                  child: Container(
+                                    constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                    decoration: BoxDecoration(
+                                      color: t.primary,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: t.bg, width: 1.5),
+                                    ),
+                                    child: Text(
+                                      badgeLabel,
+                                      style: t.miniStyle.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                           const SizedBox(height: 3),
                           Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.primary : t.faint, fontSize: 10)),
                         ],

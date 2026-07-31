@@ -6,6 +6,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../favorites/data/favorite_repository.dart';
+import '../../gym_claims/widgets/gym_claim_entry.dart';
 import '../../membership/widgets/join_gym_button.dart';
 import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
@@ -147,6 +148,7 @@ class _GlassGymDetail extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             JoinGymButton(gymId: gym.id),
+            GymClaimEntry(gymId: gym.id, ownerId: gym.ownerId),
             if (shouldShowLogoBanner(
               logoUrl: gym.logoUrl,
               isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
@@ -268,6 +270,26 @@ class _GlassGymDetail extends ConsumerWidget {
                 ),
               ),
             ],
+            if (canAccessForum) ...[
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => context.push('/gym/${gym.id}/channels'),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Icon(Icons.tag, size: 16, color: t.text),
+                    const SizedBox(width: 8),
+                    Text('Channels', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                  ]),
+                ),
+              ),
+            ],
             if (canManage) ...[
               const SizedBox(height: 12),
               GestureDetector(
@@ -284,6 +306,24 @@ class _GlassGymDetail extends ConsumerWidget {
                     Icon(LucideIcons.messageSquare, size: 16, color: t.text),
                     const SizedBox(width: 8),
                     Text('Instructor feedback', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                  ]),
+                ),
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => context.push('/gym/${gym.id}/message-reports'),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Icon(LucideIcons.flag, size: 16, color: t.text),
+                    const SizedBox(width: 8),
+                    Text('Message reports', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
                   ]),
                 ),
               ),

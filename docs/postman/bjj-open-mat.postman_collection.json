@@ -786,6 +786,261 @@
           }
         }
       ]
+    },
+    {
+      "name": "Messaging",
+      "item": [
+        {
+          "name": "Create gym channel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Announcements\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/channels"
+          }
+        },
+        {
+          "name": "List gym channels",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/channels"
+          }
+        },
+        {
+          "name": "List gym message reports (admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/gyms/GYM_ID/message-reports?status=pending"
+          }
+        },
+        {
+          "name": "Start direct conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientId\": \"USER_ID\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/direct"
+          }
+        },
+        {
+          "name": "Create group conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gymId\": \"GYM_ID\",\n  \"title\": \"Saturday Open Mat Crew\",\n  \"participantIds\": [\"USER_ID_1\", \"USER_ID_2\"]\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/groups"
+          }
+        },
+        {
+          "name": "List conversations",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/messaging/conversations?page=1&limit=20"
+          }
+        },
+        {
+          "name": "List messages",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/messaging/conversations/CONV_ID/messages?limit=30"
+          }
+        },
+        {
+          "name": "Send message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"See you on the mats!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/conversations/CONV_ID/messages"
+          }
+        },
+        {
+          "name": "Mark conversation read",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/messaging/conversations/CONV_ID/read"
+          }
+        },
+        {
+          "name": "Mute conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"muted\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/conversations/CONV_ID/mute"
+          }
+        },
+        {
+          "name": "Leave conversation",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/messaging/conversations/CONV_ID/leave"
+          }
+        },
+        {
+          "name": "Add participants",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userIds\": [\"USER_ID_3\"]\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/conversations/CONV_ID/participants"
+          }
+        },
+        {
+          "name": "Edit message",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"See you on the mats at 7pm!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/messages/MSG_ID"
+          }
+        },
+        {
+          "name": "Delete message",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/messaging/messages/MSG_ID"
+          }
+        },
+        {
+          "name": "Report message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messageId\": \"MSG_ID\",\n  \"reportedUserId\": \"USER_ID\",\n  \"reason\": \"harassment\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/messages/MSG_ID/report"
+          }
+        },
+        {
+          "name": "Submit report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reportedUserId\": \"USER_ID\",\n  \"reason\": \"spam\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/reports"
+          }
+        },
+        {
+          "name": "Resolve report (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/reports/REPORT_ID/resolve"
+          }
+        },
+        {
+          "name": "List blocks",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/messaging/blocks"
+          }
+        },
+        {
+          "name": "Block user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"USER_ID\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/messaging/blocks"
+          }
+        },
+        {
+          "name": "Unblock user",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/messaging/blocks/USER_ID"
+          }
+        }
+      ]
     }
   ]
 }

@@ -2282,6 +2282,805 @@
         }
       }
     },
+    "/api/v1/gyms/{id}/channels": {
+      "post": {
+        "summary": "Create a gym channel (admin/owner)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List gym channels",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Conversation"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gyms/{id}/message-reports": {
+      "get": {
+        "summary": "List message reports for a gym (admin/owner)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Gym ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Filter by report status",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MessageReport"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/direct": {
+      "post": {
+        "summary": "Start or retrieve a direct conversation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartDirectRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/groups": {
+      "post": {
+        "summary": "Create a group conversation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/conversations": {
+      "get": {
+        "summary": "List conversations for the current user",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConversationSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/conversations/{id}/messages": {
+      "get": {
+        "summary": "List messages in a conversation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "description": "Cursor — message ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Message"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Send a message in a conversation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/conversations/{id}/read": {
+      "post": {
+        "summary": "Mark a conversation as read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/conversations/{id}/mute": {
+      "post": {
+        "summary": "Mute or unmute a conversation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetMutedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/conversations/{id}/leave": {
+      "post": {
+        "summary": "Leave a conversation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/conversations/{id}/participants": {
+      "post": {
+        "summary": "Add participants to a conversation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddParticipantsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/messages/{id}": {
+      "patch": {
+        "summary": "Edit a message",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a message",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/messages/{id}/report": {
+      "post": {
+        "summary": "Report a message",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MessageReport"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/reports": {
+      "post": {
+        "summary": "Submit a message report",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MessageReport"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/reports/{id}/resolve": {
+      "post": {
+        "summary": "Resolve a message report (admin/owner)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveReportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/blocks": {
+      "get": {
+        "summary": "List blocked users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserBlock"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Block a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlockUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/messaging/blocks/{id}": {
+      "delete": {
+        "summary": "Unblock a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/waitlist": {
       "post": {
         "summary": "Join the founding waitlist (public)",
@@ -6406,6 +7205,661 @@
             "minimum": 1,
             "maximum": 100,
             "default": 20,
+            "type": "integer"
+          }
+        }
+      },
+      "ConversationKind": {
+        "$id": "ConversationKind",
+        "anyOf": [
+          {
+            "const": "direct",
+            "type": "string"
+          },
+          {
+            "const": "group",
+            "type": "string"
+          },
+          {
+            "const": "gym_channel",
+            "type": "string"
+          }
+        ]
+      },
+      "ParticipantRole": {
+        "$id": "ParticipantRole",
+        "anyOf": [
+          {
+            "const": "member",
+            "type": "string"
+          },
+          {
+            "const": "admin",
+            "type": "string"
+          }
+        ]
+      },
+      "MessageReportReason": {
+        "$id": "MessageReportReason",
+        "anyOf": [
+          {
+            "const": "spam",
+            "type": "string"
+          },
+          {
+            "const": "harassment",
+            "type": "string"
+          },
+          {
+            "const": "inappropriate",
+            "type": "string"
+          },
+          {
+            "const": "other",
+            "type": "string"
+          }
+        ]
+      },
+      "MessageReportStatus": {
+        "$id": "MessageReportStatus",
+        "anyOf": [
+          {
+            "const": "open",
+            "type": "string"
+          },
+          {
+            "const": "reviewed",
+            "type": "string"
+          },
+          {
+            "const": "dismissed",
+            "type": "string"
+          }
+        ]
+      },
+      "Conversation": {
+        "$id": "Conversation",
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "createdBy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "$id": "ConversationKind",
+            "anyOf": [
+              {
+                "const": "direct",
+                "type": "string"
+              },
+              {
+                "const": "group",
+                "type": "string"
+              },
+              {
+                "const": "gym_channel",
+                "type": "string"
+              }
+            ]
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "pairKey": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "lastMessageAt": {
+            "type": "string"
+          },
+          "lastMessagePreview": {
+            "type": "string"
+          }
+        }
+      },
+      "Message": {
+        "$id": "Message",
+        "type": "object",
+        "required": [
+          "id",
+          "conversationId",
+          "authorId",
+          "body"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "conversationId": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "editedAt": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ConversationParticipant": {
+        "$id": "ConversationParticipant",
+        "type": "object",
+        "required": [
+          "id",
+          "conversationId",
+          "userId",
+          "role",
+          "muted"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "conversationId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "role": {
+            "default": "member",
+            "$id": "ParticipantRole",
+            "anyOf": [
+              {
+                "const": "member",
+                "type": "string"
+              },
+              {
+                "const": "admin",
+                "type": "string"
+              }
+            ]
+          },
+          "lastReadAt": {
+            "type": "string"
+          },
+          "muted": {
+            "default": false,
+            "type": "boolean"
+          },
+          "leftAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ChannelReadState": {
+        "$id": "ChannelReadState",
+        "type": "object",
+        "required": [
+          "id",
+          "channelId",
+          "userId",
+          "muted"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "channelId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "lastReadAt": {
+            "type": "string"
+          },
+          "muted": {
+            "default": false,
+            "type": "boolean"
+          }
+        }
+      },
+      "UserBlock": {
+        "$id": "UserBlock",
+        "type": "object",
+        "required": [
+          "id",
+          "blockerId",
+          "blockedId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "blockerId": {
+            "type": "string"
+          },
+          "blockedId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        }
+      },
+      "MessageReport": {
+        "$id": "MessageReport",
+        "type": "object",
+        "required": [
+          "id",
+          "reportedUserId",
+          "reporterId",
+          "gymId",
+          "reason",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "reportedUserId": {
+            "type": "string"
+          },
+          "reporterId": {
+            "type": "string"
+          },
+          "gymId": {
+            "type": "string"
+          },
+          "reason": {
+            "$id": "MessageReportReason",
+            "anyOf": [
+              {
+                "const": "spam",
+                "type": "string"
+              },
+              {
+                "const": "harassment",
+                "type": "string"
+              },
+              {
+                "const": "inappropriate",
+                "type": "string"
+              },
+              {
+                "const": "other",
+                "type": "string"
+              }
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "status": {
+            "default": "open",
+            "$id": "MessageReportStatus",
+            "anyOf": [
+              {
+                "const": "open",
+                "type": "string"
+              },
+              {
+                "const": "reviewed",
+                "type": "string"
+              },
+              {
+                "const": "dismissed",
+                "type": "string"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "ConversationSummary": {
+        "$id": "ConversationSummary",
+        "type": "object",
+        "required": [
+          "conversation",
+          "unreadCount",
+          "muted",
+          "otherParticipantIds"
+        ],
+        "properties": {
+          "conversation": {
+            "$id": "Conversation",
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "createdBy"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "$id": "ConversationKind",
+                "anyOf": [
+                  {
+                    "const": "direct",
+                    "type": "string"
+                  },
+                  {
+                    "const": "group",
+                    "type": "string"
+                  },
+                  {
+                    "const": "gym_channel",
+                    "type": "string"
+                  }
+                ]
+              },
+              "gymId": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "pairKey": {
+                "type": "string"
+              },
+              "createdBy": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "lastMessageAt": {
+                "type": "string"
+              },
+              "lastMessagePreview": {
+                "type": "string"
+              }
+            }
+          },
+          "unreadCount": {
+            "minimum": 0,
+            "default": 0,
+            "type": "integer"
+          },
+          "muted": {
+            "default": false,
+            "type": "boolean"
+          },
+          "lastMessage": {
+            "$id": "Message",
+            "type": "object",
+            "required": [
+              "id",
+              "conversationId",
+              "authorId",
+              "body"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "conversationId": {
+                "type": "string"
+              },
+              "authorId": {
+                "type": "string"
+              },
+              "body": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "editedAt": {
+                "type": "string"
+              },
+              "deletedAt": {
+                "type": "string"
+              }
+            }
+          },
+          "otherParticipantIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StartDirectRequest": {
+        "$id": "StartDirectRequest",
+        "type": "object",
+        "required": [
+          "recipientId"
+        ],
+        "properties": {
+          "recipientId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateGroupRequest": {
+        "$id": "CreateGroupRequest",
+        "type": "object",
+        "required": [
+          "gymId",
+          "title",
+          "participantIds"
+        ],
+        "properties": {
+          "gymId": {
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "participantIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateChannelRequest": {
+        "$id": "CreateChannelRequest",
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "SendMessageRequest": {
+        "$id": "SendMessageRequest",
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "EditMessageRequest": {
+        "$id": "EditMessageRequest",
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "AddParticipantsRequest": {
+        "$id": "AddParticipantsRequest",
+        "type": "object",
+        "required": [
+          "userIds"
+        ],
+        "properties": {
+          "userIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SetMutedRequest": {
+        "$id": "SetMutedRequest",
+        "type": "object",
+        "required": [
+          "muted"
+        ],
+        "properties": {
+          "muted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BlockUserRequest": {
+        "$id": "BlockUserRequest",
+        "type": "object",
+        "required": [
+          "userId"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "ReportMessageRequest": {
+        "$id": "ReportMessageRequest",
+        "type": "object",
+        "required": [
+          "reportedUserId",
+          "reason"
+        ],
+        "properties": {
+          "messageId": {
+            "type": "string"
+          },
+          "reportedUserId": {
+            "type": "string"
+          },
+          "reason": {
+            "$id": "MessageReportReason",
+            "anyOf": [
+              {
+                "const": "spam",
+                "type": "string"
+              },
+              {
+                "const": "harassment",
+                "type": "string"
+              },
+              {
+                "const": "inappropriate",
+                "type": "string"
+              },
+              {
+                "const": "other",
+                "type": "string"
+              }
+            ]
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "ResolveReportRequest": {
+        "$id": "ResolveReportRequest",
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "$id": "MessageReportStatus",
+            "anyOf": [
+              {
+                "const": "open",
+                "type": "string"
+              },
+              {
+                "const": "reviewed",
+                "type": "string"
+              },
+              {
+                "const": "dismissed",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "ConversationListQuery": {
+        "$id": "ConversationListQuery",
+        "type": "object",
+        "properties": {
+          "page": {
+            "minimum": 1,
+            "default": 1,
+            "type": "integer"
+          },
+          "limit": {
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20,
+            "type": "integer"
+          }
+        }
+      },
+      "MessageListQuery": {
+        "$id": "MessageListQuery",
+        "type": "object",
+        "properties": {
+          "before": {
+            "type": "string"
+          },
+          "limit": {
+            "minimum": 1,
+            "maximum": 100,
+            "default": 30,
             "type": "integer"
           }
         }

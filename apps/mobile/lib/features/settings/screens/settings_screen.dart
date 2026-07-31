@@ -120,6 +120,13 @@ class _GlassSettings extends StatelessWidget {
                   trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
                   onTap: () {},
                 ),
+                Divider(height: 1, color: t.border),
+                ListTile(
+                  leading: Icon(LucideIcons.userX, color: t.muted),
+                  title: Text('Blocked users', style: t.bodyStyle),
+                  trailing: Icon(LucideIcons.chevronRight, size: 16, color: t.muted),
+                  onTap: () => context.push('/settings/blocked-users'),
+                ),
               ]),
             ),
             const SizedBox(height: 20),

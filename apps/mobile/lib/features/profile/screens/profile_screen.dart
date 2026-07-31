@@ -246,6 +246,13 @@ class _GlassProfile extends StatelessWidget {
                       trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
                       onTap: () => context.go('/admin/review'),
                     ),
+                    Divider(height: 1, color: t.border),
+                    ListTile(
+                      leading: Icon(LucideIcons.building2, color: t.muted),
+                      title: Text('Gym Claims', style: t.bodyStyle.copyWith(fontWeight: FontWeight.w600, color: t.text)),
+                      trailing: Icon(LucideIcons.chevronRight, size: 15, color: t.faint),
+                      onTap: () => context.push('/admin/gym-claims'),
+                    ),
                   ],
                   Divider(height: 1, color: t.border),
                   ListTile(

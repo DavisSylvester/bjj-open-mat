@@ -8,6 +8,7 @@ export const NotificationType = t.Union(
     t.Literal("system"),
     t.Literal("forum_answer"),
     t.Literal("forum_accepted"),
+    t.Literal("gym_claim"),
   ],
   { $id: "NotificationType" },
 );
