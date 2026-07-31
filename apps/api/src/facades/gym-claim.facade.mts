@@ -133,6 +133,98 @@ export class GymClaimFacade {
     return updated;
   }
 
+  public async approve(adminId: string, claimId: string): Promise<GymClaim> {
+    const claim = await this.getClaimOr404(claimId);
+    if (claim.status !== "pending") throw new AppError("conflict", "Claim is not pending");
+    const gym: Gym | null = await this.gyms.findById(claim.gymId);
+    if (!gym) throw new AppError("not_found", `Gym ${claim.gymId} not found`);
+
+    const previousOwnerId: string | undefined = gym.ownerId;
+    const now: string = new Date().toISOString();
+
+    // 1. Move ownership on the gym.
+    await this.gyms.update(gym.id, { ownerId: claim.claimantId });
+
+    // 2. Elevate the claimant's account role (never downgrade admin/gym_owner).
+    const claimant = await this.users.findById(claim.claimantId);
+    if (!claimant || (claimant.role !== "gym_owner" && claimant.role !== "admin")) {
+      await this.users.update(claim.claimantId, { role: "gym_owner" });
+    }
+
+    // 3. Grant the claimant an owner membership (create or promote).
+    const existing = await this.memberships.find(gym.id, claim.claimantId);
+    if (existing) {
+      await this.memberships.update(gym.id, claim.claimantId, {
+        gymRole: "owner",
+        status: "active",
+        verifiedMember: true,
+      });
+    } else {
+      await this.memberships.upsertJoin({
+        id: this.newId(),
+        gymId: gym.id,
+        userId: claim.claimantId,
+        status: "active",
+        verifiedMember: true,
+        gymRole: "owner",
+        isHome: false,
+        visibleInRoster: true,
+        joinMethod: "self",
+        joinedAt: now,
+        createdAt: now,
+      });
+    }
+
+    // 4. On a transfer, downgrade the previous owner's per-gym role (keep account role + isHome).
+    if (previousOwnerId && previousOwnerId !== claim.claimantId) {
+      const prev = await this.memberships.find(gym.id, previousOwnerId);
+      if (prev) await this.memberships.update(gym.id, previousOwnerId, { gymRole: "member" });
+      await this.notify(
+        previousOwnerId,
+        "Ownership transferred",
+        `Ownership of ${gym.name} was transferred`,
+        { gymId: gym.id, claimId, outcome: "transferred" },
+      );
+    }
+
+    // 5. Mark this claim approved. Only include previousOwnerId when set, so a
+    //    'claim' (no prior owner) never writes an undefined/null into $set.
+    const approvePatch: Partial<GymClaim> = {
+      status: "approved",
+      decidedAt: now,
+      decidedBy: adminId,
+    };
+    if (previousOwnerId !== undefined) approvePatch.previousOwnerId = previousOwnerId;
+    const updated = await this.claims.updateStatus(claimId, approvePatch);
+    if (!updated) throw new AppError("not_found", `Claim ${claimId} not found`);
+
+    // 6. Supersede other pending claims for this gym.
+    const others = (await this.claims.listPendingByGym(gym.id)).filter((c) => c.id !== claimId);
+    for (const other of others) {
+      await this.claims.updateStatus(other.id, {
+        status: "rejected",
+        decidedAt: now,
+        decidedBy: adminId,
+        decisionNote: "superseded by another approved claim",
+      });
+      await this.notify(
+        other.claimantId,
+        "Claim not approved",
+        `Ownership of ${gym.name} was granted to another claimant`,
+        { gymId: gym.id, claimId: other.id, outcome: "rejected" },
+      );
+    }
+
+    // 7. Notify the claimant.
+    await this.notify(
+      claim.claimantId,
+      "Claim approved",
+      `You now manage ${gym.name}`,
+      { gymId: gym.id, claimId, outcome: "approved" },
+    );
+    return updated;
+  }
+
   public async listForAdmin(status: GymClaimStatus): Promise<GymClaim[]> {
     return this.claims.listByStatus(status);
   }

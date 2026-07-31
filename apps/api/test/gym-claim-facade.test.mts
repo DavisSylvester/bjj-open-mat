@@ -168,3 +168,72 @@ describe("GymClaimFacade — submit / cancel / reject", () => {
     expect(got?.id).toBe(c.id);
   });
 });
+
+describe("GymClaimFacade — approve", () => {
+  it("grants ownership on a claim: sets ownerId, elevates role, owner membership", async () => {
+    const { facade, gyms, users } = makeFakes();
+    const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    await facade.approve("admin1", c.id);
+    expect(gyms.get("g1")?.ownerId).toBe("u1");
+    expect(users.get("u1")?.role).toBe("gym_owner");
+  });
+
+  it("creates an owner membership for the claimant", async () => {
+    const { facade, memberships } = makeFakes();
+    const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    await facade.approve("admin1", c.id);
+    expect(memberships.get("g1::u1")?.gymRole).toBe("owner");
+    expect(memberships.get("g1::u1")?.verifiedMember).toBe(true);
+  });
+
+  it("does not downgrade an admin claimant's account role", async () => {
+    const { facade, users } = makeFakes();
+    users.set("u1", { id: "u1", email: "a@b.c", displayName: "Ann", role: "admin" } as never);
+    const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    await facade.approve("admin1", c.id);
+    expect(users.get("u1")?.role).toBe("admin");
+  });
+
+  it("on transfer, downgrades the previous owner's membership to member", async () => {
+    const { facade, memberships, gyms } = makeFakes({ ownerId: "owner9" });
+    memberships.set("g1::owner9", {
+      id: "m0", gymId: "g1", userId: "owner9", status: "active", verifiedMember: true,
+      gymRole: "owner", isHome: true, visibleInRoster: true, joinMethod: "self",
+      joinedAt: "2020-01-01T00:00:00.000Z",
+    });
+    const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    await facade.approve("admin1", c.id);
+    expect(gyms.get("g1")?.ownerId).toBe("u1");
+    expect(memberships.get("g1::owner9")?.gymRole).toBe("member");
+    expect(memberships.get("g1::owner9")?.isHome).toBe(true); // isHome untouched
+  });
+
+  it("supersedes other pending claims for the same gym", async () => {
+    const { facade, claims } = makeFakes();
+    const c1 = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    const c2 = await facade.submit("u2", "g1", { relationship: "manager", contact: "u2@gym.com", message: "no mine" });
+    await facade.approve("admin1", c1.id);
+    expect(claims.get(c1.id)?.status).toBe("approved");
+    expect(claims.get(c2.id)?.status).toBe("rejected");
+  });
+
+  it("notifies the claimant on approval", async () => {
+    const { facade, notifications } = makeFakes();
+    const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    await facade.approve("admin1", c.id);
+    expect(notifications.some((n) => n.userId === "u1" && (n.data?.["outcome"] === "approved"))).toBe(true);
+  });
+
+  it("409s approving a non-pending claim", async () => {
+    const { facade } = makeFakes();
+    const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    await facade.approve("admin1", c.id);
+    let code = "";
+    try {
+      await facade.approve("admin1", c.id);
+    } catch (e) {
+      if (e instanceof AppError) code = e.code;
+    }
+    expect(code).toBe("conflict");
+  });
+});
