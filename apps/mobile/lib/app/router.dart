@@ -18,6 +18,7 @@ import '../features/settings/screens/settings_screen.dart';
 import '../features/notifications/screens/notifications_screen.dart';
 import '../features/open_mats/screens/open_mat_detail_screen.dart';
 import '../features/gyms/screens/gym_detail_screen.dart';
+import '../features/gyms/screens/gym_open_mats_screen.dart';
 import '../features/checkins/screens/checkin_success_screen.dart';
 import '../features/checkins/screens/check_in_form_screen.dart';
 import '../features/checkins/screens/review_screen.dart';
@@ -108,6 +109,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                   path: 'gym/:id',
                   builder: (context, state) => GymDetailScreen(gymId: state.pathParameters['id']!),
                   routes: [
+                    GoRoute(
+                      path: 'open-mats',
+                      builder: (context, state) =>
+                          GymOpenMatsScreen(gymId: state.pathParameters['id']!),
+                    ),
                     GoRoute(
                       path: 'roster',
                       builder: (context, state) => RosterScreen(gymId: state.pathParameters['id']!),
