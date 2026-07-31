@@ -41,7 +41,7 @@ self-contained widget that owns its own state.
 
 **Files:**
 - Create: `apps/mobile/lib/features/gyms/widgets/gym_logo_picker.dart`
-- Modify: `apps/mobile/lib/features/admin/screens/add_gym_screen.dart` — delete `_pickLogo`, `_logoBytes`, `_uploadingLogo`, and `_PhotoDropzone`; embed the new widget
+- Modify: `apps/mobile/lib/features/admin/screens/add_gym_screen.dart` — delete `_pickLogo`, `_logoBytes`, and `_PhotoDropzone`; embed the new widget. **Keep `_logoUrl` and `_uploadingLogo`** — `_submit` and the submit-enabled getter at `:68` still read them; they are now set from the widget's callbacks.
 - Test: `apps/mobile/test/gyms/gym_logo_picker_test.dart` (create)
 
 **Interfaces:**

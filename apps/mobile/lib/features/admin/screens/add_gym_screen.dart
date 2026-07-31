@@ -1,13 +1,12 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../gyms/data/gym_requests.dart';
+import '../../gyms/widgets/gym_logo_picker.dart';
 import 'my_gyms_screen.dart';
 
 class AddGymScreen extends ConsumerStatefulWidget {
@@ -30,8 +29,8 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
   bool _saving = false;
   String? _error;
 
-  // Gym logo: picked preview bytes, the uploaded public URL, and upload state.
-  Uint8List? _logoBytes;
+  // Gym logo: the uploaded public URL and upload state (set via GymLogoPicker
+  // callbacks; _submit sends _logoUrl, the submit-enabled getter reads _uploadingLogo).
   String? _logoUrl;
   bool _uploadingLogo = false;
 
@@ -66,41 +65,6 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
 
   bool get _valid =>
       _nameCtrl.text.trim().isNotEmpty && _addrCtrl.text.trim().isNotEmpty && !_uploadingLogo;
-
-  Future<void> _pickLogo() async {
-    if (_uploadingLogo) return;
-    // Downscale + re-encode to JPEG (keeps logos tiny; matches upload type).
-    final file = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 512,
-      maxHeight: 512,
-      imageQuality: 85,
-    );
-    if (file == null) return;
-    final bytes = await file.readAsBytes();
-    setState(() {
-      _logoBytes = bytes;
-      _uploadingLogo = true;
-      _error = null;
-    });
-    try {
-      final url = await ref.read(gymRepositoryProvider).uploadLogo(bytes, 'image/jpeg');
-      if (mounted) {
-        setState(() {
-          _logoUrl = url;
-          _uploadingLogo = false;
-        });
-      }
-    } on ApiException catch (e) {
-      if (mounted) {
-        setState(() {
-          _uploadingLogo = false;
-          _logoBytes = null;
-          _error = 'Logo upload failed: ${e.message}';
-        });
-      }
-    }
-  }
 
   Future<void> _submit() async {
     if (!_valid || _saving) return;
@@ -149,12 +113,15 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _PhotoDropzone(
-                      t: t,
-                      previewBytes: _logoBytes,
-                      uploading: _uploadingLogo,
-                      uploaded: _logoUrl != null,
-                      onTap: _pickLogo,
+                    GymLogoPicker(
+                      onUploaded: (url) => setState(() => _logoUrl = url),
+                      onUploadingChanged: (up) => setState(() {
+                        _uploadingLogo = up;
+                        // Clear any stale error from a prior failed attempt
+                        // as soon as a new upload starts.
+                        if (up) _error = null;
+                      }),
+                      onError: (m) => setState(() => _error = m),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
@@ -356,83 +323,6 @@ class _Header extends StatelessWidget {
         Expanded(child: Center(child: Text('Add Your Gym', style: t.h2Style.copyWith(fontSize: 16)))),
         const SizedBox(width: 36),
       ]),
-    );
-  }
-}
-
-// ── Photo drop zone ───────────────────────────────────────────
-class _PhotoDropzone extends StatelessWidget {
-  final AppTokens t;
-  final Uint8List? previewBytes;
-  final bool uploading;
-  final bool uploaded;
-  final VoidCallback onTap;
-
-  const _PhotoDropzone({
-    required this.t,
-    required this.onTap,
-    this.previewBytes,
-    this.uploading = false,
-    this.uploaded = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(t.cardRadius + 2);
-    return GestureDetector(
-      onTap: uploading ? null : onTap,
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(18, 16, 18, 0),
-        height: 120,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: t.surface,
-          borderRadius: radius,
-          border: Border.all(color: t.borderHi, width: 2),
-        ),
-        child: Stack(fit: StackFit.expand, children: [
-          if (previewBytes != null)
-            Image.memory(previewBytes!, fit: BoxFit.cover)
-          else
-            Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                width: 44, height: 44,
-                decoration: BoxDecoration(
-                  color: t.gi.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(t.badgeRadius + 4),
-                ),
-                child: Icon(LucideIcons.plus, size: 22, color: t.gi),
-              ),
-              const SizedBox(height: 8),
-              Text('Add gym logo', style: t.miniStyle.copyWith(fontSize: 12, color: t.muted)),
-            ]),
-          if (uploading)
-            Container(
-              color: Colors.black.withValues(alpha: 0.35),
-              alignment: Alignment.center,
-              child: const SizedBox(
-                width: 26, height: 26,
-                child: CircularProgressIndicator(strokeWidth: 2.5, valueColor: AlwaysStoppedAnimation(Colors.white)),
-              ),
-            ),
-          if (previewBytes != null && !uploading)
-            Positioned(
-              right: 8, bottom: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                decoration: BoxDecoration(
-                  color: (uploaded ? t.green : t.muted).withValues(alpha: 0.92),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(uploaded ? LucideIcons.check : LucideIcons.pencil, size: 12, color: Colors.white),
-                  const SizedBox(width: 5),
-                  Text(uploaded ? 'Logo added' : 'Change', style: t.miniStyle.copyWith(fontSize: 11, color: Colors.white, fontWeight: FontWeight.w700)),
-                ]),
-              ),
-            ),
-        ]),
-      ),
     );
   }
 }

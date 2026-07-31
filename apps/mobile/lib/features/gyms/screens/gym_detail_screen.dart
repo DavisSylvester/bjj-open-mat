@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../favorites/data/favorite_repository.dart';
@@ -9,6 +10,7 @@ import '../../membership/widgets/join_gym_button.dart';
 import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
 import '../data/directions.dart';
+import '../data/logo_banner_dismissal.dart';
 import '../models/gym.dart';
 
 class GymDetailScreen extends ConsumerWidget {
@@ -145,6 +147,53 @@ class _GlassGymDetail extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             JoinGymButton(gymId: gym.id),
+            if (shouldShowLogoBanner(
+              logoUrl: gym.logoUrl,
+              isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
+              ownsThisGym: gym.ownerId != null && gym.ownerId == ref.watch(currentUserIdProvider),
+              dismissed: ref.watch(logoBannerDismissedProvider(gym.id)).value ?? false,
+            )) ...[
+              const SizedBox(height: 12),
+              Container(
+                key: const Key('gym-logo-banner'),
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: t.border),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Add your gym's logo",
+                              style: t.labelStyle.copyWith(fontWeight: FontWeight.w700, color: t.text)),
+                          const SizedBox(height: 4),
+                          Text('Gyms with a logo stand out in search and on open mats.',
+                              style: t.miniStyle.copyWith(color: t.muted)),
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      key: const Key('gym-logo-banner-add'),
+                      onPressed: () => context.push('/owner/gyms/${gym.id}'),
+                      child: const Text('Add'),
+                    ),
+                    IconButton(
+                      key: const Key('gym-logo-banner-dismiss'),
+                      icon: Icon(Icons.close, size: 18, color: t.muted),
+                      onPressed: () async {
+                        await dismissLogoBanner(gym.id);
+                        ref.invalidate(logoBannerDismissedProvider(gym.id));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => context.push('/gym/${gym.id}/open-mats'),

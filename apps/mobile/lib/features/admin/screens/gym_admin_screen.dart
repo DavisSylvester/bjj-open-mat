@@ -7,6 +7,7 @@ import '../../../core/design/tokens.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../gyms/data/gym_requests.dart';
 import '../../gyms/models/gym.dart';
+import '../../gyms/widgets/gym_logo_picker.dart';
 import 'my_gyms_screen.dart';
 import '../../../core/api/friendly_error.dart';
 
@@ -28,6 +29,8 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
   String? _hydratedFor;
   bool _saving = false;
   String? _error;
+  String? _logoUrl;
+  bool _uploadingLogo = false;
 
   @override
   void dispose() {
@@ -44,12 +47,13 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
   }
 
   Future<void> _save(Gym gym) async {
-    if (_saving) return;
+    if (_saving || _uploadingLogo) return;
     final changed = <String, dynamic>{};
     final name = _nameCtrl.text.trim();
     final address = _addrCtrl.text.trim();
     if (name.isNotEmpty && name != gym.name) changed['name'] = name;
     if (address.isNotEmpty && address != gym.address) changed['address'] = address;
+    if (_logoUrl != null && _logoUrl != gym.logoUrl) changed['logoUrl'] = _logoUrl;
     if (changed.isEmpty) return;
     setState(() {
       _saving = true;
@@ -58,6 +62,7 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
     try {
       await ref.read(gymRepositoryProvider).update(widget.gymId, UpdateGymRequest(changed));
       ref.invalidate(gymDetailProvider(widget.gymId));
+      ref.invalidate(gymByIdProvider(widget.gymId));
       ref.invalidate(myGymsProvider);
       if (mounted) {
         setState(() {
@@ -114,6 +119,22 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
+                    GymLogoPicker(
+                      existingLogoUrl: gym.logoUrl,
+                      // Unlike the create flow, this screen is not followed by a
+                      // separate submit step the user is guaranteed to reach —
+                      // they may arrive from the "Add your logo" banner, upload,
+                      // see the picker's "Logo added" badge, and leave via the
+                      // back arrow with no unsaved-changes prompt. Persist the
+                      // logo the moment it uploads so it is never silently lost.
+                      onUploaded: (url) {
+                        setState(() => _logoUrl = url);
+                        _save(gym);
+                      },
+                      onUploadingChanged: (up) => setState(() => _uploadingLogo = up),
+                      onError: (m) => setState(() => _error = m),
+                    ),
+                    const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
@@ -141,12 +162,12 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
                     ),
                     const SizedBox(height: 16),
                     GestureDetector(
-                      onTap: _saving ? null : () => _save(gym),
+                      onTap: (_saving || _uploadingLogo) ? null : () => _save(gym),
                       child: Container(
                         width: double.infinity,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: _saving ? t.border : t.gi,
+                          color: (_saving || _uploadingLogo) ? t.border : t.gi,
                           borderRadius: BorderRadius.circular(t.cardRadius + 2),
                         ),
                         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
