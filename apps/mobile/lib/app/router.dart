@@ -52,6 +52,7 @@ import '../features/messaging/screens/new_message_screen.dart';
 import '../features/messaging/screens/blocked_users_screen.dart';
 import '../features/messaging/screens/gym_reports_screen.dart';
 import '../features/messaging/data/messaging_repository.dart';
+import '../features/gym_claims/screens/claim_gym_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   ref.watch(authStateProvider);
@@ -160,6 +161,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     GoRoute(
                       path: 'message-reports',
                       builder: (context, state) => GymReportsScreen(gymId: state.pathParameters['id']!),
+                    ),
+                    GoRoute(
+                      path: 'claim',
+                      builder: (context, state) => ClaimGymScreen(
+                        gymId: state.pathParameters['id']!,
+                        kind: state.uri.queryParameters['kind'] ?? 'claim',
+                      ),
                     ),
                     GoRoute(
                       path: 'forum',
