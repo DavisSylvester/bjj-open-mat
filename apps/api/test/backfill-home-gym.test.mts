@@ -141,22 +141,26 @@ describe("createMongoMembershipWriter", () => {
 
     const writer: MembershipWriter = createMongoMembershipWriter(col);
 
-    await expect(
-      writer.insertMembership({
-        _id: "backfill-1",
-        id: "backfill-1",
-        gymId: "g1",
-        userId: "u1",
-        status: "active",
-        verifiedMember: false,
-        gymRole: "member",
-        isHome: true,
-        visibleInRoster: true,
-        joinMethod: "self",
-        joinedAt: "2026-07-30T00:00:00.000Z",
-        createdAt: "2026-07-30T00:00:00.000Z",
-      }),
-    ).resolves.toBeUndefined();
+    // Await directly rather than `expect(...).resolves`: Bun's `.resolves`
+    // matcher hangs on a mongodb op that carries a client-wide CSOT
+    // (`timeoutMS: 4000` above), waiting out the full deadline instead of
+    // resolving. A direct await completes in ~2ms; production awaits it the
+    // same way. The assertion (resolves to undefined) is unchanged.
+    const result: void = await writer.insertMembership({
+      _id: "backfill-1",
+      id: "backfill-1",
+      gymId: "g1",
+      userId: "u1",
+      status: "active",
+      verifiedMember: false,
+      gymRole: "member",
+      isHome: true,
+      visibleInRoster: true,
+      joinMethod: "self",
+      joinedAt: "2026-07-30T00:00:00.000Z",
+      createdAt: "2026-07-30T00:00:00.000Z",
+    });
+    expect(result).toBeUndefined();
 
     const docs = await col.find({ gymId: "g1", userId: "u1" }).toArray();
     expect(docs).toHaveLength(1);
