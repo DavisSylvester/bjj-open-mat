@@ -6,6 +6,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
 import '../../favorites/data/favorite_repository.dart';
+import '../../gym_claims/widgets/gym_claim_entry.dart';
 import '../../membership/widgets/join_gym_button.dart';
 import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
@@ -147,6 +148,7 @@ class _GlassGymDetail extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             JoinGymButton(gymId: gym.id),
+            GymClaimEntry(gymId: gym.id, ownerId: gym.ownerId),
             if (shouldShowLogoBanner(
               logoUrl: gym.logoUrl,
               isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
