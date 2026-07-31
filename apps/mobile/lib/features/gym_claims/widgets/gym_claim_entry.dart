@@ -23,9 +23,43 @@ class GymClaimEntry extends ConsumerWidget {
     final claimAsync = ref.watch(myGymClaimProvider(gymId));
     return claimAsync.maybeWhen(
       data: (claim) {
+        // Pending → chip + withdraw button
         if (claim != null && claim.status == 'pending') {
-          return _chip(t, 'Claim pending review');
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _chip(t, 'Claim pending review'),
+              TextButton(
+                onPressed: () async {
+                  try {
+                    await ref.read(gymClaimRepositoryProvider).withdraw(gymId);
+                    ref.invalidate(myGymClaimProvider(gymId));
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Couldn't withdraw. Try again.")),
+                      );
+                    }
+                  }
+                },
+                child: const Text('Withdraw'),
+              ),
+            ],
+          );
         }
+        // Rejected → "Not approved" chip + re-submit button
+        if (claim != null && claim.status == 'rejected') {
+          final kind = ownerId != null ? 'transfer' : 'claim';
+          final label = ownerId != null ? 'Request ownership' : 'Claim this gym';
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _chip(t, 'Not approved'),
+              _button(context, t, label, kind),
+            ],
+          );
+        }
+        // approved (or null claim) → fall through to normal
         final kind = ownerId != null ? 'transfer' : 'claim';
         final label = ownerId != null ? 'Request ownership' : 'Claim this gym';
         return _button(context, t, label, kind);
