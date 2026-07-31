@@ -120,7 +120,8 @@ export class GymClaimFacade {
       decidedBy: adminId,
     };
     if (note !== undefined) patch.decisionNote = note;
-    const updated = (await this.claims.updateStatus(claimId, patch)) as GymClaim;
+    const updated = await this.claims.updateStatus(claimId, patch);
+    if (!updated) throw new AppError("not_found", `Claim ${claimId} not found`);
     await this.notify(
       claim.claimantId,
       "Claim not approved",
