@@ -121,7 +121,16 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
                   children: [
                     GymLogoPicker(
                       existingLogoUrl: gym.logoUrl,
-                      onUploaded: (url) => setState(() => _logoUrl = url),
+                      // Unlike the create flow, this screen is not followed by a
+                      // separate submit step the user is guaranteed to reach —
+                      // they may arrive from the "Add your logo" banner, upload,
+                      // see the picker's "Logo added" badge, and leave via the
+                      // back arrow with no unsaved-changes prompt. Persist the
+                      // logo the moment it uploads so it is never silently lost.
+                      onUploaded: (url) {
+                        setState(() => _logoUrl = url);
+                        _save(gym);
+                      },
                       onUploadingChanged: (up) => setState(() => _uploadingLogo = up),
                       onError: (m) => setState(() => _error = m),
                     ),
