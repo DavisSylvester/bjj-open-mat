@@ -17,6 +17,7 @@ String _expLevel(String skillLevel) => switch (skillLevel) {
 SessionRowData sessionRowFromOpenMat(OpenMat m) => SessionRowData(
       id: m.id,
       gymName: m.gymName ?? m.title,
+      title: m.title,
       giType: m.giType,
       expLevel: _expLevel(m.skillLevel),
       time: m.startLabel,

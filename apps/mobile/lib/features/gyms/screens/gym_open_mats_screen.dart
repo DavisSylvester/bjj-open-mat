@@ -64,6 +64,7 @@ class GymOpenMatsScreen extends ConsumerWidget {
                         child: SessionRow(
                           session: sessionRowFromOpenMat(m),
                           onTap: () => context.push('/open-mat/${m.id}'),
+                          showGymName: false,
                         ),
                       );
                     },
