@@ -111,6 +111,18 @@ class _Dropzone extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(t.cardRadius + 2);
     final hasExisting = previewBytes == null && (existingLogoUrl?.isNotEmpty ?? false);
+    final emptyPlaceholder = Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Container(
+        width: 44, height: 44,
+        decoration: BoxDecoration(
+          color: t.gi.withValues(alpha: 0.14),
+          borderRadius: BorderRadius.circular(t.badgeRadius + 4),
+        ),
+        child: Icon(LucideIcons.plus, size: 22, color: t.gi),
+      ),
+      const SizedBox(height: 8),
+      Text('Add gym logo', style: t.miniStyle.copyWith(fontSize: 12, color: t.muted)),
+    ]);
     return GestureDetector(
       onTap: uploading ? null : onTap,
       child: Container(
@@ -132,20 +144,14 @@ class _Dropzone extends StatelessWidget {
               errorBuilder: (_, _, _) => const SizedBox.shrink(),
             )
           else if (hasExisting)
-            CachedNetworkImage(imageUrl: existingLogoUrl!, fit: BoxFit.cover)
+            CachedNetworkImage(
+              imageUrl: existingLogoUrl!,
+              fit: BoxFit.cover,
+              placeholder: (_, _) => emptyPlaceholder,
+              errorWidget: (_, _, _) => emptyPlaceholder,
+            )
           else
-            Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                width: 44, height: 44,
-                decoration: BoxDecoration(
-                  color: t.gi.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(t.badgeRadius + 4),
-                ),
-                child: Icon(LucideIcons.plus, size: 22, color: t.gi),
-              ),
-              const SizedBox(height: 8),
-              Text('Add gym logo', style: t.miniStyle.copyWith(fontSize: 12, color: t.muted)),
-            ]),
+            emptyPlaceholder,
           if (uploading)
             Container(
               key: const Key('gym-logo-picker-uploading'),

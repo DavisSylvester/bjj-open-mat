@@ -7,6 +7,7 @@ import '../../../core/design/tokens.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../gyms/data/gym_requests.dart';
 import '../../gyms/models/gym.dart';
+import '../../gyms/widgets/gym_logo_picker.dart';
 import 'my_gyms_screen.dart';
 import '../../../core/api/friendly_error.dart';
 
@@ -28,6 +29,8 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
   String? _hydratedFor;
   bool _saving = false;
   String? _error;
+  String? _logoUrl;
+  bool _uploadingLogo = false;
 
   @override
   void dispose() {
@@ -44,12 +47,13 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
   }
 
   Future<void> _save(Gym gym) async {
-    if (_saving) return;
+    if (_saving || _uploadingLogo) return;
     final changed = <String, dynamic>{};
     final name = _nameCtrl.text.trim();
     final address = _addrCtrl.text.trim();
     if (name.isNotEmpty && name != gym.name) changed['name'] = name;
     if (address.isNotEmpty && address != gym.address) changed['address'] = address;
+    if (_logoUrl != null && _logoUrl != gym.logoUrl) changed['logoUrl'] = _logoUrl;
     if (changed.isEmpty) return;
     setState(() {
       _saving = true;
@@ -114,6 +118,13 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
+                    GymLogoPicker(
+                      existingLogoUrl: gym.logoUrl,
+                      onUploaded: (url) => setState(() => _logoUrl = url),
+                      onUploadingChanged: (up) => setState(() => _uploadingLogo = up),
+                      onError: (m) => setState(() => _error = m),
+                    ),
+                    const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
