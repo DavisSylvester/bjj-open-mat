@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/api/friendly_error.dart';
 import '../../../core/data/api_exception.dart';
 import '../../../core/design/tokens.dart';
 import '../data/gym_claim_repository.dart';
@@ -46,7 +47,7 @@ class _ClaimGymScreenState extends ConsumerState<ClaimGymScreen> {
       ref.invalidate(myGymClaimProvider(widget.gymId));
       if (mounted) Navigator.of(context).pop();
     } on ApiException catch (e) {
-      if (mounted) setState(() { _saving = false; _error = e.message; });
+      if (mounted) setState(() { _saving = false; _error = friendlyErrorMessage(e); });
     }
   }
 

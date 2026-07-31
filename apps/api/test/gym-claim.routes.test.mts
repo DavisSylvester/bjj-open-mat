@@ -24,7 +24,6 @@ function testApp(identity: AuthIdentity | null, adminIdentity?: AuthIdentity): {
     getMyClaimForGym: async (_uid: string, gymId: string): Promise<GymClaim | null> => ({ ...pending, gymId }),
     cancel: async (): Promise<void> => { return; },
     listMyClaims: async (): Promise<GymClaim[]> => [pending],
-    listForAdmin: async (): Promise<GymClaim[]> => [pending],
     approve: async (_adminId: string, claimId: string): Promise<GymClaim> => ({ ...pending, id: claimId, status: "approved" }),
     reject: async (_adminId: string, claimId: string): Promise<GymClaim> => ({ ...pending, id: claimId, status: "rejected" }),
   };

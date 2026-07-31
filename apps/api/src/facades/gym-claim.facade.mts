@@ -142,6 +142,11 @@ export class GymClaimFacade {
   }
 
   public async approve(adminId: string, claimId: string): Promise<GymClaim> {
+    // NOTE: non-transactional — this performs several sequential writes
+    // (gym owner, user role, memberships, claim status, supersede) without a
+    // Mongo session. Matches the existing facade precedent. Re-running approve
+    // is safe: it re-reads state and the pending-guard makes a completed
+    // approval a no-op, so a mid-sequence crash is recoverable by re-invoking.
     const claim = await this.getClaimOr404(claimId);
     if (claim.status !== "pending") throw new AppError("conflict", "Claim is not pending");
     const gym: Gym | null = await this.gyms.findById(claim.gymId);
@@ -231,10 +236,6 @@ export class GymClaimFacade {
       { gymId: gym.id, claimId, outcome: "approved" },
     );
     return updated;
-  }
-
-  public async listForAdmin(status: GymClaimStatus): Promise<GymClaim[]> {
-    return this.claims.listByStatus(status);
   }
 
   public async listForAdminEnriched(status: GymClaimStatus): Promise<AdminGymClaimView[]> {
