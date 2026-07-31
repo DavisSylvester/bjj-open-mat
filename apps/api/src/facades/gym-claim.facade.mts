@@ -233,10 +233,6 @@ export class GymClaimFacade {
     return updated;
   }
 
-  public async listForAdmin(status: GymClaimStatus): Promise<GymClaim[]> {
-    return this.claims.listByStatus(status);
-  }
-
   public async listForAdminEnriched(status: GymClaimStatus): Promise<AdminGymClaimView[]> {
     const claims = await this.claims.listByStatus(status);
     return Promise.all(
