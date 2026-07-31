@@ -44,5 +44,8 @@ void main() {
       find.ancestor(of: find.text('Google User'), matching: find.byType(TextField)),
     );
     expect(nameField.enabled, isFalse);
+
+    // Home gym join-roster hint is visible.
+    expect(find.textContaining('member roster'), findsOneWidget);
   });
 }

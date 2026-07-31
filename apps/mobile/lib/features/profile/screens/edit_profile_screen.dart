@@ -209,6 +209,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     onTap: _pickHomeGym,
                     child: _HomeGymLabel(homeGymId: _homeGymId, style: t.bodyStyle),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Setting your home gym also adds you to its member roster.',
+                    style: t.bodyStyle.copyWith(fontSize: 12, color: t.muted),
+                  ),
                   ...[
                     const SizedBox(height: 16),
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
