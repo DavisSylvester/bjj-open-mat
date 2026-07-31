@@ -62,6 +62,7 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
     try {
       await ref.read(gymRepositoryProvider).update(widget.gymId, UpdateGymRequest(changed));
       ref.invalidate(gymDetailProvider(widget.gymId));
+      ref.invalidate(gymByIdProvider(widget.gymId));
       ref.invalidate(myGymsProvider);
       if (mounted) {
         setState(() {
