@@ -11,12 +11,21 @@ String _key(String gymId) => 'gym_logo_banner_dismissed_$gymId';
 /// non-owners away from `/owner/**`. A coach passes `deriveCanManageGym` but
 /// would be bounced to Discover and then 403'd, so a broader gate would offer
 /// an action that cannot complete.
+///
+/// [ownsThisGym] adds the per-gym dimension the account role lacks: a
+/// `gym_owner` account owns SOME gym, not necessarily THIS one. The server's
+/// admin update path additionally checks `gym.ownerId == ownerId`
+/// (`gym.facade.mts`), so without this the banner would offer an "Add" action
+/// that uploads bytes to S3 and then 403s on save for any logo-less gym the
+/// viewer does not own (e.g. reached via Favorites).
 bool shouldShowLogoBanner({
   required String? logoUrl,
   required bool isGymOwner,
+  required bool ownsThisGym,
   required bool dismissed,
 }) {
   if (!isGymOwner) return false;
+  if (!ownsThisGym) return false;
   if (dismissed) return false;
   return logoUrl == null || logoUrl.isEmpty;
 }

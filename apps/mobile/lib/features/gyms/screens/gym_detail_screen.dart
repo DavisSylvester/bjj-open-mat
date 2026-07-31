@@ -150,6 +150,7 @@ class _GlassGymDetail extends ConsumerWidget {
             if (shouldShowLogoBanner(
               logoUrl: gym.logoUrl,
               isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
+              ownsThisGym: gym.ownerId != null && gym.ownerId == ref.watch(currentUserIdProvider),
               dismissed: ref.watch(logoBannerDismissedProvider(gym.id)).value ?? false,
             )) ...[
               const SizedBox(height: 12),
