@@ -162,12 +162,12 @@ class _GymAdminScreenState extends ConsumerState<GymAdminScreen> {
                     ),
                     const SizedBox(height: 16),
                     GestureDetector(
-                      onTap: _saving ? null : () => _save(gym),
+                      onTap: (_saving || _uploadingLogo) ? null : () => _save(gym),
                       child: Container(
                         width: double.infinity,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: _saving ? t.border : t.gi,
+                          color: (_saving || _uploadingLogo) ? t.border : t.gi,
                           borderRadius: BorderRadius.circular(t.cardRadius + 2),
                         ),
                         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
