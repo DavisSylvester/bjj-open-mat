@@ -147,7 +147,7 @@ export class GymClaimFacade {
 
     // 2. Elevate the claimant's account role (never downgrade admin/gym_owner).
     const claimant = await this.users.findById(claim.claimantId);
-    if (!claimant || (claimant.role !== "gym_owner" && claimant.role !== "admin")) {
+    if (claimant && claimant.role !== "gym_owner" && claimant.role !== "admin") {
       await this.users.update(claim.claimantId, { role: "gym_owner" });
     }
 

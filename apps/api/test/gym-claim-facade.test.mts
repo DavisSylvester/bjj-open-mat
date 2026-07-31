@@ -172,6 +172,7 @@ describe("GymClaimFacade — submit / cancel / reject", () => {
 describe("GymClaimFacade — approve", () => {
   it("grants ownership on a claim: sets ownerId, elevates role, owner membership", async () => {
     const { facade, gyms, users } = makeFakes();
+    users.set("u1", { id: "u1", email: "u1@gym.com", displayName: "U1", role: "practitioner" } as never);
     const c = await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
     await facade.approve("admin1", c.id);
     expect(gyms.get("g1")?.ownerId).toBe("u1");
