@@ -3,12 +3,16 @@ import type { AuthIdentity } from "../auth/auth.types.mts";
 import { isSocial } from "../auth/is-social.mts";
 import { AppError } from "../http/errors.mts";
 import type { UserRepository } from "../repositories/user.repository.mts";
+import type { MembershipFacade } from "./membership.facade.mts";
 
 const DEFAULT_SETTINGS: UserSettings = { theme: "glass", notifyRsvp: true, notifySessionUpdates: true };
 
 export class UserFacade {
 
-  public constructor(private readonly users: Pick<UserRepository, "findById" | "upsertByAuth0Id" | "update" | "insert">) {}
+  public constructor(
+    private readonly users: Pick<UserRepository, "findById" | "upsertByAuth0Id" | "update" | "insert">,
+    private readonly memberships: Pick<MembershipFacade, "ensureHome">,
+  ) {}
 
   public async getOrCreate(identity: AuthIdentity): Promise<User> {
     const existing = await this.users.findById(identity.userId);
@@ -60,6 +64,23 @@ export class UserFacade {
 
   public async updateProfile(id: string, patch: UpdateUserRequest, isSocialUser = false): Promise<User> {
     const effective: UpdateUserRequest = isSocialUser ? this.socialAllowed(patch) : patch;
+
+    // A home gym now means a roster entry. Sync BEFORE writing the user, so an
+    // unknown gym rejects the whole update rather than leaving the profile
+    // pointing at a gym the user was never joined to.
+    const nextHomeGymId: string | undefined = effective.homeGymId;
+    if (nextHomeGymId !== undefined && nextHomeGymId !== "") {
+      const current: User | null = await this.users.findById(id);
+      // A missing user (a valid token for a deleted user) must throw before
+      // any write — otherwise `current?.homeGymId` is `undefined`, differs
+      // from `nextHomeGymId`, and ensureHome writes an orphan membership for
+      // a user that update() below is about to 404 on anyway.
+      if (!current) throw new AppError("not_found", `User ${id} not found`);
+      if (current.homeGymId !== nextHomeGymId) {
+        await this.memberships.ensureHome(id, nextHomeGymId);
+      }
+    }
+
     const updated = await this.users.update(id, effective);
     if (!updated) throw new AppError("not_found", `User ${id} not found`);
     return updated;

@@ -57,6 +57,20 @@ export class MembershipFacade {
     return this.memberships.upsertJoin(membership);
   }
 
+  /// Guarantees the user is a member of [gymId] and that it is their home gym.
+  ///
+  /// Composed from the existing paths rather than reimplementing them: [join]
+  /// already rejects an unknown gym and already upserts, so this is safe to
+  /// call repeatedly. Deliberately does NOT call `setMine`, which would write
+  /// `users.homeGymId` a second time — the caller owns that field.
+  public async ensureHome(userId: string, gymId: string): Promise<void> {
+    const existing: GymMembership | null = await this.memberships.find(gymId, userId);
+    if (!existing) {
+      await this.join(userId, gymId);
+    }
+    await this.memberships.setHome(userId, gymId);
+  }
+
   public async leave(userId: string, gymId: string): Promise<void> {
     await this.memberships.remove(gymId, userId);
   }

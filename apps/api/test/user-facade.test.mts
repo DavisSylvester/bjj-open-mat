@@ -26,10 +26,12 @@ function fakeRepo(): FakeRepo {
   };
 }
 
+const memberships = { ensureHome: async (): Promise<void> => {} };
+
 describe("UserFacade identity", () => {
   it("does NOT seed displayName from the Auth0 sub on creation", async () => {
     const repo = fakeRepo();
-    const f = new UserFacade(repo);
+    const f = new UserFacade(repo, memberships);
     const u = await f.getOrCreate({ userId: "auth0|6a36dd6a90830c3d8fb430aa", role: "practitioner", email: "", viaBypass: false });
     expect(u.displayName).toBe("");
     expect(u.displayName).not.toContain("auth0");
@@ -37,7 +39,7 @@ describe("UserFacade identity", () => {
 
   it("applies provider name/email on sync for a database (auth0|) user", async () => {
     const repo = fakeRepo();
-    const f = new UserFacade(repo);
+    const f = new UserFacade(repo, memberships);
     const id = { userId: "auth0|6a36dd6a90830c3d8fb430aa", role: "practitioner", email: "", viaBypass: false } as const;
     await f.getOrCreate(id);
     const synced = await f.syncFromProvider(id, { displayName: "Danaher", email: "john@example.com" });
@@ -47,7 +49,7 @@ describe("UserFacade identity", () => {
 
   it("does not overwrite an existing user-set name on sync", async () => {
     const repo = fakeRepo();
-    const f = new UserFacade(repo);
+    const f = new UserFacade(repo, memberships);
     const id = { userId: "auth0|abc", role: "practitioner", email: "", viaBypass: false } as const;
     await f.getOrCreate(id);
     await f.updateProfile("auth0|abc", { displayName: "My Name" });

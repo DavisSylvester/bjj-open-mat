@@ -13,7 +13,8 @@ function facade(store: Map<string, User>): UserFacade {
       const cur = store.get(id); if (!cur) return null; const next = { ...cur, ...patch }; store.set(id, next); return next;
     },
   };
-  return new UserFacade(repo);
+  const memberships = { ensureHome: async (): Promise<void> => {} };
+  return new UserFacade(repo, memberships);
 }
 
 const googleId: AuthIdentity = { userId: "google-oauth2|9", email: "old@x.io", role: "practitioner", viaBypass: false };

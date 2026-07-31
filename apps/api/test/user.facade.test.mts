@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { UserFacade } from "../src/facades/user.facade.mts";
+import type { MembershipFacade } from "../src/facades/membership.facade.mts";
 import type { UserRepository } from "../src/repositories/user.repository.mts";
 import type { User } from "@bjj/contract";
 
@@ -26,24 +27,26 @@ function fakeRepo(seed: User[]): FakeUserRepo {
   };
 }
 
+const memberships = { ensureHome: async (): Promise<void> => {} };
+
 describe("UserFacade", () => {
   it("getOrCreate returns existing user", async () => {
     const repo = fakeRepo([{ id: "u-1", email: "a@b.dev", displayName: "A", role: "practitioner" }]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     const u = await facade.getOrCreate({ userId: "u-1", role: "practitioner", email: "a@b.dev", viaBypass: true });
     expect(u.id).toBe("u-1");
   });
 
   it("updateProfile applies a patch", async () => {
     const repo = fakeRepo([{ id: "u-1", email: "a@b.dev", displayName: "A", role: "practitioner" }]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     const u = await facade.updateProfile("u-1", { displayName: "B" });
     expect(u.displayName).toBe("B");
   });
 
   it("getOrCreate synthesizes a valid email when the token carries none", async () => {
     const repo = fakeRepo([]);
-    const facade = new UserFacade(repo);
+    const facade = new UserFacade(repo, memberships);
     // Social access tokens don't include the `email` claim, so identity.email is "".
     const u = await facade.getOrCreate({ userId: "google-oauth2|123", role: "practitioner", email: "", viaBypass: false });
     expect(u.email).not.toBe("");
@@ -63,9 +66,28 @@ describe("UserFacade", () => {
       },
       findById: async (): Promise<User | null> => null,
     };
-    const facade = new UserFacade(uniqueEmailRepo);
+    const facade = new UserFacade(uniqueEmailRepo, memberships);
     const a = await facade.getOrCreate({ userId: "google-oauth2|111", role: "practitioner", email: "", viaBypass: false });
     const b = await facade.getOrCreate({ userId: "google-oauth2|222", role: "practitioner", email: "", viaBypass: false });
     expect(a.email).not.toBe(b.email);
+  });
+
+  it("updateProfile on a missing user throws not_found and writes no membership", async () => {
+    // A valid access token for a since-deleted user: findById returns null,
+    // so `current?.homeGymId` used to be `undefined` — different from
+    // nextHomeGymId — which wrote an orphan membership before the 404 on
+    // update(). The guard must throw before any write happens.
+    const repo = fakeRepo([]);
+    let ensureHomeCalls = 0;
+    const spyMemberships: Pick<MembershipFacade, "ensureHome"> = {
+      ensureHome: async (): Promise<void> => {
+        ensureHomeCalls += 1;
+      },
+    };
+    const facade = new UserFacade(repo, spyMemberships);
+    await expect(facade.updateProfile("ghost-user", { homeGymId: "gym-1" })).rejects.toThrow(
+      "User ghost-user not found",
+    );
+    expect(ensureHomeCalls).toBe(0);
   });
 });
