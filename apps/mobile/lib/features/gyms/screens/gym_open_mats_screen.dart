@@ -50,7 +50,7 @@ class GymOpenMatsScreen extends ConsumerWidget {
                 ? _EmptyState(
                     t: t,
                     onPost: () async {
-                      await context.push('/add-session');
+                      await context.push('/add-session', extra: gymId);
                       ref.invalidate(gymSessionsProvider(gymId));
                     },
                   )
