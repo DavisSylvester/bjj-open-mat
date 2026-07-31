@@ -46,6 +46,7 @@ void main() {
     await pump(tester, repo);
     await tester.enterText(find.byKey(const Key('claim-contact')), 'me@gym.com');
     await tester.enterText(find.byKey(const Key('claim-message')), 'I run this gym');
+    await tester.pump();
     await tester.tap(find.byKey(const Key('claim-submit')));
     await tester.pump();
     expect(repo.submits, hasLength(1));

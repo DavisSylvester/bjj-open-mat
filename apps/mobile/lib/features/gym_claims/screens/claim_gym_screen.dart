@@ -115,7 +115,7 @@ class _ClaimGymScreenState extends ConsumerState<ClaimGymScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 key: const Key('claim-submit'),
-                onPressed: _saving ? null : _submit,
+                onPressed: _canSubmit ? _submit : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: t.primary,
                   disabledBackgroundColor: t.border,
