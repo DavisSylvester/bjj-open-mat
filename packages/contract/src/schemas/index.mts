@@ -30,5 +30,6 @@ export * from "./channel-read-state.mts";
 export * from "./user-block.mts";
 export * from "./message-report.mts";
 export * from "./conversation-summary.mts";
+export * from "./gym-claim.mts";
 export * from "./requests/index.mts";
 export * from "./responses/index.mts";
