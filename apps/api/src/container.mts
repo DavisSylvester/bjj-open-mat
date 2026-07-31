@@ -64,6 +64,8 @@ import { ConversationParticipantRepository } from "./repositories/conversation-p
 import { ChannelReadStateRepository } from "./repositories/channel-read-state.repository.mts";
 import { UserBlockRepository } from "./repositories/user-block.repository.mts";
 import { MessageReportRepository } from "./repositories/message-report.repository.mts";
+import { GymClaimFacade } from "./facades/gym-claim.facade.mts";
+import { GymClaimRepository } from "./repositories/gym-claim.repository.mts";
 
 export interface Container {
   readonly db: Db;
@@ -81,6 +83,7 @@ export interface Container {
   readonly classJournalFacade: ClassJournalFacade;
   readonly forumFacade: ForumFacade;
   readonly messagingFacade: MessagingFacade;
+  readonly gymClaimFacade: GymClaimFacade;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
@@ -116,6 +119,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const channelReadStateRepo = new ChannelReadStateRepository(db);
   const userBlockRepo = new UserBlockRepository(db);
   const messageReportRepo = new MessageReportRepository(db);
+  const gymClaimRepo = new GymClaimRepository(db);
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -168,6 +172,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
     forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, id),
     messagingFacade: new MessagingFacade(conversationRepo, messageRepo, conversationParticipantRepo, channelReadStateRepo, userBlockRepo, messageReportRepo, membershipRepo, gymRepo, id),
+    gymClaimFacade: new GymClaimFacade(gymClaimRepo, gymRepo, userRepo, membershipRepo, notificationRepo, id),
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
       checkInRepo,
@@ -208,6 +213,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
         channelReadStateRepo.ensureIndexes(),
         userBlockRepo.ensureIndexes(),
         messageReportRepo.ensureIndexes(),
+        gymClaimRepo.ensureIndexes(),
       ]);
     },
   };
