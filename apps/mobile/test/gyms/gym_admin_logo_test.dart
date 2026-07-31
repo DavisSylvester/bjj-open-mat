@@ -143,14 +143,12 @@ void main() {
   testWidgets('back arrow pops when the route stack can pop', (tester) async {
     final repo = _FakeGymRepository(const Gym(id: 'g1', ownerId: 'u1', name: 'Test Gym', address: '123 St'));
 
-    bool poppedToStart = false;
-
     final router = GoRouter(
       initialLocation: '/start',
       routes: [
         GoRoute(
           path: '/start',
-          builder: (_, __) => Scaffold(
+          builder: (context, state) => Scaffold(
             body: Builder(
               builder: (ctx) => TextButton(
                 onPressed: () => ctx.push('/admin/g1'),
@@ -158,15 +156,13 @@ void main() {
               ),
             ),
           ),
-          routes: [
-            GoRoute(
-              path: '/admin/g1',
-              builder: (_, __) => ProviderScope(
-                overrides: [gymRepositoryProvider.overrideWithValue(repo)],
-                child: const GymAdminScreen(gymId: 'g1'),
-              ),
-            ),
-          ],
+        ),
+        GoRoute(
+          path: '/admin/g1',
+          builder: (context, state) => ProviderScope(
+            overrides: [gymRepositoryProvider.overrideWithValue(repo)],
+            child: const GymAdminScreen(gymId: 'g1'),
+          ),
         ),
       ],
     );
