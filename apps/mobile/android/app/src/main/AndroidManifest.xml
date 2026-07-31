@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for all network access (API, Auth0, Google Maps tiles). Flutter
+         only injects INTERNET into the debug/profile manifests, so it MUST be
+         declared here or release builds ship with no network access. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Required by geolocator for the "GPS / near me" search. Without these the
          runtime permission request auto-denies (Android never prompts for an
          undeclared permission) and location capture silently returns null. -->

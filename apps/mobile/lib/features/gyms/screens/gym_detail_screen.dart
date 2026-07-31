@@ -5,13 +5,12 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
-import '../../../shared/widgets/session_row.dart';
 import '../../favorites/data/favorite_repository.dart';
-import '../../membership/data/membership_repository.dart';
 import '../../membership/widgets/join_gym_button.dart';
+import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
-import '../data/gym_sessions_provider.dart';
 import '../data/directions.dart';
+import '../data/logo_banner_dismissal.dart';
 import '../models/gym.dart';
 
 class GymDetailScreen extends ConsumerWidget {
@@ -47,39 +46,11 @@ class _GlassGymDetail extends ConsumerWidget {
   final Gym gym;
   const _GlassGymDetail({required this.t, required this.gym});
 
-  bool _deriveCanManage(WidgetRef ref) {
-    final myId = ref.watch(currentUserIdProvider);
-    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-    final isOwner = gym.ownerId == myId && myId != null;
-    final rosterAsync = ref.watch(rosterProvider(gym.id));
-    final myGymRole = rosterAsync.maybeWhen(
-      data: (members) => myId != null
-          ? members.where((m) => m.userId == myId).firstOrNull?.gymRole
-          : null,
-      orElse: () => null,
-    );
-    return isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
-  }
-
-  bool _deriveCanAccessForum(WidgetRef ref) {
-    final myId = ref.watch(currentUserIdProvider);
-    if (myId == null) return false;
-    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-    final isOwner = gym.ownerId == myId;
-    final rosterAsync = ref.watch(rosterProvider(gym.id));
-    final isMember = rosterAsync.maybeWhen(
-      data: (members) => members.any((m) => m.userId == myId),
-      orElse: () => false,
-    );
-    return isAdmin || isOwner || isMember;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sessionsAsync = ref.watch(gymSessionsProvider(gym.id));
     final favoritesAsync = ref.watch(myFavoritesProvider);
-    final canManage = _deriveCanManage(ref);
-    final canAccessForum = _deriveCanAccessForum(ref);
+    final canManage = deriveCanManageGym(ref, gymId: gym.id, ownerId: gym.ownerId);
+    final canAccessForum = deriveCanAccessForumGym(ref, gymId: gym.id, ownerId: gym.ownerId);
     final isFavorite = favoritesAsync.maybeWhen(
       data: (gyms) => gyms.any((g) => g.id == gym.id),
       orElse: () => false,
@@ -176,6 +147,71 @@ class _GlassGymDetail extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             JoinGymButton(gymId: gym.id),
+            if (shouldShowLogoBanner(
+              logoUrl: gym.logoUrl,
+              isGymOwner: ref.watch(authStateProvider).user?.isGymOwner ?? false,
+              ownsThisGym: gym.ownerId != null && gym.ownerId == ref.watch(currentUserIdProvider),
+              dismissed: ref.watch(logoBannerDismissedProvider(gym.id)).value ?? false,
+            )) ...[
+              const SizedBox(height: 12),
+              Container(
+                key: const Key('gym-logo-banner'),
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: t.border),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Add your gym's logo",
+                              style: t.labelStyle.copyWith(fontWeight: FontWeight.w700, color: t.text)),
+                          const SizedBox(height: 4),
+                          Text('Gyms with a logo stand out in search and on open mats.',
+                              style: t.miniStyle.copyWith(color: t.muted)),
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      key: const Key('gym-logo-banner-add'),
+                      onPressed: () => context.push('/owner/gyms/${gym.id}'),
+                      child: const Text('Add'),
+                    ),
+                    IconButton(
+                      key: const Key('gym-logo-banner-dismiss'),
+                      icon: Icon(Icons.close, size: 18, color: t.muted),
+                      onPressed: () async {
+                        await dismissLogoBanner(gym.id);
+                        ref.invalidate(logoBannerDismissedProvider(gym.id));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 12),
+            GestureDetector(
+              onTap: () => context.push('/gym/${gym.id}/open-mats'),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: t.border),
+                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.event_available_outlined, size: 16, color: t.text),
+                  const SizedBox(width: 8),
+                  Text('Open Mats', style: t.miniStyle.copyWith(color: t.text, fontSize: 14, fontWeight: FontWeight.w700)),
+                ]),
+              ),
+            ),
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => context.push('/gym/${gym.id}/roster'),
@@ -290,25 +326,6 @@ class _GlassGymDetail extends ConsumerWidget {
                 ),
               ),
             ],
-            const SizedBox(height: 20),
-            Text('Open Mats', style: t.h2Style),
-            const SizedBox(height: 8),
-            sessionsAsync.when(
-              loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
-              error: (e, _) => Text("Couldn't load sessions", style: t.bodyStyle.copyWith(color: t.muted)),
-              data: (mats) => mats.isEmpty
-                  ? Text('No open mats posted yet.', style: t.bodyStyle.copyWith(color: t.muted))
-                  : Column(children: [
-                      for (final m in mats)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: SessionRow(
-                            session: sessionRowFromOpenMat(m),
-                            onTap: () => context.push('/open-mat/${m.id}'),
-                          ),
-                        ),
-                    ]),
-            ),
             if (gym.description != null && gym.description!.isNotEmpty) ...[
               const SizedBox(height: 20),
               Text('About', style: t.h2Style),

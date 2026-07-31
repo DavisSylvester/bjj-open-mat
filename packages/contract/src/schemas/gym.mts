@@ -14,6 +14,7 @@ export const Gym = t.Object(
     postalCode: t.Optional(t.String()),
     location: t.Optional(GeoLocation),
     googlePlaceId: t.Optional(t.String()),
+    googleReviewUri: t.Optional(t.String()),
     phone: t.Optional(t.String()),
     website: t.Optional(t.String()),
     logoUrl: t.Optional(t.String()),

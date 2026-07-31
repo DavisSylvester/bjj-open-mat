@@ -3,10 +3,10 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../core/design/tokens.dart';
 
 /// Practitioner bottom-nav tab ids, in branch/index order.
-const List<String> kPracTabs = ['home', 'search', 'profile', 'report', 'messages'];
+const List<String> kPracTabs = ['home', 'search', 'mygym', 'profile', 'messages'];
 
 class AppBottomNav extends StatelessWidget {
-  final String active; // 'home', 'search', 'profile', 'report', 'messages'
+  final String active; // 'home', 'search', 'mygym', 'profile', 'messages'
   final void Function(String tab) onTap;
   final VoidCallback? onAdd;
 
@@ -27,10 +27,10 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final tabs = [
-      (id: 'home',     icon: LucideIcons.home,        label: 'Home'),
-      (id: 'search',   icon: LucideIcons.search,      label: 'Find'),
-      (id: 'profile',  icon: LucideIcons.user,        label: 'Profile'),
-      (id: 'report',   icon: LucideIcons.flag,        label: 'Report'),
+      (id: 'home',     icon: LucideIcons.home,          label: 'Home'),
+      (id: 'search',   icon: LucideIcons.search,        label: 'Find'),
+      (id: 'mygym',    icon: LucideIcons.store,         label: 'My Gym'),
+      (id: 'profile',  icon: LucideIcons.user,          label: 'Profile'),
       (id: 'messages', icon: LucideIcons.messageCircle, label: 'Messages'),
     ];
 
@@ -90,7 +90,7 @@ class AppBottomNav extends StatelessWidget {
                   child: const Icon(Icons.add, color: Colors.white, size: 28),
                 ),
               ),
-              // Right three tabs (profile, report, messages)
+              // Right three tabs (mygym, profile, messages)
               ...tabs.sublist(2).map((tab) {
                 final on = tab.id == active;
                 final showBadge = tab.id == 'messages' && messagesUnreadCount > 0;

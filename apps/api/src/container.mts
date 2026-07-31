@@ -10,6 +10,7 @@ import { OpenMatFacade } from "./facades/open-mat.facade.mts";
 import { ReportFacade } from "./facades/report.facade.mts";
 import { UserFacade } from "./facades/user.facade.mts";
 import { ZipcodesGeocoder, type Geocoder } from "./services/geocoder.mts";
+import { GooglePlacesClient, NullPlacesClient, type PlacesClient } from "./services/places-client.mts";
 import {
   S3AssetStorage,
   UnconfiguredAssetStorage,
@@ -85,6 +86,7 @@ export interface Container {
   readonly geocoder: Geocoder;
   readonly assetStorage: AssetStorage;
   readonly audioStorage: AudioStorage;
+  readonly placesClient: PlacesClient;
   ensureIndexes(): Promise<void>;
 }
 
@@ -136,6 +138,11 @@ export function createContainer(db: Db, env: AppEnv): Container {
     env.auth0Domain && env.auth0M2mClientId && env.auth0M2mClientSecret
       ? new HttpAuth0ManagementService(env.auth0Domain, env.auth0M2mClientId, env.auth0M2mClientSecret)
       : new UnconfiguredAuth0ManagementService();
+  const placesClient: PlacesClient = env.googlePlacesApiKey
+    ? new GooglePlacesClient(env.googlePlacesApiKey)
+    : new NullPlacesClient();
+
+  const membershipFacade = new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id);
 
   return {
     db,
@@ -149,14 +156,14 @@ export function createContainer(db: Db, env: AppEnv): Container {
       const user = await userRepo.findById(userId);
       return user?.role ?? null;
     },
-    userFacade: new UserFacade(userRepo),
-    gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder),
+    userFacade: new UserFacade(userRepo, membershipFacade),
+    gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder, placesClient),
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
     leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
-    membershipFacade: new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id),
+    membershipFacade,
     classFacade: new ClassFacade(classRepo, classOccurrenceRepo, classRsvpRepo, membershipRepo, gymRepo, userRepo, id),
     classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
     forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, id),
@@ -173,6 +180,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     geocoder,
     assetStorage,
     audioStorage,
+    placesClient,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),

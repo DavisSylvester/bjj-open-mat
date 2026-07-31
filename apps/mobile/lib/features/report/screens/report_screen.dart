@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:record/record.dart';
 import '../../../core/data/api_exception.dart';
@@ -250,6 +251,16 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     final t = Theme.of(context).extension<AppTokens>()!;
     return Scaffold(
       backgroundColor: t.bg,
+      appBar: AppBar(
+        backgroundColor: t.bg2,
+        foregroundColor: t.text,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () => context.canPop() ? context.pop() : context.go('/profile'),
+          child: Icon(Icons.arrow_back, color: t.text),
+        ),
+        title: Text('Report', style: t.h2Style),
+      ),
       body: SafeArea(
         child: _done ? _buildSuccess(t) : _buildForm(t),
       ),

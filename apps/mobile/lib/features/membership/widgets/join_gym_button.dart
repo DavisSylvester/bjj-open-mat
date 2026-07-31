@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
@@ -11,13 +12,20 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return ref.watch(authStateProvider).user?.id;
 });
 
+/// The mutually exclusive states the action button can be in. Modelled as an
+/// enum rather than a `disabled` flag so "signed out" and "roster failed"
+/// cannot collapse into the same silent grey button again.
+enum JoinButtonState { signedOut, error, member, nonMember }
+
 /// Displays the current member count and a Join / Leave button for [gymId].
 ///
 /// - Shows "N members" as a label above the action button.
+/// - Shows **Sign in to join** when no user is authenticated — tappable, and
+///   routes to `/login`.
+/// - Shows **Retry** when the roster request fails — tappable, and
+///   invalidates the roster provider to retry.
 /// - Shows **Join** when the signed-in user is not in the roster.
 /// - Shows **Leave** when the signed-in user is already in the roster.
-/// - Both the label and button are disabled while the roster is loading.
-/// - The button is disabled (but visible) when no user is authenticated.
 class JoinGymButton extends ConsumerStatefulWidget {
   final String gymId;
 
@@ -63,30 +71,35 @@ class _JoinGymButtonState extends ConsumerState<JoinGymButton> {
     return rosterAsync.when(
       loading: () => _MembershipLayout(
         memberCount: 0,
-        isMember: false,
+        state: JoinButtonState.nonMember,
         loading: true,
-        disabled: true,
         onTap: null,
         t: t,
       ),
       error: (err, st) => _MembershipLayout(
         memberCount: 0,
-        isMember: false,
+        state: JoinButtonState.error,
         loading: false,
-        disabled: true,
-        onTap: null,
+        onTap: () => ref.invalidate(rosterProvider(widget.gymId)),
         t: t,
       ),
       data: (roster) {
         final count = roster.length;
-        final isMember = isAuthed && roster.any((m) => m.userId == myId);
-
+        if (!isAuthed) {
+          return _MembershipLayout(
+            memberCount: count,
+            state: JoinButtonState.signedOut,
+            loading: false,
+            onTap: () => context.push('/login'),
+            t: t,
+          );
+        }
+        final isMember = roster.any((m) => m.userId == myId);
         return _MembershipLayout(
           memberCount: count,
-          isMember: isMember,
+          state: isMember ? JoinButtonState.member : JoinButtonState.nonMember,
           loading: _busy,
-          disabled: !isAuthed || _busy,
-          onTap: (!isAuthed || _busy) ? null : () => _toggle(isMember: isMember),
+          onTap: _busy ? null : () => _toggle(isMember: isMember),
           t: t,
         );
       },
@@ -96,17 +109,15 @@ class _JoinGymButtonState extends ConsumerState<JoinGymButton> {
 
 class _MembershipLayout extends StatelessWidget {
   final int memberCount;
-  final bool isMember;
+  final JoinButtonState state;
   final bool loading;
-  final bool disabled;
   final VoidCallback? onTap;
   final AppTokens? t;
 
   const _MembershipLayout({
     required this.memberCount,
-    required this.isMember,
+    required this.state,
     required this.loading,
-    required this.disabled,
     required this.onTap,
     required this.t,
   });
@@ -114,9 +125,25 @@ class _MembershipLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = memberCount == 1 ? '1 member' : '$memberCount members';
-    final buttonLabel = isMember ? 'Leave' : 'Join';
-    final icon = isMember ? LucideIcons.logOut : LucideIcons.userPlus;
+    final isMember = state == JoinButtonState.member;
     final primaryColor = t?.primary ?? Theme.of(context).colorScheme.primary;
+
+    final String buttonLabel;
+    final IconData icon;
+    switch (state) {
+      case JoinButtonState.signedOut:
+        buttonLabel = 'Sign in to join';
+        icon = LucideIcons.logIn;
+      case JoinButtonState.error:
+        buttonLabel = 'Retry';
+        icon = LucideIcons.refreshCw;
+      case JoinButtonState.member:
+        buttonLabel = 'Leave';
+        icon = LucideIcons.logOut;
+      case JoinButtonState.nonMember:
+        buttonLabel = 'Join';
+        icon = LucideIcons.userPlus;
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,

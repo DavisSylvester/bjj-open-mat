@@ -8,6 +8,7 @@ import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../gyms/models/gym.dart';
+import '../../../core/api/friendly_error.dart';
 
 final myGymsProvider = FutureProvider<List<Gym>>((ref) async {
   return ref.read(gymRepositoryProvider).listMine();
@@ -26,7 +27,7 @@ class MyGymsScreen extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(myGymsProvider),
         child: gymsAsync.when(
           loading: () => const ShimmerList(),
-          error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(myGymsProvider)),
+          error: (e, _) => ErrorState(message: friendlyErrorMessage(e), onRetry: () => ref.invalidate(myGymsProvider)),
           data: (gyms) {
             if (gyms.isEmpty) return const EmptyState(title: 'No gyms yet', subtitle: 'Register your first gym', icon: Icons.store);
             return ListView.builder(

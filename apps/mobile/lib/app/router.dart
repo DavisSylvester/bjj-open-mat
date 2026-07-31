@@ -13,10 +13,12 @@ import '../features/search/screens/search_screen.dart';
 import '../features/training/screens/my_training_screen.dart';
 import '../features/report/screens/report_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
+import '../features/mygym/screens/my_gym_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
 import '../features/notifications/screens/notifications_screen.dart';
 import '../features/open_mats/screens/open_mat_detail_screen.dart';
 import '../features/gyms/screens/gym_detail_screen.dart';
+import '../features/gyms/screens/gym_open_mats_screen.dart';
 import '../features/checkins/screens/checkin_success_screen.dart';
 import '../features/checkins/screens/check_in_form_screen.dart';
 import '../features/checkins/screens/review_screen.dart';
@@ -89,6 +91,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
+        path: '/report',
+        builder: (context, state) => const ReportScreen(),
+      ),
+      GoRoute(
         path: '/role-select',
         builder: (context, state) => const RoleSelectScreen(),
       ),
@@ -110,6 +116,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                   path: 'gym/:id',
                   builder: (context, state) => GymDetailScreen(gymId: state.pathParameters['id']!),
                   routes: [
+                    GoRoute(
+                      path: 'open-mats',
+                      builder: (context, state) =>
+                          GymOpenMatsScreen(gymId: state.pathParameters['id']!),
+                    ),
                     GoRoute(
                       path: 'roster',
                       builder: (context, state) => RosterScreen(gymId: state.pathParameters['id']!),
@@ -201,6 +212,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
+              path: '/my-gym',
+              builder: (context, state) => const MyGymScreen(),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
               path: '/profile',
               builder: (context, state) => const ProfileScreen(),
               routes: [
@@ -225,12 +242,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(
               path: '/user/:id',
               builder: (context, state) => PublicProfileScreen(userId: state.pathParameters['id']!),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: '/report',
-              builder: (context, state) => const ReportScreen(),
             ),
           ]),
           StatefulShellBranch(routes: [

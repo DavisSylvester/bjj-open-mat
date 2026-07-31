@@ -22,7 +22,8 @@ describe("updateProfile edit restriction", () => {
       insert: async () => base,
       update: async (_id: string, patch: Partial<User>): Promise<User> => { captured.patch = patch; return { ...base, ...patch }; },
     };
-    return new UserFacade(repo);
+    const memberships = { ensureHome: async (): Promise<void> => {} };
+    return new UserFacade(repo, memberships);
   }
 
   it("social user: strips only provider identity (displayName/avatar), keeps app-data", async () => {

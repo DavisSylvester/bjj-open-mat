@@ -4,6 +4,7 @@ import type { FavoriteRepository } from "../src/repositories/favorite.repository
 import type { GymRepository } from "../src/repositories/gym.repository.mts";
 import type { Gym } from "@bjj/contract";
 import { fakeGeocoder, nullGeocoder } from "./fakes/geocoder.fake.mts";
+import { NullPlacesClient } from "../src/services/places-client.mts";
 
 type FakeGymRepo = Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "findNearby" | "ensureIndexes">;
 type FakeFavRepo = Pick<FavoriteRepository, "add" | "remove" | "listGymIds" | "ensureIndexes">;
@@ -41,7 +42,7 @@ function repos(): { gymRepo: FakeGymRepo; favRepo: FakeFavRepo } {
 describe("GymFacade", () => {
   it("create assigns ownerId and an id", async () => {
     const { gymRepo, favRepo } = repos();
-    const facade = new GymFacade(gymRepo, favRepo, () => "gym-generated", nullGeocoder);
+    const facade = new GymFacade(gymRepo, favRepo, () => "gym-generated", nullGeocoder, new NullPlacesClient());
     const gym = await facade.create("owner-1", { name: "Atos", address: "x" });
     expect(gym.id).toBe("gym-generated");
     expect(gym.ownerId).toBe("owner-1");
@@ -49,21 +50,21 @@ describe("GymFacade", () => {
 
   it("update rejects a non-owner", async () => {
     const { gymRepo, favRepo } = repos();
-    const facade = new GymFacade(gymRepo, favRepo, () => "g-1", nullGeocoder);
+    const facade = new GymFacade(gymRepo, favRepo, () => "g-1", nullGeocoder, new NullPlacesClient());
     await facade.create("owner-1", { name: "Atos", address: "x" });
     await expect(facade.update("someone-else", "g-1", { name: "New" })).rejects.toMatchObject({ code: "forbidden" });
   });
 
   it("geocodes postalCode into location when no explicit location is provided", async () => {
     const { gymRepo, favRepo } = repos();
-    const facade = new GymFacade(gymRepo, favRepo, () => "gym-geo", fakeGeocoder);
+    const facade = new GymFacade(gymRepo, favRepo, () => "gym-geo", fakeGeocoder, new NullPlacesClient());
     const gym = await facade.create("owner-1", { name: "Texas BJJ", address: "1 Main St", postalCode: "75495" });
     expect(gym.location).toEqual({ lat: 33.42, lng: -96.58 });
   });
 
   it("preserves explicit location over geocoded one", async () => {
     const { gymRepo, favRepo } = repos();
-    const facade = new GymFacade(gymRepo, favRepo, () => "gym-explicit", fakeGeocoder);
+    const facade = new GymFacade(gymRepo, favRepo, () => "gym-explicit", fakeGeocoder, new NullPlacesClient());
     const gym = await facade.create("owner-1", {
       name: "Texas BJJ",
       address: "1 Main St",

@@ -8,6 +8,7 @@ import '../../open_mats/data/session_repository.dart';
 import '../../open_mats/data/session_requests.dart';
 import '../../open_mats/models/open_mat.dart';
 import 'session_mgmt_screen.dart';
+import '../../../core/api/friendly_error.dart';
 
 final sessionDetailProvider = FutureProvider.family<OpenMat, String>((ref, id) async {
   return ref.read(sessionRepositoryProvider).getById(id);
@@ -80,7 +81,7 @@ class _SessionAdminScreenState extends ConsumerState<SessionAdminScreen> {
               error: (e, _) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Text(e.toString(), textAlign: TextAlign.center, style: t.bodyStyle.copyWith(color: t.red)),
+                  child: Text(friendlyErrorMessage(e), textAlign: TextAlign.center, style: t.bodyStyle.copyWith(color: t.red)),
                 ),
               ),
               data: (session) => ListView(

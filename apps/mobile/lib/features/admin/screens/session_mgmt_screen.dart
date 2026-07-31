@@ -7,6 +7,7 @@ import '../../../shared/widgets/error_state.dart';
 import '../../../shared/widgets/shimmer_loader.dart';
 import '../../open_mats/data/session_repository.dart';
 import '../../open_mats/models/open_mat.dart';
+import '../../../core/api/friendly_error.dart';
 
 final mySessionsProvider = FutureProvider<List<OpenMat>>((ref) async {
   return ref.read(sessionRepositoryProvider).listMine();
@@ -25,7 +26,7 @@ class SessionMgmtScreen extends ConsumerWidget {
         onRefresh: () async => ref.invalidate(mySessionsProvider),
         child: sessionsAsync.when(
           loading: () => const ShimmerList(),
-          error: (e, _) => ErrorState(message: e.toString(), onRetry: () => ref.invalidate(mySessionsProvider)),
+          error: (e, _) => ErrorState(message: friendlyErrorMessage(e), onRetry: () => ref.invalidate(mySessionsProvider)),
           data: (sessions) {
             if (sessions.isEmpty) return const EmptyState(title: 'No sessions', subtitle: 'Create your first open mat', icon: Icons.event);
             return ListView.builder(

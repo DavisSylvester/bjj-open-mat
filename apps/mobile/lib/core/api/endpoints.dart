@@ -16,6 +16,7 @@ class Endpoints {
   static const String gymsNearby = '/api/v1/gyms/nearby';
   static String gymById(String id) => '/api/v1/gyms/$id';
   static String gymDirections(String id) => '/api/v1/gyms/$id/directions';
+  static String gymReviewLink(String id) => '/api/v1/gyms/$id/review-link';
   static String gymFavorite(String id) => '/api/v1/gyms/$id/favorite';
 
   // Open Mats

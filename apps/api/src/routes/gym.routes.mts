@@ -59,6 +59,7 @@ export function gymRoutes(container: Container) {
       { requireOwner: true, body: UpdateGymRequest },
     )
     .get("/:id/directions", async ({ params }) => data(await gymFacade.directions(params.id)))
+    .get("/:id/review-link", async ({ params }) => data(await gymFacade.reviewLink(params.id)))
     .post(
       "/:id/favorite",
       async ({ identity, params }) => {
