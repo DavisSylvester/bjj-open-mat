@@ -21,6 +21,7 @@ import { notificationRoutes } from "./routes/notification.routes.mts";
 import { openMatRoutes } from "./routes/open-mat.routes.mts";
 import { reportRoutes } from "./routes/report.routes.mts";
 import { userRoutes } from "./routes/user.routes.mts";
+import { adminRoutes } from "./routes/admin.routes.mjs";
 
 // The auth plugin (identity resolve + requireAuth/requireOwner macros) is applied
 // inside each route module. Elysia encapsulates a plugin's macros and resolve by
@@ -54,5 +55,6 @@ export function buildApp(container: Container) {
     .use(classJournalRoutes(container))
     .use(forumRoutes(container))
     .use(messagingRoutes(container))
-    .use(deviceRoutes(container));
+    .use(deviceRoutes(container))
+    .use(adminRoutes(container));
 }
