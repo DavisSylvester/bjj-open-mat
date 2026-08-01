@@ -30,6 +30,25 @@ describe("syncFromProvider", () => {
     expect(out.avatarUrl).toBe("https://x/a.png");
   });
 
+  it("social user: captures first/last name and derives displayName when name is blank", async () => {
+    const store = new Map<string, User>();
+    const f = facade(store);
+    await f.getOrCreate(googleId);
+    const out = await f.syncFromProvider(googleId, { firstName: "Grace", lastName: "Hopper" });
+    expect(out.firstName).toBe("Grace");
+    expect(out.lastName).toBe("Hopper");
+    expect(out.displayName).toBe("Grace Hopper");
+  });
+
+  it("prefers an explicit provider displayName over the derived first/last", async () => {
+    const store = new Map<string, User>();
+    const f = facade(store);
+    await f.getOrCreate(googleId);
+    const out = await f.syncFromProvider(googleId, { displayName: "G. Hopper", firstName: "Grace", lastName: "Hopper" });
+    expect(out.displayName).toBe("G. Hopper");
+    expect(out.firstName).toBe("Grace");
+  });
+
   it("non-social user: fills the placeholder displayName from provider claims", async () => {
     const store = new Map<string, User>();
     const f = facade(store);

@@ -8,6 +8,8 @@ import { WeightDivision } from "../../enums/weight-division.mts";
 export const UpdateUserRequest = t.Partial(
   t.Object({
     displayName: t.String(),
+    firstName: t.String(),
+    lastName: t.String(),
     role: UserRole,
     beltRank: BeltRank,
     beltStripes: t.Integer({ minimum: 0, maximum: 4 }),

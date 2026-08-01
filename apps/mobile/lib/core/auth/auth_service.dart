@@ -98,6 +98,8 @@ class UserProfile {
   final String? birthday; // ISO YYYY-MM-DD
   final String? createdAt;
   final UserPreferences? preferences;
+  final String? firstName;
+  final String? lastName;
 
   const UserProfile({
     required this.id,
@@ -121,6 +123,8 @@ class UserProfile {
     this.birthday,
     this.createdAt,
     this.preferences,
+    this.firstName,
+    this.lastName,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -148,6 +152,8 @@ class UserProfile {
       preferences: json['preferences'] != null
           ? UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>)
           : null,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
     );
   }
 
@@ -168,6 +174,8 @@ class UserProfile {
     'weightDivisionContext': weightDivisionContext,
     'birthday': birthday,
     'createdAt': createdAt,
+    'firstName': firstName,
+    'lastName': lastName,
     if (preferences != null) 'preferences': preferences!.toJson(),
   };
 
@@ -288,7 +296,13 @@ class AuthStateNotifier extends Notifier<AuthState> {
       if (credentials != null) {
         final pu = credentials.user; // auth0_flutter UserProfile
         try {
-          await _authService.syncProfile(displayName: pu.name, email: pu.email, avatarUrl: pu.pictureUrl?.toString());
+          await _authService.syncProfile(
+            displayName: pu.name,
+            email: pu.email,
+            avatarUrl: pu.pictureUrl?.toString(),
+            firstName: pu.givenName,
+            lastName: pu.familyName,
+          );
         } catch (_) {
           // best-effort provider-metadata sync; login proceeds even if it fails
         }
@@ -329,8 +343,20 @@ class AuthStateNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<void> syncProfile({String? displayName, String? email, String? avatarUrl}) async {
-    final updated = await _authService.syncProfile(displayName: displayName, email: email, avatarUrl: avatarUrl);
+  Future<void> syncProfile({
+    String? displayName,
+    String? email,
+    String? avatarUrl,
+    String? firstName,
+    String? lastName,
+  }) async {
+    final updated = await _authService.syncProfile(
+      displayName: displayName,
+      email: email,
+      avatarUrl: avatarUrl,
+      firstName: firstName,
+      lastName: lastName,
+    );
     if (updated != null) state = state.copyWith(user: updated);
   }
 }
@@ -413,11 +439,19 @@ class AuthService {
     return null;
   }
 
-  Future<UserProfile?> syncProfile({String? displayName, String? email, String? avatarUrl}) async {
+  Future<UserProfile?> syncProfile({
+    String? displayName,
+    String? email,
+    String? avatarUrl,
+    String? firstName,
+    String? lastName,
+  }) async {
     final response = await apiClient.post(Endpoints.authSync, data: {
       if (displayName != null) 'displayName': displayName,
       if (email != null) 'email': email,
       if (avatarUrl != null) 'avatarUrl': avatarUrl,
+      if (firstName != null) 'firstName': firstName,
+      if (lastName != null) 'lastName': lastName,
     });
     final data = response.data;
     if (data != null && data['data'] != null) {

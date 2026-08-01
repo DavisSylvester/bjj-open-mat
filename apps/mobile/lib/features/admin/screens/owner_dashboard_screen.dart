@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/data/api_envelope.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../open_mats/data/session_repository.dart';
+import '../../profile/widgets/name_completion_dialog.dart';
 
 /// Check-ins metric window: false = all-time, true = last 30 days.
 class _CheckinWindowNotifier extends Notifier<bool> {
@@ -45,11 +47,32 @@ final ownerStatsProvider = FutureProvider<OwnerStats>((ref) async {
   return (gyms: gyms.length, sessions: sessions.length, checkInsAll: all, checkIns30d: recent, avgRating: avgRating);
 });
 
-class OwnerDashboardScreen extends ConsumerWidget {
+class OwnerDashboardScreen extends ConsumerStatefulWidget {
   const OwnerDashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OwnerDashboardScreen> createState() => _OwnerDashboardScreenState();
+}
+
+class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
+  bool _promptShown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowNamePrompt());
+  }
+
+  void _maybeShowNamePrompt() {
+    if (_promptShown) return;
+    final displayName = ref.read(authStateProvider).user?.displayName ?? '';
+    if (displayName.trim().isNotEmpty) return;
+    _promptShown = true;
+    showNameCompletionDialog(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
     final statsAsync = ref.watch(ownerStatsProvider);
     final win30 = ref.watch(ownerCheckinWindowProvider);

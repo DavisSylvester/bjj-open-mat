@@ -9,6 +9,7 @@ import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/nearby_gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
 import '../../open_mats/models/open_mat.dart';
+import '../../profile/widgets/name_completion_dialog.dart';
 import '../providers/discover_provider.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
@@ -19,12 +20,16 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
+  bool _promptShown = false;
+
   @override
   void initState() {
     super.initState();
     // Fetch GPS once via the shared controller (cached + reused by the Find
     // screen). Deferred to post-frame so we don't mutate providers during build.
     WidgetsBinding.instance.addPostFrameCallback((_) => ref.read(locationControllerProvider.notifier).ensure());
+    // Prompt users who have no display name yet to enter their first/last name.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowNamePrompt());
   }
 
   /// Map an [OpenMat] to the presentational [SessionRowData] used by rows.
@@ -68,6 +73,14 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       default:
         return 'all';
     }
+  }
+
+  void _maybeShowNamePrompt() {
+    if (_promptShown) return;
+    final displayName = ref.read(authStateProvider).user?.displayName ?? '';
+    if (displayName.trim().isNotEmpty) return;
+    _promptShown = true;
+    showNameCompletionDialog(context);
   }
 
   @override
