@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Gym deduplication helpers — normalization, grouping, merge planning, and
  * DB write runner (reference repointer + commit gate).
  *
@@ -158,7 +158,10 @@ export function planMerge(gyms: DedupeGym[]): MergePlan {
  *   - beltPromotions / gymId    — promotion.repository.mts
  *   - gymClasses / gymId        — class.repository.mts
  *   - classOccurrences / gymId  — class-occurrence.repository.mts
- *   - classJournals / gymId     — class-journal.repository.mts
+ *   - classJournals / gymId     — gymId is PERSISTED on the document: declared in
+ *                                packages/contract/src/schemas/class-journal-entry.mts
+ *                                and written via `$set: { ...rest }` in
+ *                                class-journal.repository.mts upsert
  *   - instructorRatings / gymId — instructor-rating.repository.mts (confirmed)
  *   - forumQuestions / gymId    — forum-question.repository.mts (confirmed)
  *   - forumAnswers / gymId      — forum-answer.repository.mts
@@ -298,56 +301,58 @@ if (isMain) {
 
   const client = new MongoClient(uri);
   await client.connect();
-  const db = client.db(dbName);
+  try {
+    const db = client.db(dbName);
 
-  const gymDocs = await db
-    .collection<{ _id: string; name: string; address: string; googlePlaceId?: string; ownerId?: string; logoUrl?: string; createdAt?: string }>("gyms")
-    .find({}, { projection: { _id: 1, name: 1, address: 1, googlePlaceId: 1, ownerId: 1, logoUrl: 1, createdAt: 1 } })
-    .toArray();
+    const gymDocs = await db
+      .collection<{ _id: string; name: string; address: string; googlePlaceId?: string; ownerId?: string; logoUrl?: string; createdAt?: string }>("gyms")
+      .find({}, { projection: { _id: 1, name: 1, address: 1, googlePlaceId: 1, ownerId: 1, logoUrl: 1, createdAt: 1 } })
+      .toArray();
 
-  const gyms: DedupeGym[] = gymDocs.map((doc): DedupeGym => ({
-    id: String(doc["_id"]),
-    name: doc.name,
-    address: doc.address,
-    googlePlaceId: doc.googlePlaceId,
-    ownerId: doc.ownerId,
-    logoUrl: doc.logoUrl,
-    createdAt: doc.createdAt,
-  }));
+    const gyms: DedupeGym[] = gymDocs.map((doc): DedupeGym => ({
+      id: String(doc["_id"]),
+      name: doc.name,
+      address: doc.address,
+      googlePlaceId: doc.googlePlaceId,
+      ownerId: doc.ownerId,
+      logoUrl: doc.logoUrl,
+      createdAt: doc.createdAt,
+    }));
 
-  const plan: MergePlan = planMerge(gyms);
+    const plan: MergePlan = planMerge(gyms);
 
-  console.log(`total gyms          : ${gyms.length}`);
-  console.log(`duplicate groups    : ${plan.merges.length + plan.conflicts.length}`);
-  console.log(`gyms to merge away  : ${plan.merges.reduce((acc, m) => acc + m.mergedIds.length, 0)}`);
-  console.log(`conflicts (manual)  : ${plan.conflicts.length}`);
+    console.log(`total gyms          : ${gyms.length}`);
+    console.log(`duplicate groups    : ${plan.merges.length + plan.conflicts.length}`);
+    console.log(`gyms to merge away  : ${plan.merges.reduce((acc, m) => acc + m.mergedIds.length, 0)}`);
+    console.log(`conflicts (manual)  : ${plan.conflicts.length}`);
 
-  if (plan.conflicts.length > 0) {
-    console.log("\nConflicts — two or more owned records; resolve manually:");
-    for (const group of plan.conflicts) {
-      const ids: string = group.map((g) => g.id).join(", ");
-      console.log(`  [${ids}]`);
+    if (plan.conflicts.length > 0) {
+      console.log("\nConflicts — two or more owned records; resolve manually:");
+      for (const group of plan.conflicts) {
+        const ids: string = group.map((g) => g.id).join(", ");
+        console.log(`  [${ids}]`);
+      }
     }
-  }
 
-  if (plan.merges.length > 0) {
-    console.log("\nMerge plan:");
-    for (const m of plan.merges) {
-      console.log(`  keep ${m.canonicalId} (${m.canonicalName})  <- [${m.mergedIds.join(", ")}]`);
+    if (plan.merges.length > 0) {
+      console.log("\nMerge plan:");
+      for (const m of plan.merges) {
+        console.log(`  keep ${m.canonicalId} (${m.canonicalName})  <- [${m.mergedIds.join(", ")}]`);
+      }
     }
-  }
 
-  if (!COMMIT) {
-    console.log("\nDRY RUN — nothing written. Re-run with --commit to apply.");
-  } else {
-    const writer: DedupeWriter = createMongoDedupeWriter(db);
-    const result: MergeApplyResult = await applyMerges(plan, writer, GYM_REF_COLLECTIONS);
-    console.log("\nMerge applied:");
-    for (const [col, count] of Object.entries(result.repointed)) {
-      console.log(`  ${col}: ${count} doc(s) repointed`);
+    if (!COMMIT) {
+      console.log("\nDRY RUN — nothing written. Re-run with --commit to apply.");
+    } else {
+      const writer: DedupeWriter = createMongoDedupeWriter(db);
+      const result: MergeApplyResult = await applyMerges(plan, writer, GYM_REF_COLLECTIONS);
+      console.log("\nMerge applied:");
+      for (const [col, count] of Object.entries(result.repointed)) {
+        console.log(`  ${col}: ${count} doc(s) repointed`);
+      }
+      console.log(`  gyms deleted: ${result.deletedGyms}`);
     }
-    console.log(`  gyms deleted: ${result.deletedGyms}`);
+  } finally {
+    await client.close();
   }
-
-  await client.close();
 }
