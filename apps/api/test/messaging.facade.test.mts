@@ -377,4 +377,48 @@ describe("MessagingFacade — push notifications", () => {
     expect(pushes[0].payload.title).toBe("Alice");
     expect(pushes[0].payload.data).toMatchObject({ type: "message", conversationId: "c1" });
   });
+
+  it("sendMessage excludes blocked participants (either direction) but includes non-blocked ones", async () => {
+    // u1 sends; u2 has a block against u1 (blocked u1); u3 is non-blocked
+    // Expected: only u3 receives the push
+    const seed = {
+      memberships: [member("u1"), member("u2"), member("u3")],
+      users: [user("u1", "Alice"), user("u2", "Bob"), user("u3", "Cara")],
+      conversations: [{ id: "c1", kind: "group" as const, gymId: "g1", title: "Squad", createdBy: "u1" }],
+      participants: [
+        { id: "p1", conversationId: "c1", userId: "u1", role: "member" as const, muted: false },
+        { id: "p2", conversationId: "c1", userId: "u2", role: "member" as const, muted: false },
+        { id: "p3", conversationId: "c1", userId: "u3", role: "member" as const, muted: false },
+      ],
+      // u2 has blocked u1 (reverse direction — existsEitherWay covers this)
+      blocks: [{ id: "blk1", blockerId: "u2", blockedId: "u1" }],
+    };
+    const { f, pushes } = facade(seed);
+    await f.sendMessage("u1", "c1", { body: "squad message" }, "practitioner");
+    expect(pushes).toHaveLength(1);
+    // u2 is blocked (either direction), u1 is sender → only u3 receives
+    expect(pushes[0].userIds.sort()).toEqual(["u3"]);
+    expect(pushes[0].payload.title).toBe("Alice");
+  });
+
+  it("sendMessage excludes participants who have left (leftAt set)", async () => {
+    // u1 sends; u2 has leftAt set; u3 is active and non-muted
+    // Expected: only u3 receives the push
+    const seed = {
+      memberships: [member("u1"), member("u2"), member("u3")],
+      users: [user("u1", "Alice"), user("u2", "Bob"), user("u3", "Cara")],
+      conversations: [{ id: "c1", kind: "group" as const, gymId: "g1", title: "Squad", createdBy: "u1" }],
+      participants: [
+        { id: "p1", conversationId: "c1", userId: "u1", role: "member" as const, muted: false },
+        { id: "p2", conversationId: "c1", userId: "u2", role: "member" as const, muted: false, leftAt: "2026-01-01T00:00:00.000Z" },
+        { id: "p3", conversationId: "c1", userId: "u3", role: "member" as const, muted: false },
+      ],
+    };
+    const { f, pushes } = facade(seed);
+    await f.sendMessage("u1", "c1", { body: "anyone here?" }, "practitioner");
+    expect(pushes).toHaveLength(1);
+    // u2 has leftAt → excluded; u1 is sender → excluded; only u3 remains
+    expect(pushes[0].userIds.sort()).toEqual(["u3"]);
+    expect(pushes[0].payload.title).toBe("Alice");
+  });
 });
