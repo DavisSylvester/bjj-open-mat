@@ -31,7 +31,7 @@ class AppBottomNav extends StatelessWidget {
       (id: 'search',   icon: LucideIcons.search,        label: 'Find'),
       (id: 'mygym',    icon: LucideIcons.store,         label: 'My Gym'),
       (id: 'profile',  icon: LucideIcons.user,          label: 'Profile'),
-      (id: 'messages', icon: LucideIcons.messageCircle, label: 'Messages'),
+      (id: 'messages', icon: LucideIcons.messageCircle, label: 'Chat'),
     ];
 
     return Container(
@@ -53,7 +53,7 @@ class AppBottomNav extends StatelessWidget {
                     onTap: () => onTap(tab.id),
                     behavior: HitTestBehavior.opaque,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
                       decoration: BoxDecoration(
                         color: on ? t.primary.withValues(alpha: 0.10) : Colors.transparent,
                         borderRadius: BorderRadius.circular(14),
@@ -63,7 +63,7 @@ class AppBottomNav extends StatelessWidget {
                         children: [
                           Icon(tab.icon, size: 22, color: on ? t.primary : t.faint),
                           const SizedBox(height: 3),
-                          Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.primary : t.faint, fontSize: 10)),
+                          Text(tab.label, textAlign: TextAlign.center, maxLines: 1, softWrap: false, overflow: TextOverflow.visible, style: t.miniStyle.copyWith(color: on ? t.primary : t.faint, fontSize: 10)),
                         ],
                       ),
                     ),
@@ -100,7 +100,7 @@ class AppBottomNav extends StatelessWidget {
                     onTap: () => onTap(tab.id),
                     behavior: HitTestBehavior.opaque,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
                       decoration: BoxDecoration(
                         color: on ? t.primary.withValues(alpha: 0.10) : Colors.transparent,
                         borderRadius: BorderRadius.circular(14),
@@ -138,7 +138,7 @@ class AppBottomNav extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 3),
-                          Text(tab.label, style: t.miniStyle.copyWith(color: on ? t.primary : t.faint, fontSize: 10)),
+                          Text(tab.label, textAlign: TextAlign.center, maxLines: 1, softWrap: false, overflow: TextOverflow.visible, style: t.miniStyle.copyWith(color: on ? t.primary : t.faint, fontSize: 10)),
                         ],
                       ),
                     ),

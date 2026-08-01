@@ -40,8 +40,9 @@ export type AcceptAnswerRequest = Static<typeof AcceptAnswerRequest>;
 export const ForumListQuery = t.Object(
   {
     category: t.Optional(ForumCategory),
-    page: t.Optional(t.Integer({ minimum: 1, default: 1 })),
-    limit: t.Optional(t.Integer({ minimum: 1, maximum: 100, default: 20 })),
+    // query params arrive as strings; Elysia coerces t.Number, not t.Integer.
+    page: t.Optional(t.Number({ minimum: 1, default: 1 })),
+    limit: t.Optional(t.Number({ minimum: 1, maximum: 100, default: 20 })),
   },
   { $id: "ForumListQuery" },
 );

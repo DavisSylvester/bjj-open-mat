@@ -39,13 +39,15 @@ export const ResolveReportRequest = t.Object({ status: MessageReportStatus }, { 
 export type ResolveReportRequest = Static<typeof ResolveReportRequest>;
 
 export const ConversationListQuery = t.Object(
-  { page: t.Optional(t.Integer({ minimum: 1, default: 1 })), limit: t.Optional(t.Integer({ minimum: 1, maximum: 100, default: 20 })) },
+  // NOTE: query params arrive as STRINGS; Elysia coerces t.Number (not t.Integer)
+  // for query. Using t.Integer here made every request 422 "Expected integer".
+  { page: t.Optional(t.Number({ minimum: 1, default: 1 })), limit: t.Optional(t.Number({ minimum: 1, maximum: 100, default: 20 })) },
   { $id: "ConversationListQuery" },
 );
 export type ConversationListQuery = Static<typeof ConversationListQuery>;
 
 export const MessageListQuery = t.Object(
-  { before: t.Optional(t.String()), limit: t.Optional(t.Integer({ minimum: 1, maximum: 100, default: 30 })) },
+  { before: t.Optional(t.String()), limit: t.Optional(t.Number({ minimum: 1, maximum: 100, default: 30 })) },
   { $id: "MessageListQuery" },
 );
 export type MessageListQuery = Static<typeof MessageListQuery>;

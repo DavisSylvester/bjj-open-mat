@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/design/tokens.dart';
+import '../../membership/data/membership_repository.dart';
+import '../../membership/models/gym_membership.dart';
 import '../data/messaging_repository.dart';
 import '../models/conversation_summary.dart';
 
@@ -55,6 +57,32 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
     await ref.read(conversationsProvider.future).catchError((_) => <ConversationSummary>[]);
   }
 
+  /// The new-message flow is gym-scoped (it lists a gym's roster). From the
+  /// global Messages tab there is no gym in context, so resolve the user's
+  /// gym — their home gym if set, otherwise their first active membership —
+  /// and pass it along. With no active membership there is no one to message.
+  Future<void> _startNewMessage() async {
+    final messenger = ScaffoldMessenger.of(context);
+    List<GymMembership> memberships;
+    try {
+      memberships = await ref.read(myMembershipsProvider.future);
+    } catch (_) {
+      memberships = const <GymMembership>[];
+    }
+    if (!mounted) return;
+    final active = memberships.where((m) => m.status == 'active').toList();
+    if (active.isEmpty) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Join a gym to start a conversation.')),
+      );
+      return;
+    }
+    final gymId = active
+        .firstWhere((m) => m.isHome, orElse: () => active.first)
+        .gymId;
+    context.push('/messages/new?gymId=$gymId');
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<AppTokens>()!;
@@ -71,8 +99,7 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
       floatingActionButton: FloatingActionButton(
         backgroundColor: t.primary,
         foregroundColor: Colors.white,
-        // TODO: navigate to new-message screen (Task 20: /messages/new)
-        onPressed: () => context.push('/messages/new'),
+        onPressed: _startNewMessage,
         child: const Icon(Icons.edit_outlined),
       ),
       body: conversationsAsync.when(
