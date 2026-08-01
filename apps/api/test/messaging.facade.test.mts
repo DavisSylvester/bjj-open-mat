@@ -1,7 +1,7 @@
 // apps/api/test/messaging.facade.test.mts
 import { describe, expect, it } from "bun:test";
 import { MessagingFacade } from "../src/facades/messaging.facade.mts";
-import type { Conversation, ConversationParticipant, Gym, GymMembership, Message, UserBlock, MessageReport, ChannelReadState } from "@bjj/contract";
+import type { Conversation, ConversationParticipant, Gym, GymMembership, Message, User, UserBlock, MessageReport, ChannelReadState } from "@bjj/contract";
 import type { MessageListQuery, AddParticipantsRequest, EditMessageRequest } from "@bjj/contract";
 
 interface Seed {
@@ -11,6 +11,7 @@ interface Seed {
   participants?: ConversationParticipant[];
   messages?: Message[];
   blocks?: UserBlock[];
+  users?: User[];
 }
 
 export function facade(seed?: Seed) {
@@ -87,10 +88,13 @@ export function facade(seed?: Seed) {
     listByUser: async (u: string) => memberList.filter((m) => m.userId === u),
   };
   const gymRepo = { findById: async (id: string) => gyms.get(id) ?? null };
+  const userMap = new Map<string, User>();
+  (seed?.users ?? []).forEach((u) => userMap.set(u.id, u));
+  const userRepo = { findById: async (id: string) => userMap.get(id) ?? null };
   let n = 0;
 
   return {
-    f: new MessagingFacade(convRepo, msgRepo, partRepo, readRepo, blockRepo, reportRepo, memberRepo, gymRepo, () => `id-${n++}`),
+    f: new MessagingFacade(convRepo, msgRepo, partRepo, readRepo, blockRepo, reportRepo, memberRepo, gymRepo, userRepo, () => `id-${n++}`),
     conversations, participants, messages, blocks, channelReads, reports,
   };
 }
@@ -98,6 +102,30 @@ export function facade(seed?: Seed) {
 export const member = (userId: string, gymId = "g1", over: Partial<GymMembership> = {}): GymMembership => ({
   id: `m-${userId}-${gymId}`, gymId, userId, status: "active", verifiedMember: true, gymRole: "member",
   isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t", ...over,
+});
+
+export const user = (id: string, displayName: string): User => ({
+  id, email: `${id}@example.test`, displayName,
+});
+
+describe("MessagingFacade — listConversations participant names", () => {
+  it("resolves other participants to display names, not raw user ids", async () => {
+    const { f } = facade({
+      memberships: [member("u1"), member("u2")],
+      users: [user("u2", "Camille Sylvester")],
+      conversations: [{ id: "c1", kind: "direct", pairKey: "u1|u2", createdBy: "u1" }],
+      participants: [
+        { id: "p1", conversationId: "c1", userId: "u1", role: "member", muted: false },
+        { id: "p2", conversationId: "c1", userId: "u2", role: "member", muted: false },
+      ],
+    });
+
+    const { items } = await f.listConversations("u1", "practitioner", 1, 20);
+    const direct = items.find((s) => s.conversation.id === "c1");
+
+    expect(direct?.otherParticipantIds).toEqual(["u2"]);
+    expect(direct?.otherParticipants).toEqual([{ userId: "u2", displayName: "Camille Sylvester" }]);
+  });
 });
 
 describe("MessagingFacade — creation + gating", () => {

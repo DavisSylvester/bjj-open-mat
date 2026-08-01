@@ -155,6 +155,11 @@ class _ConversationTile extends StatelessWidget {
   String _resolveTitle() {
     final conv = summary.conversation;
     if (conv.kind == 'direct') {
+      // Prefer the resolved display name; fall back to the raw id only if the
+      // server did not enrich the summary (older payloads).
+      if (summary.otherParticipants.isNotEmpty) {
+        return summary.otherParticipants.first.displayName;
+      }
       return summary.otherParticipantIds.isNotEmpty ? summary.otherParticipantIds.first : conv.id;
     }
     return conv.title ?? conv.id;

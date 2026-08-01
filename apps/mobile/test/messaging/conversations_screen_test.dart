@@ -40,6 +40,9 @@ final _directSummary = ConversationSummary(
   unreadCount: 0,
   muted: true,
   otherParticipantIds: ['u5'],
+  otherParticipants: const [
+    ParticipantRef(userId: 'u5', displayName: 'Camille Sylvester'),
+  ],
 );
 
 // ── Harness ───────────────────────────────────────────────────────────────────
@@ -77,9 +80,11 @@ void main() {
     expect(find.text('Team Alpha'), findsOneWidget);
   });
 
-  testWidgets('renders direct conversation with other participant id', (tester) async {
+  testWidgets('renders direct conversation with other participant display name', (tester) async {
     await _pump(tester);
-    expect(find.text('u5'), findsOneWidget);
+    expect(find.text('Camille Sylvester'), findsOneWidget);
+    // The raw Auth0 user id must never be shown as the title.
+    expect(find.text('u5'), findsNothing);
   });
 
   testWidgets('shows unread badge "2" for group conversation', (tester) async {
