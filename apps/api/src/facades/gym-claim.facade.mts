@@ -11,6 +11,7 @@ import type { GymRepository } from "../repositories/gym.repository.mts";
 import type { UserRepository } from "../repositories/user.repository.mts";
 import type { MembershipRepository } from "../repositories/membership.repository.mts";
 import type { NotificationRepository } from "../repositories/notification.repository.mts";
+import type { PushNotifier } from "../push/push.types.mts";
 
 export interface AdminGymClaimView {
   readonly claim: GymClaim;
@@ -46,6 +47,7 @@ export class GymClaimFacade {
     private readonly users: UserRepo,
     private readonly memberships: MemberRepo,
     private readonly notifications: NotifRepo,
+    private readonly push: PushNotifier,
     private readonly newId: IdFactory,
   ) {}
 
@@ -66,6 +68,7 @@ export class GymClaimFacade {
       createdAt: new Date().toISOString(),
     };
     await this.notifications.insert(n);
+    await this.push.pushToUsers([n.userId], { title: n.title, body: n.body, data: { type: n.type } });
   }
 
   private async getClaimOr404(id: string): Promise<GymClaim> {

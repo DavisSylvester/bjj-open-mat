@@ -8,9 +8,10 @@ import type {
 } from "@bjj/contract";
 import { AppError } from "../src/http/errors.mts";
 import { GymClaimFacade } from "../src/facades/gym-claim.facade.mts";
+import type { PushPayload } from "../src/push/push.types.mts";
 
 // ── In-memory fakes ─────────────────────────────────────────────────────────
-function makeFakes(seedGym: Partial<Gym> = {}): {
+function makeFakes(seedGym: Partial<Gym> = {}, pushCapture?: { userIds: string[]; payload: PushPayload }[]): {
   facade: GymClaimFacade;
   claims: Map<string, GymClaim>;
   gyms: Map<string, Gym>;
@@ -90,8 +91,10 @@ function makeFakes(seedGym: Partial<Gym> = {}): {
   const notificationsRepo = {
     insert: async (n: Notification): Promise<Notification> => { notifications.push(n); return n; },
   };
+  const pushes = pushCapture ?? [];
+  const push = { pushToUsers: async (userIds: string[], payload: PushPayload): Promise<void> => { pushes.push({ userIds, payload }); } };
 
-  const facade = new GymClaimFacade(gymClaimsRepo, gymsRepo, usersRepo, membershipsRepo, notificationsRepo, newId);
+  const facade = new GymClaimFacade(gymClaimsRepo, gymsRepo, usersRepo, membershipsRepo, notificationsRepo, push, newId);
   return { facade, claims, gyms, users, memberships, notifications };
 }
 
@@ -111,6 +114,14 @@ describe("GymClaimFacade — submit / cancel / reject", () => {
     expect(notifications).toHaveLength(1);
     expect(notifications[0]?.userId).toBe("owner9");
     expect(notifications[0]?.type).toBe("gym_claim");
+  });
+
+  it("push fires with type=gym_claim when transfer notifies current owner", async () => {
+    const pushes: { userIds: string[]; payload: PushPayload }[] = [];
+    const { facade } = makeFakes({ ownerId: "owner9" }, pushes);
+    await facade.submit("u1", "g1", { relationship: "owner", contact: "u1@gym.com", message: "mine" });
+    expect(pushes).toHaveLength(1);
+    expect(pushes[0].payload.data.type).toBe("gym_claim");
   });
 
   it("rejects a duplicate pending claim", async () => {

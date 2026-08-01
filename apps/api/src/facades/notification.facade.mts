@@ -1,5 +1,6 @@
 import type { Notification, NotificationType } from "@bjj/contract";
 import type { NotificationRepository } from "../repositories/notification.repository.mts";
+import type { PushNotifier } from "../push/push.types.mts";
 
 type IdFactory = () => string;
 
@@ -7,11 +8,12 @@ export class NotificationFacade {
 
   public constructor(
     private readonly notifications: Pick<NotificationRepository, "insert" | "listByUser" | "markRead" | "markAllRead">,
+    private readonly push: PushNotifier,
     private readonly newId: IdFactory,
   ) {}
 
   public async create(userId: string, type: NotificationType, title: string, body: string): Promise<Notification> {
-    return this.notifications.insert({
+    const n = await this.notifications.insert({
       id: this.newId(),
       userId,
       type,
@@ -20,6 +22,8 @@ export class NotificationFacade {
       read: false,
       createdAt: new Date().toISOString(),
     });
+    await this.push.pushToUsers([userId], { title, body, data: { type } });
+    return n;
   }
 
   public async list(userId: string, unread: boolean, skip: number, limit: number): Promise<{ items: Notification[]; total: number }> {
