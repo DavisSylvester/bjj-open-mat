@@ -15,6 +15,8 @@ import GoogleMaps
        !mapsKey.isEmpty {
       GMSServices.provideAPIKey(mapsKey)
     }
+    // Register for APNs so firebase_messaging can exchange the device token.
+    application.registerForRemoteNotifications()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 

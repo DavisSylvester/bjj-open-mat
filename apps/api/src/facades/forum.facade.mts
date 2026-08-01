@@ -20,6 +20,7 @@ import type { ForumAnswerRepository } from '../repositories/forum-answer.reposit
 import type { MembershipRepository } from '../repositories/membership.repository.mts';
 import type { GymRepository } from '../repositories/gym.repository.mts';
 import type { NotificationRepository } from '../repositories/notification.repository.mts';
+import type { PushNotifier } from '../push/push.types.mts';
 
 type IdFactory = () => string;
 type QRepo = Pick<ForumQuestionRepository, 'insert' | 'findById' | 'listByGym' | 'update' | 'incAnswerCount' | 'delete'>;
@@ -36,6 +37,7 @@ export class ForumFacade {
     private readonly memberships: MemberRepo,
     private readonly gyms: GymRepo,
     private readonly notifications: NotifRepo,
+    private readonly push: PushNotifier,
     private readonly newId: IdFactory,
   ) {}
 
@@ -73,6 +75,7 @@ export class ForumFacade {
       createdAt: new Date().toISOString(),
     };
     await this.notifications.insert(n);
+    await this.push.pushToUsers([n.userId], { title: n.title, body: n.body, data: { type: n.type } });
   }
 
   public async createQuestion(

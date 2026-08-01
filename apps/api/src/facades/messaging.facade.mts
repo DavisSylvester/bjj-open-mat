@@ -15,6 +15,7 @@ import type { MessageReportRepository } from "../repositories/message-report.rep
 import type { MembershipRepository } from "../repositories/membership.repository.mts";
 import type { GymRepository } from "../repositories/gym.repository.mts";
 import type { UserRepository } from "../repositories/user.repository.mts";
+import type { PushNotifier } from "../push/push.types.mts";
 
 type IdFactory = () => string;
 
@@ -40,6 +41,7 @@ export class MessagingFacade {
     private readonly memberships: MemberRepo,
     private readonly gyms: GymRepo,
     private readonly users: UserRepo,
+    private readonly push: PushNotifier,
     private readonly newId: IdFactory,
   ) {}
 
@@ -203,6 +205,21 @@ export class MessagingFacade {
     const message: Message = { id: this.newId(), conversationId, authorId: userId, body: req.body, createdAt: now };
     await this.messages.insert(message);
     await this.conversations.updateLastMessage(conversationId, now, req.body.slice(0, 140));
+    const parts = await this.participants.listByConversation(conversationId);
+    const recipientIds: string[] = [];
+    for (const p of parts) {
+      if (p.userId === userId || p.leftAt || p.muted) continue;
+      if (await this.blocks.existsEitherWay(userId, p.userId)) continue;
+      recipientIds.push(p.userId);
+    }
+    if (recipientIds.length > 0) {
+      const sender = await this.users.findById(userId);
+      await this.push.pushToUsers(recipientIds, {
+        title: sender?.displayName ?? "New message",
+        body: req.body,
+        data: { type: "message", conversationId },
+      });
+    }
     return message;
   }
 

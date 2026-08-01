@@ -66,6 +66,12 @@ import { UserBlockRepository } from "./repositories/user-block.repository.mts";
 import { MessageReportRepository } from "./repositories/message-report.repository.mts";
 import { GymClaimFacade } from "./facades/gym-claim.facade.mts";
 import { GymClaimRepository } from "./repositories/gym-claim.repository.mts";
+import { DeviceTokenRepository } from "./repositories/device-token.repository.mts";
+import { FcmPushSender } from "./push/fcm-push-sender.mts";
+import { PushService } from "./push/push.service.mts";
+import type { PushSender } from "./push/push.types.mts";
+import { logger } from "./config/logger.mts";
+import { GoogleAuth } from "google-auth-library";
 
 export interface Container {
   readonly db: Db;
@@ -84,6 +90,9 @@ export interface Container {
   readonly forumFacade: ForumFacade;
   readonly messagingFacade: MessagingFacade;
   readonly gymClaimFacade: GymClaimFacade;
+  readonly deviceTokenRepo: DeviceTokenRepository;
+  readonly pushService: PushService;
+  readonly id: () => string;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
   readonly geocoder: Geocoder;
@@ -120,6 +129,33 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const userBlockRepo = new UserBlockRepository(db);
   const messageReportRepo = new MessageReportRepository(db);
   const gymClaimRepo = new GymClaimRepository(db);
+  const deviceTokenRepo = new DeviceTokenRepository(db);
+
+  let pushSender: PushSender;
+  if (env.fcmProjectId && env.fcmServiceAccountJson) {
+    try {
+      const credentials = JSON.parse(env.fcmServiceAccountJson) as Record<string, unknown>;
+      const auth = new GoogleAuth({
+        credentials,
+        scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+      });
+      const accessToken = async (): Promise<string> => {
+        const c = await auth.getClient();
+        const t = await c.getAccessToken();
+        if (!t.token) throw new Error("no FCM access token");
+        return t.token;
+      };
+      pushSender = new FcmPushSender({ projectId: env.fcmProjectId, accessToken });
+    } catch (err) {
+      logger.error("push notifications disabled — FCM_SERVICE_ACCOUNT_JSON is invalid JSON", { err });
+      pushSender = { send: async (): Promise<{ unregistered: string[] }> => ({ unregistered: [] }) };
+    }
+  } else {
+    pushSender = { send: async (): Promise<{ unregistered: string[] }> => ({ unregistered: [] }) };
+    logger.info("push notifications disabled — FCM_PROJECT_ID or FCM_SERVICE_ACCOUNT_JSON not set");
+  }
+  const pushService = new PushService(deviceTokenRepo, pushSender);
+
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -164,21 +200,25 @@ export function createContainer(db: Db, env: AppEnv): Container {
     gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder, placesClient),
     openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
-    notificationFacade: new NotificationFacade(notificationRepo, id),
+    notificationFacade: new NotificationFacade(notificationRepo, pushService, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
     leadFacade: new LeadFacade(waitlistLeadRepo, gymLeadRepo, emailService, id),
     membershipFacade,
     classFacade: new ClassFacade(classRepo, classOccurrenceRepo, classRsvpRepo, membershipRepo, gymRepo, userRepo, id),
     classJournalFacade: new ClassJournalFacade(classJournalRepo, instructorRatingRepo, classRepo, classOccurrenceRepo, membershipRepo, gymRepo, userRepo, id),
-    forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, id),
-    messagingFacade: new MessagingFacade(conversationRepo, messageRepo, conversationParticipantRepo, channelReadStateRepo, userBlockRepo, messageReportRepo, membershipRepo, gymRepo, userRepo, id),
-    gymClaimFacade: new GymClaimFacade(gymClaimRepo, gymRepo, userRepo, membershipRepo, notificationRepo, id),
+    forumFacade: new ForumFacade(forumQuestionRepo, forumAnswerRepo, membershipRepo, gymRepo, notificationRepo, pushService, id),
+    messagingFacade: new MessagingFacade(conversationRepo, messageRepo, conversationParticipantRepo, channelReadStateRepo, userBlockRepo, messageReportRepo, membershipRepo, gymRepo, userRepo, pushService, id),
+    gymClaimFacade: new GymClaimFacade(gymClaimRepo, gymRepo, userRepo, membershipRepo, notificationRepo, pushService, id),
+    deviceTokenRepo,
+    pushService,
+    id,
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
       checkInRepo,
       favoriteRepo,
       rsvpRepo,
       notificationRepo,
+      deviceTokenRepo,
       auth0Management,
     ),
     env,
@@ -214,6 +254,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
         userBlockRepo.ensureIndexes(),
         messageReportRepo.ensureIndexes(),
         gymClaimRepo.ensureIndexes(),
+        deviceTokenRepo.ensureIndexes(),
       ]);
     },
   };

@@ -25,6 +25,7 @@ export const COLLECTIONS = {
   userBlocks: "userBlocks",
   messageReports: "messageReports",
   gymClaims: "gymClaims",
+  deviceTokens: "deviceTokens",
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];

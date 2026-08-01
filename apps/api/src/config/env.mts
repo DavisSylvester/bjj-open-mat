@@ -36,6 +36,10 @@ const EnvSchema = t.Object({
   // Optional: Google Places API (New) key used for the gym review hand-off
   // link. Absent in local dev — the review link is then simply omitted.
   GOOGLE_PLACES_API_KEY: t.Optional(t.String()),
+  // Optional: FCM project ID and service account JSON for push notifications.
+  // Absent in local dev — push is then a no-op.
+  FCM_PROJECT_ID: t.Optional(t.String()),
+  FCM_SERVICE_ACCOUNT_JSON: t.Optional(t.String()),
 });
 
 type RawEnv = Static<typeof EnvSchema>;
@@ -62,6 +66,8 @@ export interface AppEnv {
   readonly auth0M2mClientId: string | undefined;
   readonly auth0M2mClientSecret: string | undefined;
   readonly googlePlacesApiKey: string | undefined;
+  readonly fcmProjectId: string | undefined;
+  readonly fcmServiceAccountJson: string | undefined;
 }
 
 export function loadEnv(source: Record<string, string | undefined> = process.env): AppEnv {
@@ -91,5 +97,7 @@ export function loadEnv(source: Record<string, string | undefined> = process.env
     auth0M2mClientId: raw.AUTH0_M2M_CLIENT_ID,
     auth0M2mClientSecret: raw.AUTH0_M2M_CLIENT_SECRET,
     googlePlacesApiKey: raw.GOOGLE_PLACES_API_KEY,
+    fcmProjectId: raw.FCM_PROJECT_ID,
+    fcmServiceAccountJson: raw.FCM_SERVICE_ACCOUNT_JSON,
   };
 }

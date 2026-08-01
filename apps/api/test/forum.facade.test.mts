@@ -2,8 +2,9 @@
 import { describe, expect, it } from "bun:test";
 import { ForumFacade } from "../src/facades/forum.facade.mts";
 import type { ForumQuestion, ForumAnswer, Gym, GymMembership, Notification } from "@bjj/contract";
+import type { PushPayload } from "../src/push/push.types.mts";
 
-function facade(seed?: { gymOwnerId?: string; memberships?: GymMembership[]; questions?: ForumQuestion[]; answers?: ForumAnswer[] }): { f: ForumFacade; questions: Map<string, ForumQuestion>; answers: Map<string, ForumAnswer>; notifications: Notification[] } {
+function facade(seed?: { gymOwnerId?: string; memberships?: GymMembership[]; questions?: ForumQuestion[]; answers?: ForumAnswer[]; pushCapture?: { userIds: string[]; payload: PushPayload }[] }): { f: ForumFacade; questions: Map<string, ForumQuestion>; answers: Map<string, ForumAnswer>; notifications: Notification[] } {
   const questions = new Map<string, ForumQuestion>();
   (seed?.questions ?? []).forEach((q) => questions.set(q.id, q));
   const answers = new Map<string, ForumAnswer>();
@@ -43,8 +44,10 @@ function facade(seed?: { gymOwnerId?: string; memberships?: GymMembership[]; que
   const memberRepo = { find: async (g: string, u: string): Promise<GymMembership | null> => members.get(`${g}:${u}`) ?? null };
   const gymRepo = { findById: async (id: string): Promise<Gym | null> => gyms.get(id) ?? null };
   const notifRepo = { insert: async (n: Notification): Promise<Notification> => { notifications.push(n); return n; } };
+  const pushCapture = seed?.pushCapture ?? [];
+  const push = { pushToUsers: async (userIds: string[], payload: PushPayload): Promise<void> => { pushCapture.push({ userIds, payload }); } };
   let n = 0;
-  return { f: new ForumFacade(qRepo, aRepo, memberRepo, gymRepo, notifRepo, () => `id-${n++}`), questions, answers, notifications };
+  return { f: new ForumFacade(qRepo, aRepo, memberRepo, gymRepo, notifRepo, push, () => `id-${n++}`), questions, answers, notifications };
 }
 
 const member = (userId: string, over: Partial<GymMembership> = {}): GymMembership => ({
@@ -108,5 +111,17 @@ describe("ForumFacade", () => {
     await f.deleteAnswer("responder", "a1", "practitioner");
     expect(questions.get("q1")?.acceptedAnswerId).toBeUndefined();
     expect(questions.get("q1")?.answerCount).toBe(0);
+  });
+
+  it("push fires with type=forum_answer when responder answers", async () => {
+    const pushCalls: { userIds: string[]; payload: PushPayload }[] = [];
+    const { f } = facade({
+      memberships: [member("asker"), member("responder")],
+      questions: [question({ id: "q1", authorId: "asker" })],
+      pushCapture: pushCalls,
+    });
+    await f.createAnswer("responder", "q1", { body: "try this" }, "practitioner");
+    expect(pushCalls).toHaveLength(1);
+    expect(pushCalls[0].payload.data.type).toBe("forum_answer");
   });
 });

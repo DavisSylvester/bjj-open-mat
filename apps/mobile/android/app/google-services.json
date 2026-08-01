@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "267225383844",
+    "project_id": "bjj-open-mat-579b9",
+    "storage_bucket": "bjj-open-mat-579b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267225383844:android:88a0b9b27ac673e94cf731",
+        "android_client_info": {
+          "package_name": "com.davissylvester.bjjopenmat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS2J2rx8Va4hG6rk5e4V1Z-3OmK8bzSNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

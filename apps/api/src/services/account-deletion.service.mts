@@ -3,6 +3,7 @@ import type { CheckInRepository } from "../repositories/check-in.repository.mts"
 import type { FavoriteRepository } from "../repositories/favorite.repository.mts";
 import type { RsvpRepository } from "../repositories/rsvp.repository.mts";
 import type { NotificationRepository } from "../repositories/notification.repository.mts";
+import type { DeviceTokenRepository } from "../repositories/device-token.repository.mts";
 import type { Auth0ManagementService } from "./auth0-management.service.mts";
 
 export interface AccountDeletionService {
@@ -21,6 +22,7 @@ export class AccountDeletionOrchestrator implements AccountDeletionService {
     private readonly favorites: Pick<FavoriteRepository, "deleteByUserId">,
     private readonly rsvps: Pick<RsvpRepository, "deleteByUserId">,
     private readonly notifications: Pick<NotificationRepository, "deleteByUserId">,
+    private readonly deviceTokens: Pick<DeviceTokenRepository, "deleteByUserId">,
     private readonly auth0: Auth0ManagementService,
   ) {}
 
@@ -30,6 +32,7 @@ export class AccountDeletionOrchestrator implements AccountDeletionService {
       this.favorites.deleteByUserId(userId),
       this.rsvps.deleteByUserId(userId),
       this.notifications.deleteByUserId(userId),
+      this.deviceTokens.deleteByUserId(userId),
     ]);
     await this.auth0.deleteUser(userId);
     await this.users.remove(userId);

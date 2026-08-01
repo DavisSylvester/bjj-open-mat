@@ -87,6 +87,10 @@ class Endpoints {
   static String forumQuestionAccept(String questionId) => '/api/v1/forum/questions/$questionId/accept';
   static String forumAnswer(String answerId) => '/api/v1/forum/answers/$answerId';
 
+  // Devices
+  static const String devices = '/api/v1/devices';
+  static String deviceByToken(String token) => '/api/v1/devices/$token';
+
   // Messaging
   static const String messagingDirect = '/api/v1/messaging/direct';
   static const String messagingGroups = '/api/v1/messaging/groups';
