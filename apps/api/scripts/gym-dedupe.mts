@@ -158,6 +158,7 @@ export function planMerge(gyms: DedupeGym[]): MergePlan {
  *   - beltPromotions / gymId    — promotion.repository.mts
  *   - gymClasses / gymId        — class.repository.mts
  *   - classOccurrences / gymId  — class-occurrence.repository.mts
+ *   - classJournals / gymId     — class-journal.repository.mts
  *   - instructorRatings / gymId — instructor-rating.repository.mts (confirmed)
  *   - forumQuestions / gymId    — forum-question.repository.mts (confirmed)
  *   - forumAnswers / gymId      — forum-answer.repository.mts
@@ -166,7 +167,7 @@ export function planMerge(gyms: DedupeGym[]): MergePlan {
  *   - gymClaims / gymId         — gym-claim.repository.mts
  *   - users / homeGymId         — users collection (via facade/user.repository)
  *
- * Dropped: classRsvps, classJournals, rsvps, notifications, reports,
+ * Dropped: classRsvps, rsvps, notifications, reports,
  *   userBlocks, conversationParticipants, channelReadStates, waitlistLeads,
  *   gymLeads — none carry a gymId or homeGymId field in their repositories.
  */
@@ -178,6 +179,7 @@ export const GYM_REF_COLLECTIONS: ReadonlyArray<{ readonly collection: string; r
   { collection: "beltPromotions", field: "gymId" },
   { collection: "gymClasses", field: "gymId" },
   { collection: "classOccurrences", field: "gymId" },
+  { collection: "classJournals", field: "gymId" },
   { collection: "instructorRatings", field: "gymId" },
   { collection: "forumQuestions", field: "gymId" },
   { collection: "forumAnswers", field: "gymId" },
