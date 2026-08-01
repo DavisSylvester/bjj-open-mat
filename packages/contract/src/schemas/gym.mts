@@ -21,6 +21,7 @@ export const Gym = t.Object(
     joinCode: t.Optional(t.String()),
     amenities: t.Array(t.String(), { default: [] }),
     isVerified: t.Boolean({ default: false }),
+    verifiedAt: t.Optional(t.String()),
     rating: t.Optional(t.Number({ minimum: 0, maximum: 5 })),
     ratingCount: t.Optional(t.Integer({ minimum: 0 })),
     distanceKm: t.Optional(t.Number({ minimum: 0 })),

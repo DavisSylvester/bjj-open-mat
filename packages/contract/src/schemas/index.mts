@@ -32,5 +32,6 @@ export * from "./user-block.mts";
 export * from "./message-report.mts";
 export * from "./conversation-summary.mts";
 export * from "./gym-claim.mts";
+export * from "./admin-stats.mjs";
 export * from "./requests/index.mts";
 export * from "./responses/index.mts";
