@@ -16,6 +16,7 @@ import { classJournalRoutes } from "./routes/class-journal.routes.mts";
 import { forumRoutes } from "./routes/forum.routes.mts";
 import { messagingRoutes } from "./routes/messaging.routes.mts";
 import { gymClaimRoutes } from "./routes/gym-claim.routes.mts";
+import { deviceRoutes } from "./routes/device.routes.mts";
 import { notificationRoutes } from "./routes/notification.routes.mts";
 import { openMatRoutes } from "./routes/open-mat.routes.mts";
 import { reportRoutes } from "./routes/report.routes.mts";
@@ -52,5 +53,6 @@ export function buildApp(container: Container) {
     .use(classRoutes(container))
     .use(classJournalRoutes(container))
     .use(forumRoutes(container))
-    .use(messagingRoutes(container));
+    .use(messagingRoutes(container))
+    .use(deviceRoutes(container));
 }
