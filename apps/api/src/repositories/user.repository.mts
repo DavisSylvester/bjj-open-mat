@@ -71,4 +71,13 @@ export class UserRepository extends BaseRepository {
   public async remove(id: string): Promise<void> {
     await this.collection<UserDoc>(COLLECTIONS.users).deleteOne({ _id: id });
   }
+
+  public async list(skip: number, limit: number): Promise<{ items: UserType[]; total: number }> {
+    const col = this.collection<UserDoc>(COLLECTIONS.users);
+    const [docs, total] = await Promise.all([
+      col.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit).toArray(),
+      col.countDocuments({}),
+    ]);
+    return { items: docs.map((d) => stripId<UserType>(d)!), total };
+  }
 }
