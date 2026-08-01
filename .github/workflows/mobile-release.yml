@@ -14,6 +14,10 @@ on:
         description: 'Google Play track'
         default: internal
         required: false
+      play_status:
+        description: 'Google Play release status (draft = staged; completed = live to that track''s testers)'
+        default: draft
+        required: false
 
 permissions:
   contents: write   # attach artifacts to the GitHub Release
@@ -117,7 +121,7 @@ jobs:
           packageName: com.davissylvester.bjjopenmat
           releaseFiles: apps/mobile/build/app/outputs/bundle/release/app-release.aab
           track: ${{ github.event.inputs.play_track || 'internal' }}
-          status: draft
+          status: ${{ github.event.inputs.play_status || 'draft' }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
