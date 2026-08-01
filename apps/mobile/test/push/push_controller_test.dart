@@ -6,9 +6,9 @@ import 'package:bjj_open_mat/features/push/push_controller.dart';
 
 class _FakeMessaging implements PushMessaging {
   final bool granted;
-  final String? token;
+  final String? token = 'tok-1';
   final _refresh = StreamController<String>.broadcast();
-  _FakeMessaging({this.granted = true, this.token = 'tok-1'});
+  _FakeMessaging({this.granted = true});
   @override
   Future<bool> requestPermission() async => granted;
   @override
