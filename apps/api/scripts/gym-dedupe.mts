@@ -72,6 +72,17 @@ export function ownedCount(group: DedupeGym[]): number {
  * 3. Earliest `createdAt` (records missing `createdAt` sort last).
  * 4. Lexicographically smallest `id` (stable tiebreak).
  */
+export interface MergeAction {
+  readonly canonicalId: string;
+  readonly mergedIds: string[];
+  readonly canonicalName: string;
+}
+
+export interface MergePlan {
+  readonly merges: MergeAction[];
+  readonly conflicts: DedupeGym[][];
+}
+
 export function chooseCanonical(group: DedupeGym[]): DedupeGym {
   const sorted: DedupeGym[] = [...group].sort((a: DedupeGym, b: DedupeGym): number => {
     const aOwned: boolean = a.ownerId !== undefined && a.ownerId !== "";
@@ -96,4 +107,31 @@ export function chooseCanonical(group: DedupeGym[]): DedupeGym {
   });
 
   return sorted[0]!;
+}
+
+/**
+ * Produces a merge plan from a flat list of gyms.
+ *
+ * Groups duplicates with `groupDuplicates`, then for each group:
+ * - If `ownedCount > 1`, the group is ambiguous — push to `conflicts`.
+ * - Otherwise, pick a canonical with `chooseCanonical` and record a
+ *   `MergeAction` listing the IDs of the non-canonical records.
+ */
+export function planMerge(gyms: DedupeGym[]): MergePlan {
+  const merges: MergeAction[] = [];
+  const conflicts: DedupeGym[][] = [];
+
+  for (const group of groupDuplicates(gyms)) {
+    if (ownedCount(group) > 1) {
+      conflicts.push(group);
+    } else {
+      const canonical: DedupeGym = chooseCanonical(group);
+      const mergedIds: string[] = group
+        .filter((g): boolean => g.id !== canonical.id)
+        .map((g): string => g.id);
+      merges.push({ canonicalId: canonical.id, mergedIds, canonicalName: canonical.name });
+    }
+  }
+
+  return { merges, conflicts };
 }

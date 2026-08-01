@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { chooseCanonical, groupDuplicates, normalizeKey, ownedCount, type DedupeGym } from "../scripts/gym-dedupe.mjs";
+import { chooseCanonical, groupDuplicates, normalizeKey, ownedCount, planMerge, type DedupeGym, type MergePlan } from "../scripts/gym-dedupe.mjs";
 
 const g = (id: string, name: string, address: string, extra: Partial<DedupeGym> = {}): DedupeGym =>
   ({ id, name, address, ...extra });
@@ -76,5 +76,35 @@ describe("chooseCanonical", (): void => {
   it("falls back to smallest id", (): void => {
     const c = chooseCanonical([g("zzz", "X", "1"), g("aaa", "X", "1")]);
     expect(c.id).toBe("aaa");
+  });
+});
+
+describe("planMerge", (): void => {
+  it("plans a merge for a normal duplicate pair", (): void => {
+    const plan: MergePlan = planMerge([
+      g("keep", "X", "1", { logoUrl: "u" }),
+      g("dup", "X", "1"),
+      g("solo", "Y", "2"),
+    ]);
+    expect(plan.merges.length).toBe(1);
+    expect(plan.merges[0]!.canonicalId).toBe("keep");
+    expect(plan.merges[0]!.mergedIds).toEqual(["dup"]);
+    expect(plan.conflicts).toEqual([]);
+  });
+
+  it("routes two-owned groups to conflicts, never merges", (): void => {
+    const plan: MergePlan = planMerge([
+      g("o1", "X", "1", { ownerId: "a" }),
+      g("o2", "X", "1", { ownerId: "b" }),
+    ]);
+    expect(plan.merges).toEqual([]);
+    expect(plan.conflicts.length).toBe(1);
+    expect(plan.conflicts[0]!.map((x) => x.id).sort()).toEqual(["o1", "o2"]);
+  });
+
+  it("yields empty plan when there are no duplicates", (): void => {
+    const plan: MergePlan = planMerge([g("a", "X", "1"), g("b", "Y", "2")]);
+    expect(plan.merges).toEqual([]);
+    expect(plan.conflicts).toEqual([]);
   });
 });
