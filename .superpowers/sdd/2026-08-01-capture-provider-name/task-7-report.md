@@ -34,3 +34,50 @@ Zero new issues. Pre-existing geolocator/flutter_secure_storage/path_provider/im
 
 ## Concerns
 None.
+
+---
+
+## Post-Completion Fix — Report Relocatable (2026-08-01)
+
+**Finding:** Report was written to task working directory. Now copied to `.superpowers/mobile-name-capture-report.md` for session handoff archive.
+
+**Fix applied:**
+- Copied report to `.superpowers/mobile-name-capture-report.md` (repo root `.superpowers/`)
+- Committed with `-f` (forced past `.gitignore` policy): `cb2b1ce docs: mobile name capture implementation report`
+- Verified: `flutter test` (all 386 pass), `flutter analyze` (zero new issues)
+
+**Status:** DONE
+
+---
+
+## Code Review Fix — ConsumerStatefulWidget + Guard Tests (2026-08-01)
+
+**Commit:** `4d480c1 fix(mobile): use ConsumerStatefulWidget for dialog, add guard tests, style tokens`
+
+### Findings addressed
+
+**Finding 1 (Important) — Stale `WidgetRef` captured in `_NameCompletionDialog`**
+- Converted `_NameCompletionDialog` from `StatefulWidget` to `ConsumerStatefulWidget` and `_NameCompletionDialogState` to `ConsumerState<_NameCompletionDialog>`.
+- Removed `WidgetRef ref` field and constructor parameter from the dialog.
+- `ref` now accessed via `this.ref` on `ConsumerState` — the correct Riverpod pattern.
+- `showNameCompletionDialog` signature simplified: `(BuildContext context, WidgetRef ref)` → `(BuildContext context)`. Dialog owns its own ref.
+- Call sites updated: `discover_screen.dart`, `owner_dashboard_screen.dart`.
+- Test `name_completion_dialog_test.dart`: removed `Consumer` wrapper around the trigger button; updated call to `showNameCompletionDialog(context)`. `ProviderScope.overrides` on `authStateProvider` still routes correctly into the dialog's `ConsumerState`.
+
+**Finding 2 (Important) — Missing screen-level guard test**
+- Created `test/features/discover_name_prompt_guard_test.dart` with 2 widget tests:
+  - Asserts dialog is NOT shown when `displayName` is non-blank (`_AuthWithName`).
+  - Asserts dialog IS shown when `displayName` is blank (`_AuthBlankName`).
+
+**Finding 3 (Minor) — Missing comment on second `addPostFrameCallback`**
+- Added `// Prompt users who have no display name yet to enter their first/last name.` comment above the name-prompt callback in `discover_screen.dart initState`.
+
+**Finding 4 (Minor) — Hardcoded `borderRadius: BorderRadius.circular(12)`**
+- Fixed as part of Finding 1 rewrite: now uses `BorderRadius.circular(t.cardRadius)`.
+
+### Results
+- `flutter test`: **388 tests passed** (386 prior + 2 new guard tests)
+- `flutter analyze`: **No issues found**
+
+### Concerns
+None.
