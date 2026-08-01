@@ -14,6 +14,7 @@ import type { UserBlockRepository } from "../repositories/user-block.repository.
 import type { MessageReportRepository } from "../repositories/message-report.repository.mts";
 import type { MembershipRepository } from "../repositories/membership.repository.mts";
 import type { GymRepository } from "../repositories/gym.repository.mts";
+import type { UserRepository } from "../repositories/user.repository.mts";
 
 type IdFactory = () => string;
 
@@ -25,6 +26,7 @@ type BlockRepo = Pick<UserBlockRepository, "insert" | "existsEitherWay" | "listB
 type ReportRepo = Pick<MessageReportRepository, "insert" | "findById" | "listByGym" | "updateStatus">;
 type MemberRepo = Pick<MembershipRepository, "find" | "listByUser">;
 type GymRepo = Pick<GymRepository, "findById">;
+type UserRepo = Pick<UserRepository, "findById">;
 
 export class MessagingFacade {
 
@@ -37,6 +39,7 @@ export class MessagingFacade {
     private readonly reports: ReportRepo,
     private readonly memberships: MemberRepo,
     private readonly gyms: GymRepo,
+    private readonly users: UserRepo,
     private readonly newId: IdFactory,
   ) {}
 
@@ -159,7 +162,13 @@ export class MessagingFacade {
       if (conv.kind === "gym_channel") muted = (await this.channelReads.find(conv.id, userId))?.muted ?? false;
       else muted = (await this.participants.find(conv.id, userId))?.muted ?? false;
       const others = await this.otherParticipantIds(userId, conv);
-      return { conversation: conv, unreadCount, muted, lastMessage: lastMessage ?? undefined, otherParticipantIds: others };
+      const otherParticipants = await Promise.all(
+        others.map(async (uid) => ({
+          userId: uid,
+          displayName: (await this.users.findById(uid))?.displayName ?? "Member",
+        })),
+      );
+      return { conversation: conv, unreadCount, muted, lastMessage: lastMessage ?? undefined, otherParticipantIds: others, otherParticipants };
     }));
     summaries.sort((a, b) => (b.conversation.lastMessageAt ?? "").localeCompare(a.conversation.lastMessageAt ?? ""));
     const total = summaries.length;
