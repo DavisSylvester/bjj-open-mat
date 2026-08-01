@@ -1,5 +1,16 @@
 import { describe, expect, it } from "bun:test";
-import { chooseCanonical, groupDuplicates, normalizeKey, ownedCount, planMerge, type DedupeGym, type MergePlan } from "../scripts/gym-dedupe.mjs";
+import {
+  applyMerges,
+  chooseCanonical,
+  groupDuplicates,
+  normalizeKey,
+  ownedCount,
+  planMerge,
+  type DedupeGym,
+  type DedupeWriter,
+  type MergeApplyResult,
+  type MergePlan,
+} from "../scripts/gym-dedupe.mjs";
 
 const g = (id: string, name: string, address: string, extra: Partial<DedupeGym> = {}): DedupeGym =>
   ({ id, name, address, ...extra });
@@ -106,5 +117,26 @@ describe("planMerge", (): void => {
     const plan: MergePlan = planMerge([g("a", "X", "1"), g("b", "Y", "2")]);
     expect(plan.merges).toEqual([]);
     expect(plan.conflicts).toEqual([]);
+  });
+});
+
+describe("applyMerges", (): void => {
+  it("repoints references then deletes merged gyms", async (): Promise<void> => {
+    const rows = { gymMemberships: [{ gymId: "dup" }, { gymId: "other" }] } as Record<string, Array<Record<string, string>>>;
+    const deleted: string[] = [];
+    const writer: DedupeWriter = {
+      repointRefs: async (c, f, from, to): Promise<number> => {
+        let n = 0;
+        for (const r of rows[c] ?? []) if (from.includes(r[f]!)) { r[f] = to; n++; }
+        return n;
+      },
+      deleteGyms: async (ids): Promise<void> => { deleted.push(...ids); },
+    };
+    const plan: MergePlan = { merges: [{ canonicalId: "keep", mergedIds: ["dup"], canonicalName: "X" }], conflicts: [] };
+    const result: MergeApplyResult = await applyMerges(plan, writer, [{ collection: "gymMemberships", field: "gymId" }]);
+    expect(rows.gymMemberships[0]!.gymId).toBe("keep");
+    expect(rows.gymMemberships[1]!.gymId).toBe("other");
+    expect(result.deletedGyms).toBe(1);
+    expect(deleted).toEqual(["dup"]);
   });
 });
