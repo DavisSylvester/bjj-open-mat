@@ -61,6 +61,12 @@ export class GymFacade {
     return updated as Gym;
   }
 
+  public async adminUpdate(id: string, patch: Partial<Gym>): Promise<Gym> {
+    await this.getById(id); // existence check (throws not_found)
+    const updated = await this.gyms.update(id, patch);
+    return updated as Gym;
+  }
+
   public async list(opts: { ownerId?: string; skip: number; limit: number }): Promise<{ items: Gym[]; total: number }> {
     return opts.ownerId
       ? this.gyms.listByOwner(opts.ownerId, opts.skip, opts.limit)
