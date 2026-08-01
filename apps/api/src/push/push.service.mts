@@ -15,14 +15,22 @@ export class PushService implements PushNotifier {
   ) {}
 
   public async pushToUsers(userIds: string[], payload: PushPayload): Promise<void> {
+    let unregistered: string[] = [];
     try {
       const rows = await Promise.all([...new Set(userIds)].map((u) => this.tokens.listByUser(u)));
       const tokens = [...new Set(rows.flat().map((r) => r.token))];
       if (tokens.length === 0) return;
-      const { unregistered } = await this.sender.send(tokens, payload);
-      if (unregistered.length > 0) await this.tokens.pruneTokens(unregistered);
+      ({ unregistered } = await this.sender.send(tokens, payload));
     } catch (err) {
       logger.warn("push send failed (swallowed)", { err });
+      return;
+    }
+    if (unregistered.length > 0) {
+      try {
+        await this.tokens.pruneTokens(unregistered);
+      } catch (err) {
+        logger.warn("push token pruning failed (swallowed)", { err });
+      }
     }
   }
 }

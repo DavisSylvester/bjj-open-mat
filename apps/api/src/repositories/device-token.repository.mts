@@ -38,6 +38,10 @@ export class DeviceTokenRepository extends BaseRepository {
     await this.collection<DeviceTokenDoc>(COLLECTIONS.deviceTokens).deleteOne({ token });
   }
 
+  public async deleteByTokenAndUser(token: string, userId: string): Promise<void> {
+    await this.collection<DeviceTokenDoc>(COLLECTIONS.deviceTokens).deleteOne({ token, userId });
+  }
+
   public async pruneTokens(tokens: string[]): Promise<void> {
     if (tokens.length === 0) return;
     await this.collection<DeviceTokenDoc>(COLLECTIONS.deviceTokens).deleteMany({ token: { $in: tokens } });

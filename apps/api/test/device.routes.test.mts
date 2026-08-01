@@ -76,6 +76,29 @@ describe("device routes", () => {
     });
   });
 
+  it("DELETE /api/v1/devices/:token does not delete another user's token", async () => {
+    await withDb(async (deviceTokenRepo) => {
+      // Register token as u1 (callerIdentity)
+      const app = testApp(callerIdentity, deviceTokenRepo);
+      await app.handle(new Request("http://localhost/api/v1/devices", {
+        method: "POST",
+        headers: { authorization: "Bearer t", "content-type": "application/json" },
+        body: JSON.stringify({ token: "tok-other-user", platform: "ios" }),
+      }));
+      // Try to delete as u2
+      const u2Identity: AuthIdentity = { userId: "u2", role: "practitioner", email: "u2@x.co", viaBypass: true };
+      const app2 = testApp(u2Identity, deviceTokenRepo);
+      const res = await app2.handle(new Request("http://localhost/api/v1/devices/tok-other-user", {
+        method: "DELETE",
+        headers: { authorization: "Bearer t" },
+      }));
+      // Should return 200 (not found is silent) but token must still exist for u1
+      expect(res.status).toBe(200);
+      const rows = await deviceTokenRepo.listByUser("u1");
+      expect(rows.map((r) => r.token)).toContain("tok-other-user");
+    });
+  });
+
   it("DELETE /api/v1/devices/:token removes the token", async () => {
     await withDb(async (deviceTokenRepo) => {
       const app = testApp(callerIdentity, deviceTokenRepo);

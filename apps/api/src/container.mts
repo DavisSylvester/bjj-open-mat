@@ -133,17 +133,23 @@ export function createContainer(db: Db, env: AppEnv): Container {
 
   let pushSender: PushSender;
   if (env.fcmProjectId && env.fcmServiceAccountJson) {
-    const auth = new GoogleAuth({
-      credentials: JSON.parse(env.fcmServiceAccountJson) as Record<string, unknown>,
-      scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
-    });
-    const accessToken = async (): Promise<string> => {
-      const c = await auth.getClient();
-      const t = await c.getAccessToken();
-      if (!t.token) throw new Error("no FCM access token");
-      return t.token;
-    };
-    pushSender = new FcmPushSender({ projectId: env.fcmProjectId, accessToken });
+    try {
+      const credentials = JSON.parse(env.fcmServiceAccountJson) as Record<string, unknown>;
+      const auth = new GoogleAuth({
+        credentials,
+        scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+      });
+      const accessToken = async (): Promise<string> => {
+        const c = await auth.getClient();
+        const t = await c.getAccessToken();
+        if (!t.token) throw new Error("no FCM access token");
+        return t.token;
+      };
+      pushSender = new FcmPushSender({ projectId: env.fcmProjectId, accessToken });
+    } catch (err) {
+      logger.error("push notifications disabled — FCM_SERVICE_ACCOUNT_JSON is invalid JSON", { err });
+      pushSender = { send: async (): Promise<{ unregistered: string[] }> => ({ unregistered: [] }) };
+    }
   } else {
     pushSender = { send: async (): Promise<{ unregistered: string[] }> => ({ unregistered: [] }) };
     logger.info("push notifications disabled — FCM_PROJECT_ID or FCM_SERVICE_ACCOUNT_JSON not set");

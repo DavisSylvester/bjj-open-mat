@@ -37,8 +37,8 @@ export function deviceRoutes(container: Container) {
     .delete(
       "/devices/:token",
       async ({ identity, params }) => {
-        requireId(identity);
-        await deviceTokenRepo.deleteByToken(params.token);
+        const userId = requireId(identity).userId;
+        await deviceTokenRepo.deleteByTokenAndUser(params.token, userId);
         return data({ registered: false });
       },
       { requireAuth: true },
