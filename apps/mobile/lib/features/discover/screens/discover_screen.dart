@@ -28,6 +28,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     // Fetch GPS once via the shared controller (cached + reused by the Find
     // screen). Deferred to post-frame so we don't mutate providers during build.
     WidgetsBinding.instance.addPostFrameCallback((_) => ref.read(locationControllerProvider.notifier).ensure());
+    // Prompt users who have no display name yet to enter their first/last name.
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowNamePrompt());
   }
 
@@ -79,7 +80,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     final displayName = ref.read(authStateProvider).user?.displayName ?? '';
     if (displayName.trim().isNotEmpty) return;
     _promptShown = true;
-    showNameCompletionDialog(context, ref);
+    showNameCompletionDialog(context);
   }
 
   @override

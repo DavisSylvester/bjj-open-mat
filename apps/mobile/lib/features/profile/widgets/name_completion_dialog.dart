@@ -8,24 +8,22 @@ import '../../../shared/widgets/glass_form.dart';
 /// On Save, calls [AuthStateNotifier.updateProfile] with the entered values.
 /// On Skip (or dismiss), does nothing. Non-blocking — the caller should not
 /// await meaningful state from the return value.
-Future<void> showNameCompletionDialog(BuildContext context, WidgetRef ref) {
+Future<void> showNameCompletionDialog(BuildContext context) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => _NameCompletionDialog(ref: ref),
+    builder: (_) => const _NameCompletionDialog(),
   );
 }
 
-class _NameCompletionDialog extends StatefulWidget {
-  final WidgetRef ref;
-
-  const _NameCompletionDialog({required this.ref});
+class _NameCompletionDialog extends ConsumerStatefulWidget {
+  const _NameCompletionDialog();
 
   @override
-  State<_NameCompletionDialog> createState() => _NameCompletionDialogState();
+  ConsumerState<_NameCompletionDialog> createState() => _NameCompletionDialogState();
 }
 
-class _NameCompletionDialogState extends State<_NameCompletionDialog> {
+class _NameCompletionDialogState extends ConsumerState<_NameCompletionDialog> {
   final TextEditingController _firstController = TextEditingController();
   final TextEditingController _lastController = TextEditingController();
   bool _saving = false;
@@ -46,7 +44,7 @@ class _NameCompletionDialogState extends State<_NameCompletionDialog> {
     }
     setState(() => _saving = true);
     try {
-      await widget.ref.read(authStateProvider.notifier).updateProfile({
+      await ref.read(authStateProvider.notifier).updateProfile({
         if (first.isNotEmpty) 'firstName': first,
         if (last.isNotEmpty) 'lastName': last,
       });
@@ -103,7 +101,7 @@ class _NameCompletionDialogState extends State<_NameCompletionDialog> {
             backgroundColor: t.primary,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(t.cardRadius),
             ),
           ),
           child: _saving

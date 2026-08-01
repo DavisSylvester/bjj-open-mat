@@ -68,7 +68,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
     final displayName = ref.read(authStateProvider).user?.displayName ?? '';
     if (displayName.trim().isNotEmpty) return;
     _promptShown = true;
-    showNameCompletionDialog(context, ref);
+    showNameCompletionDialog(context);
   }
 
   @override

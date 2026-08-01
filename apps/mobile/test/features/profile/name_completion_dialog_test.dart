@@ -45,17 +45,13 @@ Future<_FakeAuthNotifier> _pumpDialog(WidgetTester tester) async {
         theme: AppTheme.glass(),
         home: Builder(
           builder: (context) {
-            return Consumer(
-              builder: (context, ref, _) {
-                return Scaffold(
-                  body: Center(
-                    child: ElevatedButton(
-                      onPressed: () => showNameCompletionDialog(context, ref),
-                      child: const Text('Open'),
-                    ),
-                  ),
-                );
-              },
+            return Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () => showNameCompletionDialog(context),
+                  child: const Text('Open'),
+                ),
+              ),
             );
           },
         ),
