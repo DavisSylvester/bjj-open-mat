@@ -181,9 +181,13 @@ class _NewMessageScreenState extends ConsumerState<NewMessageScreen>
       if (canManage) const Tab(text: 'Channel'),
     ];
 
+    // Exclude the signed-in user from the picker — you cannot message
+    // yourself (the server rejects it), and a group of just yourself is invalid.
+    final myId = ref.watch(currentUserIdProvider);
     final rosterAsync = ref.watch(rosterProvider(widget.gymId));
     final members = rosterAsync.maybeWhen(
-      data: (list) => list,
+      data: (list) =>
+          myId == null ? list : list.where((m) => m.userId != myId).toList(),
       orElse: () => <RosterMember>[],
     );
 

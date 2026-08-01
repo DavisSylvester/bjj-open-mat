@@ -219,6 +219,14 @@ void main() {
       expect(find.text('Bob'), findsOneWidget);
     });
 
+    testWidgets('excludes the current user from the member list', (tester) async {
+      // Roster includes the signed-in user; they must not be pickable
+      // (the server rejects messaging yourself with "Cannot message yourself").
+      await _pump(tester, currentUserId: 'user-alice');
+      expect(find.text('Alice'), findsNothing);
+      expect(find.text('Bob'), findsOneWidget);
+    });
+
     testWidgets('Start button is disabled when no member selected', (tester) async {
       await _pump(tester);
       final startButton = tester.widget<ElevatedButton>(find.byKey(const Key('nm_start')));
