@@ -53,3 +53,47 @@ export function groupDuplicates(gyms: DedupeGym[]): DedupeGym[][] {
   }
   return [...map.values()].filter((grp): boolean => grp.length >= 2);
 }
+
+/**
+ * Counts the number of records in a group that have a non-empty `ownerId`.
+ */
+export function ownedCount(group: DedupeGym[]): number {
+  return group.filter((g): boolean => g.ownerId !== undefined && g.ownerId !== "").length;
+}
+
+/**
+ * Picks the canonical (surviving) record from a duplicate group.
+ *
+ * Priority (first match wins):
+ * 1. Owned record (`ownerId` present and non-empty). If two are owned, the
+ *    caller is responsible for routing the group to conflicts — this function
+ *    does NOT throw.
+ * 2. Record with a `logoUrl` (curated).
+ * 3. Earliest `createdAt` (records missing `createdAt` sort last).
+ * 4. Lexicographically smallest `id` (stable tiebreak).
+ */
+export function chooseCanonical(group: DedupeGym[]): DedupeGym {
+  const sorted: DedupeGym[] = [...group].sort((a: DedupeGym, b: DedupeGym): number => {
+    const aOwned: boolean = a.ownerId !== undefined && a.ownerId !== "";
+    const bOwned: boolean = b.ownerId !== undefined && b.ownerId !== "";
+    if (aOwned !== bOwned) {
+      return aOwned ? -1 : 1;
+    }
+
+    const aHasLogo: boolean = a.logoUrl !== undefined && a.logoUrl !== "";
+    const bHasLogo: boolean = b.logoUrl !== undefined && b.logoUrl !== "";
+    if (aHasLogo !== bHasLogo) {
+      return aHasLogo ? -1 : 1;
+    }
+
+    const aDate: string = a.createdAt ?? "￿";
+    const bDate: string = b.createdAt ?? "￿";
+    if (aDate !== bDate) {
+      return aDate < bDate ? -1 : 1;
+    }
+
+    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+  });
+
+  return sorted[0]!;
+}

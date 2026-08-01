@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { groupDuplicates, normalizeKey, type DedupeGym } from "../scripts/gym-dedupe.mjs";
+import { chooseCanonical, groupDuplicates, normalizeKey, ownedCount, type DedupeGym } from "../scripts/gym-dedupe.mjs";
 
 const g = (id: string, name: string, address: string, extra: Partial<DedupeGym> = {}): DedupeGym =>
   ({ id, name, address, ...extra });
@@ -31,5 +31,50 @@ describe("groupDuplicates", (): void => {
     ]);
     expect(groups.length).toBe(1);
     expect(groups[0]!.map((x) => x.id).sort()).toEqual(["1", "gpl-ChIJ9"]);
+  });
+});
+
+describe("ownedCount", (): void => {
+  it("counts records with a non-empty ownerId", (): void => {
+    expect(ownedCount([
+      g("a", "X", "1", { ownerId: "owner-1" }),
+      g("b", "X", "1"),
+      g("c", "X", "1", { ownerId: "" }),
+    ])).toBe(1);
+  });
+
+  it("returns 0 when no record is owned", (): void => {
+    expect(ownedCount([g("a", "X", "1"), g("b", "X", "1")])).toBe(0);
+  });
+});
+
+describe("chooseCanonical", (): void => {
+  it("prefers an owned record", (): void => {
+    const c = chooseCanonical([
+      g("a", "X", "1", { createdAt: "2020-01-01" }),
+      g("b", "X", "1", { ownerId: "owner-1", createdAt: "2024-01-01" }),
+    ]);
+    expect(c.id).toBe("b");
+  });
+
+  it("prefers a record with a logo when none owned", (): void => {
+    const c = chooseCanonical([
+      g("a", "X", "1", { createdAt: "2020-01-01" }),
+      g("b", "X", "1", { logoUrl: "https://cdn/x.png", createdAt: "2021-01-01" }),
+    ]);
+    expect(c.id).toBe("b");
+  });
+
+  it("prefers the oldest when neither owned nor logo'd", (): void => {
+    const c = chooseCanonical([
+      g("a", "X", "1", { createdAt: "2022-01-01" }),
+      g("b", "X", "1", { createdAt: "2020-01-01" }),
+    ]);
+    expect(c.id).toBe("b");
+  });
+
+  it("falls back to smallest id", (): void => {
+    const c = chooseCanonical([g("zzz", "X", "1"), g("aaa", "X", "1")]);
+    expect(c.id).toBe("aaa");
   });
 });
