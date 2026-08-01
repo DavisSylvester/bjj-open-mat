@@ -218,6 +218,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
       favoriteRepo,
       rsvpRepo,
       notificationRepo,
+      deviceTokenRepo,
       auth0Management,
     ),
     env,

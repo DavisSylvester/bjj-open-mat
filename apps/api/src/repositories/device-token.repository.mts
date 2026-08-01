@@ -34,10 +34,6 @@ export class DeviceTokenRepository extends BaseRepository {
     return docs.map((d) => stripId<DeviceToken>(d) as DeviceToken);
   }
 
-  public async deleteByToken(token: string): Promise<void> {
-    await this.collection<DeviceTokenDoc>(COLLECTIONS.deviceTokens).deleteOne({ token });
-  }
-
   public async deleteByTokenAndUser(token: string, userId: string): Promise<void> {
     await this.collection<DeviceTokenDoc>(COLLECTIONS.deviceTokens).deleteOne({ token, userId });
   }
