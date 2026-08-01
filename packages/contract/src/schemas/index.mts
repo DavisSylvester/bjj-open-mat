@@ -1,5 +1,6 @@
 export * from "./geo-location.mts";
 export * from "./user.mts";
+export * from "./device-token.mjs";
 export * from "./gym.mts";
 export * from "./open-mat.mts";
 export * from "./open-mat-detail.mts";
