@@ -1,0 +1,3 @@
+export const environment = {
+  apiBaseUrl: 'http://localhost:3100',
+} as const;

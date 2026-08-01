@@ -1,0 +1,18 @@
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>BJJ Admin</h2>
+    </div>
+    <nav>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/users" routerLinkActive="active">Users</a>
+      <a routerLink="/gyms" routerLinkActive="active">Gyms</a>
+      <a routerLink="/open-mats" routerLinkActive="active">Open Mats</a>
+      <a routerLink="/members" routerLinkActive="active">Members</a>
+      <a routerLink="/schedules" routerLinkActive="active">Schedules</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>
