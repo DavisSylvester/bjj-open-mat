@@ -67,6 +67,11 @@ import { MessageReportRepository } from "./repositories/message-report.repositor
 import { GymClaimFacade } from "./facades/gym-claim.facade.mts";
 import { GymClaimRepository } from "./repositories/gym-claim.repository.mts";
 import { DeviceTokenRepository } from "./repositories/device-token.repository.mts";
+import { FcmPushSender } from "./push/fcm-push-sender.mts";
+import { PushService } from "./push/push.service.mts";
+import type { PushSender } from "./push/push.types.mts";
+import { logger } from "./config/logger.mts";
+import { GoogleAuth } from "google-auth-library";
 
 export interface Container {
   readonly db: Db;
@@ -86,6 +91,7 @@ export interface Container {
   readonly messagingFacade: MessagingFacade;
   readonly gymClaimFacade: GymClaimFacade;
   readonly deviceTokenRepo: DeviceTokenRepository;
+  readonly pushService: PushService;
   readonly id: () => string;
   readonly accountDeletionService: AccountDeletionService;
   readonly env: AppEnv;
@@ -124,6 +130,26 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const messageReportRepo = new MessageReportRepository(db);
   const gymClaimRepo = new GymClaimRepository(db);
   const deviceTokenRepo = new DeviceTokenRepository(db);
+
+  let pushSender: PushSender;
+  if (env.fcmProjectId && env.fcmServiceAccountJson) {
+    const auth = new GoogleAuth({
+      credentials: JSON.parse(env.fcmServiceAccountJson) as Record<string, unknown>,
+      scopes: ["https://www.googleapis.com/auth/firebase.messaging"],
+    });
+    const accessToken = async (): Promise<string> => {
+      const c = await auth.getClient();
+      const t = await c.getAccessToken();
+      if (!t.token) throw new Error("no FCM access token");
+      return t.token;
+    };
+    pushSender = new FcmPushSender({ projectId: env.fcmProjectId, accessToken });
+  } else {
+    pushSender = { send: async (): Promise<{ unregistered: string[] }> => ({ unregistered: [] }) };
+    logger.info("push notifications disabled — FCM_PROJECT_ID or FCM_SERVICE_ACCOUNT_JSON not set");
+  }
+  const pushService = new PushService(deviceTokenRepo, pushSender);
+
   const emailService: EmailService =
     env.sesFrom && env.adminEmail
       ? new SesEmailService({ from: env.sesFrom, adminEmail: env.adminEmail }, undefined, env.sesRegion)
@@ -178,6 +204,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     messagingFacade: new MessagingFacade(conversationRepo, messageRepo, conversationParticipantRepo, channelReadStateRepo, userBlockRepo, messageReportRepo, membershipRepo, gymRepo, userRepo, id),
     gymClaimFacade: new GymClaimFacade(gymClaimRepo, gymRepo, userRepo, membershipRepo, notificationRepo, id),
     deviceTokenRepo,
+    pushService,
     id,
     accountDeletionService: new AccountDeletionOrchestrator(
       userRepo,
