@@ -30,6 +30,8 @@ export const User = t.Object(
     auth0Id: t.Optional(t.String()),
     email: t.String({ format: "email" }),
     displayName: t.String(),
+    firstName: t.Optional(t.String()),
+    lastName: t.Optional(t.String()),
     role: t.Optional(UserRole),
     beltRank: t.Optional(BeltRank),
     beltStripes: t.Optional(t.Integer({ minimum: 0, maximum: 4 })),

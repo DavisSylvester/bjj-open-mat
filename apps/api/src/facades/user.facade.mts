@@ -49,8 +49,19 @@ export class UserFacade {
     // empty/placeholder default, so a user-edited name is never overwritten.
     const social = isSocial(identity.userId);
     if (claims.displayName && (social || user.displayName.trim() === "")) patch.displayName = claims.displayName;
+    if (claims.firstName && (social || !user.firstName)) patch.firstName = claims.firstName;
+    if (claims.lastName && (social || !user.lastName)) patch.lastName = claims.lastName;
     if (claims.email && (social || isPlaceholderEmail)) patch.email = claims.email;
     if (claims.avatarUrl && (social || !user.avatarUrl)) patch.avatarUrl = claims.avatarUrl;
+    // Providers like Apple send given/family names but no combined `name`.
+    // Derive displayName from them so rosters/messaging show a real name —
+    // only when the provider gave no explicit displayName.
+    if (!claims.displayName) {
+      const derived = [patch.firstName ?? user.firstName, patch.lastName ?? user.lastName]
+        .filter((p): p is string => !!p && p.trim() !== "").join(" ").trim();
+      const nameStillBlank = ((patch.displayName ?? user.displayName) ?? "").trim() === "";
+      if (derived && (social || nameStillBlank)) patch.displayName = derived;
+    }
     if (Object.keys(patch).length === 0) return user;
     const updated = await this.users.update(identity.userId, patch);
     return updated ?? user;
@@ -64,6 +75,21 @@ export class UserFacade {
 
   public async updateProfile(id: string, patch: UpdateUserRequest, isSocialUser = false): Promise<User> {
     const effective: UpdateUserRequest = isSocialUser ? this.socialAllowed(patch) : patch;
+
+    // Profile-completion path: when the user supplies first/last (e.g. because
+    // the provider gave no name) and has no displayName yet, derive it so the
+    // roster/messaging name is populated. This is the user's own name, so it is
+    // allowed even for social users (whose provider displayName is otherwise
+    // read-only).
+    if ((effective.firstName || effective.lastName) && !effective.displayName) {
+      const current = await this.users.findById(id);
+      if (!current) throw new AppError("not_found", `User ${id} not found`);
+      if (current.displayName.trim() === "") {
+        const derived = [effective.firstName ?? current.firstName, effective.lastName ?? current.lastName]
+          .filter((p): p is string => !!p && p.trim() !== "").join(" ").trim();
+        if (derived) effective.displayName = derived;
+      }
+    }
 
     // A home gym now means a roster entry. Sync BEFORE writing the user, so an
     // unknown gym rejects the whole update rather than leaving the profile
