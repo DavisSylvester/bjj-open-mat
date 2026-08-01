@@ -98,6 +98,8 @@ class UserProfile {
   final String? birthday; // ISO YYYY-MM-DD
   final String? createdAt;
   final UserPreferences? preferences;
+  final String? firstName;
+  final String? lastName;
 
   const UserProfile({
     required this.id,
@@ -121,6 +123,8 @@ class UserProfile {
     this.birthday,
     this.createdAt,
     this.preferences,
+    this.firstName,
+    this.lastName,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -148,6 +152,8 @@ class UserProfile {
       preferences: json['preferences'] != null
           ? UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>)
           : null,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
     );
   }
 
@@ -168,6 +174,8 @@ class UserProfile {
     'weightDivisionContext': weightDivisionContext,
     'birthday': birthday,
     'createdAt': createdAt,
+    'firstName': firstName,
+    'lastName': lastName,
     if (preferences != null) 'preferences': preferences!.toJson(),
   };
 

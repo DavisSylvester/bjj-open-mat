@@ -17,4 +17,39 @@ void main() {
     expect(u.birthday, '1990-01-05');
     expect(u.toJson()['birthday'], '1990-01-05');
   });
+
+  test('fromJson parses firstName and lastName', () {
+    final u = UserProfile.fromJson({
+      'id': 'u1',
+      'email': 'a@b.io',
+      'displayName': 'Alex Doe',
+      'firstName': 'Alex',
+      'lastName': 'Doe',
+    });
+    expect(u.firstName, 'Alex');
+    expect(u.lastName, 'Doe');
+  });
+
+  test('fromJson returns null firstName/lastName when absent', () {
+    final u = UserProfile.fromJson({
+      'id': 'u1',
+      'email': 'a@b.io',
+      'displayName': 'Alex',
+    });
+    expect(u.firstName, isNull);
+    expect(u.lastName, isNull);
+  });
+
+  test('toJson includes firstName and lastName', () {
+    final u = UserProfile(
+      id: 'u1',
+      email: 'a@b.io',
+      displayName: 'Alex Doe',
+      firstName: 'Alex',
+      lastName: 'Doe',
+    );
+    final json = u.toJson();
+    expect(json['firstName'], 'Alex');
+    expect(json['lastName'], 'Doe');
+  });
 }
