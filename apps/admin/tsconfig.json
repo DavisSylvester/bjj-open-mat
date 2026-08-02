@@ -11,7 +11,12 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/app/*"]
+    },
+    "ignoreDeprecations": "6.0"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

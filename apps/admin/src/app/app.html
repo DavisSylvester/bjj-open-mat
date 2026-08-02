@@ -1,18 +1,86 @@
-<div class="admin-shell">
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2>BJJ Admin</h2>
+<z-layout class="h-screen" data-testid="admin-shell">
+  <z-sidebar [zWidth]="240" data-testid="sidebar">
+    <div class="mb-6 px-2">
+      <h2 class="text-lg font-bold tracking-tight text-sidebar-foreground" data-testid="app-title">
+        BJJ Admin
+      </h2>
     </div>
-    <nav>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-      <a routerLink="/users" routerLinkActive="active">Users</a>
-      <a routerLink="/gyms" routerLinkActive="active">Gyms</a>
-      <a routerLink="/open-mats" routerLinkActive="active">Open Mats</a>
-      <a routerLink="/members" routerLinkActive="active">Members</a>
-      <a routerLink="/schedules" routerLinkActive="active">Schedules</a>
-    </nav>
-  </aside>
-  <main class="content">
-    <router-outlet />
-  </main>
-</div>
+
+    <z-sidebar-group>
+      <z-sidebar-group-label>Navigation</z-sidebar-group-label>
+
+      <nav class="flex flex-col gap-1" data-testid="nav">
+        <a
+          routerLink="/"
+          routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          data-testid="nav-dashboard"
+        >
+          <ng-icon name="lucideLayoutDashboard" class="size-4 shrink-0" />
+          Dashboard
+        </a>
+
+        <a
+          routerLink="/users"
+          routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          data-testid="nav-users"
+        >
+          <ng-icon name="lucideUsers" class="size-4 shrink-0" />
+          Users
+        </a>
+
+        <a
+          routerLink="/gyms"
+          routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          data-testid="nav-gyms"
+        >
+          <ng-icon name="lucideBuilding2" class="size-4 shrink-0" />
+          Gyms
+        </a>
+
+        <a
+          routerLink="/open-mats"
+          routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          data-testid="nav-open-mats"
+        >
+          <ng-icon name="lucideCalendarDays" class="size-4 shrink-0" />
+          Open Mats
+        </a>
+
+        <a
+          routerLink="/members"
+          routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          data-testid="nav-members"
+        >
+          <ng-icon name="lucideUserCheck" class="size-4 shrink-0" />
+          Members
+        </a>
+
+        <a
+          routerLink="/schedules"
+          routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground"
+          class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          data-testid="nav-schedules"
+        >
+          <ng-icon name="lucideClock" class="size-4 shrink-0" />
+          Schedules
+        </a>
+      </nav>
+    </z-sidebar-group>
+  </z-sidebar>
+
+  <z-layout zDirection="vertical" class="flex-1">
+    <z-header data-testid="header">
+      <h1 class="text-base font-semibold text-foreground">BJJ Admin</h1>
+    </z-header>
+
+    <z-content data-testid="content">
+      <router-outlet />
+    </z-content>
+  </z-layout>
+</z-layout>
