@@ -6,7 +6,7 @@ import { createContainer } from "./container.mts";
 import { buildApp } from "./app.mts";
 
 const env = loadEnv(await resolveEnv());
-const { client, db } = createMongoContext(env);
+const { client, db } = await createMongoContext(env);
 await client.connect();
 
 const container = createContainer(db, env);
