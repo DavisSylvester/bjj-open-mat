@@ -3,6 +3,7 @@ import type {
   AdminOpenMatsByState,
   AdminOverviewStats,
   Gym,
+  GymMembership,
   User,
 } from "@bjj/contract";
 import type { AdminAnalyticsRepository } from "../repositories/admin-analytics.repository.mjs";
@@ -41,6 +42,10 @@ export class AdminFacade {
 
   public async listUsers(skip: number, limit: number): Promise<{ items: User[]; total: number }> {
     return this.users.list(skip, limit);
+  }
+
+  public async listMemberships(skip: number, limit: number): Promise<{ items: GymMembership[]; total: number }> {
+    return this.memberships.listAll(skip, limit);
   }
 
   public async verifyGym(gymId: string, now: Date): Promise<Gym> {

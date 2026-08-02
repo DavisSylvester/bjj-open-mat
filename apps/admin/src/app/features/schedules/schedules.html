@@ -1,0 +1,60 @@
+@if (loading()) {
+  <div class="schedules-loading">
+    <z-spinner class="size-8" />
+    <span>Loading…</span>
+  </div>
+} @else {
+  <div class="schedules-container">
+    <div class="schedules-toolbar">
+      <h1 class="schedules-title">Schedules</h1>
+    </div>
+
+    <div class="gym-select-wrapper">
+      <label class="gym-select-label" for="gym-select">Select a Gym</label>
+      <select
+        id="gym-select"
+        class="gym-select"
+        [value]="selectedGymId()"
+        (change)="onGymChange(($any($event.target)).value)"
+      >
+        <option value="">— Select a gym —</option>
+        @for (gym of gyms(); track gym.id) {
+          <option [value]="gym.id">{{ gym.name }}</option>
+        }
+      </select>
+    </div>
+
+    @if (!selectedGymId()) {
+      <div class="schedules-prompt" data-testid="schedules-empty-prompt">
+        <p>Select a gym above to view its schedule.</p>
+      </div>
+    } @else if (filteredOpenMats().length === 0) {
+      <div class="schedules-empty-wrapper" data-testid="schedules-empty">
+        <z-empty
+          zIcon="lucideCalendar"
+          zTitle="No open mats for this gym"
+          zDescription="This gym has no open mats scheduled."
+        />
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table z-table data-testid="schedules-grid">
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head>Title</th>
+              <th z-table-head>Day / Time</th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+            @for (openMat of filteredOpenMats(); track openMat.id) {
+              <tr z-table-row data-testid="schedule-row">
+                <td z-table-cell>{{ openMat.title }}</td>
+                <td z-table-cell>{{ openMat.startTime }}–{{ openMat.endTime }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+}

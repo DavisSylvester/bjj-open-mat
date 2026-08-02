@@ -35,6 +35,16 @@ beforeAll(async () => {
     amenities: [],
     isVerified: false,
   } as never);
+  await db.collection("gymMemberships").insertOne({
+    _id: "m-1" as never,
+    id: "m-1",
+    gymId: "g-1",
+    userId: "u-1",
+    verifiedMember: false,
+    isHome: true,
+    visibleInRoster: true,
+    joinedAt: "2026-08-01T00:00:00.000Z",
+  } as never);
   const c = createContainer(db, env);
   app = buildApp(c).listen(0);
   base = `http://localhost:${app.server?.port}`;
@@ -72,5 +82,12 @@ describe("admin routes (unauthenticated)", () => {
     const res = await fetch(`${base}/api/v1/admin/gyms/g-1/verify`, { method: "POST" });
     const body = await res.json() as { data: { isVerified: boolean } };
     expect(body.data.isVerified).toBe(true);
+  });
+
+  it("GET /api/v1/admin/memberships returns a non-empty list", async () => {
+    const res = await fetch(`${base}/api/v1/admin/memberships?page=1&limit=20`);
+    expect(res.status).toBe(200);
+    const body = await res.json() as { data: unknown[] };
+    expect(body.data.length).toBeGreaterThan(0);
   });
 });

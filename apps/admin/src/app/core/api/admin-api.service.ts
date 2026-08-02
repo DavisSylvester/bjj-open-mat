@@ -9,6 +9,7 @@ import type {
   CreateGymBody,
   DataEnvelope,
   Gym,
+  GymMembership,
   ListEnvelope,
   OpenMat,
   User,
@@ -107,6 +108,15 @@ export class AdminApiService {
         { emails },
       ),
     ).then((res) => res.data);
+  }
+
+  public listMembers(page: number = 1, limit: number = 50): Promise<ListEnvelope<GymMembership>> {
+    return firstValueFrom(
+      this.http.get<ListEnvelope<GymMembership>>(
+        `${this.base}/api/v1/admin/memberships`,
+        { params: { page: page.toString(), limit: limit.toString() } },
+      ),
+    ).then((res) => ({ data: res.data, meta: res.meta }));
   }
 
   public updateOpenMat(id: string, body: Partial<OpenMat>): Promise<OpenMat> {

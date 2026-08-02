@@ -36,6 +36,12 @@ export function adminRoutes(container: Container) {
       const { items, total } = await openMatFacade.list({}, (page - 1) * limit, limit);
       return list(items, { page, limit, total });
     })
+    .get("/memberships", async ({ query }) => {
+      const page = Number(query["page"] ?? 1);
+      const limit = Number(query["limit"] ?? 50);
+      const { items, total } = await adminFacade.listMemberships((page - 1) * limit, limit);
+      return list(items, { page, limit, total });
+    })
     .post("/gyms", async ({ body }) => data(await gymFacade.create("admin", body)), {
       body: CreateGymRequest,
     })

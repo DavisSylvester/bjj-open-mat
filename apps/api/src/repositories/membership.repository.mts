@@ -62,4 +62,13 @@ export class MembershipRepository extends BaseRepository {
     await col.updateMany({ userId, gymId: { $ne: gymId } }, { $set: { isHome: false } });
     await col.updateOne({ userId, gymId }, { $set: { isHome: true } });
   }
+
+  public async listAll(skip: number, limit: number): Promise<{ items: GymMembership[]; total: number }> {
+    const col = this.collection<MembershipDoc>(COLLECTIONS.gymMemberships);
+    const [docs, total] = await Promise.all([
+      col.find({}).skip(skip).limit(limit).toArray(),
+      col.countDocuments({}),
+    ]);
+    return { items: docs.map((d) => stripId<GymMembership>(d) as GymMembership), total };
+  }
 }

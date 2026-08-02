@@ -1,0 +1,49 @@
+.members-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: var(--muted-foreground, #6b7280);
+}
+
+.members-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.members-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground, #111827);
+}
+
+.members-count {
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #6b7280);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border, #e5e7eb);
+}
+
+.id-cell {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--muted-foreground, #6b7280);
+  word-break: break-all;
+}
+
+.no-value {
+  color: var(--muted-foreground, #6b7280);
+}
+
+.members-empty-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
