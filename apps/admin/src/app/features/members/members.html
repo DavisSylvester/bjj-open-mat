@@ -1,0 +1,68 @@
+@if (loading()) {
+  <div class="members-loading">
+    <z-spinner class="size-8" />
+    <span>Loading…</span>
+  </div>
+} @else if (members().length === 0) {
+  <div class="members-empty-wrapper" data-testid="members-empty">
+    <z-empty
+      zIcon="lucideUsers"
+      zTitle="No members found"
+      zDescription="There are no memberships to display yet."
+    />
+  </div>
+} @else {
+  <div class="members-container">
+    <h1 class="members-title">Members</h1>
+    <p class="members-count">{{ total() }} total memberships</p>
+
+    <div class="table-wrapper">
+      <table z-table data-testid="members-grid">
+        <thead z-table-header>
+          <tr z-table-row>
+            <th z-table-head>Gym</th>
+            <th z-table-head>User</th>
+            <th z-table-head>Role</th>
+            <th z-table-head>Verified</th>
+            <th z-table-head>Status</th>
+          </tr>
+        </thead>
+        <tbody z-table-body>
+          @for (member of members(); track member.id) {
+            <tr z-table-row data-testid="member-row">
+              <td z-table-cell>
+                <span class="id-cell">{{ member.gymId }}</span>
+              </td>
+              <td z-table-cell>
+                <span class="id-cell">{{ member.userId }}</span>
+              </td>
+              <td z-table-cell>
+                @if (member.gymRole) {
+                  <z-badge zType="outline">{{ member.gymRole }}</z-badge>
+                } @else {
+                  <span class="no-value">—</span>
+                }
+              </td>
+              <td z-table-cell>
+                @if (member.verifiedMember) {
+                  <z-badge zType="default">Verified</z-badge>
+                } @else {
+                  <z-badge zType="outline">Unverified</z-badge>
+                }
+              </td>
+              <td z-table-cell>
+                @if (member.status) {
+                  <z-badge [zType]="member.status === 'active' ? 'default' : 'outline'">
+                    {{ member.status }}
+                  </z-badge>
+                } @else {
+                  <span class="no-value">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

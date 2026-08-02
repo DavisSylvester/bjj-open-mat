@@ -1,0 +1,23 @@
+# Angular / build
+/dist
+/tmp
+/out-tsc
+/bazel-out
+.angular/
+test-results/
+playwright-report/
+
+# Dependencies
+/node_modules
+
+# Environments
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Editors / OS
+.DS_Store
+Thumbs.db

@@ -13,3 +13,4 @@ export * from "./journal-requests.mts";
 export * from "./forum-requests.mts";
 export * from "./messaging-requests.mts";
 export * from "./gym-claim-requests.mts";
+export * from "./admin-requests.mjs";

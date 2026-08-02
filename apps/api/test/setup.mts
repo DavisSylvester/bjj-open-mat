@@ -11,6 +11,11 @@
  * Tests therefore get their own connection string, never the ambient one.
  * Point them somewhere else deliberately with TEST_MONGODB_URI.
  */
+
+// Runs before any test file loads mongodb, so bson@7 can init under Bun.
+// (This preload module imports no mongodb itself, so the shim wins the race.)
+import "../src/db/bson-bun-shim.mjs";
+
 const TEST_MONGODB_URI: string = process.env["TEST_MONGODB_URI"] ?? "mongodb://localhost:27017";
 
 process.env["MONGODB_URI"] = TEST_MONGODB_URI;

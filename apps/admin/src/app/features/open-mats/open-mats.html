@@ -1,0 +1,149 @@
+@if (loading()) {
+  <div class="open-mats-loading">
+    <z-spinner class="size-8" />
+    <span>Loading…</span>
+  </div>
+} @else {
+  <div class="open-mats-container">
+    <div class="open-mats-toolbar">
+      <div>
+        <h1 class="open-mats-title">Open Mats</h1>
+        <p class="open-mats-count">{{ total() }} total open mats</p>
+      </div>
+    </div>
+
+    @if (openMats().length === 0) {
+      <div class="open-mats-empty-wrapper" data-testid="open-mats-empty">
+        <z-empty
+          zIcon="lucideCalendar"
+          zTitle="No open mats found"
+          zDescription="There are no open mats to display yet."
+        />
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table z-table data-testid="open-mats-grid">
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head>Title</th>
+              <th z-table-head>Gym</th>
+              <th z-table-head>Day / Time</th>
+              <th z-table-head>Status</th>
+              <th z-table-head>Verified</th>
+              <th z-table-head>Actions</th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+            @for (openMat of openMats(); track openMat.id) {
+              <tr z-table-row data-testid="open-mat-row">
+                <td z-table-cell>{{ openMat.title }}</td>
+                <td z-table-cell>
+                  <span class="id-cell">{{ openMat.gymId }}</span>
+                </td>
+                <td z-table-cell>{{ openMat.startTime }}–{{ openMat.endTime }}</td>
+                <td z-table-cell>
+                  <z-badge [zType]="openMat.status === 'active' ? 'default' : 'outline'">
+                    {{ openMat.status }}
+                  </z-badge>
+                </td>
+                <td z-table-cell>
+                  @if (openMat.verified) {
+                    <z-badge zType="default">Verified</z-badge>
+                  } @else {
+                    <z-badge zType="outline">Unverified</z-badge>
+                  }
+                </td>
+                <td z-table-cell>
+                  <button
+                    z-button
+                    zType="ghost"
+                    zSize="sm"
+                    data-testid="edit-open-mat-btn"
+                    (click)="openEditDialog(openMat)"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+}
+
+<!-- Edit Open Mat Dialog -->
+@if (dialogMode() === 'edit') {
+  <div class="dialog-backdrop" (click)="closeDialog()">
+    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="edit-open-mat-title" (click)="$event.stopPropagation()">
+      <h2 id="edit-open-mat-title" class="dialog-title">Edit Open Mat</h2>
+      <form class="dialog-form" (ngSubmit)="onSubmitEdit()">
+        <div z-field>
+          <label z-field-label for="edit-title">Title</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-title"
+              type="text"
+              placeholder="Open mat title"
+              [(ngModel)]="formTitle"
+              name="edit-title"
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="edit-start-time">Start Time</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-start-time"
+              type="text"
+              placeholder="e.g. 10:00 AM"
+              [(ngModel)]="formStartTime"
+              name="edit-start-time"
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="edit-end-time">End Time</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-end-time"
+              type="text"
+              placeholder="e.g. 12:00 PM"
+              [(ngModel)]="formEndTime"
+              name="edit-end-time"
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="edit-status">Status</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-status"
+              type="text"
+              placeholder="e.g. active"
+              [(ngModel)]="formStatus"
+              name="edit-status"
+            />
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" z-button zType="outline" (click)="closeDialog()">Cancel</button>
+          <button
+            type="submit"
+            z-button
+            zType="default"
+            [zDisabled]="submitting()"
+            [zLoading]="submitting()"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

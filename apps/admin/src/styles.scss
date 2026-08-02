@@ -1,0 +1,201 @@
+@use 'tailwindcss';
+@use './app/shared/core/css/tailwind.css';
+@plugin 'tailwindcss-animate';
+
+@layer base, components, utilities;
+
+/*
+ * BJJ Admin — Design Tokens (ZardUI / Tailwind CSS v4)
+ *
+ * Palette:
+ *   Primary    #1a2c4e  Deep navy — authority, discipline
+ *   Accent     #c0392b  Crimson   — BJJ energy, action
+ *   Success    #27ae60  Green
+ *   Warning    #f39c12  Amber
+ *   Info       #2980b9  Steel blue
+ *   Background #f8fafc  Near-white slate
+ *   Sidebar    #152340  Richer navy
+ */
+
+:root {
+  --radius: 0.5rem;
+
+  /* Page canvas */
+  --background: oklch(0.982 0.004 247);      /* #f8fafc */
+  --foreground: oklch(0.18 0.03 254);        /* #1a2c4e */
+
+  /* Card / surface */
+  --card: oklch(1 0 0);                      /* #ffffff */
+  --card-foreground: oklch(0.18 0.03 254);   /* #1a2c4e */
+
+  /* Popover */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.03 254);
+
+  /* Primary — deep navy */
+  --primary: oklch(0.25 0.065 254);          /* #1a2c4e */
+  --primary-foreground: oklch(0.98 0 0);     /* white */
+
+  /* Secondary — light slate */
+  --secondary: oklch(0.945 0.009 247);       /* #e8edf5 */
+  --secondary-foreground: oklch(0.25 0.065 254);
+
+  /* Muted */
+  --muted: oklch(0.945 0.009 247);
+  --muted-foreground: oklch(0.52 0.02 247);  /* #64748b */
+
+  /* Accent — crimson */
+  --accent: oklch(0.945 0.009 247);          /* subtle slate for hover states */
+  --accent-foreground: oklch(0.25 0.065 254);
+
+  /* Semantic status colours (internal source tokens → consumed by @theme inline) */
+  --bjj-success: oklch(0.58 0.155 148);    /* #27ae60 */
+  --bjj-warning: oklch(0.74 0.165 68);     /* #f39c12 */
+  --bjj-info:    oklch(0.52 0.14 237);     /* #2980b9 */
+  --bjj-brand:   oklch(0.46 0.22 26);      /* #c0392b crimson */
+
+  /* Destructive — crimson */
+  --destructive: oklch(0.46 0.22 26);        /* #c0392b */
+
+  /* Borders / inputs / ring */
+  --border: oklch(0.892 0.012 247);          /* #dde4ef */
+  --input:  oklch(0.892 0.012 247);
+  --ring:   oklch(0.45 0.13 254);            /* navy focus ring */
+
+  /* Chart palette */
+  --chart-1: oklch(0.25 0.065 254);
+  --chart-2: oklch(0.46 0.22 26);
+  --chart-3: oklch(0.58 0.155 148);
+  --chart-4: oklch(0.74 0.165 68);
+  --chart-5: oklch(0.52 0.14 237);
+
+  /* Sidebar — richer navy background */
+  --sidebar: oklch(0.195 0.07 258);          /* #152340 */
+  --sidebar-foreground: oklch(0.9 0.015 247); /* soft white */
+  --sidebar-primary: oklch(0.46 0.22 26);    /* crimson active item */
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.265 0.07 258);   /* hovered nav item */
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.295 0.06 258);   /* subtle divider */
+  --sidebar-ring: oklch(0.46 0.22 26);
+}
+
+.dark {
+  --background: oklch(0.145 0.035 258);
+  --foreground: oklch(0.96 0.008 247);
+  --card: oklch(0.195 0.045 258);
+  --card-foreground: oklch(0.96 0.008 247);
+  --popover: oklch(0.195 0.045 258);
+  --popover-foreground: oklch(0.96 0.008 247);
+  --primary: oklch(0.72 0.08 247);
+  --primary-foreground: oklch(0.145 0.035 258);
+  --secondary: oklch(0.265 0.045 258);
+  --secondary-foreground: oklch(0.96 0.008 247);
+  --muted: oklch(0.265 0.045 258);
+  --muted-foreground: oklch(0.65 0.02 247);
+  --accent: oklch(0.265 0.045 258);
+  --accent-foreground: oklch(0.96 0.008 247);
+  --destructive: oklch(0.62 0.22 26);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.62 0.1 254);
+  --chart-1: oklch(0.62 0.14 254);
+  --chart-2: oklch(0.62 0.22 26);
+  --chart-3: oklch(0.65 0.155 148);
+  --chart-4: oklch(0.75 0.165 68);
+  --chart-5: oklch(0.62 0.14 237);
+  --sidebar: oklch(0.145 0.035 258);
+  --sidebar-foreground: oklch(0.92 0.01 247);
+  --sidebar-primary: oklch(0.62 0.22 26);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.225 0.05 258);
+  --sidebar-accent-foreground: oklch(0.96 0.008 247);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.62 0.22 26);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--bjj-success);
+  --color-warning: var(--bjj-warning);
+  --color-info: var(--bjj-info);
+  --color-brand: var(--bjj-brand);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}

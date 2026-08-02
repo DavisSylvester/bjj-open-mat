@@ -14,6 +14,7 @@ export interface EmailService {
   sendWaitlistConfirmation(to: string): Promise<void>;
   sendGymLeadConfirmation(to: string, gymName: string): Promise<void>;
   sendGymLeadAdminAlert(lead: GymLeadSummary): Promise<void>;
+  sendGymMemberInvite(to: string, gymName: string, joinCode?: string): Promise<void>;
 }
 
 export interface EmailConfig {
@@ -74,6 +75,15 @@ export class SesEmailService implements EmailService {
     ];
     await this.send(this.config.adminEmail, `[BJJ Open Mat] Gym lead: ${lead.gymName}`, lines.join("\n"));
   }
+
+  public async sendGymMemberInvite(to: string, gymName: string, joinCode?: string): Promise<void> {
+    const codeLine = joinCode ? `\nUse join code: ${joinCode}` : "";
+    await this.send(
+      to,
+      `[BJJ Open Mat] You're invited to join ${gymName}`,
+      `You've been invited to join ${gymName} on BJJ Open Mat.${codeLine}\n\nOpen the app to accept.`,
+    );
+  }
 }
 
 // Used in local dev / tests when SES is not configured. Logs and no-ops.
@@ -89,5 +99,9 @@ export class UnconfiguredEmailService implements EmailService {
 
   public async sendGymLeadAdminAlert(lead: GymLeadSummary): Promise<void> {
     logger.info(`[email:noop] gym admin alert for ${lead.gymName}`);
+  }
+
+  public async sendGymMemberInvite(to: string, gymName: string, joinCode?: string): Promise<void> {
+    logger.info(`[email:noop] gym member invite -> ${to} (${gymName}${joinCode ? `, code: ${joinCode}` : ""})`);
   }
 }

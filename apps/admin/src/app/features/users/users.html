@@ -1,0 +1,52 @@
+@if (loading()) {
+  <div class="users-loading">
+    <z-spinner class="size-8" />
+    <span>Loading…</span>
+  </div>
+} @else if (users().length === 0) {
+  <div class="users-empty-wrapper" data-testid="users-empty">
+    <z-empty
+      zIcon="lucideUsers"
+      zTitle="No users found"
+      zDescription="There are no users to display yet."
+    />
+  </div>
+} @else {
+  <div class="users-container">
+    <h1 class="users-title">Users</h1>
+    <p class="users-count">{{ total() }} total users</p>
+
+    <div class="table-wrapper">
+      <table z-table data-testid="users-grid">
+        <thead z-table-header>
+          <tr z-table-row>
+            <th z-table-head>Display Name</th>
+            <th z-table-head>Email</th>
+            <th z-table-head>Role</th>
+            <th z-table-head>City / State</th>
+            <th z-table-head>Created At</th>
+          </tr>
+        </thead>
+        <tbody z-table-body>
+          @for (user of users(); track user.id) {
+            <tr z-table-row data-testid="user-row">
+              <td z-table-cell>{{ user.displayName }}</td>
+              <td z-table-cell>{{ user.email }}</td>
+              <td z-table-cell>
+                @if (user.role) {
+                  <z-badge [zType]="user.role === 'admin' ? 'default' : 'outline'">
+                    {{ user.role }}
+                  </z-badge>
+                } @else {
+                  <span class="no-value">—</span>
+                }
+              </td>
+              <td z-table-cell>{{ formatLocation(user.city, user.state) }}</td>
+              <td z-table-cell>{{ formatDate(user.createdAt) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

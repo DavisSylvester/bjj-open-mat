@@ -4,23 +4,24 @@ import type { Container } from "./container.mts";
 import { logger } from "./config/logger.mts";
 import { registerErrorHandler } from "./http/error-handler.mts";
 import { buildOpenApiDocument } from "./openapi.mts";
-import { checkInRoutes } from "./routes/check-in.routes.mts";
-import { favoriteRoutes } from "./routes/favorite.routes.mts";
-import { geoRoutes } from "./routes/geo.routes.mts";
-import { gymRoutes } from "./routes/gym.routes.mts";
-import { healthRoutes } from "./routes/health.routes.mts";
-import { leadRoutes } from "./routes/lead.routes.mts";
-import { membershipRoutes } from "./routes/membership.routes.mts";
-import { classRoutes } from "./routes/class.routes.mts";
-import { classJournalRoutes } from "./routes/class-journal.routes.mts";
-import { forumRoutes } from "./routes/forum.routes.mts";
-import { messagingRoutes } from "./routes/messaging.routes.mts";
-import { gymClaimRoutes } from "./routes/gym-claim.routes.mts";
-import { deviceRoutes } from "./routes/device.routes.mts";
-import { notificationRoutes } from "./routes/notification.routes.mts";
-import { openMatRoutes } from "./routes/open-mat.routes.mts";
-import { reportRoutes } from "./routes/report.routes.mts";
-import { userRoutes } from "./routes/user.routes.mts";
+import { checkInRoutes } from "./routes/check-in.routes.mjs";
+import { favoriteRoutes } from "./routes/favorite.routes.mjs";
+import { geoRoutes } from "./routes/geo.routes.mjs";
+import { gymRoutes } from "./routes/gym.routes.mjs";
+import { healthRoutes } from "./routes/health.routes.mjs";
+import { leadRoutes } from "./routes/lead.routes.mjs";
+import { membershipRoutes } from "./routes/membership.routes.mjs";
+import { classRoutes } from "./routes/class.routes.mjs";
+import { classJournalRoutes } from "./routes/class-journal.routes.mjs";
+import { forumRoutes } from "./routes/forum.routes.mjs";
+import { messagingRoutes } from "./routes/messaging.routes.mjs";
+import { gymClaimRoutes } from "./routes/gym-claim.routes.mjs";
+import { deviceRoutes } from "./routes/device.routes.mjs";
+import { notificationRoutes } from "./routes/notification.routes.mjs";
+import { openMatRoutes } from "./routes/open-mat.routes.mjs";
+import { reportRoutes } from "./routes/report.routes.mjs";
+import { userRoutes } from "./routes/user.routes.mjs";
+import { adminRoutes } from "./routes/admin.routes.mjs";
 
 // The auth plugin (identity resolve + requireAuth/requireOwner macros) is applied
 // inside each route module. Elysia encapsulates a plugin's macros and resolve by
@@ -54,5 +55,6 @@ export function buildApp(container: Container) {
     .use(classJournalRoutes(container))
     .use(forumRoutes(container))
     .use(messagingRoutes(container))
-    .use(deviceRoutes(container));
+    .use(deviceRoutes(container))
+    .use(adminRoutes(container));
 }

@@ -72,6 +72,8 @@ import { PushService } from "./push/push.service.mts";
 import type { PushSender } from "./push/push.types.mts";
 import { logger } from "./config/logger.mts";
 import { GoogleAuth } from "google-auth-library";
+import { AdminAnalyticsRepository } from "./repositories/admin-analytics.repository.mjs";
+import { AdminFacade } from "./facades/admin.facade.mjs";
 
 export interface Container {
   readonly db: Db;
@@ -99,6 +101,7 @@ export interface Container {
   readonly assetStorage: AssetStorage;
   readonly audioStorage: AudioStorage;
   readonly placesClient: PlacesClient;
+  readonly adminFacade: AdminFacade;
   ensureIndexes(): Promise<void>;
 }
 
@@ -183,6 +186,10 @@ export function createContainer(db: Db, env: AppEnv): Container {
     : new NullPlacesClient();
 
   const membershipFacade = new MembershipFacade(membershipRepo, promotionRepo, gymRepo, userRepo, id);
+  const gymFacade = new GymFacade(gymRepo, favoriteRepo, id, geocoder, placesClient);
+  const openMatFacade = new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder);
+  const adminAnalyticsRepo = new AdminAnalyticsRepository(db);
+  const adminFacade = new AdminFacade(adminAnalyticsRepo, userRepo, gymFacade, openMatFacade, membershipFacade, emailService);
 
   return {
     db,
@@ -197,8 +204,8 @@ export function createContainer(db: Db, env: AppEnv): Container {
       return user?.role ?? null;
     },
     userFacade: new UserFacade(userRepo, membershipFacade),
-    gymFacade: new GymFacade(gymRepo, favoriteRepo, id, geocoder, placesClient),
-    openMatFacade: new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder),
+    gymFacade,
+    openMatFacade,
     checkInFacade: new CheckInFacade(checkInRepo, openMatRepo, userRepo, gymRepo, id),
     notificationFacade: new NotificationFacade(notificationRepo, pushService, id),
     reportFacade: new ReportFacade(reportRepo, githubIssueService, audioStorage, transcription, id, env.githubRepo),
@@ -226,6 +233,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     assetStorage,
     audioStorage,
     placesClient,
+    adminFacade,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),

@@ -21,7 +21,7 @@ type IdFactory = () => string;
 
 type MembershipRepo = Pick<
   MembershipRepository,
-  'upsertJoin' | 'find' | 'remove' | 'listByGym' | 'listByUser' | 'update' | 'setHome'
+  'upsertJoin' | 'find' | 'remove' | 'listByGym' | 'listByUser' | 'update' | 'setHome' | 'listAll'
 >;
 type PromotionRepo = Pick<PromotionRepository, 'insert' | 'listByUser'>;
 type GymRepo = Pick<GymRepository, 'findById'>;
@@ -168,6 +168,10 @@ export class MembershipFacade {
 
   public async listMyMemberships(userId: string): Promise<GymMembership[]> {
     return this.memberships.listByUser(userId);
+  }
+
+  public async listAll(skip: number, limit: number): Promise<{ items: GymMembership[]; total: number }> {
+    return this.memberships.listAll(skip, limit);
   }
 
   private async assertCanManage(callerId: string, gymId: string, callerRole: UserRole): Promise<void> {
