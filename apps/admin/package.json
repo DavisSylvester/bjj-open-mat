@@ -46,7 +46,7 @@
     "@playwright/test": "^1.61.1",
     "@vitest/coverage-v8": "^4.1.10",
     "happy-dom": "^20.11.1",
-    "mongodb": "^6.21.0",
+    "mongodb": "^7.5.0",
     "typescript": "~6.0.2",
     "vitest": "^4.1.10"
   }

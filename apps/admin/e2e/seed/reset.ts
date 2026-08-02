@@ -7,12 +7,14 @@
  * The MONGODB_URI env var is respected; defaults to localhost:27017.
  */
 
-import { MongoClient } from 'mongodb';
+// Side-effect shim MUST load before mongodb (see bson-bun-shim.ts).
+import './bson-bun-shim.ts';
 
 const uri: string = process.env['MONGODB_URI'] ?? 'mongodb://localhost:27017';
 const DB_NAME = 'bjj_admin_e2e';
 
 async function run(): Promise<void> {
+  const { MongoClient } = await import('mongodb');
   const client = new MongoClient(uri);
 
   try {

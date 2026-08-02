@@ -14,7 +14,8 @@
  */
 
 import { resolve } from 'path';
-import { MongoClient } from 'mongodb';
+// Side-effect shim MUST load before mongodb (see seed/bson-bun-shim.ts).
+import './seed/bson-bun-shim.ts';
 import { buildUsers, gyms, openMats } from './seed/fixtures.ts';
 import type { SeedUser, SeedGym, SeedOpenMat } from './seed/fixtures.ts';
 
@@ -37,6 +38,7 @@ process.env['PORT'] ??= '3100';
 // ---------------------------------------------------------------------------
 
 async function seed(): Promise<void> {
+  const { MongoClient } = await import('mongodb');
   const uri: string = process.env['MONGODB_URI'] as string;
   const client = new MongoClient(uri);
 
