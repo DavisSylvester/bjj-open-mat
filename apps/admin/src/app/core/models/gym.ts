@@ -10,3 +10,13 @@ export interface Gym {
   joinCode?: string;
   createdAt?: string;
 }
+
+export interface CreateGymBody {
+  name: string;
+  address: string;
+  city?: string;
+  state?: string;
+  description?: string;
+  phone?: string;
+  website?: string;
+}

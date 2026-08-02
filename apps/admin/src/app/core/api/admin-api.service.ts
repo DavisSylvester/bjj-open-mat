@@ -6,24 +6,13 @@ import { environment } from '../../../environments/environment';
 import type {
   AdminOverviewStats,
   AdminOpenMatsByState,
+  CreateGymBody,
+  DataEnvelope,
   Gym,
   ListEnvelope,
   OpenMat,
   User,
 } from '../models';
-
-interface DataEnvelopeResponse<T> {
-  data: T;
-}
-
-interface ListEnvelopeResponse<T> {
-  data: T[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-  };
-}
 
 @Injectable({ providedIn: 'root' })
 export class AdminApiService {
@@ -33,7 +22,7 @@ export class AdminApiService {
 
   public getOverview(): Promise<AdminOverviewStats> {
     return firstValueFrom(
-      this.http.get<DataEnvelopeResponse<AdminOverviewStats>>(
+      this.http.get<DataEnvelope<AdminOverviewStats>>(
         `${this.base}/api/v1/admin/stats/overview`,
       ),
     ).then((res) => res.data);
@@ -41,7 +30,7 @@ export class AdminApiService {
 
   public getOpenMatsByState(limit: number = 10): Promise<AdminOpenMatsByState> {
     return firstValueFrom(
-      this.http.get<DataEnvelopeResponse<AdminOpenMatsByState>>(
+      this.http.get<DataEnvelope<AdminOpenMatsByState>>(
         `${this.base}/api/v1/admin/stats/open-mats-by-state`,
         { params: { limit: limit.toString() } },
       ),
@@ -50,7 +39,7 @@ export class AdminApiService {
 
   public listUsers(page: number = 1, limit: number = 50): Promise<ListEnvelope<User>> {
     return firstValueFrom(
-      this.http.get<ListEnvelopeResponse<User>>(
+      this.http.get<ListEnvelope<User>>(
         `${this.base}/api/v1/admin/users`,
         { params: { page: page.toString(), limit: limit.toString() } },
       ),
@@ -59,7 +48,7 @@ export class AdminApiService {
 
   public listGyms(page: number = 1, limit: number = 50): Promise<ListEnvelope<Gym>> {
     return firstValueFrom(
-      this.http.get<ListEnvelopeResponse<Gym>>(
+      this.http.get<ListEnvelope<Gym>>(
         `${this.base}/api/v1/admin/gyms`,
         { params: { page: page.toString(), limit: limit.toString() } },
       ),
@@ -68,7 +57,7 @@ export class AdminApiService {
 
   public listOpenMats(page: number = 1, limit: number = 50): Promise<ListEnvelope<OpenMat>> {
     return firstValueFrom(
-      this.http.get<ListEnvelopeResponse<OpenMat>>(
+      this.http.get<ListEnvelope<OpenMat>>(
         `${this.base}/api/v1/admin/open-mats`,
         { params: { page: page.toString(), limit: limit.toString() } },
       ),
@@ -77,16 +66,16 @@ export class AdminApiService {
 
   public verifyGym(id: string): Promise<Gym> {
     return firstValueFrom(
-      this.http.post<DataEnvelopeResponse<Gym>>(
+      this.http.post<DataEnvelope<Gym>>(
         `${this.base}/api/v1/admin/gyms/${id}/verify`,
         {},
       ),
     ).then((res) => res.data);
   }
 
-  public createGym(body: Partial<Gym>): Promise<Gym> {
+  public createGym(body: CreateGymBody): Promise<Gym> {
     return firstValueFrom(
-      this.http.post<DataEnvelopeResponse<Gym>>(
+      this.http.post<DataEnvelope<Gym>>(
         `${this.base}/api/v1/admin/gyms`,
         body,
       ),
@@ -95,7 +84,7 @@ export class AdminApiService {
 
   public updateGym(id: string, body: Partial<Gym>): Promise<Gym> {
     return firstValueFrom(
-      this.http.put<DataEnvelopeResponse<Gym>>(
+      this.http.put<DataEnvelope<Gym>>(
         `${this.base}/api/v1/admin/gyms/${id}`,
         body,
       ),
@@ -104,7 +93,7 @@ export class AdminApiService {
 
   public addOwner(id: string, userId: string): Promise<Gym> {
     return firstValueFrom(
-      this.http.post<DataEnvelopeResponse<Gym>>(
+      this.http.post<DataEnvelope<Gym>>(
         `${this.base}/api/v1/admin/gyms/${id}/owner`,
         { userId },
       ),
@@ -113,7 +102,7 @@ export class AdminApiService {
 
   public invite(id: string, emails: string[]): Promise<{ invited: number }> {
     return firstValueFrom(
-      this.http.post<DataEnvelopeResponse<{ invited: number }>>(
+      this.http.post<DataEnvelope<{ invited: number }>>(
         `${this.base}/api/v1/admin/gyms/${id}/invite`,
         { emails },
       ),
@@ -122,7 +111,7 @@ export class AdminApiService {
 
   public updateOpenMat(id: string, body: Partial<OpenMat>): Promise<OpenMat> {
     return firstValueFrom(
-      this.http.put<DataEnvelopeResponse<OpenMat>>(
+      this.http.put<DataEnvelope<OpenMat>>(
         `${this.base}/api/v1/admin/open-mats/${id}`,
         body,
       ),
