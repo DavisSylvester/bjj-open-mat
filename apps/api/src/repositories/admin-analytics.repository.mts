@@ -22,6 +22,16 @@ export class AdminAnalyticsRepository extends BaseRepository {
     return new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
   }
 
+  /**
+   * Returns signup counts for several time windows relative to `now`.
+   *
+   * - `today`          — from midnight UTC of the current day (`startOfUtcDay`)
+   * - `last3Days`      — rolling 3-day window (N × 24 h back via `daysAgo`)
+   * - `last7Days`      — rolling 7-day window
+   * - `last14Days`     — rolling 14-day window
+   * - `monthToDate`    — from the 1st of the current calendar month (UTC)
+   * - `yearToDate`     — from 1 Jan of the current calendar year (UTC)
+   */
   public async signupWindows(now: Date): Promise<SignupWindows> {
     const col = this.collection<UserCreatedDoc>(COLLECTIONS.users);
     const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();

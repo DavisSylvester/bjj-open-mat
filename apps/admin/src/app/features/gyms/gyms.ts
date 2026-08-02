@@ -164,7 +164,7 @@ export class Gyms implements OnInit {
     }
     this.submitting.set(true);
     try {
-      const body: Partial<Gym> = {
+      const body: Pick<Gym, 'name' | 'address' | 'city' | 'state'> = {
         name: this.formName.trim(),
         address: this.formAddress.trim(),
         city: this.formCity.trim() || undefined,

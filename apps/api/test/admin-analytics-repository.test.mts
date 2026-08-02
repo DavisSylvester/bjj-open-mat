@@ -30,10 +30,12 @@ describe("AdminAnalyticsRepository", () => {
   it("counts signups per window relative to now", async () => {
     const repo = new AdminAnalyticsRepository(db);
     const w = await repo.signupWindows(NOW);
-    expect(w.today).toBe(1);       // u-today
-    expect(w.last7Days).toBe(2);   // u-today + u-5d
-    expect(w.last3Days).toBe(1);   // u-today only
-    expect(w.yearToDate).toBe(2);  // u-today + u-5d (both in 2026)
+    expect(w.today).toBe(1);        // u-today
+    expect(w.last3Days).toBe(1);    // u-today only
+    expect(w.last7Days).toBe(2);    // u-today + u-5d
+    expect(w.last14Days).toBe(2);   // u-today + u-5d (u-5d = Jul 27, within 14 days of Aug 1)
+    expect(w.monthToDate).toBe(1);  // u-today only (Aug 1 MTD since 2026-08-01T00:00Z)
+    expect(w.yearToDate).toBe(2);   // u-today + u-5d (both in 2026)
   });
 
   it("returns totals", async () => {

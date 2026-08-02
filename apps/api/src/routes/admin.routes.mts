@@ -15,30 +15,31 @@ export function adminRoutes(container: Container) {
 
   return new Elysia({ prefix: "/api/v1/admin" })
     .get("/stats/overview", async () => data(await adminFacade.overview(new Date())))
-    .get("/stats/open-mats-by-state", async ({ query }) =>
-      data(await adminFacade.openMatsByState(Number(query["limit"] ?? 10))),
-    )
+    .get("/stats/open-mats-by-state", async ({ query }) => {
+      const limit = Math.min(50, Math.max(1, Number(query["limit"] ?? 10)));
+      return data(await adminFacade.openMatsByState(limit));
+    })
     .get("/users", async ({ query }) => {
-      const page = Number(query["page"] ?? 1);
-      const limit = Number(query["limit"] ?? 20);
+      const page = Math.max(1, Number(query["page"] ?? 1));
+      const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 20)));
       const { items, total } = await adminFacade.listUsers((page - 1) * limit, limit);
       return list(items, { page, limit, total });
     })
     .get("/gyms", async ({ query }) => {
-      const page = Number(query["page"] ?? 1);
-      const limit = Number(query["limit"] ?? 20);
+      const page = Math.max(1, Number(query["page"] ?? 1));
+      const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 20)));
       const { items, total } = await gymFacade.list({ skip: (page - 1) * limit, limit });
       return list(items, { page, limit, total });
     })
     .get("/open-mats", async ({ query }) => {
-      const page = Number(query["page"] ?? 1);
-      const limit = Number(query["limit"] ?? 20);
+      const page = Math.max(1, Number(query["page"] ?? 1));
+      const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 20)));
       const { items, total } = await openMatFacade.list({}, (page - 1) * limit, limit);
       return list(items, { page, limit, total });
     })
     .get("/memberships", async ({ query }) => {
-      const page = Number(query["page"] ?? 1);
-      const limit = Number(query["limit"] ?? 50);
+      const page = Math.max(1, Number(query["page"] ?? 1));
+      const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 50)));
       const { items, total } = await adminFacade.listMemberships((page - 1) * limit, limit);
       return list(items, { page, limit, total });
     })

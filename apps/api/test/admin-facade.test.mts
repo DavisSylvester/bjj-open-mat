@@ -4,26 +4,34 @@ import { AdminFacade } from "../src/facades/admin.facade.mts";
 
 const NOW = new Date("2026-08-01T00:00:00.000Z");
 
-function makeFacade(overrides: Partial<Record<string, unknown>> = {}) {
+function makeFacade(): { facade: AdminFacade; gymStore: Record<string, unknown>; userRoles: Record<string, string>; sent: string[] } {
   const gymStore: Record<string, unknown> = { "g-1": { id: "g-1", name: "G", address: "A", amenities: [], isVerified: false } };
   const userRoles: Record<string, string> = {};
   const sent: string[] = [];
   const analytics = {
-    signupWindows: async () => ({ today: 1, last3Days: 1, last7Days: 1, last14Days: 1, monthToDate: 1, yearToDate: 1 }),
-    totals: async () => ({ totalUsers: 3, totalGyms: 1, totalOpenMats: 2 }),
-    topStates: async () => [{ state: "TX", count: 2 }],
+    signupWindows: async (): Promise<{ today: number; last3Days: number; last7Days: number; last14Days: number; monthToDate: number; yearToDate: number }> =>
+      ({ today: 1, last3Days: 1, last7Days: 1, last14Days: 1, monthToDate: 1, yearToDate: 1 }),
+    totals: async (): Promise<{ totalUsers: number; totalGyms: number; totalOpenMats: number }> =>
+      ({ totalUsers: 3, totalGyms: 1, totalOpenMats: 2 }),
+    topStates: async (): Promise<{ state: string; count: number }[]> => [{ state: "TX", count: 2 }],
   };
   const userRepo = {
-    list: async () => ({ items: [{ id: "u-1", email: "a@b.dev", displayName: "A" }], total: 1 }),
-    update: async (id: string, patch: Record<string, unknown>) => { userRoles[id] = patch["role"] as string; return { id, ...patch }; },
+    list: async (): Promise<{ items: { id: string; email: string; displayName: string }[]; total: number }> =>
+      ({ items: [{ id: "u-1", email: "a@b.dev", displayName: "A" }], total: 1 }),
+    update: async (id: string, patch: Record<string, unknown>): Promise<Record<string, unknown>> => {
+      userRoles[id] = patch["role"] as string;
+      return { id, ...patch };
+    },
   };
   const gymFacade = {
-    getById: async (id: string) => gymStore[id],
-    adminUpdate: async (id: string, patch: Record<string, unknown>) => { gymStore[id] = { ...(gymStore[id] as object), ...patch }; return gymStore[id]; },
+    getById: async (id: string): Promise<unknown> => gymStore[id],
+    adminUpdate: async (id: string, patch: Record<string, unknown>): Promise<unknown> => {
+      gymStore[id] = { ...(gymStore[id] as object), ...patch };
+      return gymStore[id];
+    },
   };
-  const email = { sendGymMemberInvite: async (to: string) => { sent.push(to); } };
+  const email = { sendGymMemberInvite: async (to: string): Promise<void> => { sent.push(to); } };
   const facade = new AdminFacade(analytics as never, userRepo as never, gymFacade as never, {} as never, {} as never, email as never);
-  void overrides;
   return { facade, gymStore, userRoles, sent };
 }
 

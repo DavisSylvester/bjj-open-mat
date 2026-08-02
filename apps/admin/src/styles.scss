@@ -48,11 +48,11 @@
   --accent: oklch(0.945 0.009 247);          /* subtle slate for hover states */
   --accent-foreground: oklch(0.25 0.065 254);
 
-  /* Semantic status colours (exposed as extra tokens) */
-  --color-success: oklch(0.58 0.155 148);    /* #27ae60 */
-  --color-warning: oklch(0.74 0.165 68);     /* #f39c12 */
-  --color-info:    oklch(0.52 0.14 237);     /* #2980b9 */
-  --color-brand:   oklch(0.46 0.22 26);      /* #c0392b crimson */
+  /* Semantic status colours (internal source tokens → consumed by @theme inline) */
+  --bjj-success: oklch(0.58 0.155 148);    /* #27ae60 */
+  --bjj-warning: oklch(0.74 0.165 68);     /* #f39c12 */
+  --bjj-info:    oklch(0.52 0.14 237);     /* #2980b9 */
+  --bjj-brand:   oklch(0.46 0.22 26);      /* #c0392b crimson */
 
   /* Destructive — crimson */
   --destructive: oklch(0.46 0.22 26);        /* #c0392b */
@@ -133,10 +133,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-success: var(--color-success);
-  --color-warning: var(--color-warning);
-  --color-info: var(--color-info);
-  --color-brand: var(--color-brand);
+  --color-success: var(--bjj-success);
+  --color-warning: var(--bjj-warning);
+  --color-info: var(--bjj-info);
+  --color-brand: var(--bjj-brand);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);

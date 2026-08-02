@@ -12,10 +12,11 @@
     <div class="gym-select-wrapper">
       <label class="gym-select-label" for="gym-select">Select a Gym</label>
       <select
+        #gymSel
         id="gym-select"
         class="gym-select"
         [value]="selectedGymId()"
-        (change)="onGymChange(($any($event.target)).value)"
+        (change)="onGymChange(gymSel.value)"
       >
         <option value="">— Select a gym —</option>
         @for (gym of gyms(); track gym.id) {

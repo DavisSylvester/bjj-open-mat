@@ -43,10 +43,10 @@ export class OpenMats implements OnInit {
   public readonly selectedOpenMat = signal<OpenMat | null>(null);
   public readonly submitting = signal<boolean>(false);
 
-  public formTitle = '';
-  public formStartTime = '';
-  public formEndTime = '';
-  public formStatus = '';
+  public formTitle: string = '';
+  public formStartTime: string = '';
+  public formEndTime: string = '';
+  public formStatus: string = '';
 
   public async ngOnInit(): Promise<void> {
     await this.loadOpenMats();
