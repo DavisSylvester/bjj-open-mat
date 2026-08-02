@@ -1,0 +1,128 @@
+@if (loading()) {
+  <div class="dashboard-loading">
+    <z-spinner class="size-8" />
+    <span>Loading…</span>
+  </div>
+} @else if (overview(); as stats) {
+  <div class="dashboard-container">
+    <h1 class="dashboard-title">Dashboard</h1>
+
+    <section class="kpi-section">
+      <h2 class="section-heading">Signups</h2>
+      <div class="kpi-grid" data-testid="kpi-cards">
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Today'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.signups.today }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Last 3 Days'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.signups.last3Days }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Last 7 Days'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.signups.last7Days }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Last 14 Days'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.signups.last14Days }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Month to Date'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.signups.monthToDate }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Year to Date'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.signups.yearToDate }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Total Users'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.totalUsers }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Total Gyms'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.totalGyms }}</span>
+          </z-card-content>
+        </z-card>
+
+        <z-card data-testid="kpi-card">
+          <z-card-header>
+            <z-card-title [zTitle]="'Total Open Mats'" />
+          </z-card-header>
+          <z-card-content>
+            <span class="kpi-value">{{ stats.totalOpenMats }}</span>
+          </z-card-content>
+        </z-card>
+      </div>
+    </section>
+
+    <section class="states-section">
+      <h2 class="section-heading">Open Mats by State (Top 10)</h2>
+      @if (openMats(); as mats) {
+        @if (mats.topStates.length > 0) {
+          <div class="table-wrapper">
+            <table z-table data-testid="top-states-table">
+              <thead z-table-header>
+                <tr z-table-row>
+                  <th z-table-head>State</th>
+                  <th z-table-head>Open Mats</th>
+                </tr>
+              </thead>
+              <tbody z-table-body>
+                @for (row of mats.topStates; track row.state) {
+                  <tr z-table-row data-testid="state-row">
+                    <td z-table-cell>{{ row.state }}</td>
+                    <td z-table-cell>{{ row.count }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="empty-state">No state data available.</p>
+        }
+      }
+    </section>
+  </div>
+} @else {
+  <div class="dashboard-empty">
+    <p>No data available.</p>
+  </div>
+}
