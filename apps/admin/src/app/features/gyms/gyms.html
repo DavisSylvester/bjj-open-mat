@@ -1,0 +1,344 @@
+@if (loading()) {
+  <div class="gyms-loading">
+    <z-spinner class="size-8" />
+    <span>Loading…</span>
+  </div>
+} @else {
+  <div class="gyms-container">
+    <div class="gyms-toolbar">
+      <div>
+        <h1 class="gyms-title">Gyms</h1>
+        @if (!loading()) {
+          <p class="gyms-count">{{ total() }} total gyms</p>
+        }
+      </div>
+      <button
+        z-button
+        zType="default"
+        data-testid="create-gym-btn"
+        (click)="openCreateDialog()"
+      >
+        Create Gym
+      </button>
+    </div>
+
+    @if (gyms().length === 0) {
+      <div class="gyms-empty-wrapper" data-testid="gyms-empty">
+        <z-empty
+          zIcon="lucideBuilding2"
+          zTitle="No gyms found"
+          zDescription="There are no gyms to display yet."
+        />
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table z-table data-testid="gyms-grid">
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head>Name</th>
+              <th z-table-head>City / State</th>
+              <th z-table-head>Verified</th>
+              <th z-table-head>Owner</th>
+              <th z-table-head>Actions</th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+            @for (gym of gyms(); track gym.id) {
+              <tr z-table-row data-testid="gym-row">
+                <td z-table-cell>{{ gym.name }}</td>
+                <td z-table-cell>{{ formatLocation(gym.city, gym.state) }}</td>
+                <td z-table-cell>
+                  @if (gym.isVerified) {
+                    <z-badge zType="default">Verified</z-badge>
+                  } @else {
+                    <z-badge zType="outline">Unverified</z-badge>
+                  }
+                </td>
+                <td z-table-cell>
+                  @if (gym.ownerId) {
+                    <span class="gym-owner-id">{{ gym.ownerId }}</span>
+                  } @else {
+                    <span class="no-value">—</span>
+                  }
+                </td>
+                <td z-table-cell>
+                  <div class="gym-actions">
+                    @if (!gym.isVerified) {
+                      <button
+                        z-button
+                        zType="outline"
+                        zSize="sm"
+                        data-testid="verify-gym-btn"
+                        (click)="onVerify(gym)"
+                      >
+                        Verify
+                      </button>
+                    }
+                    <button
+                      z-button
+                      zType="ghost"
+                      zSize="sm"
+                      data-testid="edit-gym-btn"
+                      (click)="openEditDialog(gym)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      z-button
+                      zType="ghost"
+                      zSize="sm"
+                      data-testid="add-owner-gym-btn"
+                      (click)="openAddOwnerDialog(gym)"
+                    >
+                      Add Owner
+                    </button>
+                    <button
+                      z-button
+                      zType="ghost"
+                      zSize="sm"
+                      data-testid="invite-gym-btn"
+                      (click)="openInviteDialog(gym)"
+                    >
+                      Send Invite
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+}
+
+<!-- Create Gym Dialog -->
+@if (dialogMode() === 'create') {
+  <div class="dialog-backdrop" (click)="closeDialog()">
+    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="create-gym-title" (click)="$event.stopPropagation()">
+      <h2 id="create-gym-title" class="dialog-title">Create Gym</h2>
+      <form class="dialog-form" (ngSubmit)="onSubmitCreate()">
+        <div z-field>
+          <label z-field-label for="create-name">Name <span class="required">*</span></label>
+          <div z-field-content>
+            <input
+              z-input
+              id="create-name"
+              type="text"
+              placeholder="Gym name"
+              [(ngModel)]="formName"
+              name="create-name"
+              required
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="create-address">Address <span class="required">*</span></label>
+          <div z-field-content>
+            <input
+              z-input
+              id="create-address"
+              type="text"
+              placeholder="123 Main St"
+              [(ngModel)]="formAddress"
+              name="create-address"
+              required
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="create-city">City</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="create-city"
+              type="text"
+              placeholder="City"
+              [(ngModel)]="formCity"
+              name="create-city"
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="create-state">State</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="create-state"
+              type="text"
+              placeholder="State"
+              [(ngModel)]="formState"
+              name="create-state"
+            />
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" z-button zType="outline" (click)="closeDialog()">Cancel</button>
+          <button
+            type="submit"
+            z-button
+            zType="default"
+            [zDisabled]="!isCreateFormValid() || submitting()"
+            [zLoading]="submitting()"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Edit Gym Dialog -->
+@if (dialogMode() === 'edit') {
+  <div class="dialog-backdrop" (click)="closeDialog()">
+    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="edit-gym-title" (click)="$event.stopPropagation()">
+      <h2 id="edit-gym-title" class="dialog-title">Edit Gym</h2>
+      <form class="dialog-form" (ngSubmit)="onSubmitEdit()">
+        <div z-field>
+          <label z-field-label for="edit-name">Name <span class="required">*</span></label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-name"
+              type="text"
+              placeholder="Gym name"
+              [(ngModel)]="formName"
+              name="edit-name"
+              required
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="edit-address">Address <span class="required">*</span></label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-address"
+              type="text"
+              placeholder="123 Main St"
+              [(ngModel)]="formAddress"
+              name="edit-address"
+              required
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="edit-city">City</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-city"
+              type="text"
+              placeholder="City"
+              [(ngModel)]="formCity"
+              name="edit-city"
+            />
+          </div>
+        </div>
+        <div z-field>
+          <label z-field-label for="edit-state">State</label>
+          <div z-field-content>
+            <input
+              z-input
+              id="edit-state"
+              type="text"
+              placeholder="State"
+              [(ngModel)]="formState"
+              name="edit-state"
+            />
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" z-button zType="outline" (click)="closeDialog()">Cancel</button>
+          <button
+            type="submit"
+            z-button
+            zType="default"
+            [zDisabled]="!isCreateFormValid() || submitting()"
+            [zLoading]="submitting()"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Add Owner Dialog -->
+@if (dialogMode() === 'add-owner') {
+  <div class="dialog-backdrop" (click)="closeDialog()">
+    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="add-owner-title" (click)="$event.stopPropagation()">
+      <h2 id="add-owner-title" class="dialog-title">Add Owner</h2>
+      <p class="dialog-subtitle">Assign an owner to <strong>{{ selectedGym()?.name }}</strong>.</p>
+      <form class="dialog-form" (ngSubmit)="onSubmitAddOwner()">
+        <div z-field>
+          <label z-field-label for="owner-user-id">User ID <span class="required">*</span></label>
+          <div z-field-content>
+            <input
+              z-input
+              id="owner-user-id"
+              type="text"
+              placeholder="User ID"
+              [(ngModel)]="formUserId"
+              name="owner-user-id"
+              required
+            />
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" z-button zType="outline" (click)="closeDialog()">Cancel</button>
+          <button
+            type="submit"
+            z-button
+            zType="default"
+            [zDisabled]="!formUserId.trim() || submitting()"
+            [zLoading]="submitting()"
+          >
+            Add Owner
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Send Invite Dialog -->
+@if (dialogMode() === 'invite') {
+  <div class="dialog-backdrop" (click)="closeDialog()">
+    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="invite-title" (click)="$event.stopPropagation()">
+      <h2 id="invite-title" class="dialog-title">Send Invite</h2>
+      <p class="dialog-subtitle">Invite members to <strong>{{ selectedGym()?.name }}</strong>.</p>
+      <form class="dialog-form" (ngSubmit)="onSubmitInvite()">
+        <div z-field>
+          <label z-field-label for="invite-emails">Emails <span class="required">*</span></label>
+          <p z-field-description>Enter comma-separated email addresses.</p>
+          <div z-field-content>
+            <input
+              z-input
+              id="invite-emails"
+              type="text"
+              placeholder="user@example.com, user2@example.com"
+              [(ngModel)]="formEmails"
+              name="invite-emails"
+              required
+            />
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" z-button zType="outline" (click)="closeDialog()">Cancel</button>
+          <button
+            type="submit"
+            z-button
+            zType="default"
+            [zDisabled]="!formEmails.trim() || submitting()"
+            [zLoading]="submitting()"
+          >
+            Send Invites
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
