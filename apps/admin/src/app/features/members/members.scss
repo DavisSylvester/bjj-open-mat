@@ -54,3 +54,29 @@
   justify-content: center;
   padding: 3rem 1.5rem;
 }
+
+.members-error {
+  color: var(--destructive);
+  font-size: 0.875rem;
+  margin: 0 0 0.75rem;
+}
+
+.member-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.row-action {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--foreground);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

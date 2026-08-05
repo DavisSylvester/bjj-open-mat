@@ -11,6 +11,7 @@ import type {
   Gym,
   GymMembership,
   ListEnvelope,
+  MembershipStatus,
   OpenMat,
   User,
 } from '../models';
@@ -117,6 +118,19 @@ export class AdminApiService {
         { params: { page: page.toString(), limit: limit.toString() } },
       ),
     ).then((res) => ({ data: res.data, meta: res.meta }));
+  }
+
+  public updateMembership(
+    gymId: string,
+    userId: string,
+    body: { status: MembershipStatus },
+  ): Promise<GymMembership> {
+    return firstValueFrom(
+      this.http.patch<DataEnvelope<GymMembership>>(
+        `${this.base}/api/v1/admin/memberships/${gymId}/${userId}`,
+        body,
+      ),
+    ).then((res) => res.data);
   }
 
   public updateOpenMat(id: string, body: Partial<OpenMat>): Promise<OpenMat> {

@@ -8,4 +8,4 @@ export type {
   AdminOpenMatsByState,
 } from './admin-stats';
 export type { DataEnvelope, ListEnvelope } from './envelopes';
-export type { GymMembership } from './gym-membership';
+export type { GymMembership, MembershipStatus } from './gym-membership';
