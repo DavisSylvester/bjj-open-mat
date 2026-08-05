@@ -52,13 +52,6 @@ describe("membership routes", () => {
     expect(calls).toContain("join:u1:g1");
   });
 
-  it("GET roster is public", async () => {
-    const { app, calls } = testApp(id);
-    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members"));
-    expect(res.status).toBe(200);
-    expect(calls).toContain("roster:g1:false:anon");
-  });
-
   it("GET roster without includeHidden calls the facade in public mode", async () => {
     const { app, calls } = testApp(id);
     const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members"));
