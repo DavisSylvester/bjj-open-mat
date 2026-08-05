@@ -332,4 +332,65 @@ void main() {
     expect(find.text('Jane Doe'), findsOneWidget);
     expect(find.byIcon(Icons.military_tech), findsNothing);
   });
+
+  testWidgets(
+      'manageRosterProvider error falls back to the public roster instead of the error state',
+      (tester) async {
+    // A demoted coach can carry a stale myMembershipsProvider for the
+    // session: the client derives canManage == true, but the server (which
+    // resolves the role fresh via roleLookup) returns 403. Before this fix
+    // the screen rendered "Couldn't load roster" with no members at all;
+    // now it must fall back to the public roster.
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(_NoUserNotifier.new),
+          currentUserIdProvider.overrideWith((ref) => 'u1'),
+          // canManage resolves true locally (coach gymRole on an active
+          // membership) so the screen requests manageRosterProvider first.
+          manageRosterProvider('g1').overrideWith(
+            (ref) async => Future<List<RosterMember>>.error(
+              Exception('403 forbidden'),
+            ),
+          ),
+          rosterProvider('g1').overrideWith(
+            (ref) async => [_coach, _member],
+          ),
+          gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
+          myMembershipsProvider.overrideWith(
+            (ref) async => const [
+              GymMembership(
+                id: 'm1',
+                gymId: 'g1',
+                userId: 'u1',
+                status: 'active',
+                verifiedMember: true,
+                gymRole: 'coach',
+                isHome: false,
+                visibleInRoster: true,
+                joinMethod: 'manual',
+                joinedAt: '2024-01-01T00:00:00.000Z',
+              ),
+            ],
+          ),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.glass(),
+          home: const RosterScreen(gymId: 'g1'),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+
+    // The public roster's members render — no "Couldn't load roster" error.
+    expect(find.text('Coach Rivera'), findsOneWidget);
+    expect(find.text('Jane Doe'), findsOneWidget);
+    expect(find.text("Couldn't load roster"), findsNothing);
+  });
 }

@@ -33,7 +33,7 @@ class GymMembership {
         id: json['id'] as String,
         gymId: json['gymId'] as String,
         userId: json['userId'] as String,
-        status: json['status'] as String,
+        status: json['status'] as String? ?? 'active',
         verifiedMember: json['verifiedMember'] as bool,
         gymRole: json['gymRole'] as String,
         isHome: json['isHome'] as bool,

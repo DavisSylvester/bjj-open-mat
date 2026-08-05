@@ -33,8 +33,9 @@ bool hasSettled<T>(AsyncValue<T> value) => value.hasValue || value.hasError;
 /// admin, or holds `owner`/`coach` role on an active or hidden membership.
 bool deriveCanManageGym(WidgetRef ref, {required String gymId, required String? ownerId}) {
   final myId = ref.watch(currentUserIdProvider);
+  if (myId == null) return false;
   final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-  final isOwner = ownerId == myId && myId != null;
+  final isOwner = ownerId == myId;
   final mine = ref.watch(myMembershipsProvider).maybeWhen(
         data: (rows) => rows.where((m) => m.gymId == gymId).firstOrNull,
         orElse: () => null,

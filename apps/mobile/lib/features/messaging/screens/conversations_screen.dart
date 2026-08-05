@@ -70,7 +70,12 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
       memberships = const <GymMembership>[];
     }
     if (!mounted) return;
-    final active = memberships.where((m) => m.status == 'active').toList();
+    // Hidden keeps privileges (mirrors `hasMemberPrivileges` in @bjj/contract):
+    // a hidden member can still open a DM, so they must count as having a
+    // gym to converse in. Only `inactive` (and `pending`) are excluded.
+    final active = memberships
+        .where((m) => m.status == 'active' || m.status == 'hidden')
+        .toList();
     if (active.isEmpty) {
       messenger.showSnackBar(
         const SnackBar(content: Text('Join a gym to start a conversation.')),

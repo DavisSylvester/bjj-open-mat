@@ -8,8 +8,20 @@ import '../../gyms/data/gym_permissions.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../../membership/widgets/join_gym_button.dart';
 import '../data/membership_repository.dart';
+import '../models/gym_membership.dart';
 import '../models/roster_member.dart';
 import '../widgets/promote_belt_sheet.dart';
+
+/// Requests the manager roster; if the server disagrees with the
+/// locally-derived `canManage` (e.g. a demoted coach with a stale
+/// `myMembershipsProvider`) and returns 403/errors, falls back to the public
+/// roster rather than rendering an error with no members. The error state is
+/// reserved for the case where the public roster ALSO fails.
+AsyncValue<List<RosterMember>> _manageRosterOrFallback(WidgetRef ref, String gymId) {
+  final manage = ref.watch(manageRosterProvider(gymId));
+  if (manage.hasError) return ref.watch(rosterProvider(gymId));
+  return manage;
+}
 
 class RosterScreen extends ConsumerWidget {
   final String gymId;
@@ -34,7 +46,12 @@ class RosterScreen extends ConsumerWidget {
     final myId = ref.watch(currentUserIdProvider);
     final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
     final gymAsync = ref.watch(gymByIdProvider(gymId));
-    final myMembershipsAsync = ref.watch(myMembershipsProvider);
+    // Anonymous callers must never fire the auth-only memberships request —
+    // it 401s on this app's highest-traffic public screen. myId == null
+    // already decides canManage below; this stops the request itself.
+    final myMembershipsAsync = myId == null
+        ? const AsyncValue<List<GymMembership>>.data(<GymMembership>[])
+        : ref.watch(myMembershipsProvider);
     final gymOwnerId = gymAsync.maybeWhen(data: (g) => g.ownerId, orElse: () => null);
 
     bool canManage = false;
@@ -59,7 +76,7 @@ class RosterScreen extends ConsumerWidget {
 
     final async = !canManageKnown
         ? const AsyncValue<List<RosterMember>>.loading()
-        : (canManage ? ref.watch(manageRosterProvider(gymId)) : ref.watch(rosterProvider(gymId)));
+        : (canManage ? _manageRosterOrFallback(ref, gymId) : ref.watch(rosterProvider(gymId)));
 
     return Scaffold(
       backgroundColor: t.bg,
