@@ -72,6 +72,15 @@ describe("membership routes", () => {
     expect(calls).toContain("roster:g1:true:u1");
   });
 
+  it("GET roster treats a truthy-looking but non-'true' includeHidden as public", async () => {
+    const { app, calls } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members?includeHidden=1", {
+      headers: { authorization: "Bearer t" },
+    }));
+    expect(res.status).toBe(200);
+    expect(calls).toContain("roster:g1:false:u1");
+  });
+
   it("PATCH member forwards a status change", async () => {
     const { app, updateMembershipBodies } = testApp(id);
     const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members/u2", {
