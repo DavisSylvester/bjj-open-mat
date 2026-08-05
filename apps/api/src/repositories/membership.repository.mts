@@ -1,5 +1,5 @@
 // apps/api/src/repositories/membership.repository.mts
-import type { Db } from "mongodb";
+import type { Db, Filter } from "mongodb";
 import type { GymMembership } from "@bjj/contract";
 import { COLLECTIONS } from "../db/collections.mts";
 import { BaseRepository, stripId } from "./base.repository.mts";
@@ -19,6 +19,7 @@ export class MembershipRepository extends BaseRepository {
     await col.createIndex({ gymId: 1, userId: 1 }, { unique: true });
     await col.createIndex({ userId: 1 });
     await col.createIndex({ gymId: 1 });
+    await col.createIndex({ gymId: 1, status: 1 });
   }
 
   public async upsertJoin(m: GymMembership): Promise<GymMembership> {
@@ -40,9 +41,13 @@ export class MembershipRepository extends BaseRepository {
   }
 
   public async listByGym(gymId: string, includeHidden: boolean): Promise<GymMembership[]> {
-    // `visibleInRoster: { $ne: false }` also keeps legacy docs missing the field.
-    const filter = includeHidden ? { gymId } : { gymId, visibleInRoster: { $ne: false } };
-    const docs = await this.collection<MembershipDoc>(COLLECTIONS.gymMemberships).find(filter).toArray();
+    // `$nin` / `$ne` also match documents where `status` is absent, which is how
+    // legacy rows written before the field existed stay visible. Same reason
+    // `visibleInRoster` uses `$ne: false` rather than `true`.
+    const filter = includeHidden
+      ? { gymId, status: { $ne: "pending" } }
+      : { gymId, status: { $nin: ["pending", "hidden", "inactive"] }, visibleInRoster: { $ne: false } };
+    const docs = await this.collection<MembershipDoc>(COLLECTIONS.gymMemberships).find(filter as Filter<MembershipDoc>).toArray();
     return docs.map((d) => stripId<GymMembership>(d) as GymMembership);
   }
 

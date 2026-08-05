@@ -8,6 +8,10 @@ const client = new MongoClient(process.env["MONGODB_URI"] ?? "mongodb://localhos
 const db = client.db("bjj_test_memberships");
 afterAll(async () => { await db.dropDatabase(); await client.close(); });
 
+function repo0(database: typeof db): MembershipRepository {
+  return new MembershipRepository(database);
+}
+
 function m(over: Partial<GymMembership>): GymMembership {
   return {
     id: over.id ?? "m1", gymId: over.gymId ?? "g1", userId: over.userId ?? "u1",
@@ -43,5 +47,36 @@ describe("MembershipRepository", () => {
     await repo.setHome("uH", "gB");
     const list = await repo.listByUser("uH");
     expect(list.filter((x) => x.isHome).map((x) => x.gymId)).toEqual(["gB"]);
+  });
+
+  it("listByGym excludes hidden and inactive from the public roster", async () => {
+    const repo = new MembershipRepository(db);
+    await repo.upsertJoin(m({ id: "sa", gymId: "gS", userId: "act", status: "active" }));
+    await repo.upsertJoin(m({ id: "sh", gymId: "gS", userId: "hid", status: "hidden" }));
+    await repo.upsertJoin(m({ id: "si", gymId: "gS", userId: "ina", status: "inactive" }));
+    await repo.upsertJoin(m({ id: "sp", gymId: "gS", userId: "pen", status: "pending" }));
+
+    const publicRoster = await repo.listByGym("gS", false);
+    expect(publicRoster.map((x) => x.userId).sort()).toEqual(["act"]);
+
+    const managerRoster = await repo.listByGym("gS", true);
+    expect(managerRoster.map((x) => x.userId).sort()).toEqual(["act", "hid", "ina"]);
+  });
+
+  it("listByGym keeps legacy docs that have no status field", async () => {
+    const col = db.collection("gymMemberships");
+    await col.insertOne({
+      _id: "legacy", id: "legacy", gymId: "gL", userId: "old",
+      verifiedMember: false, isHome: false, visibleInRoster: true, joinedAt: "t",
+    });
+    expect((await repo0(db).listByGym("gL", false)).map((x) => x.userId)).toEqual(["old"]);
+    expect((await repo0(db).listByGym("gL", true)).map((x) => x.userId)).toEqual(["old"]);
+  });
+
+  it("a self-hidden active member is still absent from the public roster", async () => {
+    const repo = new MembershipRepository(db);
+    await repo.upsertJoin(m({ id: "sv", gymId: "gV", userId: "shy", status: "active", visibleInRoster: false }));
+    expect(await repo.listByGym("gV", false)).toEqual([]);
+    expect((await repo.listByGym("gV", true)).map((x) => x.userId)).toEqual(["shy"]);
   });
 });
