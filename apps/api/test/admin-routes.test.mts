@@ -92,6 +92,8 @@ describe("admin routes (unauthenticated)", () => {
   });
 
   it("PATCH /api/v1/admin/memberships/:gymId/:userId sets status", async () => {
+    // Relies on seeded gym g-1 having no ownerId, so the owner guard rail
+    // (a gym's owner cannot be hidden/deactivated) does not fire for u-1.
     const res = await fetch(`${base}/api/v1/admin/memberships/g-1/u-1`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },

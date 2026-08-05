@@ -190,6 +190,16 @@ describe("MembershipFacade", () => {
       .rejects.toMatchObject({ code: 'forbidden' });
   });
 
+  it("setting the gym's owner back to 'active' is allowed (the guard rail only blocks non-active)", async () => {
+    const owner = 'owner1';
+    const { f } = facade({
+      gymOwnerId: owner,
+      memberships: [member('g1', owner, { gymRole: 'owner' }), member('g1', 'coach1', { gymRole: 'coach' })],
+    });
+    const updated = await f.updateMembership('coach1', 'g1', owner, { status: 'active' }, 'practitioner');
+    expect(updated.status).toBe('active');
+  });
+
   it('status changes leave verifiedMember and gymRole untouched', async () => {
     const owner = 'owner1';
     const { f } = facade({

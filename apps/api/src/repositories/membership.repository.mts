@@ -44,10 +44,10 @@ export class MembershipRepository extends BaseRepository {
     // `$nin` / `$ne` also match documents where `status` is absent, which is how
     // legacy rows written before the field existed stay visible. Same reason
     // `visibleInRoster` uses `$ne: false` rather than `true`.
-    const filter = includeHidden
+    const filter: Filter<MembershipDoc> = includeHidden
       ? { gymId, status: { $ne: "pending" } }
       : { gymId, status: { $nin: ["pending", "hidden", "inactive"] }, visibleInRoster: { $ne: false } };
-    const docs = await this.collection<MembershipDoc>(COLLECTIONS.gymMemberships).find(filter as Filter<MembershipDoc>).toArray();
+    const docs = await this.collection<MembershipDoc>(COLLECTIONS.gymMemberships).find(filter).toArray();
     return docs.map((d) => stripId<GymMembership>(d) as GymMembership);
   }
 

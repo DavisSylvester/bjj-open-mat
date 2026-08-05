@@ -25,6 +25,11 @@ test('members grid shows every status', async ({ page }) => {
   expect(statuses).toContain('inactive');
 });
 
+// The next two tests mutate shared seed state (mem-e2e-001 -> hidden,
+// mem-e2e-003 -> active) rather than working with isolated fixtures. They
+// rely on the suite running with `fullyParallel: false` and in file order —
+// reordering or parallelizing them would make each other's status
+// assertions flaky or wrong.
 test('hiding a member updates its status badge', async ({ page }) => {
   await page.goto('/members');
   // Pin the row by its fixture user id (mem-e2e-001 / user-e2e-001, seeded as
