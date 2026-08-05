@@ -6,7 +6,7 @@ import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
 import '../../gyms/data/gym_permissions.dart';
 import '../../gyms/data/gym_repository.dart';
-import '../../membership/widgets/join_gym_button.dart';
+import '../widgets/join_gym_button.dart';
 import '../data/membership_repository.dart';
 import '../models/gym_membership.dart';
 import '../models/roster_member.dart';
@@ -166,95 +166,97 @@ class _RosterCell extends ConsumerWidget {
     final roleLabel = _roleLabel(member.gymRole);
 
     return Opacity(
-      opacity: member.status == 'active' ? 1.0 : 0.55,
+      opacity: member.isOffRoster ? 0.55 : 1.0,
       child: InkWell(
-      onTap: member.hasProfile ? () => context.push('/user/${member.userId}') : null,
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              BeltIcon(rank: _displayRank, stripes: _displayStripes, size: 44),
-              if (member.verifiedBeltRank != null)
-                Positioned(
-                  top: -4,
-                  right: -4,
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: t.green,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '✓',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
+        onTap: member.hasProfile ? () => context.push('/user/${member.userId}') : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                BeltIcon(rank: _displayRank, stripes: _displayStripes, size: 44),
+                if (member.verifiedBeltRank != null)
+                  Positioned(
+                    top: -4,
+                    right: -4,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: t.green,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '✓',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            member.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: t.bodyStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
-          ),
-          if (roleLabel != null) ...[
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: t.primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: t.primary.withValues(alpha: 0.30)),
-              ),
-              child: Text(
-                roleLabel,
-                style: t.miniStyle.copyWith(
-                  fontSize: 9,
-                  color: t.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              ],
             ),
-          ],
-          if (member.isHidden || member.isInactive) ...[
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: (member.isInactive ? t.red : t.muted).withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: (member.isInactive ? t.red : t.muted).withValues(alpha: 0.35)),
-              ),
-              child: Text(
-                member.isInactive ? 'Inactive' : 'Hidden',
-                style: t.miniStyle.copyWith(
-                  fontSize: 9,
-                  color: member.isInactive ? t.red : t.muted,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-          // Manage affordance — only visible to owners/coaches.
-          if (canManage) ...[
             const SizedBox(height: 6),
-            _ManageRow(t: t, member: member, gymId: gymId),
+            Text(
+              member.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: t.bodyStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
+            if (roleLabel != null) ...[
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: t.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: t.primary.withValues(alpha: 0.30)),
+                ),
+                child: Text(
+                  roleLabel,
+                  style: t.miniStyle.copyWith(
+                    fontSize: 9,
+                    color: t.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+            if (member.isOffRoster) ...[
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: (member.isInactive ? t.red : t.muted).withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: (member.isInactive ? t.red : t.muted).withValues(alpha: 0.35)),
+                ),
+                child: Text(
+                  member.isInactive
+                      ? 'Inactive'
+                      : (member.isHidden ? 'Hidden' : 'Self-hidden'),
+                  style: t.miniStyle.copyWith(
+                    fontSize: 9,
+                    color: member.isInactive ? t.red : t.muted,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+            // Manage affordance — only visible to owners/coaches.
+            if (canManage) ...[
+              const SizedBox(height: 6),
+              _ManageRow(t: t, member: member, gymId: gymId),
+            ],
           ],
-        ],
-      ),
+        ),
       ),
     );
   }
@@ -382,7 +384,7 @@ class _ManageRowState extends ConsumerState<_ManageRow> {
             color: widget.t.primary,
             onTap: _makeCoach,
           ),
-        if (widget.member.status == 'active')
+        if (widget.member.status == 'active' && !widget.member.isSelfHidden)
           _SmallIconBtn(
             icon: Icons.visibility_off,
             tooltip: 'Hide from roster',

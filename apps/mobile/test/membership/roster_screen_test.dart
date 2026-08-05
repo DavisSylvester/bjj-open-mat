@@ -393,4 +393,65 @@ void main() {
     expect(find.text('Jane Doe'), findsOneWidget);
     expect(find.text("Couldn't load roster"), findsNothing);
   });
+
+  testWidgets(
+      'manager roster shows Self-hidden for an active member with visibleInRoster false, and Hidden for an owner-hidden member',
+      (tester) async {
+    // Distinguishes the two hide reasons the manager view must tell apart:
+    // status == 'hidden' (an owner hid them) reads "Hidden"; an otherwise
+    // active member with visibleInRoster == false (the self-service toggle)
+    // reads "Self-hidden". visibleInRoster only ever arrives on manager
+    // rosters (?includeHidden=true).
+    final selfHiddenMember = RosterMember(
+      userId: 'u3',
+      name: 'Self Hider',
+      gymRole: 'member',
+      verifiedMember: true,
+      hasProfile: true,
+      status: 'active',
+      visibleInRoster: false,
+    );
+    final ownerHiddenMember = RosterMember(
+      userId: 'u4',
+      name: 'Owner Hidden',
+      gymRole: 'member',
+      verifiedMember: true,
+      hasProfile: true,
+      status: 'hidden',
+      visibleInRoster: true,
+    );
+
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(_AdminUserNotifier.new),
+          currentUserIdProvider.overrideWith((ref) => 'admin-user'),
+          manageRosterProvider('g1').overrideWith(
+            (ref) async => [selfHiddenMember, ownerHiddenMember],
+          ),
+          gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
+          myMembershipsProvider.overrideWith((ref) async => const []),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.glass(),
+          home: const RosterScreen(gymId: 'g1'),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.text('Self-hidden'), findsOneWidget);
+    expect(find.text('Hidden'), findsOneWidget);
+
+    // Neither member is offered "Hide from roster": the self-hidden member is
+    // already off the roster (the action would be redundant), and the
+    // owner-hidden member already has status == 'hidden' so the existing
+    // `status == 'active'` guard excludes them too.
+    expect(find.byIcon(Icons.visibility_off), findsNothing);
+  });
 }
