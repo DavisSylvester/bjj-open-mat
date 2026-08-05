@@ -1,4 +1,5 @@
 // apps/api/src/facades/gym-authz.mts
+import { hasMemberPrivileges } from '@bjj/contract';
 import type { Gym, GymMembership, UserRole } from '@bjj/contract';
 import { AppError } from '../http/errors.mts';
 
@@ -19,7 +20,7 @@ export async function assertCanManageGym(
   if (gym.ownerId === callerId) return;
   const membership: GymMembership | null = await deps.memberships.find(gymId, callerId);
   const role: string = membership?.gymRole ?? 'member';
-  if (membership && membership.status === 'active' && (role === 'coach' || role === 'owner')) return;
+  if (membership && hasMemberPrivileges(membership.status) && (role === 'coach' || role === 'owner')) return;
   throw new AppError('forbidden', 'Requires gym owner or coach');
 }
 
@@ -34,6 +35,6 @@ export async function assertActiveMember(
   if (!gym) throw new AppError('not_found', `Gym ${gymId} not found`);
   if (gym.ownerId === userId) return;
   const membership: GymMembership | null = await deps.memberships.find(gymId, userId);
-  if (membership && membership.status === 'active') return;
+  if (membership && hasMemberPrivileges(membership.status)) return;
   throw new AppError('forbidden', 'Requires active gym membership');
 }
