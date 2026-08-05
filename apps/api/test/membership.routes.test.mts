@@ -15,7 +15,10 @@ function testApp(identity: AuthIdentity | null) {
   const membershipFacade = {
     join: async (u: string, g: string): Promise<GymMembership> => { calls.push(`join:${u}:${g}`); return { id: "m1", gymId: g, userId: u, status: "active", verifiedMember: false, gymRole: "member", isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t" }; },
     leave: async (): Promise<void> => { calls.push("leave"); },
-    roster: async (g: string): Promise<RosterMember[]> => { calls.push(`roster:${g}`); return []; },
+    roster: async (g: string, incl?: boolean, caller?: { userId: string }): Promise<RosterMember[]> => {
+      calls.push(`roster:${g}:${String(incl ?? false)}:${caller?.userId ?? "anon"}`);
+      return [];
+    },
     updateMyMembership: async (): Promise<GymMembership> => ({ id: "m1", gymId: "g1", userId: "u1", status: "active", verifiedMember: false, gymRole: "member", isHome: true, visibleInRoster: true, joinMethod: "self", joinedAt: "t" }),
     updateMembership: async (): Promise<GymMembership> => ({ id: "m1", gymId: "g1", userId: "u2", status: "active", verifiedMember: true, gymRole: "coach", isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t" }),
     promote: async (): Promise<BeltPromotion> => ({ id: "p1", userId: "u2", gymId: "g1", beltRank: "blue", beltStripes: 1, promotedByUserId: "u1", promotedAt: "t" }),
@@ -53,6 +56,46 @@ describe("membership routes", () => {
     const { app, calls } = testApp(id);
     const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members"));
     expect(res.status).toBe(200);
-    expect(calls).toContain("roster:g1");
+    expect(calls).toContain("roster:g1:false:anon");
+  });
+
+  it("GET roster without includeHidden calls the facade in public mode", async () => {
+    const { app, calls } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members"));
+    expect(res.status).toBe(200);
+    expect(calls).toContain("roster:g1:false:anon");
+  });
+
+  it("GET roster passes includeHidden and the caller through", async () => {
+    const { app, calls } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members?includeHidden=true", {
+      headers: { authorization: "Bearer t" },
+    }));
+    expect(res.status).toBe(200);
+    expect(calls).toContain("roster:g1:true:u1");
+  });
+
+  it("PATCH member forwards a status change", async () => {
+    const { app } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members/u2", {
+      method: "PATCH",
+      headers: { authorization: "Bearer t", "content-type": "application/json" },
+      body: JSON.stringify({ status: "hidden" }),
+    }));
+    expect(res.status).toBe(200);
+  });
+
+  it("PATCH member rejects pending as a status", async () => {
+    const { app } = testApp(id);
+    const res = await app.handle(new Request("http://localhost/api/v1/gyms/g1/members/u2", {
+      method: "PATCH",
+      headers: { authorization: "Bearer t", "content-type": "application/json" },
+      body: JSON.stringify({ status: "pending" }),
+    }));
+    // NOTE: the brief expected 422 for TypeBox validation failures, but this repo's
+    // global error handler (apps/api/src/http/error-handler.mts, out of scope for
+    // this task) maps every VALIDATION-coded error to 400. Asserting the app's
+    // actual, already-established convention rather than the brief's assumption.
+    expect(res.status).toBe(400);
   });
 });

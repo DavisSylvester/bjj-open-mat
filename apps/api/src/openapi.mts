@@ -245,7 +245,18 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         },
         get: {
           summary: "List gym roster",
-          parameters: gymIdParam,
+          description:
+            "Public callers receive active, roster-visible members only. Owners, coaches, and admins may pass includeHidden=true to also receive hidden and inactive members, each carrying its status.",
+          parameters: [
+            ...gymIdParam,
+            {
+              name: "includeHidden",
+              in: "query",
+              required: false,
+              schema: { type: "boolean" },
+              description: "Owner/coach/admin only. 403 for anyone else.",
+            },
+          ],
           responses: ok(listOf("RosterMember")),
         },
       },
@@ -264,7 +275,7 @@ export function buildOpenApiDocument(): Record<string, unknown> {
       },
       "/api/v1/gyms/{id}/members/{userId}": {
         patch: {
-          summary: "Update member (admin/owner — verify, change role)",
+          summary: "Update member (admin/owner — verify, change role, set status)",
           parameters: memberUserIdParam,
           requestBody: { required: true, content: { "application/json": { schema: ref("UpdateMembershipRequest") } } },
           responses: ok(dataOf("GymMembership")),

@@ -34,8 +34,13 @@ export function membershipRoutes(container: Container) {
     )
     .get(
       "/:id/members",
-      async ({ params }) => {
-        const roster = await membershipFacade.roster(params.id);
+      async ({ identity, params, query }) => {
+        // Explicit opt-in rather than inferring from the caller's role: the same
+        // roster feeds the mobile DM picker, class assignment, and permission
+        // checks, and those must not silently widen for managers.
+        const includeHidden = query["includeHidden"] === "true";
+        const caller = identity ? { userId: identity.userId, role: identity.role } : undefined;
+        const roster = await membershipFacade.roster(params.id, includeHidden, caller);
         return list(roster, { page: 1, limit: roster.length, total: roster.length });
       },
     )
