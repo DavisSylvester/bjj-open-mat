@@ -21,6 +21,10 @@ export const RosterMember = t.Object(
     status: MembershipStatus,
     // False when the user doc could not be resolved — clients must not deep-link.
     hasProfile: t.Boolean(),
+    // Populated only on manager rosters (includeHidden = true), so a manager can
+    // tell an owner/admin-hidden member (status) from a self-hidden one
+    // (visibleInRoster). Absent — not `false` — on the public roster.
+    visibleInRoster: t.Optional(t.Boolean()),
   },
   { $id: "RosterMember" },
 );

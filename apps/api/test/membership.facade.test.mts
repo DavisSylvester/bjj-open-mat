@@ -50,6 +50,8 @@ function facade(seed?: { gymOwnerId?: string; memberships?: GymMembership[]; use
   const gymRepo = { findById: async (id: string): Promise<Gym | null> => gyms.get(id) ?? null };
   const userRepo = {
     findById: async (id: string): Promise<User | null> => users.get(id) ?? null,
+    findByIds: async (ids: string[]): Promise<User[]> =>
+      ids.map((id) => users.get(id)).filter((u): u is User => u !== undefined),
     update: async (id: string, patch: Partial<User>): Promise<User | null> => {
       const cur = users.get(id); if (!cur) return null; const next = { ...cur, ...patch }; users.set(id, next); return next;
     },
@@ -154,6 +156,26 @@ describe("MembershipFacade", () => {
     const roster = await f.roster('g1', true, { userId: owner, role: 'gym_owner' });
     expect(roster.map((r) => r.userId)).toEqual(['act', 'hid', 'ina']);
     expect(roster.map((r) => r.status)).toEqual(['active', 'hidden', 'inactive']);
+  });
+
+  it('visibleInRoster is surfaced only on manager rosters, never on the public roster', async () => {
+    const owner = 'owner1';
+    const { f } = facade({
+      gymOwnerId: owner,
+      memberships: [
+        member('g1', 'act', { visibleInRoster: true }),
+        member('g1', 'self-hid', { visibleInRoster: false, status: 'hidden' }),
+      ],
+    });
+    const managerRoster = await f.roster('g1', true, { userId: owner, role: 'gym_owner' });
+    const selfHid = managerRoster.find((r) => r.userId === 'self-hid');
+    expect(selfHid?.visibleInRoster).toBe(false);
+    const act = managerRoster.find((r) => r.userId === 'act');
+    expect(act?.visibleInRoster).toBe(true);
+
+    const publicRoster = await f.roster('g1');
+    expect(publicRoster.every((r) => r.visibleInRoster === undefined)).toBe(true);
+    expect(publicRoster.every((r) => !('visibleInRoster' in r))).toBe(true);
   });
 
   it('includeHidden requires a caller who can manage the gym', async () => {

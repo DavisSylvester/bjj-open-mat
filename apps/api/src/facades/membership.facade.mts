@@ -3,6 +3,7 @@ import type {
   BeltPromotion,
   Gym,
   GymMembership,
+  MembershipStatus,
   PromoteBeltRequest,
   RosterMember,
   UpdateMembershipRequest,
@@ -25,7 +26,7 @@ type MembershipRepo = Pick<
 >;
 type PromotionRepo = Pick<PromotionRepository, 'insert' | 'listByUser'>;
 type GymRepo = Pick<GymRepository, 'findById'>;
-type UserRepo = Pick<UserRepository, 'findById' | 'update'>;
+type UserRepo = Pick<UserRepository, 'findById' | 'findByIds' | 'update'>;
 
 export interface RosterCaller {
   readonly userId: string;
@@ -33,8 +34,16 @@ export interface RosterCaller {
 }
 
 /// Manager rosters sort privileged members first, then hidden, then inactive,
-/// so a manager scanning the list reads the exceptions at the bottom.
-const STATUS_ORDER: Record<string, number> = { active: 0, hidden: 1, inactive: 2 };
+/// so a manager scanning the list reads the exceptions at the bottom. `pending`
+/// never reaches this sort — the repository filters it out of both the public
+/// and manager `listByGym` queries — but it still needs a value to satisfy
+/// `Record<MembershipStatus, number>`.
+const STATUS_ORDER: Record<MembershipStatus, number> = {
+  active: 0,
+  hidden: 1,
+  inactive: 2,
+  pending: 3,
+};
 
 export class MembershipFacade {
 
@@ -94,27 +103,33 @@ export class MembershipFacade {
       await this.assertCanManage(caller.userId, gymId, caller.role);
     }
     const rows: GymMembership[] = await this.memberships.listByGym(gymId, includeHidden);
-    const built: RosterMember[] = await Promise.all(
-      rows.map(async (m): Promise<RosterMember> => {
-        const u: User | null = await this.users.findById(m.userId);
-        return {
-          userId: m.userId,
-          name: u?.displayName ?? 'Member',
-          beltRank: u?.beltRank,
-          beltStripes: u?.beltStripes,
-          verifiedBeltRank: u?.verifiedBeltRank,
-          verifiedBeltStripes: u?.verifiedBeltStripes,
-          avatarUrl: u?.avatarUrl,
-          gymRole: m.gymRole ?? 'member',
-          verifiedMember: m.verifiedMember,
-          status: m.status ?? 'active',
-          hasProfile: u !== null,
-        };
-      }),
-    );
-    return built.sort(
-      (a, b) => (STATUS_ORDER[a.status] ?? 0) - (STATUS_ORDER[b.status] ?? 0),
-    );
+    const users: User[] = await this.users.findByIds(rows.map((m) => m.userId));
+    const usersById: Map<string, User> = new Map(users.map((u) => [u.id, u]));
+    const built: RosterMember[] = rows.map((m): RosterMember => {
+      const u: User | undefined = usersById.get(m.userId);
+      return {
+        userId: m.userId,
+        name: u?.displayName ?? 'Member',
+        beltRank: u?.beltRank,
+        beltStripes: u?.beltStripes,
+        verifiedBeltRank: u?.verifiedBeltRank,
+        verifiedBeltStripes: u?.verifiedBeltStripes,
+        avatarUrl: u?.avatarUrl,
+        gymRole: m.gymRole ?? 'member',
+        verifiedMember: m.verifiedMember,
+        status: m.status ?? 'active',
+        hasProfile: u !== undefined,
+        // Only populated on manager rosters: the public payload must stay
+        // byte-identical to the pre-existing shape, so this key is omitted
+        // entirely (not `true`) when includeHidden is false.
+        ...(includeHidden ? { visibleInRoster: m.visibleInRoster } : {}),
+      };
+    });
+    return built.sort((a, b) => {
+      const statusDiff: number = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+      if (statusDiff !== 0) return statusDiff;
+      return a.name.localeCompare(b.name);
+    });
   }
 
   public async updateMyMembership(
