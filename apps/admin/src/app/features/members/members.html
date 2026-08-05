@@ -68,7 +68,7 @@
                 }
               </td>
               <td z-table-cell>
-                @if (busyId() === member.id) {
+                @if (isBusy(member.id)) {
                   <z-spinner class="size-4" />
                 } @else {
                   <div class="member-actions">
