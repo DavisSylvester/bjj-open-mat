@@ -90,6 +90,7 @@ export class MembershipFacade {
           avatarUrl: u?.avatarUrl,
           gymRole: m.gymRole ?? 'member',
           verifiedMember: m.verifiedMember,
+          status: m.status ?? 'active',
           hasProfile: u !== null,
         };
       }),
