@@ -27,6 +27,15 @@ type PromotionRepo = Pick<PromotionRepository, 'insert' | 'listByUser'>;
 type GymRepo = Pick<GymRepository, 'findById'>;
 type UserRepo = Pick<UserRepository, 'findById' | 'update'>;
 
+export interface RosterCaller {
+  readonly userId: string;
+  readonly role: UserRole;
+}
+
+/// Manager rosters sort privileged members first, then hidden, then inactive,
+/// so a manager scanning the list reads the exceptions at the bottom.
+const STATUS_ORDER: Record<string, number> = { active: 0, hidden: 1, inactive: 2 };
+
 export class MembershipFacade {
 
   public constructor(
@@ -75,8 +84,16 @@ export class MembershipFacade {
     await this.memberships.remove(gymId, userId);
   }
 
-  public async roster(gymId: string): Promise<RosterMember[]> {
-    const rows: GymMembership[] = await this.memberships.listByGym(gymId, false);
+  public async roster(
+    gymId: string,
+    includeHidden: boolean = false,
+    caller?: RosterCaller,
+  ): Promise<RosterMember[]> {
+    if (includeHidden) {
+      if (!caller) throw new AppError('unauthorized', 'Authentication required');
+      await this.assertCanManage(caller.userId, gymId, caller.role);
+    }
+    const rows: GymMembership[] = await this.memberships.listByGym(gymId, includeHidden);
     const built: RosterMember[] = await Promise.all(
       rows.map(async (m): Promise<RosterMember> => {
         const u: User | null = await this.users.findById(m.userId);
@@ -95,7 +112,9 @@ export class MembershipFacade {
         };
       }),
     );
-    return built;
+    return built.sort(
+      (a, b) => (STATUS_ORDER[a.status] ?? 0) - (STATUS_ORDER[b.status] ?? 0),
+    );
   }
 
   public async updateMyMembership(
@@ -128,6 +147,21 @@ export class MembershipFacade {
     const patch: Partial<GymMembership> = {};
     if (req.verifiedMember !== undefined) patch.verifiedMember = req.verifiedMember;
     if (req.gymRole !== undefined) patch.gymRole = req.gymRole;
+    if (req.status !== undefined) {
+      // Mirrors the self-promotion block: a manager must not be able to hide or
+      // deactivate themselves, and the gym's owner must stay visible in their
+      // own gym (transfer ownership first).
+      if (callerId === targetUserId) {
+        throw new AppError('forbidden', 'Cannot change your own membership status');
+      }
+      const gym: Gym | null = await this.gyms.findById(gymId);
+      if (gym?.ownerId === targetUserId && req.status !== 'active') {
+        throw new AppError('forbidden', "Cannot hide or deactivate the gym's owner");
+      }
+      patch.status = req.status;
+      patch.statusUpdatedAt = new Date().toISOString();
+      patch.statusUpdatedBy = callerId;
+    }
     return (await this.memberships.update(gymId, targetUserId, patch)) ?? target;
   }
 
