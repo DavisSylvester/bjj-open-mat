@@ -1,11 +1,13 @@
 import { type Static, Type as t } from "@sinclair/typebox";
 import { BeltRank } from "../../enums/belt-rank.mts";
 import { GymRole } from "../../enums/gym-role.mts";
+import { ManageableMembershipStatus } from "../../enums/membership-status.mts";
 
 export const UpdateMembershipRequest = t.Object(
   {
     verifiedMember: t.Optional(t.Boolean()),
     gymRole: t.Optional(GymRole),
+    status: t.Optional(ManageableMembershipStatus),
   },
   { $id: "UpdateMembershipRequest" },
 );
