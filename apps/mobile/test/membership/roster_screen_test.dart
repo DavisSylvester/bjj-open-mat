@@ -7,6 +7,7 @@ import 'package:bjj_open_mat/core/design/app_theme.dart';
 import 'package:bjj_open_mat/features/gyms/data/gym_repository.dart';
 import 'package:bjj_open_mat/features/gyms/models/gym.dart';
 import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
+import 'package:bjj_open_mat/features/membership/models/gym_membership.dart';
 import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
 import 'package:bjj_open_mat/features/membership/screens/roster_screen.dart';
 import 'package:bjj_open_mat/features/membership/widgets/join_gym_button.dart';
@@ -82,6 +83,9 @@ Future<void> _pump(WidgetTester tester) async {
           (ref) async => [_coach, _member],
         ),
         gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
+        // Unauthenticated viewer: no self-membership, so canManage stays
+        // false and the screen watches rosterProvider (not manageRoster).
+        myMembershipsProvider.overrideWith((ref) async => const []),
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
@@ -146,9 +150,12 @@ void main() {
         overrides: [
           authStateProvider.overrideWith(_AdminUserNotifier.new),
           currentUserIdProvider.overrideWith((ref) => 'admin-user'),
-          rosterProvider('g1')
+          // canManage is true via the isAdmin arm, so the screen watches
+          // manageRosterProvider rather than rosterProvider.
+          manageRosterProvider('g1')
               .overrideWith((ref) async => [adminMember, _member]),
           gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
+          myMembershipsProvider.overrideWith((ref) async => const []),
         ],
         child: MaterialApp(
           theme: AppTheme.glass(),
@@ -181,6 +188,25 @@ void main() {
             (ref) async => [_coach, _member],
           ),
           gymByIdProvider('g1').overrideWith((ref) async => _stubGym),
+          // Own membership is a plain 'member' on an active row — not
+          // coach/owner — so canManage stays false and the screen keeps
+          // watching rosterProvider (matching the override above).
+          myMembershipsProvider.overrideWith(
+            (ref) async => const [
+              GymMembership(
+                id: 'm2',
+                gymId: 'g1',
+                userId: 'u2',
+                status: 'active',
+                verifiedMember: false,
+                gymRole: 'member',
+                isHome: false,
+                visibleInRoster: true,
+                joinMethod: 'manual',
+                joinedAt: '2024-01-01T00:00:00.000Z',
+              ),
+            ],
+          ),
         ],
         child: MaterialApp(
           theme: AppTheme.glass(),
@@ -232,10 +258,22 @@ void main() {
         overrides: [
           authStateProvider.overrideWith(_NoUserNotifier.new),
           currentUserIdProvider.overrideWith((ref) => ownerUserId),
+          // canManage is true via the isOwner arm (gym.ownerId == myId), so
+          // the screen watches manageRosterProvider rather than rosterProvider
+          // once gymByIdProvider resolves. Both are overridden: gymByIdProvider
+          // is async, so canManage is transiently false on the very first
+          // synchronous build (before it resolves), and the screen falls back
+          // to rosterProvider for that one frame.
+          manageRosterProvider('g1').overrideWith(
+            (ref) async => [ownerMember, _member],
+          ),
           rosterProvider('g1').overrideWith(
             (ref) async => [ownerMember, _member],
           ),
           gymByIdProvider('g1').overrideWith((ref) async => gym),
+          // No membership row needed — the isOwner arm grants canManage
+          // without myMembershipsProvider containing an entry for this gym.
+          myMembershipsProvider.overrideWith((ref) async => const []),
         ],
         child: MaterialApp(
           theme: AppTheme.glass(),

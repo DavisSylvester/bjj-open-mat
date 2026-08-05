@@ -4,6 +4,7 @@ import 'package:bjj_open_mat/features/forum/data/forum_repository.dart';
 import 'package:bjj_open_mat/features/gyms/data/gym_repository.dart';
 import 'package:bjj_open_mat/features/gyms/models/gym.dart';
 import 'package:bjj_open_mat/features/membership/data/membership_repository.dart';
+import 'package:bjj_open_mat/features/membership/models/gym_membership.dart';
 import 'package:bjj_open_mat/features/membership/models/roster_member.dart';
 import 'package:bjj_open_mat/features/membership/widgets/join_gym_button.dart';
 import 'package:bjj_open_mat/features/mygym/data/home_gym_provider.dart';
@@ -23,6 +24,32 @@ RosterMember _member(String userId, String gymRole) => RosterMember(
       hasProfile: true,
     );
 
+/// Builds the caller's own [GymMembership] row for [currentUserId] from the
+/// stubbed roster, or none if they aren't on it — mirrors what
+/// myMembershipsProvider (not visibility-filtered) would return.
+List<GymMembership> _myMemberships(String? currentUserId, List<RosterMember> roster) {
+  if (currentUserId == null) return const [];
+  for (final m in roster) {
+    if (m.userId == currentUserId) {
+      return [
+        GymMembership(
+          id: 'm-$currentUserId',
+          gymId: 'g1',
+          userId: currentUserId,
+          status: 'active',
+          verifiedMember: m.verifiedMember,
+          gymRole: m.gymRole,
+          isHome: true,
+          visibleInRoster: true,
+          joinMethod: 'manual',
+          joinedAt: '2024-01-01T00:00:00.000Z',
+        ),
+      ];
+    }
+  }
+  return const [];
+}
+
 Future<void> _pump(
   WidgetTester tester, {
   required String? homeGymId,
@@ -38,6 +65,10 @@ Future<void> _pump(
         scheduleProvider.overrideWith((ref, a) async => []),
         forumQuestionsProvider.overrideWith((ref, a) async => []),
         currentUserIdProvider.overrideWithValue(currentUserId),
+        // canManage/canAccessForum now derive the caller's own membership from
+        // myMembershipsProvider rather than the roster; build it from the same
+        // stubbed roster so each test's intent (member/coach/stranger) holds.
+        myMembershipsProvider.overrideWith((ref) async => _myMemberships(currentUserId, roster)),
       ],
       child: MaterialApp(theme: AppTheme.glass(), home: const MyGymScreen()),
     ),
@@ -155,6 +186,7 @@ void main() {
           scheduleProvider.overrideWith((ref, a) async => []),
           forumQuestionsProvider.overrideWith((ref, a) async => []),
           currentUserIdProvider.overrideWithValue('stranger'),
+          myMembershipsProvider.overrideWith((ref) async => const []),
         ],
         child: MaterialApp.router(theme: AppTheme.glass(), routerConfig: router),
       ),

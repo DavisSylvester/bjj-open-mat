@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
+import '../../gyms/data/gym_permissions.dart';
 import '../../gyms/data/gym_repository.dart';
 import '../data/membership_repository.dart';
 import '../models/roster_member.dart';
-import '../widgets/join_gym_button.dart';
 import '../widgets/promote_belt_sheet.dart';
 
 class RosterScreen extends ConsumerWidget {
@@ -17,8 +16,17 @@ class RosterScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    final async = ref.watch(rosterProvider(gymId));
-    final myId = ref.watch(currentUserIdProvider);
+    final gymOwnerId = ref
+        .watch(gymByIdProvider(gymId))
+        .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+
+    // canManage must be derived WITHOUT the roster: a manager needs it to
+    // decide which roster to request in the first place. Own membership comes
+    // from myMembershipsProvider, which is not visibility-filtered.
+    final canManage = deriveCanManageGym(ref, gymId: gymId, ownerId: gymOwnerId);
+    final async = canManage
+        ? ref.watch(manageRosterProvider(gymId))
+        : ref.watch(rosterProvider(gymId));
 
     return Scaffold(
       backgroundColor: t.bg,
@@ -41,38 +49,18 @@ class RosterScreen extends ConsumerWidget {
               Text("Couldn't load roster", style: t.bodyStyle.copyWith(color: t.muted)),
               const SizedBox(height: 12),
               TextButton(
-                onPressed: () => ref.invalidate(rosterProvider(gymId)),
+                onPressed: () {
+                  ref.invalidate(rosterProvider(gymId));
+                  ref.invalidate(manageRosterProvider(gymId));
+                },
                 child: const Text('Retry'),
               ),
             ],
           ),
         ),
-        data: (members) {
-          // Compute canManage: true when the current user is a system admin,
-          // when their own RosterMember entry has gymRole 'owner' or 'coach',
-          // or when they are the gym's owner via gym.ownerId (no membership row
-          // required — covers gym owners who never created a membership record).
-          final myMember = myId != null
-              ? members.where((m) => m.userId == myId).firstOrNull
-              : null;
-          final myGymRole = myMember?.gymRole;
-          final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
-          final gymOwnerId = ref
-              .watch(gymByIdProvider(gymId))
-              .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
-          final isOwner = gymOwnerId != null && gymOwnerId == myId;
-          final canManage =
-              isAdmin || isOwner || myGymRole == 'owner' || myGymRole == 'coach';
-
-          return members.isEmpty
-              ? Center(child: Text('No members yet.', style: t.bodyStyle.copyWith(color: t.muted)))
-              : _RosterGrid(
-                  t: t,
-                  members: members,
-                  gymId: gymId,
-                  canManage: canManage,
-                );
-        },
+        data: (members) => members.isEmpty
+            ? Center(child: Text('No members yet.', style: t.bodyStyle.copyWith(color: t.muted)))
+            : _RosterGrid(t: t, members: members, gymId: gymId, canManage: canManage),
       ),
     );
   }
@@ -127,7 +115,9 @@ class _RosterCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final roleLabel = _roleLabel(member.gymRole);
 
-    return InkWell(
+    return Opacity(
+      opacity: member.status == 'active' ? 1.0 : 0.55,
+      child: InkWell(
       onTap: member.hasProfile ? () => context.push('/user/${member.userId}') : null,
       borderRadius: BorderRadius.circular(12),
       child: Column(
@@ -189,12 +179,32 @@ class _RosterCell extends ConsumerWidget {
               ),
             ),
           ],
+          if (member.isHidden || member.isInactive) ...[
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: (member.isInactive ? t.red : t.muted).withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: (member.isInactive ? t.red : t.muted).withValues(alpha: 0.35)),
+              ),
+              child: Text(
+                member.isInactive ? 'Inactive' : 'Hidden',
+                style: t.miniStyle.copyWith(
+                  fontSize: 9,
+                  color: member.isInactive ? t.red : t.muted,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
           // Manage affordance — only visible to owners/coaches.
           if (canManage) ...[
             const SizedBox(height: 6),
             _ManageRow(t: t, member: member, gymId: gymId),
           ],
         ],
+      ),
       ),
     );
   }
@@ -237,6 +247,7 @@ class _ManageRowState extends ConsumerState<_ManageRow> {
     try {
       await action();
       ref.invalidate(rosterProvider(widget.gymId));
+      ref.invalidate(manageRosterProvider(widget.gymId));
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -261,6 +272,14 @@ class _ManageRowState extends ConsumerState<_ManageRow> {
               widget.gymId,
               widget.member.userId,
               gymRole: 'coach',
+            );
+      });
+
+  Future<void> _setStatus(String status) => _runAction(() async {
+        await ref.read(membershipRepositoryProvider).manageMember(
+              widget.gymId,
+              widget.member.userId,
+              status: status,
             );
       });
 
@@ -312,6 +331,27 @@ class _ManageRowState extends ConsumerState<_ManageRow> {
             tooltip: 'Make coach',
             color: widget.t.primary,
             onTap: _makeCoach,
+          ),
+        if (widget.member.status == 'active')
+          _SmallIconBtn(
+            icon: Icons.visibility_off,
+            tooltip: 'Hide from roster',
+            color: widget.t.muted,
+            onTap: () => _setStatus('hidden'),
+          ),
+        if (widget.member.status != 'inactive')
+          _SmallIconBtn(
+            icon: Icons.person_off,
+            tooltip: 'Mark inactive',
+            color: widget.t.red,
+            onTap: () => _setStatus('inactive'),
+          ),
+        if (widget.member.isHidden || widget.member.isInactive)
+          _SmallIconBtn(
+            icon: Icons.restart_alt,
+            tooltip: 'Reactivate',
+            color: widget.t.green,
+            onTap: () => _setStatus('active'),
           ),
       ],
     );
