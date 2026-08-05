@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/belt_icon.dart';
 import '../../gyms/data/gym_permissions.dart';
 import '../../gyms/data/gym_repository.dart';
+import '../../membership/widgets/join_gym_button.dart';
 import '../data/membership_repository.dart';
 import '../models/roster_member.dart';
 import '../widgets/promote_belt_sheet.dart';
@@ -16,17 +18,48 @@ class RosterScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Theme.of(context).extension<AppTokens>()!;
-    final gymOwnerId = ref
-        .watch(gymByIdProvider(gymId))
-        .maybeWhen(data: (g) => g.ownerId, orElse: () => null);
 
     // canManage must be derived WITHOUT the roster: a manager needs it to
     // decide which roster to request in the first place. Own membership comes
     // from myMembershipsProvider, which is not visibility-filtered.
-    final canManage = deriveCanManageGym(ref, gymId: gymId, ownerId: gymOwnerId);
-    final async = canManage
-        ? ref.watch(manageRosterProvider(gymId))
-        : ref.watch(rosterProvider(gymId));
+    //
+    // gymByIdProvider and myMembershipsProvider are both async, so on a cold
+    // load they're still loading on the first frame. Picking a provider
+    // before they settle would make a genuine owner/coach flash the public
+    // roster first (no hidden/inactive members, no manage row) and fire a
+    // second request once canManage flips true. Anonymous visitors must
+    // never wait on myMembershipsProvider — it's auth-only (401 for a
+    // logged-out caller) and the public roster has to stay reachable with no
+    // delay for exactly that audience.
+    final myId = ref.watch(currentUserIdProvider);
+    final isAdmin = ref.watch(authStateProvider).user?.role == 'admin';
+    final gymAsync = ref.watch(gymByIdProvider(gymId));
+    final myMembershipsAsync = ref.watch(myMembershipsProvider);
+    final gymOwnerId = gymAsync.maybeWhen(data: (g) => g.ownerId, orElse: () => null);
+
+    bool canManage = false;
+    bool canManageKnown;
+    if (myId == null) {
+      // Definitively not a manager — never wait on anything.
+      canManageKnown = true;
+    } else if (isAdmin) {
+      // authStateProvider is a synchronous Notifier, so this is known on the
+      // very first frame with no waiting.
+      canManage = true;
+      canManageKnown = true;
+    } else if (hasSettled(gymAsync) && hasSettled(myMembershipsAsync)) {
+      // Both inputs are in (data or error — an error is treated as "no
+      // manage rights" so a failed lookup falls through to the public
+      // roster instead of leaving the screen stuck on a spinner).
+      canManage = deriveCanManageGym(ref, gymId: gymId, ownerId: gymOwnerId);
+      canManageKnown = true;
+    } else {
+      canManageKnown = false;
+    }
+
+    final async = !canManageKnown
+        ? const AsyncValue<List<RosterMember>>.loading()
+        : (canManage ? ref.watch(manageRosterProvider(gymId)) : ref.watch(rosterProvider(gymId)));
 
     return Scaffold(
       backgroundColor: t.bg,

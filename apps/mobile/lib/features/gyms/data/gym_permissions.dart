@@ -21,6 +21,14 @@ import '../../membership/widgets/join_gym_button.dart';
 /// `hasMemberPrivileges` in @bjj/contract.
 bool _hasPrivileges(String status) => status == 'active' || status == 'hidden';
 
+/// True once [value] has resolved to data or an error — never true while it
+/// is still on its first, valueless load. Callers that must choose between a
+/// public and a permission-gated code path (e.g. which roster endpoint to
+/// request) need to know their inputs have settled before deciding, rather
+/// than deriving from a still-loading [AsyncValue] and silently treating
+/// "not yet known" the same as "no rights".
+bool hasSettled<T>(AsyncValue<T> value) => value.hasValue || value.hasError;
+
 /// True when the current user can manage [gymId] — i.e. the gym's owner, an
 /// admin, or holds `owner`/`coach` role on an active or hidden membership.
 bool deriveCanManageGym(WidgetRef ref, {required String gymId, required String? ownerId}) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -258,16 +260,14 @@ void main() {
         overrides: [
           authStateProvider.overrideWith(_NoUserNotifier.new),
           currentUserIdProvider.overrideWith((ref) => ownerUserId),
-          // canManage is true via the isOwner arm (gym.ownerId == myId), so
-          // the screen watches manageRosterProvider rather than rosterProvider
-          // once gymByIdProvider resolves. Both are overridden: gymByIdProvider
-          // is async, so canManage is transiently false on the very first
-          // synchronous build (before it resolves), and the screen falls back
-          // to rosterProvider for that one frame.
+          // canManage is true via the isOwner arm (gym.ownerId == myId). The
+          // screen now waits for gymByIdProvider and myMembershipsProvider to
+          // settle before picking a roster provider at all, so it goes
+          // straight to manageRosterProvider and never touches
+          // rosterProvider — deliberately NOT overridden here; if the screen
+          // regressed to watching it transiently, this test would hit the
+          // real (unstubbed) provider and fail.
           manageRosterProvider('g1').overrideWith(
-            (ref) async => [ownerMember, _member],
-          ),
-          rosterProvider('g1').overrideWith(
             (ref) async => [ownerMember, _member],
           ),
           gymByIdProvider('g1').overrideWith((ref) async => gym),
@@ -288,5 +288,48 @@ void main() {
     // appear because the user owns the gym via ownerId even though their
     // RosterMember.gymRole is only 'member'.
     expect(find.byIcon(Icons.military_tech), findsWidgets);
+  });
+
+  testWidgets(
+      'logged-out viewer gets the public roster immediately, without waiting on myMembershipsProvider',
+      (tester) async {
+    // Regression guard: myMembershipsProvider is auth-only (401 for a
+    // logged-out caller). If the screen ever waited on it before deciding
+    // which roster to request, an anonymous visitor's roster would hang or
+    // error. Deliberately never resolve myMembershipsProvider or
+    // gymByIdProvider here — if the screen's canManage logic regressed to
+    // waiting on them regardless of whether there's a current user, this
+    // test would hang on a spinner forever instead of rendering the roster
+    // after two pumps, and the icon assertions below would fail.
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(_NoUserNotifier.new),
+          currentUserIdProvider.overrideWith((ref) => null),
+          rosterProvider('g1').overrideWith(
+            (ref) async => [_coach, _member],
+          ),
+          // Never resolves — proves the screen doesn't wait on it for an
+          // anonymous viewer.
+          gymByIdProvider('g1').overrideWith((ref) => Completer<Gym>().future),
+          myMembershipsProvider.overrideWith((ref) => Completer<List<GymMembership>>().future),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.glass(),
+          home: const RosterScreen(gymId: 'g1'),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+
+    // The public roster renders — no manage affordance, no hang.
+    expect(find.text('Coach Rivera'), findsOneWidget);
+    expect(find.text('Jane Doe'), findsOneWidget);
+    expect(find.byIcon(Icons.military_tech), findsNothing);
   });
 }
