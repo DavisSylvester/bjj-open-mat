@@ -128,7 +128,9 @@ export class MembershipFacade {
     return built.sort((a, b) => {
       const statusDiff: number = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
       if (statusDiff !== 0) return statusDiff;
-      return a.name.localeCompare(b.name);
+      // Pinned locale: the default is environment-dependent, which would let
+      // the same roster sort differently on a dev machine and in CI.
+      return a.name.localeCompare(b.name, 'en');
     });
   }
 

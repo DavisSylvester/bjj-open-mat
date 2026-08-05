@@ -1,4 +1,5 @@
-import type { HttpErrorResponse } from '@angular/common/http';
+// Value import, not `import type`: the guard below uses `instanceof`.
+import { HttpErrorResponse } from '@angular/common/http';
 import type { OnInit } from '@angular/core';
 import { Component, inject, signal } from '@angular/core';
 
@@ -12,7 +13,7 @@ import { ZardTableImports } from '@/shared/components/table';
 const DEFAULT_UPDATE_ERROR = 'Could not update that member. Please try again.';
 
 function isHttpErrorResponse(err: unknown): err is HttpErrorResponse {
-  return typeof err === 'object' && err !== null && 'error' in err;
+  return err instanceof HttpErrorResponse;
 }
 
 /**
