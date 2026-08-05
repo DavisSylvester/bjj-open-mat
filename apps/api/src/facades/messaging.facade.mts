@@ -4,6 +4,7 @@ import type {
   EditMessageRequest, Gym, GymMembership, Message, MessageListQuery, MessageReport, MessageReportStatus,
   ReportMessageRequest, ResolveReportRequest, SendMessageRequest, UserRole,
 } from "@bjj/contract";
+import { hasMemberPrivileges } from "@bjj/contract";
 import { AppError } from "../http/errors.mts";
 import { assertActiveMember, assertCanManageGym } from "./gym-authz.mts";
 import type { ConversationRepository } from "../repositories/conversation.repository.mts";
@@ -55,8 +56,8 @@ export class MessagingFacade {
 
   private async sharesActiveGym(a: string, b: string): Promise<boolean> {
     const [am, bm] = await Promise.all([this.memberships.listByUser(a), this.memberships.listByUser(b)]);
-    const bActive: Set<string> = new Set(bm.filter((m: GymMembership) => m.status === "active").map((m) => m.gymId));
-    return am.some((m: GymMembership) => m.status === "active" && bActive.has(m.gymId));
+    const bActive: Set<string> = new Set(bm.filter((m: GymMembership) => hasMemberPrivileges(m.status)).map((m) => m.gymId));
+    return am.some((m: GymMembership) => hasMemberPrivileges(m.status) && bActive.has(m.gymId));
   }
 
   public async startDirect(userId: string, recipientId: string, _role: UserRole): Promise<Conversation> {
@@ -81,7 +82,7 @@ export class MessagingFacade {
     const others: string[] = [...new Set(req.participantIds)].filter((id) => id !== userId);
     for (const pid of others) {
       const m: GymMembership | null = await this.memberships.find(gymId, pid);
-      if (!m || m.status !== "active") throw new AppError("forbidden", `User ${pid} is not a member of this gym`);
+      if (!m || !hasMemberPrivileges(m.status)) throw new AppError("forbidden", `User ${pid} is not a member of this gym`);
     }
     const now: string = new Date().toISOString();
     const conv: Conversation = { id: this.newId(), kind: "group", gymId, title: req.title, createdBy: userId, createdAt: now };
@@ -151,7 +152,7 @@ export class MessagingFacade {
     }
     // gym channels for gyms where the user is an active member
     const memberships = await this.memberships.listByUser(userId);
-    const activeGymIds = memberships.filter((m) => m.status === "active").map((m) => m.gymId);
+    const activeGymIds = memberships.filter((m) => hasMemberPrivileges(m.status)).map((m) => m.gymId);
     const channels: Conversation[] = [];
     for (const gymId of activeGymIds) {
       const list = await this.conversations.listChannelsByGym(gymId);
@@ -252,7 +253,7 @@ export class MessagingFacade {
     for (const uid of [...new Set(req.userIds)]) {
       if (await this.participants.find(conversationId, uid)) continue;
       const mem = await this.memberships.find(conv.gymId, uid);
-      if (!mem || mem.status !== "active") throw new AppError("forbidden", `User ${uid} is not a member of this gym`);
+      if (!mem || !hasMemberPrivileges(mem.status)) throw new AppError("forbidden", `User ${uid} is not a member of this gym`);
       rows.push({ id: this.newId(), conversationId, userId: uid, role: "member", muted: false });
     }
     await this.participants.insertMany(rows);
@@ -302,8 +303,8 @@ export class MessagingFacade {
 
   private async firstSharedActiveGym(a: string, b: string): Promise<string | null> {
     const [am, bm] = await Promise.all([this.memberships.listByUser(a), this.memberships.listByUser(b)]);
-    const bActive = new Set(bm.filter((m) => m.status === "active").map((m) => m.gymId));
-    const hit = am.find((m) => m.status === "active" && bActive.has(m.gymId));
+    const bActive = new Set(bm.filter((m) => hasMemberPrivileges(m.status)).map((m) => m.gymId));
+    const hit = am.find((m) => hasMemberPrivileges(m.status) && bActive.has(m.gymId));
     return hit?.gymId ?? null;
   }
 

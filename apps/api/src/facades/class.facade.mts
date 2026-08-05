@@ -3,6 +3,7 @@ import type {
   ClassAttendee, ClassOccurrence, CreateClassRequest, GymClass, OccurrenceOverrideRequest,
   ScheduledClass, UpdateClassRequest, UserRole,
 } from '@bjj/contract';
+import { hasMemberPrivileges } from '@bjj/contract';
 import { AppError } from '../http/errors.mts';
 import { assertCanManageGym } from './gym-authz.mts';
 import type { ClassRepository } from '../repositories/class.repository.mts';
@@ -155,7 +156,7 @@ export class ClassFacade {
       if (going >= cls.capacity) throw new AppError('conflict', 'This class is full');
     }
     const membership = await this.memberships.find(cls.gymId, userId);
-    const isMember: boolean = membership !== null && membership.status === 'active';
+    const isMember: boolean = membership !== null && hasMemberPrivileges(membership.status);
     await this.rsvps.add(classId, date, userId, isMember);
   }
 
