@@ -651,6 +651,17 @@ export function buildOpenApiDocument(): Record<string, unknown> {
           responses: ok(dataOf("LeadResponse")),
         },
       },
+      "/api/v1/admin/memberships/{gymId}/{userId}": {
+        patch: {
+          summary: "Admin — update a membership (verify, change role, set status)",
+          parameters: [
+            { name: "gymId", in: "path", required: true, schema: { type: "string" } },
+            { name: "userId", in: "path", required: true, schema: { type: "string" } },
+          ],
+          requestBody: { required: true, content: { "application/json": { schema: ref("UpdateMembershipRequest") } } },
+          responses: ok(dataOf("GymMembership")),
+        },
+      },
     },
     components: {
       schemas: {

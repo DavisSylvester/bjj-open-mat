@@ -4,6 +4,7 @@ import type {
   AdminOverviewStats,
   Gym,
   GymMembership,
+  UpdateMembershipRequest,
   User,
 } from "@bjj/contract";
 import type { AdminAnalyticsRepository } from "../repositories/admin-analytics.repository.mjs";
@@ -46,6 +47,17 @@ export class AdminFacade {
 
   public async listMemberships(skip: number, limit: number): Promise<{ items: GymMembership[]; total: number }> {
     return this.memberships.listAll(skip, limit);
+  }
+
+  /// Admin-scoped membership update. Passes 'admin' as the caller id and role,
+  /// matching the convention adminRoutes already uses for open mats — the admin
+  /// router carries no per-user identity.
+  public async updateMembership(
+    gymId: string,
+    userId: string,
+    req: UpdateMembershipRequest,
+  ): Promise<GymMembership> {
+    return this.memberships.updateMembership("admin", gymId, userId, req, "admin");
   }
 
   public async verifyGym(gymId: string, now: Date): Promise<Gym> {

@@ -63,4 +63,26 @@ describe("AdminFacade", () => {
     expect(r.invited).toBe(2);
     expect(sent).toEqual(["x@y.dev", "z@y.dev"]);
   });
+
+  it("updateMembership delegates with the admin identity", async () => {
+    const calls: string[] = [];
+    const memberships = {
+      updateMembership: async (
+        callerId: string,
+        gymId: string,
+        userId: string,
+        req: { status?: string },
+        role: string,
+      ): Promise<Record<string, unknown>> => {
+        calls.push(`${callerId}:${gymId}:${userId}:${String(req.status)}:${role}`);
+        return { id: "m1", gymId, userId, status: req.status };
+      },
+    };
+    const facade = new AdminFacade(
+      {} as never, {} as never, {} as never, {} as never, memberships as never, {} as never,
+    );
+    const out = await facade.updateMembership("g-1", "u-1", { status: "inactive" });
+    expect(out.status).toBe("inactive");
+    expect(calls).toEqual(["admin:g-1:u-1:inactive:admin"]);
+  });
 });
