@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/design/tokens.dart';
 import '../../membership/data/membership_repository.dart';
 import '../../membership/models/gym_membership.dart';
+import '../../membership/models/membership_status.dart';
 import '../data/messaging_repository.dart';
 import '../models/conversation_summary.dart';
 
@@ -70,11 +71,11 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen>
       memberships = const <GymMembership>[];
     }
     if (!mounted) return;
-    // Hidden keeps privileges (mirrors `hasMemberPrivileges` in @bjj/contract):
-    // a hidden member can still open a DM, so they must count as having a
-    // gym to converse in. Only `inactive` (and `pending`) are excluded.
+    // Hidden keeps privileges (see hasMemberPrivileges): a hidden member can
+    // still open a DM, so they must count as having a gym to converse in.
+    // Only `inactive` (and `pending`) are excluded.
     final active = memberships
-        .where((m) => m.status == 'active' || m.status == 'hidden')
+        .where((m) => hasMemberPrivileges(m.status))
         .toList();
     if (active.isEmpty) {
       messenger.showSnackBar(

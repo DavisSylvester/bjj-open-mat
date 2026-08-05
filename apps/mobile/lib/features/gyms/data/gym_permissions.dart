@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../membership/data/membership_repository.dart';
+import '../../membership/models/membership_status.dart';
 import '../../membership/widgets/join_gym_button.dart';
 
 /// Shared gym-permission derivations.
@@ -16,10 +17,6 @@ import '../../membership/widgets/join_gym_button.dart';
 /// [rosterProvider]: a hidden member is absent from the roster but still holds
 /// their privileges server-side, so deriving from the roster would revoke
 /// access the API would have granted.
-
-/// True when a membership status grants gym-member privileges. Mirrors
-/// `hasMemberPrivileges` in @bjj/contract.
-bool _hasPrivileges(String status) => status == 'active' || status == 'hidden';
 
 /// True once [value] has resolved to data or an error — never true while it
 /// is still on its first, valueless load. Callers that must choose between a
@@ -41,7 +38,7 @@ bool deriveCanManageGym(WidgetRef ref, {required String gymId, required String? 
         orElse: () => null,
       );
   final canManageViaRole =
-      mine != null && _hasPrivileges(mine.status) && (mine.gymRole == 'owner' || mine.gymRole == 'coach');
+      mine != null && hasMemberPrivileges(mine.status) && (mine.gymRole == 'owner' || mine.gymRole == 'coach');
   return isAdmin || isOwner || canManageViaRole;
 }
 
@@ -56,5 +53,5 @@ bool deriveCanAccessForumGym(WidgetRef ref, {required String gymId, required Str
         data: (rows) => rows.where((m) => m.gymId == gymId).firstOrNull,
         orElse: () => null,
       );
-  return isAdmin || isOwner || (mine != null && _hasPrivileges(mine.status));
+  return isAdmin || isOwner || (mine != null && hasMemberPrivileges(mine.status));
 }
