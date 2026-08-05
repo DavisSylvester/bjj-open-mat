@@ -48,6 +48,21 @@ export interface SeedOpenMat {
   createdAt: string;
 }
 
+export interface SeedMembership {
+  _id: string;
+  id: string;
+  gymId: string;
+  userId: string;
+  status: 'pending' | 'active' | 'hidden' | 'inactive';
+  verifiedMember: boolean;
+  gymRole: 'member' | 'coach' | 'owner';
+  isHome: boolean;
+  visibleInRoster: boolean;
+  joinMethod: 'self' | 'code' | 'invite';
+  joinedAt: string;
+  createdAt: string;
+}
+
 // ---------------------------------------------------------------------------
 // Static timestamps — everything except the one "today" user
 // ---------------------------------------------------------------------------
@@ -246,3 +261,38 @@ export function buildUsers(): SeedUser[] {
   };
   return [todayUser, ...STATIC_USERS];
 }
+
+// ---------------------------------------------------------------------------
+// Memberships — one per status so the admin grid exercises every badge
+// ---------------------------------------------------------------------------
+
+export const gymMemberships: SeedMembership[] = [
+  {
+    _id: 'mem-e2e-001', id: 'mem-e2e-001',
+    gymId: 'gym-e2e-001', userId: 'user-e2e-001',
+    status: 'active', verifiedMember: true, gymRole: 'member',
+    isHome: true, visibleInRoster: true, joinMethod: 'self',
+    joinedAt: PAST_2025_01, createdAt: PAST_2025_01,
+  },
+  {
+    _id: 'mem-e2e-002', id: 'mem-e2e-002',
+    gymId: 'gym-e2e-001', userId: 'user-e2e-002',
+    status: 'hidden', verifiedMember: false, gymRole: 'member',
+    isHome: false, visibleInRoster: true, joinMethod: 'code',
+    joinedAt: PAST_2025_03, createdAt: PAST_2025_03,
+  },
+  {
+    _id: 'mem-e2e-003', id: 'mem-e2e-003',
+    gymId: 'gym-e2e-001', userId: 'user-e2e-003',
+    status: 'inactive', verifiedMember: false, gymRole: 'member',
+    isHome: false, visibleInRoster: true, joinMethod: 'invite',
+    joinedAt: PAST_2025_06, createdAt: PAST_2025_06,
+  },
+  {
+    _id: 'mem-e2e-004', id: 'mem-e2e-004',
+    gymId: 'gym-e2e-001', userId: 'user-e2e-004',
+    status: 'active', verifiedMember: true, gymRole: 'coach',
+    isHome: false, visibleInRoster: false, joinMethod: 'self',
+    joinedAt: PAST_2025_09, createdAt: PAST_2025_09,
+  },
+];
