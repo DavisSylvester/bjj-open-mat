@@ -45,29 +45,18 @@ class _FakeMembershipRepo implements MembershipRepository {
   Future<List<RosterMember>> manageRoster(String gymId) async => [];
 
   @override
-  Future<GymMembership> updateMine(
-    String gymId, {
-    bool? visibleInRoster,
-    bool? isHome,
-  }) async => throw UnimplementedError();
+  Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome}) async =>
+      throw UnimplementedError();
 
   @override
-  Future<GymMembership> manageMember(
-    String gymId,
-    String userId, {
-    bool? verifiedMember,
-    String? gymRole,
-    String? status,
-  }) async => throw UnimplementedError();
+  Future<GymMembership> manageMember(String gymId, String userId,
+          {bool? verifiedMember, String? gymRole, String? status}) async =>
+      throw UnimplementedError();
 
   @override
-  Future<BeltPromotion> promote(
-    String gymId,
-    String userId, {
-    required String beltRank,
-    required int beltStripes,
-    String? note,
-  }) async => throw UnimplementedError();
+  Future<BeltPromotion> promote(String gymId, String userId,
+          {required String beltRank, required int beltStripes, String? note}) async =>
+      throw UnimplementedError();
 
   @override
   Future<List<BeltPromotion>> userPromotions(String userId) async => [];
@@ -80,12 +69,12 @@ class _FakeMembershipRepo implements MembershipRepository {
 // Helpers
 // ---------------------------------------------------------------------------
 RosterMember _member(String userId) => RosterMember(
-  userId: userId,
-  name: 'Test User',
-  gymRole: 'member',
-  verifiedMember: true,
-  hasProfile: true,
-);
+      userId: userId,
+      name: 'Test User',
+      gymRole: 'member',
+      verifiedMember: true,
+      hasProfile: true,
+    );
 
 Future<void> _pump(
   WidgetTester tester, {
@@ -108,7 +97,9 @@ Future<void> _pump(
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
-        home: const Scaffold(body: Center(child: JoinGymButton(gymId: 'g1'))),
+        home: const Scaffold(
+          body: Center(child: JoinGymButton(gymId: 'g1')),
+        ),
       ),
     ),
   );
@@ -135,14 +126,14 @@ Future<void> _pumpWithRosterError(
         // for several seconds during the test. Throwing a `StateError`
         // short-circuits the retry so the provider settles into `AsyncError`
         // immediately.
-        rosterProvider(
-          'g1',
-        ).overrideWith((_) async => throw StateError('boom')),
+        rosterProvider('g1').overrideWith((_) async => throw StateError('boom')),
         currentUserIdProvider.overrideWithValue(currentUserId),
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
-        home: const Scaffold(body: Center(child: JoinGymButton(gymId: 'g1'))),
+        home: const Scaffold(
+          body: Center(child: JoinGymButton(gymId: 'g1')),
+        ),
       ),
     ),
   );
@@ -191,9 +182,7 @@ void main() {
       expect(find.text('Leave'), findsOneWidget);
     });
 
-    testWidgets('tapping Leave calls repo.leave with the gym id', (
-      tester,
-    ) async {
+    testWidgets('tapping Leave calls repo.leave with the gym id', (tester) async {
       final repo = _FakeMembershipRepo();
       await _pump(tester, repo: repo, roster: [_member('user-1')]);
 
@@ -222,11 +211,7 @@ void main() {
       expect(find.text('Join'), findsNothing);
 
       final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
-      expect(
-        button.onPressed,
-        isNotNull,
-        reason: 'must be tappable so the user can reach login',
-      );
+      expect(button.onPressed, isNotNull, reason: 'must be tappable so the user can reach login');
     });
   });
 

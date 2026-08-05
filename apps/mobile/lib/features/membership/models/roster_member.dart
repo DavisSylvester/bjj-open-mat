@@ -26,18 +26,18 @@ class RosterMember {
   });
 
   factory RosterMember.fromJson(Map<String, dynamic> json) => RosterMember(
-    userId: json['userId'] as String,
-    name: json['name'] as String,
-    beltRank: json['beltRank'] as String?,
-    beltStripes: json['beltStripes'] as int?,
-    verifiedBeltRank: json['verifiedBeltRank'] as String?,
-    verifiedBeltStripes: json['verifiedBeltStripes'] as int?,
-    avatarUrl: json['avatarUrl'] as String?,
-    gymRole: json['gymRole'] as String,
-    verifiedMember: json['verifiedMember'] as bool,
-    hasProfile: json['hasProfile'] as bool,
-    status: json['status'] as String? ?? 'active',
-  );
+        userId: json['userId'] as String,
+        name: json['name'] as String,
+        beltRank: json['beltRank'] as String?,
+        beltStripes: json['beltStripes'] as int?,
+        verifiedBeltRank: json['verifiedBeltRank'] as String?,
+        verifiedBeltStripes: json['verifiedBeltStripes'] as int?,
+        avatarUrl: json['avatarUrl'] as String?,
+        gymRole: json['gymRole'] as String,
+        verifiedMember: json['verifiedMember'] as bool,
+        hasProfile: json['hasProfile'] as bool,
+        status: json['status'] as String? ?? 'active',
+      );
 
   bool get isHidden => status == 'hidden';
   bool get isInactive => status == 'inactive';

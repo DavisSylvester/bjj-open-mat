@@ -70,15 +70,15 @@ class _FakeClassRepo implements ClassRepository {
   Future<void> unrsvp(String classId, String date) async {}
 
   @override
-  Future<List<ClassAttendee>> attendees(String classId, String date) async =>
-      [];
+  Future<List<ClassAttendee>> attendees(String classId, String date) async => [];
 
   @override
   Future<List<ScheduledClass>> schedule(
     String gymId, {
     required String from,
     required String to,
-  }) async => [];
+  }) async =>
+      [];
 
   @override
   Future<List<GymClass>> definitions(String gymId) async => [];
@@ -101,27 +101,19 @@ class _FakeMembershipRepo implements MembershipRepository {
   @override
   Future<void> leave(String gymId) async => throw UnimplementedError();
   @override
-  Future<GymMembership> updateMine(
-    String gymId, {
-    bool? visibleInRoster,
-    bool? isHome,
-  }) async => throw UnimplementedError();
+  Future<GymMembership> updateMine(String gymId,
+          {bool? visibleInRoster, bool? isHome}) async =>
+      throw UnimplementedError();
   @override
-  Future<GymMembership> manageMember(
-    String gymId,
-    String userId, {
-    bool? verifiedMember,
-    String? gymRole,
-    String? status,
-  }) async => throw UnimplementedError();
+  Future<GymMembership> manageMember(String gymId, String userId,
+          {bool? verifiedMember, String? gymRole, String? status}) async =>
+      throw UnimplementedError();
   @override
-  Future<BeltPromotion> promote(
-    String gymId,
-    String userId, {
-    required String beltRank,
-    required int beltStripes,
-    String? note,
-  }) async => throw UnimplementedError();
+  Future<BeltPromotion> promote(String gymId, String userId,
+          {required String beltRank,
+          required int beltStripes,
+          String? note}) async =>
+      throw UnimplementedError();
   @override
   Future<List<BeltPromotion>> userPromotions(String userId) async => [];
   @override
@@ -152,7 +144,9 @@ Future<_FakeClassRepo> _pump(
       ],
       child: MaterialApp(
         theme: AppTheme.glass(),
-        home: Scaffold(body: ClassEditScreen(gymId: 'g1', existing: existing)),
+        home: Scaffold(
+          body: ClassEditScreen(gymId: 'g1', existing: existing),
+        ),
       ),
     ),
   );
@@ -181,49 +175,47 @@ void main() {
     expect(btn.onPressed, isNull);
   });
 
-  testWidgets(
-    'Save button enabled after filling required fields in recurring mode',
-    (tester) async {
-      final repo = await _pump(tester);
+  testWidgets('Save button enabled after filling required fields in recurring mode',
+      (tester) async {
+    final repo = await _pump(tester);
 
-      // Fill title.
-      await tester.enterText(
-        find.byKey(const Key('class_edit_title')),
-        'Morning Gi',
-      );
-      await tester.pump();
+    // Fill title.
+    await tester.enterText(
+      find.byKey(const Key('class_edit_title')),
+      'Morning Gi',
+    );
+    await tester.pump();
 
-      // Pick class type via dropdown.
-      await tester.tap(find.byKey(const Key('class_edit_class_type')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Gi').last);
-      await tester.pumpAndSettle();
+    // Pick class type via dropdown.
+    await tester.tap(find.byKey(const Key('class_edit_class_type')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gi').last);
+    await tester.pumpAndSettle();
 
-      // In recurring mode (default), pick a day of week — Mon (index 1 in 0=Sun convention).
-      await tester.tap(find.byKey(const Key('class_edit_day_1')));
-      await tester.pump();
+    // In recurring mode (default), pick a day of week — Mon (index 1 in 0=Sun convention).
+    await tester.tap(find.byKey(const Key('class_edit_day_1')));
+    await tester.pump();
 
-      // Save should now be enabled.
-      final btn = tester.widget<ElevatedButton>(
-        find.byKey(const Key('class_edit_save')),
-      );
-      expect(btn.onPressed, isNotNull);
+    // Save should now be enabled.
+    final btn = tester.widget<ElevatedButton>(
+      find.byKey(const Key('class_edit_save')),
+    );
+    expect(btn.onPressed, isNotNull);
 
-      // Tap Save and assert create was called with correct body.
-      await tester.tap(find.byKey(const Key('class_edit_save')));
-      await tester.pump();
+    // Tap Save and assert create was called with correct body.
+    await tester.tap(find.byKey(const Key('class_edit_save')));
+    await tester.pump();
 
-      expect(repo.createCalls, hasLength(1));
-      final call = repo.createCalls.first;
-      expect(call.gymId, equals('g1'));
-      expect(call.body['title'], equals('Morning Gi'));
-      expect(call.body['classType'], equals('gi'));
-      expect(call.body['dayOfWeek'], equals(1));
-      expect(call.body['isRecurring'], isTrue);
-      expect(call.body['startTime'], isNotNull);
-      expect(call.body['endTime'], isNotNull);
-    },
-  );
+    expect(repo.createCalls, hasLength(1));
+    final call = repo.createCalls.first;
+    expect(call.gymId, equals('g1'));
+    expect(call.body['title'], equals('Morning Gi'));
+    expect(call.body['classType'], equals('gi'));
+    expect(call.body['dayOfWeek'], equals(1));
+    expect(call.body['isRecurring'], isTrue);
+    expect(call.body['startTime'], isNotNull);
+    expect(call.body['endTime'], isNotNull);
+  });
 
   testWidgets('one-off mode: Save disabled without date', (tester) async {
     await _pump(tester);
@@ -254,44 +246,39 @@ void main() {
     await tester.tap(find.text('Other').last);
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const Key('class_edit_class_type_label')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('class_edit_class_type_label')), findsOneWidget);
   });
 
-  testWidgets(
-    'create called with title, classType, dayOfWeek, startTime, endTime, isRecurring',
-    (tester) async {
-      final repo = await _pump(tester);
+  testWidgets('create called with title, classType, dayOfWeek, startTime, endTime, isRecurring',
+      (tester) async {
+    final repo = await _pump(tester);
 
-      await tester.enterText(
-        find.byKey(const Key('class_edit_title')),
-        'Evening NoGi',
-      );
-      await tester.pump();
+    await tester.enterText(
+      find.byKey(const Key('class_edit_title')),
+      'Evening NoGi',
+    );
+    await tester.pump();
 
-      // Pick NoGi class type.
-      await tester.tap(find.byKey(const Key('class_edit_class_type')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('No-Gi').last);
-      await tester.pumpAndSettle();
+    // Pick NoGi class type.
+    await tester.tap(find.byKey(const Key('class_edit_class_type')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('No-Gi').last);
+    await tester.pumpAndSettle();
 
-      // Pick Wednesday (day 2).
-      await tester.tap(find.byKey(const Key('class_edit_day_2')));
-      await tester.pump();
+    // Pick Wednesday (day 2).
+    await tester.tap(find.byKey(const Key('class_edit_day_2')));
+    await tester.pump();
 
-      await tester.tap(find.byKey(const Key('class_edit_save')));
-      await tester.pump();
+    await tester.tap(find.byKey(const Key('class_edit_save')));
+    await tester.pump();
 
-      expect(repo.createCalls, hasLength(1));
-      final body = repo.createCalls.first.body;
-      expect(body['title'], equals('Evening NoGi'));
-      expect(body['classType'], equals('nogi'));
-      expect(body['dayOfWeek'], equals(2));
-      expect(body['isRecurring'], isTrue);
-      expect(body['startTime'], isA<String>());
-      expect(body['endTime'], isA<String>());
-    },
-  );
+    expect(repo.createCalls, hasLength(1));
+    final body = repo.createCalls.first.body;
+    expect(body['title'], equals('Evening NoGi'));
+    expect(body['classType'], equals('nogi'));
+    expect(body['dayOfWeek'], equals(2));
+    expect(body['isRecurring'], isTrue);
+    expect(body['startTime'], isA<String>());
+    expect(body['endTime'], isA<String>());
+  });
 }

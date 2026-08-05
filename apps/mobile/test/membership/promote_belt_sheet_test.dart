@@ -84,11 +84,8 @@ class _FakeMembershipRepo implements MembershipRepository {
   Future<List<RosterMember>> manageRoster(String gymId) async => [];
 
   @override
-  Future<GymMembership> updateMine(
-    String gymId, {
-    bool? visibleInRoster,
-    bool? isHome,
-  }) async => throw UnimplementedError();
+  Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome}) async =>
+      throw UnimplementedError();
 
   @override
   Future<List<BeltPromotion>> userPromotions(String userId) async => [];
@@ -118,20 +115,14 @@ Future<_FakeMembershipRepo> _pumpSheet(WidgetTester tester) async {
         theme: AppTheme.glass(),
         home: Scaffold(
           body: Builder(
-            builder:
-                (ctx) => ElevatedButton(
-                  onPressed:
-                      () => showModalBottomSheet<void>(
-                        context: ctx,
-                        isScrollControlled: true,
-                        builder:
-                            (_) => const PromoteBeltSheet(
-                              gymId: 'g1',
-                              targetUserId: 'u2',
-                            ),
-                      ),
-                  child: const Text('Open'),
-                ),
+            builder: (ctx) => ElevatedButton(
+              onPressed: () => showModalBottomSheet<void>(
+                context: ctx,
+                isScrollControlled: true,
+                builder: (_) => const PromoteBeltSheet(gymId: 'g1', targetUserId: 'u2'),
+              ),
+              child: const Text('Open'),
+            ),
           ),
         ),
       ),
@@ -162,35 +153,33 @@ void main() {
     expect(find.text('Confirm'), findsOneWidget);
   });
 
-  testWidgets(
-    'select blue belt and 2 stripes, tap Confirm — promote called correctly',
-    (tester) async {
-      final repo = await _pumpSheet(tester);
+  testWidgets('select blue belt and 2 stripes, tap Confirm — promote called correctly',
+      (tester) async {
+    final repo = await _pumpSheet(tester);
 
-      // Open the belt dropdown.
-      await tester.tap(find.text('white')); // default selection
-      await tester.pumpAndSettle();
+    // Open the belt dropdown.
+    await tester.tap(find.text('white')); // default selection
+    await tester.pumpAndSettle();
 
-      // Choose 'blue'.
-      await tester.tap(find.text('blue').last);
-      await tester.pumpAndSettle();
+    // Choose 'blue'.
+    await tester.tap(find.text('blue').last);
+    await tester.pumpAndSettle();
 
-      // Increment stripes to 2 by tapping the + button twice.
-      final plusBtn = find.byIcon(Icons.add);
-      await tester.tap(plusBtn);
-      await tester.pumpAndSettle();
-      await tester.tap(plusBtn);
-      await tester.pumpAndSettle();
+    // Increment stripes to 2 by tapping the + button twice.
+    final plusBtn = find.byIcon(Icons.add);
+    await tester.tap(plusBtn);
+    await tester.pumpAndSettle();
+    await tester.tap(plusBtn);
+    await tester.pumpAndSettle();
 
-      // Tap Confirm.
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
+    // Tap Confirm.
+    await tester.tap(find.text('Confirm'));
+    await tester.pumpAndSettle();
 
-      expect(repo.promoteCalls, hasLength(1));
-      expect(repo.promoteCalls.first['beltRank'], equals('blue'));
-      expect(repo.promoteCalls.first['beltStripes'], equals(2));
-    },
-  );
+    expect(repo.promoteCalls, hasLength(1));
+    expect(repo.promoteCalls.first['beltRank'], equals('blue'));
+    expect(repo.promoteCalls.first['beltStripes'], equals(2));
+  });
 
   testWidgets('stripes selector cannot exceed 4', (tester) async {
     await _pumpSheet(tester);
