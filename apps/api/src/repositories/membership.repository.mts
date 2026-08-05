@@ -18,7 +18,6 @@ export class MembershipRepository extends BaseRepository {
     const col = this.collection<MembershipDoc>(COLLECTIONS.gymMemberships);
     await col.createIndex({ gymId: 1, userId: 1 }, { unique: true });
     await col.createIndex({ userId: 1 });
-    await col.createIndex({ gymId: 1 });
     await col.createIndex({ gymId: 1, status: 1 });
   }
 
@@ -47,7 +46,9 @@ export class MembershipRepository extends BaseRepository {
     const filter: Filter<MembershipDoc> = includeHidden
       ? { gymId, status: { $ne: "pending" } }
       : { gymId, status: { $nin: ["pending", "hidden", "inactive"] }, visibleInRoster: { $ne: false } };
-    const docs = await this.collection<MembershipDoc>(COLLECTIONS.gymMemberships).find(filter).toArray();
+    const docs = await this.collection<MembershipDoc>(COLLECTIONS.gymMemberships)
+      .find(filter)
+      .toArray();
     return docs.map((d) => stripId<GymMembership>(d) as GymMembership);
   }
 
