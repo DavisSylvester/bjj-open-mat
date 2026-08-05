@@ -1,7 +1,9 @@
 /// All API endpoint constants matching the BJJ Open Mat Finder backend
 class Endpoints {
-  static const String baseUrl =
-      String.fromEnvironment('API_BASE_URL', defaultValue: 'https://api.bjj-open-mat.dsylvester.io');
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://api.bjj-open-mat.dsylvester.io',
+  );
 
   // Auth
   static const String authMe = '/api/v1/auth/me';
@@ -21,8 +23,10 @@ class Endpoints {
   static String gymClaims(String gymId) => '/api/v1/gyms/$gymId/claims';
   static String gymClaimMine(String gymId) => '/api/v1/gyms/$gymId/claims/me';
   static const String adminGymClaims = '/api/v1/admin/gym-claims';
-  static String adminGymClaimApprove(String claimId) => '/api/v1/admin/gym-claims/$claimId/approve';
-  static String adminGymClaimReject(String claimId) => '/api/v1/admin/gym-claims/$claimId/reject';
+  static String adminGymClaimApprove(String claimId) =>
+      '/api/v1/admin/gym-claims/$claimId/approve';
+  static String adminGymClaimReject(String claimId) =>
+      '/api/v1/admin/gym-claims/$claimId/reject';
 
   // Open Mats
   static const String openMats = '/api/v1/open-mats';
@@ -31,7 +35,8 @@ class Endpoints {
   static String openMatCheckin(String id) => '/api/v1/open-mats/$id/checkin';
   static String openMatCheckins(String id) => '/api/v1/open-mats/$id/checkins';
   static String openMatRsvp(String id) => '/api/v1/open-mats/$id/rsvp';
-  static String openMatAttendees(String id) => '/api/v1/open-mats/$id/attendees';
+  static String openMatAttendees(String id) =>
+      '/api/v1/open-mats/$id/attendees';
 
   // Check-ins
   static String checkinReview(String id) => '/api/v1/checkins/$id/review';
@@ -59,33 +64,51 @@ class Endpoints {
 
   // Membership
   static String gymMembers(String gymId) => '/api/v1/gyms/$gymId/members';
+
+  /// Owner/coach/admin roster — also returns hidden and inactive members.
+  static String gymMembersManage(String gymId) =>
+      '/api/v1/gyms/$gymId/members?includeHidden=true';
   static String gymMemberMe(String gymId) => '/api/v1/gyms/$gymId/members/me';
-  static String gymMember(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId';
-  static String gymMemberPromotions(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId/promotions';
-  static String userPromotions(String userId) => '/api/v1/users/$userId/promotions';
+  static String gymMember(String gymId, String userId) =>
+      '/api/v1/gyms/$gymId/members/$userId';
+  static String gymMemberPromotions(String gymId, String userId) =>
+      '/api/v1/gyms/$gymId/members/$userId/promotions';
+  static String userPromotions(String userId) =>
+      '/api/v1/users/$userId/promotions';
   static const String myMemberships = '/api/v1/users/me/memberships';
 
   // Classes
   static String gymClasses(String gymId) => '/api/v1/gyms/$gymId/classes';
   static String gymSchedule(String gymId) => '/api/v1/gyms/$gymId/schedule';
   static String classById(String classId) => '/api/v1/classes/$classId';
-  static String classOccurrence(String classId, String date) => '/api/v1/classes/$classId/occurrences/$date';
+  static String classOccurrence(String classId, String date) =>
+      '/api/v1/classes/$classId/occurrences/$date';
   static String classRsvp(String classId) => '/api/v1/classes/$classId/rsvp';
-  static String classAttendees(String classId) => '/api/v1/classes/$classId/attendees';
+  static String classAttendees(String classId) =>
+      '/api/v1/classes/$classId/attendees';
 
   // Class Journal & Ratings
-  static String classJournal(String classId) => '/api/v1/classes/$classId/journal';
+  static String classJournal(String classId) =>
+      '/api/v1/classes/$classId/journal';
   static const String myJournal = '/api/v1/users/me/journal';
-  static String classInstructorRating(String classId) => '/api/v1/classes/$classId/instructor-rating';
-  static String userInstructorRating(String userId) => '/api/v1/users/$userId/instructor-rating';
-  static String gymInstructorFeedback(String gymId) => '/api/v1/gyms/$gymId/instructor-feedback';
+  static String classInstructorRating(String classId) =>
+      '/api/v1/classes/$classId/instructor-rating';
+  static String userInstructorRating(String userId) =>
+      '/api/v1/users/$userId/instructor-rating';
+  static String gymInstructorFeedback(String gymId) =>
+      '/api/v1/gyms/$gymId/instructor-feedback';
 
   // Forum
-  static String gymForumQuestions(String gymId) => '/api/v1/gyms/$gymId/forum/questions';
-  static String forumQuestion(String questionId) => '/api/v1/forum/questions/$questionId';
-  static String forumQuestionAnswers(String questionId) => '/api/v1/forum/questions/$questionId/answers';
-  static String forumQuestionAccept(String questionId) => '/api/v1/forum/questions/$questionId/accept';
-  static String forumAnswer(String answerId) => '/api/v1/forum/answers/$answerId';
+  static String gymForumQuestions(String gymId) =>
+      '/api/v1/gyms/$gymId/forum/questions';
+  static String forumQuestion(String questionId) =>
+      '/api/v1/forum/questions/$questionId';
+  static String forumQuestionAnswers(String questionId) =>
+      '/api/v1/forum/questions/$questionId/answers';
+  static String forumQuestionAccept(String questionId) =>
+      '/api/v1/forum/questions/$questionId/accept';
+  static String forumAnswer(String answerId) =>
+      '/api/v1/forum/answers/$answerId';
 
   // Devices
   static const String devices = '/api/v1/devices';
@@ -94,18 +117,27 @@ class Endpoints {
   // Messaging
   static const String messagingDirect = '/api/v1/messaging/direct';
   static const String messagingGroups = '/api/v1/messaging/groups';
-  static const String messagingConversations = '/api/v1/messaging/conversations';
-  static String messagingConversationMessages(String id) => '/api/v1/messaging/conversations/$id/messages';
-  static String messagingConversationRead(String id) => '/api/v1/messaging/conversations/$id/read';
-  static String messagingConversationMute(String id) => '/api/v1/messaging/conversations/$id/mute';
-  static String messagingConversationLeave(String id) => '/api/v1/messaging/conversations/$id/leave';
-  static String messagingConversationParticipants(String id) => '/api/v1/messaging/conversations/$id/participants';
+  static const String messagingConversations =
+      '/api/v1/messaging/conversations';
+  static String messagingConversationMessages(String id) =>
+      '/api/v1/messaging/conversations/$id/messages';
+  static String messagingConversationRead(String id) =>
+      '/api/v1/messaging/conversations/$id/read';
+  static String messagingConversationMute(String id) =>
+      '/api/v1/messaging/conversations/$id/mute';
+  static String messagingConversationLeave(String id) =>
+      '/api/v1/messaging/conversations/$id/leave';
+  static String messagingConversationParticipants(String id) =>
+      '/api/v1/messaging/conversations/$id/participants';
   static String messagingMessage(String id) => '/api/v1/messaging/messages/$id';
-  static String messagingMessageReport(String id) => '/api/v1/messaging/messages/$id/report';
+  static String messagingMessageReport(String id) =>
+      '/api/v1/messaging/messages/$id/report';
   static const String messagingReports = '/api/v1/messaging/reports';
-  static String messagingReportResolve(String id) => '/api/v1/messaging/reports/$id/resolve';
+  static String messagingReportResolve(String id) =>
+      '/api/v1/messaging/reports/$id/resolve';
   static const String messagingBlocks = '/api/v1/messaging/blocks';
   static String messagingBlock(String id) => '/api/v1/messaging/blocks/$id';
   static String gymChannels(String gymId) => '/api/v1/gyms/$gymId/channels';
-  static String gymMessageReports(String gymId) => '/api/v1/gyms/$gymId/message-reports';
+  static String gymMessageReports(String gymId) =>
+      '/api/v1/gyms/$gymId/message-reports';
 }

@@ -9,6 +9,7 @@ class RosterMember {
   final String gymRole;
   final bool verifiedMember;
   final bool hasProfile;
+  final String status;
 
   const RosterMember({
     required this.userId,
@@ -21,18 +22,23 @@ class RosterMember {
     required this.gymRole,
     required this.verifiedMember,
     required this.hasProfile,
+    this.status = 'active',
   });
 
   factory RosterMember.fromJson(Map<String, dynamic> json) => RosterMember(
-        userId: json['userId'] as String,
-        name: json['name'] as String,
-        beltRank: json['beltRank'] as String?,
-        beltStripes: json['beltStripes'] as int?,
-        verifiedBeltRank: json['verifiedBeltRank'] as String?,
-        verifiedBeltStripes: json['verifiedBeltStripes'] as int?,
-        avatarUrl: json['avatarUrl'] as String?,
-        gymRole: json['gymRole'] as String,
-        verifiedMember: json['verifiedMember'] as bool,
-        hasProfile: json['hasProfile'] as bool,
-      );
+    userId: json['userId'] as String,
+    name: json['name'] as String,
+    beltRank: json['beltRank'] as String?,
+    beltStripes: json['beltStripes'] as int?,
+    verifiedBeltRank: json['verifiedBeltRank'] as String?,
+    verifiedBeltStripes: json['verifiedBeltStripes'] as int?,
+    avatarUrl: json['avatarUrl'] as String?,
+    gymRole: json['gymRole'] as String,
+    verifiedMember: json['verifiedMember'] as bool,
+    hasProfile: json['hasProfile'] as bool,
+    status: json['status'] as String? ?? 'active',
+  );
+
+  bool get isHidden => status == 'hidden';
+  bool get isInactive => status == 'inactive';
 }

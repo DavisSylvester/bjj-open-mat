@@ -51,10 +51,15 @@ class _FakeMembershipRepository implements MembershipRepository {
   final List<String> updateCalls = [];
 
   @override
-  Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome}) async {
-    final suffix = visibleInRoster != null
-        ? 'visibleInRoster:$visibleInRoster'
-        : 'isHome:$isHome';
+  Future<GymMembership> updateMine(
+    String gymId, {
+    bool? visibleInRoster,
+    bool? isHome,
+  }) async {
+    final suffix =
+        visibleInRoster != null
+            ? 'visibleInRoster:$visibleInRoster'
+            : 'isHome:$isHome';
     updateCalls.add('$gymId.$suffix');
     // Return the unmodified membership (invalidation drives the reload in prod).
     return _membershipB;
@@ -70,18 +75,34 @@ class _FakeMembershipRepository implements MembershipRepository {
   Future<List<RosterMember>> roster(String gymId) async => [];
 
   @override
-  Future<GymMembership> manageMember(String gymId, String userId, {bool? verifiedMember, String? gymRole}) async =>
-      _membershipB;
+  Future<List<RosterMember>> manageRoster(String gymId) async => [];
 
   @override
-  Future<BeltPromotion> promote(String gymId, String userId, {required String beltRank, required int beltStripes, String? note}) async =>
-      throw UnimplementedError();
+  Future<GymMembership> manageMember(
+    String gymId,
+    String userId, {
+    bool? verifiedMember,
+    String? gymRole,
+    String? status,
+  }) async => _membershipB;
+
+  @override
+  Future<BeltPromotion> promote(
+    String gymId,
+    String userId, {
+    required String beltRank,
+    required int beltStripes,
+    String? note,
+  }) async => throw UnimplementedError();
 
   @override
   Future<List<BeltPromotion>> userPromotions(String userId) async => [];
 
   @override
-  Future<List<GymMembership>> myMemberships() async => [_membershipA, _membershipB];
+  Future<List<GymMembership>> myMemberships() async => [
+    _membershipA,
+    _membershipB,
+  ];
 }
 
 // ── Pump helper ───────────────────────────────────────────────────────────────
@@ -97,7 +118,9 @@ Future<_FakeMembershipRepository> _pump(WidgetTester tester) async {
     ProviderScope(
       overrides: [
         membershipRepositoryProvider.overrideWithValue(fakeRepo),
-        myMembershipsProvider.overrideWith((_) async => [_membershipA, _membershipB]),
+        myMembershipsProvider.overrideWith(
+          (_) async => [_membershipA, _membershipB],
+        ),
         gymByIdProvider(_kGymAId).overrideWith((_) async => _gymA),
         gymByIdProvider(_kGymBId).overrideWith((_) async => _gymB),
       ],
@@ -131,7 +154,9 @@ void main() {
     expect(find.text('Home gym'), findsOneWidget);
   });
 
-  testWidgets('shows Verified chip for verifiedMember membership', (tester) async {
+  testWidgets('shows Verified chip for verifiedMember membership', (
+    tester,
+  ) async {
     await _pump(tester);
     expect(find.text('Verified'), findsOneWidget);
   });
@@ -157,17 +182,22 @@ void main() {
     expect(switchB.value, isTrue);
   });
 
-  testWidgets('toggling roster switch on gymB calls updateMine with visibleInRoster:false', (tester) async {
-    final fakeRepo = await _pump(tester);
+  testWidgets(
+    'toggling roster switch on gymB calls updateMine with visibleInRoster:false',
+    (tester) async {
+      final fakeRepo = await _pump(tester);
 
-    // Tap the switch for gymB (currently ON → toggle to OFF).
-    await tester.tap(find.byKey(const Key('roster-switch-$_kGymBId')));
-    await tester.pump();
+      // Tap the switch for gymB (currently ON → toggle to OFF).
+      await tester.tap(find.byKey(const Key('roster-switch-$_kGymBId')));
+      await tester.pump();
 
-    expect(fakeRepo.updateCalls, contains('$_kGymBId.visibleInRoster:false'));
-  });
+      expect(fakeRepo.updateCalls, contains('$_kGymBId.visibleInRoster:false'));
+    },
+  );
 
-  testWidgets('tapping Set home on gymB calls updateMine with isHome:true', (tester) async {
+  testWidgets('tapping Set home on gymB calls updateMine with isHome:true', (
+    tester,
+  ) async {
     final fakeRepo = await _pump(tester);
 
     await tester.tap(find.byKey(const Key('set-home-$_kGymBId')));
