@@ -48,18 +48,20 @@ class _FakeMembershipRepo implements MembershipRepository {
     String userId, {
     bool? verifiedMember,
     String? gymRole,
+    String? status,
   }) async {
     manageCalls.add({
       'gymId': gymId,
       'userId': userId,
       'verifiedMember': verifiedMember,
       'gymRole': gymRole,
+      'status': status,
     });
     return GymMembership(
       id: 'mem-1',
       gymId: gymId,
       userId: userId,
-      status: 'active',
+      status: status ?? 'active',
       verifiedMember: verifiedMember ?? false,
       gymRole: gymRole ?? 'member',
       isHome: false,
@@ -77,6 +79,9 @@ class _FakeMembershipRepo implements MembershipRepository {
 
   @override
   Future<List<RosterMember>> roster(String gymId) async => [];
+
+  @override
+  Future<List<RosterMember>> manageRoster(String gymId) async => [];
 
   @override
   Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome}) async =>

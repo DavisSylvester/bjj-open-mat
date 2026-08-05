@@ -16,8 +16,8 @@
 import { resolve } from 'path';
 // Side-effect shim MUST load before mongodb (see seed/bson-bun-shim.ts).
 import './seed/bson-bun-shim.ts';
-import { buildUsers, gyms, openMats } from './seed/fixtures.ts';
-import type { SeedUser, SeedGym, SeedOpenMat } from './seed/fixtures.ts';
+import { buildUsers, gyms, openMats, gymMemberships } from './seed/fixtures.ts';
+import type { SeedUser, SeedGym, SeedOpenMat, SeedMembership } from './seed/fixtures.ts';
 
 // ---------------------------------------------------------------------------
 // 1. Set required env defaults in-process before spawning the API
@@ -52,6 +52,7 @@ async function seed(): Promise<void> {
     await db.collection('users').drop().catch(() => undefined);
     await db.collection('gyms').drop().catch(() => undefined);
     await db.collection('openMats').drop().catch(() => undefined);
+    await db.collection('gymMemberships').drop().catch(() => undefined);
     console.log('[serve-api] Dropped existing collections.');
 
     const users: SeedUser[] = buildUsers();
@@ -63,6 +64,11 @@ async function seed(): Promise<void> {
 
     const openMatsResult = await db.collection<SeedOpenMat>('openMats').insertMany(openMats);
     console.log(`[serve-api] Inserted ${openMatsResult.insertedCount} open mats`);
+
+    const membershipsResult = await db
+      .collection<SeedMembership>('gymMemberships')
+      .insertMany(gymMemberships);
+    console.log(`[serve-api] Inserted ${membershipsResult.insertedCount} memberships`);
 
     console.log('[serve-api] Seed complete.');
   } finally {

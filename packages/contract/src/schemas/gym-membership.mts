@@ -16,6 +16,9 @@ export const GymMembership = t.Object(
     joinMethod: t.Optional(t.Union([JoinMethod], { default: "self" })),
     joinedAt: t.String(),
     createdAt: t.Optional(t.String()),
+    // Set whenever an owner/coach/admin changes `status`.
+    statusUpdatedAt: t.Optional(t.String()),
+    statusUpdatedBy: t.Optional(t.String()),
   },
   { $id: "GymMembership" },
 );

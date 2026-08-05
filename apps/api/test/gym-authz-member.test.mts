@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { assertActiveMember } from "../src/facades/gym-authz.mts";
-import type { Gym, GymMembership } from "@bjj/contract";
+import { assertActiveMember, assertCanManageGym } from "../src/facades/gym-authz.mts";
+import type { GymAuthzDeps } from "../src/facades/gym-authz.mts";
+import type { Gym, GymMembership, GymRole, MembershipStatus } from "@bjj/contract";
 
 function deps(gym: Gym | null, membership: GymMembership | null): {
   gyms: { findById(): Promise<Gym | null> };
@@ -27,5 +28,47 @@ describe("assertActiveMember", () => {
   });
   it("missing gym is not_found", async () => {
     await expect(assertActiveMember(deps(null, null), "u", "ghost", "practitioner")).rejects.toMatchObject({ code: "not_found" });
+  });
+});
+
+describe("gym authz vs membership status", () => {
+  const gym_: Gym = { id: "g1", name: "Atos", address: "x", amenities: [], isVerified: true };
+
+  function depsNew(status: MembershipStatus | undefined, gymRole: GymRole = "member"): GymAuthzDeps {
+    return {
+      gyms: { findById: async (): Promise<Gym | null> => gym_ },
+      memberships: {
+        find: async (): Promise<GymMembership | null> => ({
+          id: "m1", gymId: "g1", userId: "u1", status, verifiedMember: false, gymRole,
+          isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t",
+        }),
+      },
+    };
+  }
+
+  it("a hidden member keeps member privileges", async () => {
+    await expect(assertActiveMember(depsNew("hidden"), "u1", "g1", "practitioner")).resolves.toBeUndefined();
+  });
+
+  it("an inactive member loses member privileges", async () => {
+    await expect(assertActiveMember(depsNew("inactive"), "u1", "g1", "practitioner"))
+      .rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("a hidden coach can still manage the gym", async () => {
+    await expect(assertCanManageGym(depsNew("hidden", "coach"), "u1", "g1", "practitioner")).resolves.toBeUndefined();
+  });
+
+  it("an inactive coach cannot manage the gym", async () => {
+    await expect(assertCanManageGym(depsNew("inactive", "coach"), "u1", "g1", "practitioner"))
+      .rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("a member with no status field keeps member privileges (legacy doc, schema default is active)", async () => {
+    await expect(assertActiveMember(depsNew(undefined), "u1", "g1", "practitioner")).resolves.toBeUndefined();
+  });
+
+  it("a coach with no status field can still manage the gym (legacy doc, schema default is active)", async () => {
+    await expect(assertCanManageGym(depsNew(undefined, "coach"), "u1", "g1", "practitioner")).resolves.toBeUndefined();
   });
 });

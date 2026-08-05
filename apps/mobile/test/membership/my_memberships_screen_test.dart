@@ -70,7 +70,11 @@ class _FakeMembershipRepository implements MembershipRepository {
   Future<List<RosterMember>> roster(String gymId) async => [];
 
   @override
-  Future<GymMembership> manageMember(String gymId, String userId, {bool? verifiedMember, String? gymRole}) async =>
+  Future<List<RosterMember>> manageRoster(String gymId) async => [];
+
+  @override
+  Future<GymMembership> manageMember(String gymId, String userId,
+          {bool? verifiedMember, String? gymRole, String? status}) async =>
       _membershipB;
 
   @override

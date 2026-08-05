@@ -94,6 +94,9 @@ class _FakeMembershipRepo implements MembershipRepository {
   Future<List<RosterMember>> roster(String gymId) async => members;
 
   @override
+  Future<List<RosterMember>> manageRoster(String gymId) async => members;
+
+  @override
   Future<GymMembership> join(String gymId) async => throw UnimplementedError();
   @override
   Future<void> leave(String gymId) async => throw UnimplementedError();
@@ -103,7 +106,7 @@ class _FakeMembershipRepo implements MembershipRepository {
       throw UnimplementedError();
   @override
   Future<GymMembership> manageMember(String gymId, String userId,
-          {bool? verifiedMember, String? gymRole}) async =>
+          {bool? verifiedMember, String? gymRole, String? status}) async =>
       throw UnimplementedError();
   @override
   Future<BeltPromotion> promote(String gymId, String userId,

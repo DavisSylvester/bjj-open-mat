@@ -1,8 +1,10 @@
+export type MembershipStatus = 'pending' | 'active' | 'hidden' | 'inactive';
+
 export interface GymMembership {
   id: string;
   gymId: string;
   userId: string;
-  status?: string;
+  status?: MembershipStatus;
   verifiedMember: boolean;
   gymRole?: string;
   isHome: boolean;
@@ -10,4 +12,6 @@ export interface GymMembership {
   joinMethod?: string;
   joinedAt: string;
   createdAt?: string;
+  statusUpdatedAt?: string;
+  statusUpdatedBy?: string;
 }

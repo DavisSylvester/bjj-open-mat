@@ -358,6 +358,59 @@ describe("MessagingFacade — blocks + reports", () => {
   });
 });
 
+describe("MessagingFacade — hidden vs inactive member privileges", () => {
+  it("a hidden member can start a DM with a shared-gym member", async () => {
+    const { f } = facade({ memberships: [member("u1", "g1", { status: "hidden" }), member("u2")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    expect(conv.pairKey).toBe("u1|u2");
+  });
+
+  it("an inactive member cannot start a DM with a shared-gym member", async () => {
+    const { f } = facade({ memberships: [member("u1", "g1", { status: "inactive" }), member("u2")] });
+    await expect(f.startDirect("u1", "u2", "practitioner")).rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("a membership with no status field is treated as privileged (legacy case)", async () => {
+    const legacy = member("u1");
+    delete (legacy as { status?: string }).status;
+    const { f } = facade({ memberships: [legacy, member("u2")] });
+    const conv = await f.startDirect("u1", "u2", "practitioner");
+    expect(conv.pairKey).toBe("u1|u2");
+  });
+
+  it("createGroup accepts a hidden participant but rejects an inactive one", async () => {
+    const { f } = facade({ memberships: [member("u1"), member("u2", "g1", { status: "hidden" }), member("u3", "g1", { status: "inactive" })] });
+    const g = await f.createGroup("u1", "g1", { gymId: "g1", title: "Squad", participantIds: ["u2"] }, "practitioner");
+    expect(g.kind).toBe("group");
+    await expect(f.createGroup("u1", "g1", { gymId: "g1", title: "Squad2", participantIds: ["u3"] }, "practitioner"))
+      .rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("a hidden member still sees their gym channel in listConversations", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2", "g1", { status: "hidden" })] });
+    const [channel] = await owner.f.listChannels("u1", "g1", "practitioner");
+    await owner.f.sendMessage("u1", channel.id, { body: "hi" }, "practitioner");
+    const list = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    expect(list.items.some((s) => s.conversation.id === channel.id)).toBe(true);
+  });
+
+  it("an inactive member no longer sees their gym channel in listConversations", async () => {
+    const owner = facade({ gymOwnerId: "u1", memberships: [member("u1", "g1", { gymRole: "owner" }), member("u2", "g1", { status: "inactive" })] });
+    const [channel] = await owner.f.listChannels("u1", "g1", "practitioner");
+    await owner.f.sendMessage("u1", channel.id, { body: "hi" }, "practitioner");
+    const list = await owner.f.listConversations("u2", "practitioner", 1, 20);
+    expect(list.items.some((s) => s.conversation.id === channel.id)).toBe(false);
+  });
+
+  it("addParticipants accepts a hidden target but rejects an inactive one", async () => {
+    const { f, participants } = facade({ memberships: [member("u1"), member("u2"), member("u3", "g1", { status: "hidden" }), member("u4", "g1", { status: "inactive" })] });
+    const g = await f.createGroup("u1", "g1", { gymId: "g1", title: "S", participantIds: ["u2"] }, "practitioner");
+    await f.addParticipants("u1", g.id, { userIds: ["u3"] }, "practitioner");
+    expect(participants.get(`${g.id}:u3`)?.role).toBe("member");
+    await expect(f.addParticipants("u1", g.id, { userIds: ["u4"] }, "practitioner")).rejects.toMatchObject({ code: "forbidden" });
+  });
+});
+
 describe("MessagingFacade — push notifications", () => {
   it("sendMessage pushes to other participants but not muted or the sender", async () => {
     const seed = {

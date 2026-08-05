@@ -4,6 +4,7 @@ import {
   CreateGymRequest,
   GymMemberInviteRequest,
   UpdateGymRequest,
+  UpdateMembershipRequest,
   UpdateOpenMatRequest,
 } from "@bjj/contract";
 import type { Container } from "../container.mts";
@@ -49,6 +50,11 @@ export function adminRoutes(container: Container) {
     .put("/gyms/:id", async ({ params, body }) => data(await gymFacade.adminUpdate(params.id, body)), {
       body: UpdateGymRequest,
     })
+    .patch(
+      "/memberships/:gymId/:userId",
+      async ({ params, body }) => data(await adminFacade.updateMembership(params.gymId, params.userId, body)),
+      { body: UpdateMembershipRequest },
+    )
     .post("/gyms/:id/verify", async ({ params }) => data(await adminFacade.verifyGym(params.id, new Date())))
     .post("/gyms/:id/owner", async ({ params, body }) => data(await adminFacade.addOwner(params.id, body.userId)), {
       body: AddGymOwnerRequest,

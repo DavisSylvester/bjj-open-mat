@@ -3,6 +3,7 @@ import type {
   BeltPromotion,
   Gym,
   GymMembership,
+  MembershipStatus,
   PromoteBeltRequest,
   RosterMember,
   UpdateMembershipRequest,
@@ -25,7 +26,24 @@ type MembershipRepo = Pick<
 >;
 type PromotionRepo = Pick<PromotionRepository, 'insert' | 'listByUser'>;
 type GymRepo = Pick<GymRepository, 'findById'>;
-type UserRepo = Pick<UserRepository, 'findById' | 'update'>;
+type UserRepo = Pick<UserRepository, 'findById' | 'findByIds' | 'update'>;
+
+export interface RosterCaller {
+  readonly userId: string;
+  readonly role: UserRole;
+}
+
+/// Manager rosters sort privileged members first, then hidden, then inactive,
+/// so a manager scanning the list reads the exceptions at the bottom. `pending`
+/// never reaches this sort — the repository filters it out of both the public
+/// and manager `listByGym` queries — but it still needs a value to satisfy
+/// `Record<MembershipStatus, number>`.
+const STATUS_ORDER: Record<MembershipStatus, number> = {
+  active: 0,
+  hidden: 1,
+  inactive: 2,
+  pending: 3,
+};
 
 export class MembershipFacade {
 
@@ -75,26 +93,45 @@ export class MembershipFacade {
     await this.memberships.remove(gymId, userId);
   }
 
-  public async roster(gymId: string): Promise<RosterMember[]> {
-    const rows: GymMembership[] = await this.memberships.listByGym(gymId, false);
-    const built: RosterMember[] = await Promise.all(
-      rows.map(async (m): Promise<RosterMember> => {
-        const u: User | null = await this.users.findById(m.userId);
-        return {
-          userId: m.userId,
-          name: u?.displayName ?? 'Member',
-          beltRank: u?.beltRank,
-          beltStripes: u?.beltStripes,
-          verifiedBeltRank: u?.verifiedBeltRank,
-          verifiedBeltStripes: u?.verifiedBeltStripes,
-          avatarUrl: u?.avatarUrl,
-          gymRole: m.gymRole ?? 'member',
-          verifiedMember: m.verifiedMember,
-          hasProfile: u !== null,
-        };
-      }),
-    );
-    return built;
+  public async roster(
+    gymId: string,
+    includeHidden: boolean = false,
+    caller?: RosterCaller,
+  ): Promise<RosterMember[]> {
+    if (includeHidden) {
+      if (!caller) throw new AppError('unauthorized', 'Authentication required');
+      await this.assertCanManage(caller.userId, gymId, caller.role);
+    }
+    const rows: GymMembership[] = await this.memberships.listByGym(gymId, includeHidden);
+    const users: User[] = await this.users.findByIds(rows.map((m) => m.userId));
+    const usersById: Map<string, User> = new Map(users.map((u) => [u.id, u]));
+    const built: RosterMember[] = rows.map((m): RosterMember => {
+      const u: User | undefined = usersById.get(m.userId);
+      return {
+        userId: m.userId,
+        name: u?.displayName ?? 'Member',
+        beltRank: u?.beltRank,
+        beltStripes: u?.beltStripes,
+        verifiedBeltRank: u?.verifiedBeltRank,
+        verifiedBeltStripes: u?.verifiedBeltStripes,
+        avatarUrl: u?.avatarUrl,
+        gymRole: m.gymRole ?? 'member',
+        verifiedMember: m.verifiedMember,
+        status: m.status ?? 'active',
+        hasProfile: u !== undefined,
+        // Only populated on manager rosters: the public payload must stay
+        // byte-identical to the pre-existing shape, so this key is omitted
+        // entirely (not `true`) when includeHidden is false.
+        ...(includeHidden ? { visibleInRoster: m.visibleInRoster } : {}),
+      };
+    });
+    return built.sort((a, b) => {
+      const statusDiff: number = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+      if (statusDiff !== 0) return statusDiff;
+      // Pinned locale: the default is environment-dependent, which would let
+      // the same roster sort differently on a dev machine and in CI.
+      return a.name.localeCompare(b.name, 'en');
+    });
   }
 
   public async updateMyMembership(
@@ -127,6 +164,21 @@ export class MembershipFacade {
     const patch: Partial<GymMembership> = {};
     if (req.verifiedMember !== undefined) patch.verifiedMember = req.verifiedMember;
     if (req.gymRole !== undefined) patch.gymRole = req.gymRole;
+    if (req.status !== undefined) {
+      // Mirrors the self-promotion block: a manager must not be able to hide or
+      // deactivate themselves, and the gym's owner must stay visible in their
+      // own gym (transfer ownership first).
+      if (callerId === targetUserId) {
+        throw new AppError('forbidden', 'Cannot change your own membership status');
+      }
+      const gym: Gym | null = await this.gyms.findById(gymId);
+      if (gym?.ownerId === targetUserId && req.status !== 'active') {
+        throw new AppError('forbidden', "Cannot hide or deactivate the gym's owner");
+      }
+      patch.status = req.status;
+      patch.statusUpdatedAt = new Date().toISOString();
+      patch.statusUpdatedBy = callerId;
+    }
     return (await this.memberships.update(gymId, targetUserId, patch)) ?? target;
   }
 

@@ -21,7 +21,7 @@ describe("membership requests + user verified fields", () => {
   });
   it("RosterMember requires identity + role flags", () => {
     expect(Value.Check(RosterMember, {
-      userId: "u1", name: "A", gymRole: "coach", verifiedMember: true, hasProfile: true,
+      userId: "u1", name: "A", gymRole: "coach", verifiedMember: true, hasProfile: true, status: "active",
     })).toBe(true);
   });
 });

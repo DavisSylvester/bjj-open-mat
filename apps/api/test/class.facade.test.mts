@@ -133,4 +133,29 @@ describe("ClassFacade authorization + rsvp", () => {
     await expect(f.overrideOccurrence("owner1", "c1", "2026-08-04", { status: "cancelled" }, "gym_owner"))
       .rejects.toMatchObject({ code: "bad_request" });
   });
+
+  it("rsvp snapshots isMember true for a hidden member (hidden keeps privileges)", async () => {
+    const { f, rsvps } = facade({
+      classes: [recur()],
+      memberships: [{ id: "m", gymId: "g1", userId: "u1", status: "hidden", verifiedMember: true, gymRole: "member", isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t" }],
+    });
+    await f.rsvp("u1", "c1", "2026-08-03");
+    expect(rsvps[0]?.isMember).toBe(true);
+  });
+
+  it("rsvp snapshots isMember false for an inactive member", async () => {
+    const { f, rsvps } = facade({
+      classes: [recur()],
+      memberships: [{ id: "m", gymId: "g1", userId: "u1", status: "inactive", verifiedMember: true, gymRole: "member", isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t" }],
+    });
+    await f.rsvp("u1", "c1", "2026-08-03");
+    expect(rsvps[0]?.isMember).toBe(false);
+  });
+
+  it("rsvp snapshots isMember true for a membership with no status field (legacy case)", async () => {
+    const legacy = { id: "m", gymId: "g1", userId: "u1", verifiedMember: true, gymRole: "member", isHome: false, visibleInRoster: true, joinMethod: "self", joinedAt: "t" } as GymMembership;
+    const { f, rsvps } = facade({ classes: [recur()], memberships: [legacy] });
+    await f.rsvp("u1", "c1", "2026-08-03");
+    expect(rsvps[0]?.isMember).toBe(true);
+  });
 });

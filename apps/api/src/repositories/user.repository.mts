@@ -36,6 +36,14 @@ export class UserRepository extends BaseRepository {
     return stripId<UserType>(doc);
   }
 
+  public async findByIds(ids: string[]): Promise<UserType[]> {
+    if (ids.length === 0) return [];
+    const docs = await this.collection<UserDoc>(COLLECTIONS.users)
+      .find({ _id: { $in: ids } })
+      .toArray();
+    return docs.map((d) => stripId<UserType>(d) as UserType);
+  }
+
   public async upsertByAuth0Id(auth0Id: string, user: NewUser): Promise<UserType> {
     const col = this.collection<UserDoc>(COLLECTIONS.users);
     const existing = await col.findOne({ auth0Id });

@@ -12,8 +12,15 @@ abstract class MembershipRepository {
   Future<GymMembership> join(String gymId);
   Future<void> leave(String gymId);
   Future<List<RosterMember>> roster(String gymId);
+  Future<List<RosterMember>> manageRoster(String gymId);
   Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome});
-  Future<GymMembership> manageMember(String gymId, String userId, {bool? verifiedMember, String? gymRole});
+  Future<GymMembership> manageMember(
+    String gymId,
+    String userId, {
+    bool? verifiedMember,
+    String? gymRole,
+    String? status,
+  });
   Future<BeltPromotion> promote(
     String gymId,
     String userId, {
@@ -59,6 +66,16 @@ class ApiMembershipRepository implements MembershipRepository {
   }
 
   @override
+  Future<List<RosterMember>> manageRoster(String gymId) async {
+    try {
+      final res = await _dio.get(Endpoints.gymMembersManage(gymId));
+      return unwrapList(res.data as Map<String, dynamic>).items.map(RosterMember.fromJson).toList();
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
+  }
+
+  @override
   Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome}) async {
     try {
       final body = <String, dynamic>{
@@ -78,11 +95,13 @@ class ApiMembershipRepository implements MembershipRepository {
     String userId, {
     bool? verifiedMember,
     String? gymRole,
+    String? status,
   }) async {
     try {
       final body = <String, dynamic>{
         if (verifiedMember != null) 'verifiedMember': verifiedMember,
         if (gymRole != null) 'gymRole': gymRole,
+        if (status != null) 'status': status,
       };
       final res = await _dio.patch(Endpoints.gymMember(gymId, userId), data: body);
       return GymMembership.fromJson(unwrapData(res.data as Map<String, dynamic>));
@@ -139,6 +158,13 @@ final membershipRepositoryProvider = Provider<MembershipRepository>((ref) {
 
 final rosterProvider = FutureProvider.family<List<RosterMember>, String>((ref, gymId) {
   return ref.read(membershipRepositoryProvider).roster(gymId);
+});
+
+/// Manager-only roster: also carries hidden and inactive members. Deliberately
+/// separate from [rosterProvider] so the DM picker, class assignment, and
+/// permission derivations keep seeing only active, visible members.
+final manageRosterProvider = FutureProvider.family<List<RosterMember>, String>((ref, gymId) {
+  return ref.read(membershipRepositoryProvider).manageRoster(gymId);
 });
 
 final userPromotionsProvider = FutureProvider.family<List<BeltPromotion>, String>((ref, userId) {

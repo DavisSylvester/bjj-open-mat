@@ -15,6 +15,9 @@
   <div class="members-container">
     <h1 class="members-title">Members</h1>
     <p class="members-count">{{ total() }} total memberships</p>
+    @if (error()) {
+      <p class="members-error" data-testid="members-error">{{ error() }}</p>
+    }
 
     <div class="table-wrapper">
       <table z-table data-testid="members-grid">
@@ -25,6 +28,8 @@
             <th z-table-head>Role</th>
             <th z-table-head>Verified</th>
             <th z-table-head>Status</th>
+            <th z-table-head>Visible</th>
+            <th z-table-head>Actions</th>
           </tr>
         </thead>
         <tbody z-table-body>
@@ -51,12 +56,35 @@
                 }
               </td>
               <td z-table-cell>
-                @if (member.status) {
-                  <z-badge [zType]="member.status === 'active' ? 'default' : 'outline'">
-                    {{ member.status }}
-                  </z-badge>
+                <z-badge [zType]="badgeType(member.status)" data-testid="member-status">
+                  {{ member.status ?? 'active' }}
+                </z-badge>
+              </td>
+              <td z-table-cell>
+                @if (member.visibleInRoster) {
+                  <z-badge zType="outline" data-testid="member-visible">Visible</z-badge>
                 } @else {
-                  <span class="no-value">—</span>
+                  <z-badge zType="outline" data-testid="member-visible">Self-hidden</z-badge>
+                }
+              </td>
+              <td z-table-cell>
+                @if (isBusy(member.id)) {
+                  <z-spinner class="size-4" />
+                } @else {
+                  <div class="member-actions">
+                    @if (member.status !== 'hidden') {
+                      <button type="button" class="row-action" data-testid="member-hide"
+                        (click)="setStatus(member, 'hidden')">Hide</button>
+                    }
+                    @if (member.status !== 'inactive') {
+                      <button type="button" class="row-action" data-testid="member-deactivate"
+                        (click)="setStatus(member, 'inactive')">Deactivate</button>
+                    }
+                    @if (member.status === 'hidden' || member.status === 'inactive') {
+                      <button type="button" class="row-action" data-testid="member-reactivate"
+                        (click)="setStatus(member, 'active')">Reactivate</button>
+                    }
+                  </div>
                 }
               </td>
             </tr>

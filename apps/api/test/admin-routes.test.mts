@@ -90,4 +90,42 @@ describe("admin routes (unauthenticated)", () => {
     const body = await res.json() as { data: unknown[] };
     expect(body.data.length).toBeGreaterThan(0);
   });
+
+  it("PATCH /api/v1/admin/memberships/:gymId/:userId sets status", async () => {
+    // Relies on seeded gym g-1 having no ownerId, so the owner guard rail
+    // (a gym's owner cannot be hidden/deactivated) does not fire for u-1.
+    const res = await fetch(`${base}/api/v1/admin/memberships/g-1/u-1`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ status: "hidden" }),
+    });
+    expect(res.status).toBe(200);
+    const body = await res.json() as { data: { status: string; statusUpdatedBy: string } };
+    expect(body.data.status).toBe("hidden");
+    expect(body.data.statusUpdatedBy).toBe("admin");
+  });
+
+  it("PATCH /api/v1/admin/memberships rejects pending", async () => {
+    const res = await fetch(`${base}/api/v1/admin/memberships/g-1/u-1`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ status: "pending" }),
+    });
+    // The app's global error handler normalizes every VALIDATION failure to 400
+    // (apps/api/src/http/error-handler.mts:17), not 422.
+    expect(res.status).toBe(400);
+  });
+
+  it("a hidden member drops out of the public roster", async () => {
+    // Runs after the PATCH above, which set m-1 to hidden.
+    const res = await fetch(`${base}/api/v1/gyms/g-1/members`);
+    expect(res.status).toBe(200);
+    const body = await res.json() as { data: { userId: string }[] };
+    expect(body.data.map((r) => r.userId)).not.toContain("u-1");
+  });
+
+  it("includeHidden without a manager token is refused", async () => {
+    const res = await fetch(`${base}/api/v1/gyms/g-1/members?includeHidden=true`);
+    expect(res.status).toBe(401);
+  });
 });

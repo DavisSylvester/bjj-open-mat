@@ -42,12 +42,15 @@ class _FakeMembershipRepo implements MembershipRepository {
   Future<List<RosterMember>> roster(String gymId) async => [];
 
   @override
+  Future<List<RosterMember>> manageRoster(String gymId) async => [];
+
+  @override
   Future<GymMembership> updateMine(String gymId, {bool? visibleInRoster, bool? isHome}) async =>
       throw UnimplementedError();
 
   @override
   Future<GymMembership> manageMember(String gymId, String userId,
-          {bool? verifiedMember, String? gymRole}) async =>
+          {bool? verifiedMember, String? gymRole, String? status}) async =>
       throw UnimplementedError();
 
   @override

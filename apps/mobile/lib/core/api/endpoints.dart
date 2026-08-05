@@ -59,6 +59,8 @@ class Endpoints {
 
   // Membership
   static String gymMembers(String gymId) => '/api/v1/gyms/$gymId/members';
+  /// Owner/coach/admin roster — also returns hidden and inactive members.
+  static String gymMembersManage(String gymId) => '/api/v1/gyms/$gymId/members?includeHidden=true';
   static String gymMemberMe(String gymId) => '/api/v1/gyms/$gymId/members/me';
   static String gymMember(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId';
   static String gymMemberPromotions(String gymId, String userId) => '/api/v1/gyms/$gymId/members/$userId/promotions';

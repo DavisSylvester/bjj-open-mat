@@ -10,6 +10,8 @@ class GymMembership {
   final String joinMethod;
   final String joinedAt;
   final String? createdAt;
+  final String? statusUpdatedAt;
+  final String? statusUpdatedBy;
 
   const GymMembership({
     required this.id,
@@ -23,13 +25,15 @@ class GymMembership {
     required this.joinMethod,
     required this.joinedAt,
     this.createdAt,
+    this.statusUpdatedAt,
+    this.statusUpdatedBy,
   });
 
   factory GymMembership.fromJson(Map<String, dynamic> json) => GymMembership(
         id: json['id'] as String,
         gymId: json['gymId'] as String,
         userId: json['userId'] as String,
-        status: json['status'] as String,
+        status: json['status'] as String? ?? 'active',
         verifiedMember: json['verifiedMember'] as bool,
         gymRole: json['gymRole'] as String,
         isHome: json['isHome'] as bool,
@@ -37,5 +41,7 @@ class GymMembership {
         joinMethod: json['joinMethod'] as String,
         joinedAt: json['joinedAt'] as String,
         createdAt: json['createdAt'] as String?,
+        statusUpdatedAt: json['statusUpdatedAt'] as String?,
+        statusUpdatedBy: json['statusUpdatedBy'] as String?,
       );
 }
