@@ -260,8 +260,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   }
 }
 
-/// Always-on "Gyms near you" section: up to 100 gyms within 50 miles (80 km)
-/// of the device, sourced from [nearbyGymsProvider]. Hidden while empty/erroring.
+/// Always-on "Gyms near you" section: up to 50 gyms within 50 miles (80 km) of
+/// the device (50 is the API's maximum page size), sourced from
+/// [nearbyGymsProvider]. Hidden while empty/erroring.
 class _NearbyGymsSection extends ConsumerWidget {
   final double lat;
   final double lng;
