@@ -147,8 +147,8 @@ Lives in the facade, not the repository — it is a product policy, not a query.
 
 - Applies **only when `page === 1` and the result set is empty**. A partial
   first page is a real answer and is not widened.
-- Ladder: double the requested radius, at most twice, capped at 161 km (100 mi).
-  A 40 km (25 mi) request therefore tries 40 → 80 → 161.
+- Ladder: double the requested radius, at most twice, clamped to a 161 km
+  (100 mi) cap. A 40 km (25 mi) request therefore tries 40 → 80 → 160.
 - Stops at the first radius that yields ≥ 1 result.
 - The radius that produced results is returned as `effectiveRadiusKm`.
 - Pages 2+ never widen. The client passes the `effectiveRadiusKm` it received
@@ -237,7 +237,7 @@ The required scenario, verbatim from the requirement — search 75495, expand to
    `data[0].distanceKm` is between 40 and 80; `joinCode` is absent.
 
 A second case asserts the negative control — a gym seeded 200 km away is *not*
-returned even after the ladder exhausts, and `effectiveRadiusKm` is 161.
+returned even after the ladder exhausts, and `effectiveRadiusKm` is 160.
 
 Seed data is inserted and dropped by the test into its own database, following
 the pattern in `gym.repository.test.mts`.
