@@ -25,6 +25,12 @@ export const Gym = t.Object(
     rating: t.Optional(t.Number({ minimum: 0, maximum: 5 })),
     ratingCount: t.Optional(t.Integer({ minimum: 0 })),
     distanceKm: t.Optional(t.Number({ minimum: 0 })),
+    // Ranking seam for future paid placement. Nothing writes rankBoost today;
+    // the search sort reads it so that selling placement later is a write path
+    // plus a badge, not a contract change. `sponsored` is derived at read time
+    // as rankBoost > 0 and is never persisted.
+    rankBoost: t.Optional(t.Integer({ default: 0 })),
+    sponsored: t.Optional(t.Boolean({ default: false })),
     createdAt: t.Optional(t.String()),
   },
   { $id: "Gym" },

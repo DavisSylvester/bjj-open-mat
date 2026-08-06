@@ -1,7 +1,14 @@
 import { type Static, type TSchema, Type as t } from "@sinclair/typebox";
 
 export const ListMeta = t.Object(
-  { page: t.Integer({ minimum: 1 }), limit: t.Integer({ minimum: 1 }), total: t.Integer({ minimum: 0 }) },
+  {
+    page: t.Integer({ minimum: 1 }),
+    limit: t.Integer({ minimum: 1 }),
+    total: t.Integer({ minimum: 0 }),
+    // Present only on geo searches. The radius that actually produced these
+    // results — differs from the requested radius when the search auto-widened.
+    effectiveRadiusKm: t.Optional(t.Number({ minimum: 0 })),
+  },
   { $id: "ListMeta" },
 );
 export type ListMeta = Static<typeof ListMeta>;

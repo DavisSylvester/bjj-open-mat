@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/design/tokens.dart';
 import '../../../shared/widgets/error_state.dart';
@@ -12,6 +13,7 @@ import '../data/gym_permissions.dart';
 import '../data/gym_repository.dart';
 import '../data/directions.dart';
 import '../data/logo_banner_dismissal.dart';
+import '../data/website_links.dart';
 import '../models/gym.dart';
 
 class GymDetailScreen extends ConsumerWidget {
@@ -339,6 +341,35 @@ class _GlassGymDetail extends ConsumerWidget {
                 ),
               ),
             ],
+            _DetailRow(
+              key: const Key('gym-detail-address'),
+              icon: LucideIcons.mapPin,
+              label: gym.address,
+              t: t,
+              onTap: () => openDirections(ref, context, gymId: gym.id, address: gym.address),
+            ),
+            if ((gym.phone ?? '').trim().isNotEmpty)
+              _DetailRow(
+                key: const Key('gym-detail-phone'),
+                icon: LucideIcons.phone,
+                label: gym.phone!.trim(),
+                t: t,
+                onTap: () => launchUrl(
+                  Uri.parse('tel:${gym.phone!.trim()}'),
+                  mode: LaunchMode.externalApplication,
+                ),
+              ),
+            if ((gym.website ?? '').trim().isNotEmpty)
+              _DetailRow(
+                key: const Key('gym-detail-website'),
+                icon: LucideIcons.globe,
+                // Display the compact host, not the raw URL — a long path
+                // would overflow the row.
+                label: websiteDisplayHost(gym.website!.trim()),
+                t: t,
+                onTap: () => openWebsite(context, gym.website!.trim()),
+              ),
+            const SizedBox(height: 8),
             if (gym.description != null && gym.description!.isNotEmpty) ...[
               const SizedBox(height: 20),
               Text('About', style: t.h2Style),
@@ -354,10 +385,57 @@ class _GlassGymDetail extends ConsumerWidget {
                 child: Text(gym.description!, style: t.bodyStyle),
               ),
             ],
+            if (gym.amenities.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              Text('Amenities', style: t.h2Style),
+              const SizedBox(height: 10),
+              Wrap(
+                key: const Key('gym-detail-amenities'),
+                spacing: 8,
+                runSpacing: 8,
+                children: gym.amenities
+                    .map((a) => _Pill(label: a, color: t.primary, t: t))
+                    .toList(),
+              ),
+            ],
             const SizedBox(height: 80),
           ])),
         ),
       ]),
+    );
+  }
+}
+
+/// A tappable icon + label row used by the contact block. Rendered only when
+/// its underlying field is present, so the block collapses on sparse gyms
+/// rather than showing empty scaffolding.
+class _DetailRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+  final AppTokens t;
+
+  const _DetailRow({required this.icon, required this.label, required this.t, this.onTap, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: t.muted),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                label,
+                style: t.bodyStyle.copyWith(color: onTap == null ? t.text : t.primary),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

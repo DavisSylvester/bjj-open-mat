@@ -9,7 +9,10 @@ import '../../../core/design/tokens.dart';
 import '../../../core/location/geo_repository.dart';
 import '../../../core/location/location_controller.dart';
 import '../../../shared/widgets/gym_card.dart';
+import '../../../shared/widgets/nearby_gym_card.dart';
 import '../../../shared/widgets/session_row.dart';
+import '../../gyms/data/gym_search_controller.dart';
+import '../../gyms/data/gym_search_query.dart';
 import '../../open_mats/models/open_mat.dart';
 import '../data/search_query.dart';
 import '../data/search_repository.dart';
@@ -42,6 +45,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   String? _locationLabel;
 
   SearchQuery _query = const SearchQuery(radiusKm: 16);
+
+  /// Which entity the screen is searching. The geo inputs (radius, ZIP, GPS)
+  /// are shared across modes; only the result list and the filter chips differ.
+  bool _gymMode = false;
 
   @override
   void initState() {
@@ -146,7 +153,29 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return null;
   }
 
+  /// Build the gym query from the same geo inputs the open-mat query uses.
+  /// Coordinates are suppressed when a ZIP is present, matching _rebuildQuery.
+  GymSearchQuery _buildGymQuery() {
+    final zipText = _zipCtrl.text.trim();
+    final useZip = zipText.isNotEmpty;
+    return GymSearchQuery(
+      q: _searchCtrl.text,
+      lat: useZip ? null : _gpsLat,
+      lng: useZip ? null : _gpsLng,
+      zip: useZip ? zipText : null,
+      radiusKm: _distanceMi * 1.60934,
+    );
+  }
+
+  void _submitGymSearch() {
+    ref.read(gymSearchControllerProvider.notifier).submit(_buildGymQuery());
+  }
+
   void _rebuildQuery() {
+    if (_gymMode) {
+      _submitGymSearch();
+      return;
+    }
     // Enforce a single geo source: ZIP takes precedence when present, and
     // lat/lng derive ONLY from the captured GPS coords (suppressed when a zip
     // is set) — so we never send both zip and lat/lng.
@@ -338,6 +367,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Widget _buildGlass(AppTokens t) {
     final results = ref.watch(searchResultsProvider(_query));
+    final gymState = ref.watch(gymSearchControllerProvider);
     final locStatus = ref.watch(locationControllerProvider).status;
     final whenOptions = _whenOptions(t);
     final filters = [
@@ -346,6 +376,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       (id: 'both', label: 'Gi · No-Gi', color: t.both),
       (id: 'free', label: 'Free', color: t.green),
     ];
+    final resultCount = _gymMode ? gymState.total : (results.asData?.value.length ?? 0);
+    final resultCountLabel = _gymMode
+        ? (resultCount == 1 ? ' Gym' : ' Gyms')
+        : (resultCount == 1 ? ' Session' : ' Sessions');
     return Scaffold(
       backgroundColor: t.bg,
       body: SafeArea(
@@ -369,6 +403,22 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ],
               ),
               const SizedBox(height: 14),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: SegmentedButton<bool>(
+                  key: const Key('search-mode-toggle'),
+                  segments: const [
+                    ButtonSegment<bool>(value: false, label: Text('Open Mats')),
+                    ButtonSegment<bool>(value: true, label: Text('Gyms')),
+                  ],
+                  selected: <bool>{_gymMode},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (sel) {
+                    setState(() => _gymMode = sel.first);
+                    _rebuildQuery();
+                  },
+                ),
+              ),
               Container(
                 height: 52,
                 decoration: BoxDecoration(color: t.panel, borderRadius: BorderRadius.circular(15)),
@@ -381,7 +431,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       controller: _searchCtrl,
                       style: t.h2Style.copyWith(fontSize: 15, color: t.text),
                       decoration: InputDecoration(
-                        hintText: _locationLabel ?? 'Los Angeles, CA',
+                        hintText: _gymMode ? 'Search gyms by name or city' : (_locationLabel ?? 'Los Angeles, CA'),
                         hintStyle: t.h2Style.copyWith(fontSize: 15),
                         border: InputBorder.none,
                         isDense: true,
@@ -446,69 +496,73 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
             ]),
           ),
-          SizedBox(
-            height: 42,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              separatorBuilder: (_, _) => const SizedBox(width: 8),
-              itemCount: filters.length,
-              itemBuilder: (_, i) {
-                final f = filters[i];
-                final on = _filters.contains(f.id);
-                return GestureDetector(
-                  onTap: () => _toggleFilter(f.id),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-                    decoration: BoxDecoration(
-                      color: on ? f.color.withValues(alpha: 0.09) : t.bg,
-                      borderRadius: BorderRadius.circular(999),
-                      border: Border.all(
-                        color: on ? f.color.withValues(alpha: 0.33) : t.borderHi,
-                        width: 1.5,
+          if (!_gymMode) ...[
+            SizedBox(
+              height: 42,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemCount: filters.length,
+                itemBuilder: (_, i) {
+                  final f = filters[i];
+                  final on = _filters.contains(f.id);
+                  return GestureDetector(
+                    onTap: () => _toggleFilter(f.id),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                      decoration: BoxDecoration(
+                        color: on ? f.color.withValues(alpha: 0.09) : t.bg,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(
+                          color: on ? f.color.withValues(alpha: 0.33) : t.borderHi,
+                          width: 1.5,
+                        ),
                       ),
+                      child: Row(children: [
+                        if (on) ...[
+                          Icon(LucideIcons.check, size: 13, color: f.color),
+                          const SizedBox(width: 5),
+                        ],
+                        Text(f.label, style: t.miniStyle.copyWith(
+                          color: on ? f.color : t.body,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        )),
+                      ]),
                     ),
-                    child: Row(children: [
-                      if (on) ...[
-                        Icon(LucideIcons.check, size: 13, color: f.color),
-                        const SizedBox(width: 5),
-                      ],
-                      Text(f.label, style: t.miniStyle.copyWith(
-                        color: on ? f.color : t.body,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                      )),
-                    ]),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
+          ],
           const SizedBox(height: 18),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
             child: Row(children: [
-              Expanded(child: Container(
-                padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: t.border),
-                  boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
-                ),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('WHEN', style: t.miniStyle.copyWith(color: t.muted, fontSize: 10)),
-                  const SizedBox(height: 6),
-                  Row(children: [
-                    Icon(LucideIcons.calendar, size: 15, color: t.primary),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(_whenLabel, style: t.h2Style.copyWith(fontSize: 14), overflow: TextOverflow.ellipsis),
-                    ),
+              if (!_gymMode) ...[
+                Expanded(child: Container(
+                  padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: t.border),
+                    boxShadow: [BoxShadow(color: const Color(0xFF14151A).withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+                  ),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('WHEN', style: t.miniStyle.copyWith(color: t.muted, fontSize: 10)),
+                    const SizedBox(height: 6),
+                    Row(children: [
+                      Icon(LucideIcons.calendar, size: 15, color: t.primary),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(_whenLabel, style: t.h2Style.copyWith(fontSize: 14), overflow: TextOverflow.ellipsis),
+                      ),
+                    ]),
                   ]),
-                ]),
-              )),
-              const SizedBox(width: 12),
+                )),
+                const SizedBox(width: 12),
+              ],
               Expanded(child: Container(
                 padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
                 decoration: BoxDecoration(
@@ -547,26 +601,28 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               )),
             ]),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
-            child: SizedBox(
-              height: 34,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                separatorBuilder: (_, _) => const SizedBox(width: 8),
-                itemCount: whenOptions.length,
-                itemBuilder: (_, i) => whenOptions[i],
+          if (!_gymMode) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+              child: SizedBox(
+                height: 34,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
+                  itemCount: whenOptions.length,
+                  itemBuilder: (_, i) => whenOptions[i],
+                ),
               ),
             ),
-          ),
+          ],
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 RichText(text: TextSpan(children: [
-                  TextSpan(text: '${results.asData?.value.length ?? 0}', style: t.h2Style.copyWith(color: t.primary)),
-                  TextSpan(text: (results.asData?.value.length ?? 0) == 1 ? ' Session' : ' Sessions', style: t.h2Style),
+                  TextSpan(text: '$resultCount', style: t.h2Style.copyWith(color: t.primary)),
+                  TextSpan(text: resultCountLabel, style: t.h2Style),
                 ])),
                 const Spacer(),
                 GestureDetector(
@@ -591,7 +647,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
           ),
           Expanded(
-            child: results.when(
+            child: _gymMode
+                ? _buildGymResults(t)
+                : results.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
                 child: Text("Couldn't load results", style: t.bodyStyle.copyWith(color: t.muted)),
@@ -652,4 +710,74 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ),
     );
   }
+
+  // ── Gyms mode results ────────────────────────────────────────────────────
+  Widget _buildGymResults(AppTokens t) {
+    final state = ref.watch(gymSearchControllerProvider);
+
+    if (state.loading && state.items.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (state.error != null && state.items.isEmpty) {
+      return const EmptyState(
+        icon: LucideIcons.alertTriangle,
+        title: "Couldn't load gyms",
+        subtitle: 'Check your connection and try again.',
+      );
+    }
+
+    if (state.searched && state.items.isEmpty) {
+      return const EmptyState(
+        icon: LucideIcons.mapPin,
+        title: 'No gyms found',
+        subtitle: 'Try a different area, widen the radius, or clear the search text.',
+      );
+    }
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The API widened the search because nothing was in range. Say so —
+          // otherwise the radius control silently misreports what is shown.
+          if (state.widened)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                'No gyms within ${_miles(state.requestedRadiusKm)} mi — '
+                'showing results within ${_miles(state.effectiveRadiusKm)} mi.',
+                key: const Key('gym-search-widened-notice'),
+                style: t.miniStyle.copyWith(color: t.muted),
+              ),
+            ),
+          ...state.items.map(
+            (gym) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: NearbyGymCard(gym: gym),
+            ),
+          ),
+          if (state.hasMore)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Center(
+                child: state.loading
+                    ? const CircularProgressIndicator()
+                    : TextButton(
+                        key: const Key('gym-search-load-more'),
+                        onPressed: () => ref.read(gymSearchControllerProvider.notifier).loadMore(),
+                        child: const Text('Load more'),
+                      ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  static String _miles(double km) => (km / 1.60934).round().toString();
 }

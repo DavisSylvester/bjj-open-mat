@@ -38,6 +38,29 @@ export function fromDoc(doc: (GymDoc & { distanceMeters?: number }) | null): Gym
   return gym;
 }
 
+/**
+ * Escape regex metacharacters so user text is matched literally. Without this a
+ * gym named "Alliance (North)" is unsearchable (the parens become a group) and
+ * a crafted `q` is a ReDoS vector.
+ */
+function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export interface GymSearchOptions {
+  lat: number;
+  lng: number;
+  radiusKm: number;
+  q?: string;
+  skip: number;
+  limit: number;
+}
+
+interface FacetResult {
+  total: { n: number }[];
+  items: (GymDoc & { distanceMeters: number })[];
+}
+
 export class GymRepository extends BaseRepository {
   public constructor(db: Db) {
     super(db);
@@ -82,20 +105,48 @@ export class GymRepository extends BaseRepository {
     return this.findById(id);
   }
 
-  public async findNearby(lat: number, lng: number, radiusKm: number): Promise<Gym[]> {
+  public async searchNearby(opts: GymSearchOptions): Promise<{ items: Gym[]; total: number }> {
     const col = this.collection<GymDoc>(COLLECTIONS.gyms);
-    const docs = await col
-      .aggregate<GymDoc & { distanceMeters: number }>([
-        {
-          $geoNear: {
-            near: { type: "Point", coordinates: [lng, lat] },
-            distanceField: "distanceMeters",
-            maxDistance: radiusKm * 1000,
-            spherical: true,
-          },
+    const q = opts.q?.trim();
+
+    const pipeline: Document[] = [
+      {
+        // $geoNear must be the first stage in the pipeline. It both filters by
+        // maxDistance and emits distanceMeters for the sort below.
+        $geoNear: {
+          near: { type: "Point", coordinates: [opts.lng, opts.lat] },
+          distanceField: "distanceMeters",
+          maxDistance: opts.radiusKm * 1000,
+          spherical: true,
         },
-      ])
-      .toArray();
-    return docs.map((d) => fromDoc(d) as Gym);
+      },
+    ];
+
+    if (q) {
+      const rx = { $regex: escapeRegex(q), $options: "i" };
+      pipeline.push({ $match: { $or: [{ name: rx }, { city: rx }] } });
+    }
+
+    // Normalize the missing field to 0 before sorting: no document carries
+    // rankBoost today, and sorting on a missing field orders by BSON
+    // null-vs-integer rules rather than by distance.
+    pipeline.push({ $addFields: { rankBoost: { $ifNull: ["$rankBoost", 0] } } });
+
+    // joinCode is a gym's roster-join secret and this endpoint is public.
+    // ownerId is not the caller's business either. getById is unaffected.
+    pipeline.push({ $project: { joinCode: 0, ownerId: 0 } });
+
+    pipeline.push({
+      $facet: {
+        total: [{ $count: "n" }],
+        items: [{ $sort: { rankBoost: -1, distanceMeters: 1 } }, { $skip: opts.skip }, { $limit: opts.limit }],
+      },
+    });
+
+    const [res] = await col.aggregate<FacetResult>(pipeline).toArray();
+    return {
+      items: (res?.items ?? []).map((d) => fromDoc(d) as Gym),
+      total: res?.total[0]?.n ?? 0,
+    };
   }
 }

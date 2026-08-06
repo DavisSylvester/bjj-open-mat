@@ -14,10 +14,38 @@ export interface DirectionsPayload {
   mapsUrl: string;
 }
 
+/** 100 miles. Widening never exceeds this. */
+const WIDEN_CAP_KM = 161;
+/** Number of doublings attempted after the requested radius. */
+const WIDEN_STEPS = 2;
+
+export interface GymSearchRequest {
+  lat?: number;
+  lng?: number;
+  zip?: string;
+  q?: string;
+  radiusKm: number;
+  page: number;
+  limit: number;
+}
+
+/**
+ * [requested, requested*2, requested*4], each clamped to WIDEN_CAP_KM, with
+ * duplicates dropped so a request already at the cap yields a single attempt.
+ */
+function buildRadiusLadder(requestedKm: number): number[] {
+  const ladder: number[] = [Math.min(requestedKm, WIDEN_CAP_KM)];
+  for (let i = 0; i < WIDEN_STEPS; i += 1) {
+    const next = Math.min((ladder[ladder.length - 1] as number) * 2, WIDEN_CAP_KM);
+    if (next > (ladder[ladder.length - 1] as number)) ladder.push(next);
+  }
+  return ladder;
+}
+
 export class GymFacade {
 
   public constructor(
-    private readonly gyms: Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "findNearby">,
+    private readonly gyms: Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "searchNearby">,
     private readonly favorites: Pick<FavoriteRepository, "add" | "remove" | "listGymIds">,
     private readonly newId: IdFactory,
     private readonly geocoder: Pick<Geocoder, "lookupZip">,
@@ -73,8 +101,50 @@ export class GymFacade {
       : this.gyms.list(opts.skip, opts.limit);
   }
 
-  public async nearby(lat: number, lng: number, radiusKm: number): Promise<Gym[]> {
-    return this.gyms.findNearby(lat, lng, radiusKm);
+  /**
+   * Geo gym search. Resolves the origin (coords win over zip), then walks a
+   * widening radius ladder until something is found.
+   *
+   * Widening is a product policy, not a query concern, which is why it lives
+   * here and not in the repository: an empty first page in a rural area should
+   * quietly reach further rather than show the user nothing. It applies ONLY to
+   * an empty page 1 — a partial page is a real answer, and widening mid-paging
+   * would shuffle the result set under the user. Clients page through the
+   * returned effectiveRadiusKm to stay on one stable set.
+   */
+  public async searchNearby(
+    req: GymSearchRequest,
+  ): Promise<{ items: Gym[]; total: number; effectiveRadiusKm: number }> {
+    const origin = this.resolveOrigin(req);
+    const skip = (req.page - 1) * req.limit;
+    const ladder = req.page === 1 ? buildRadiusLadder(req.radiusKm) : [req.radiusKm];
+
+    let last = { items: [] as Gym[], total: 0 };
+    let effectiveRadiusKm = req.radiusKm;
+
+    for (const radiusKm of ladder) {
+      effectiveRadiusKm = radiusKm;
+      last = await this.gyms.searchNearby({ ...origin, radiusKm, q: req.q, skip, limit: req.limit });
+      if (last.items.length > 0) break;
+    }
+
+    return {
+      items: last.items.map((gym) => ({ ...gym, sponsored: (gym.rankBoost ?? 0) > 0 })),
+      total: last.total,
+      effectiveRadiusKm,
+    };
+  }
+
+  private resolveOrigin(req: GymSearchRequest): { lat: number; lng: number } {
+    if (typeof req.lat === "number" && typeof req.lng === "number") {
+      return { lat: req.lat, lng: req.lng };
+    }
+    if (req.zip) {
+      const resolved = this.geocoder.lookupZip(req.zip);
+      if (!resolved) throw new AppError("bad_request", "Unknown ZIP code");
+      return { lat: resolved.lat, lng: resolved.lng };
+    }
+    throw new AppError("bad_request", "lat/lng or zip is required");
   }
 
   public async directions(id: string): Promise<DirectionsPayload> {
