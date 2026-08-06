@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  # Duplicated into .github/workflows/api-deploy.yml — GitHub Actions has no
+  # cross-workflow `needs`, so the gate must also live there to block the
+  # deploy. Keep the two copies in sync.
+  e2e:
+    runs-on: ubuntu-latest
+
+    # The gym-search E2E drives the real app against a real MongoDB. A memory
+    # server would not exercise the 2dsphere index the search depends on.
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Scoped deliberately to the gym-search E2E. The full suite has 5
+      # pre-existing failures in device.routes.test.mts (5s timeouts, unrelated
+      # to this feature) that would red every build. Widening this to `bun test`
+      # is a one-line change once those are fixed.
+      - name: Gym search E2E
+        working-directory: apps/api
+        env:
+          # test/setup.mts (preloaded via bunfig.toml) OVERWRITES MONGODB_URI
+          # with TEST_MONGODB_URI to keep tests off any ambient cluster. Setting
+          # MONGODB_URI here would be inert — this is the variable that lands.
+          TEST_MONGODB_URI: mongodb://localhost:27017
+        run: bun test test/gym-search.e2e.test.mts
