@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/gym.dart';
 import 'gym_search_query.dart';
 import 'gym_search_repository.dart';
@@ -58,17 +58,28 @@ class GymSearchState {
 
 /// Accumulates pages of gym search results.
 ///
-/// A StateNotifier rather than a FutureProvider because paging needs to append
-/// to a list that survives across fetches; a FutureProvider replaces its value
-/// on every request.
-class GymSearchController extends StateNotifier<GymSearchState> {
-  final GymSearchRepository _repo;
+/// A Notifier rather than a FutureProvider because paging needs to append to a
+/// list that survives across fetches; a FutureProvider replaces its value on
+/// every request.
+///
+/// Requests race: `submit` will be wired to a debounced text field and a radius
+/// slider, so overlapping `submit`/`loadMore` calls are expected, not exotic.
+/// [_generation] guards against a stale request's response landing after a
+/// newer one already reset or advanced the state — every submit/loadMore bumps
+/// it, captures its own value locally, and discards its result (writes nothing
+/// to `state`, touches nothing on `_query`) if that value is no longer current
+/// by the time the awaited call resolves.
+class GymSearchController extends Notifier<GymSearchState> {
   GymSearchQuery? _query;
+  int _generation = 0;
 
-  GymSearchController(this._repo) : super(const GymSearchState());
+  @override
+  GymSearchState build() => const GymSearchState();
 
   /// Run a new search. Resets to page 1 and discards accumulated results.
   Future<void> submit(GymSearchQuery query) async {
+    final generation = ++_generation;
+
     if (!query.hasOrigin) {
       state = const GymSearchState(searched: true);
       return;
@@ -87,7 +98,8 @@ class GymSearchController extends StateNotifier<GymSearchState> {
     );
 
     try {
-      final page = await _repo.search(first);
+      final page = await ref.read(gymSearchRepositoryProvider).search(first);
+      if (generation != _generation) return; // superseded by a newer submit/loadMore
       // Page subsequent requests at the radius that produced page 1, so the
       // user scrolls through one stable result set rather than a shifting one.
       _query = first.copyWith(radiusKm: page.effectiveRadiusKm);
@@ -98,6 +110,7 @@ class GymSearchController extends StateNotifier<GymSearchState> {
         loading: false,
       );
     } catch (e) {
+      if (generation != _generation) return;
       state = state.copyWith(loading: false, error: e);
     }
   }
@@ -108,11 +121,13 @@ class GymSearchController extends StateNotifier<GymSearchState> {
     final current = _query;
     if (current == null || state.loading || !state.hasMore) return;
 
+    final generation = ++_generation;
     final next = current.copyWith(page: current.page + 1);
     state = state.copyWith(loading: true, clearError: true);
 
     try {
-      final page = await _repo.search(next);
+      final page = await ref.read(gymSearchRepositoryProvider).search(next);
+      if (generation != _generation) return; // superseded by a newer submit/loadMore
       _query = next;
       state = state.copyWith(
         items: <Gym>[...state.items, ...page.items],
@@ -120,12 +135,11 @@ class GymSearchController extends StateNotifier<GymSearchState> {
         loading: false,
       );
     } catch (e) {
+      if (generation != _generation) return;
       state = state.copyWith(loading: false, error: e);
     }
   }
 }
 
 final gymSearchControllerProvider =
-    StateNotifierProvider<GymSearchController, GymSearchState>((ref) {
-  return GymSearchController(ref.read(gymSearchRepositoryProvider));
-});
+    NotifierProvider<GymSearchController, GymSearchState>(GymSearchController.new);
