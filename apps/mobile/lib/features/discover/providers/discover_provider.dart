@@ -24,6 +24,9 @@ final nearbyGymsProvider = FutureProvider.family<List<Gym>, NearbyQuery>((ref, q
     'lat': query.lat,
     'lng': query.lng,
     'radiusKm': query.radiusKm,
+    // The API now defaults to a limit of 20; this screen deliberately asks
+    // for more so the "Gyms near you" section still shows a full list.
+    'limit': 100,
   });
   final data = response.data['data'] as List? ?? [];
   return data.map((e) => Gym.fromJson(e as Map<String, dynamic>)).toList();

@@ -2,6 +2,9 @@ name: CI
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   # Duplicated into .github/workflows/api-deploy.yml — GitHub Actions has no

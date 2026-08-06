@@ -36,7 +36,7 @@ function makeFacade(
     insert: async (): Promise<never> => { throw new Error("unused"); },
     list: async (): Promise<never> => { throw new Error("unused"); },
     listByOwner: async (): Promise<never> => { throw new Error("unused"); },
-    findNearby: async (): Promise<never> => { throw new Error("unused"); },
+    searchNearby: async (): Promise<never> => { throw new Error("unused"); },
   };
   const favorites = {
     add: async (): Promise<void> => {},
