@@ -6,7 +6,7 @@ import type { Gym } from "@bjj/contract";
 import { fakeGeocoder, nullGeocoder } from "./fakes/geocoder.fake.mts";
 import { NullPlacesClient } from "../src/services/places-client.mts";
 
-type FakeGymRepo = Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "findNearby" | "ensureIndexes">;
+type FakeGymRepo = Pick<GymRepository, "insert" | "findById" | "update" | "list" | "listByOwner" | "searchNearby" | "ensureIndexes">;
 type FakeFavRepo = Pick<FavoriteRepository, "add" | "remove" | "listGymIds" | "ensureIndexes">;
 
 function repos(): { gymRepo: FakeGymRepo; favRepo: FakeFavRepo } {
@@ -24,7 +24,7 @@ function repos(): { gymRepo: FakeGymRepo; favRepo: FakeFavRepo } {
       const items = [...gyms.values()].filter((g) => g.ownerId === ownerId);
       return { items, total: items.length };
     },
-    findNearby: async (): Promise<Gym[]> => [...gyms.values()],
+    searchNearby: async (): Promise<{ items: Gym[]; total: number }> => ({ items: [...gyms.values()], total: gyms.size }),
     ensureIndexes: async (): Promise<void> => {},
   };
   const favRepo = {
@@ -72,5 +72,101 @@ describe("GymFacade", () => {
       location: { lat: 10, lng: 20 },
     });
     expect(gym.location).toEqual({ lat: 10, lng: 20 });
+  });
+});
+
+describe("GymFacade.searchNearby", () => {
+  // Minimal stubs. `calls` records every radius the facade tried, in order —
+  // that sequence IS the widening behaviour under test.
+  function makeFacade(resultsByRadius: Record<number, string[]>): {
+    facade: GymFacade;
+    calls: number[];
+  } {
+    const calls: number[] = [];
+    const gyms = {
+      searchNearby: async (opts: { radiusKm: number; skip: number; limit: number }) => {
+        calls.push(opts.radiusKm);
+        const ids = resultsByRadius[opts.radiusKm] ?? [];
+        return {
+          items: ids.slice(opts.skip, opts.skip + opts.limit).map((id) => ({
+            id, name: id, address: "a", amenities: [], isVerified: false,
+          })),
+          total: ids.length,
+        };
+      },
+    };
+    const geocoder = { lookupZip: (zip: string) => (zip === "75495" ? { lat: 33.4292, lng: -96.5486 } : null) };
+    const facade = new GymFacade(
+      gyms as never, {} as never, () => "id", geocoder as never, {} as never,
+    );
+    return { facade, calls };
+  }
+
+  it("resolves a zip to coordinates", async () => {
+    const { facade } = makeFacade({ 40: ["g-1"] });
+    const r = await facade.searchNearby({ zip: "75495", radiusKm: 40, page: 1, limit: 20 });
+    expect(r.items.map((g) => g.id)).toEqual(["g-1"]);
+    expect(r.effectiveRadiusKm).toBe(40);
+  });
+
+  it("rejects a request with no origin", async () => {
+    const { facade } = makeFacade({});
+    await expect(facade.searchNearby({ radiusKm: 40, page: 1, limit: 20 })).rejects.toThrow("lat/lng or zip is required");
+  });
+
+  it("rejects an unresolvable zip", async () => {
+    const { facade } = makeFacade({});
+    await expect(facade.searchNearby({ zip: "00000", radiusKm: 40, page: 1, limit: 20 })).rejects.toThrow("Unknown ZIP code");
+  });
+
+  it("prefers explicit coordinates over zip", async () => {
+    const { facade } = makeFacade({ 40: ["g-1"] });
+    const r = await facade.searchNearby({ lat: 1, lng: 2, zip: "00000", radiusKm: 40, page: 1, limit: 20 });
+    expect(r.items).toHaveLength(1);
+  });
+
+  it("widens the radius when page 1 is empty", async () => {
+    const { facade, calls } = makeFacade({ 80: ["g-1"] });
+    const r = await facade.searchNearby({ lat: 33.4292, lng: -96.5486, radiusKm: 40, page: 1, limit: 20 });
+    expect(calls).toEqual([40, 80]);
+    expect(r.effectiveRadiusKm).toBe(80);
+    expect(r.items.map((g) => g.id)).toEqual(["g-1"]);
+  });
+
+  it("stops widening at the 161 km cap after two steps", async () => {
+    const { facade, calls } = makeFacade({});
+    const r = await facade.searchNearby({ lat: 1, lng: 2, radiusKm: 40, page: 1, limit: 20 });
+    expect(calls).toEqual([40, 80, 160]);
+    expect(r.effectiveRadiusKm).toBe(160);
+    expect(r.items).toHaveLength(0);
+  });
+
+  it("does not widen when page 1 has results", async () => {
+    const { facade, calls } = makeFacade({ 40: ["g-1"], 80: ["g-1", "g-2"] });
+    await facade.searchNearby({ lat: 1, lng: 2, radiusKm: 40, page: 1, limit: 20 });
+    expect(calls).toEqual([40]);
+  });
+
+  it("does not widen on page 2", async () => {
+    const { facade, calls } = makeFacade({ 80: [] });
+    const r = await facade.searchNearby({ lat: 1, lng: 2, radiusKm: 80, page: 2, limit: 20 });
+    expect(calls).toEqual([80]);
+    expect(r.effectiveRadiusKm).toBe(80);
+  });
+
+  it("derives sponsored from rankBoost", async () => {
+    const gyms = {
+      searchNearby: async () => ({
+        items: [
+          { id: "a", name: "a", address: "x", amenities: [], isVerified: false, rankBoost: 5 },
+          { id: "b", name: "b", address: "x", amenities: [], isVerified: false },
+        ],
+        total: 2,
+      }),
+    };
+    const facade = new GymFacade(gyms as never, {} as never, () => "id", {} as never, {} as never);
+    const r = await facade.searchNearby({ lat: 1, lng: 2, radiusKm: 40, page: 1, limit: 20 });
+    expect(r.items[0]?.sponsored).toBe(true);
+    expect(r.items[1]?.sponsored).toBe(false);
   });
 });
