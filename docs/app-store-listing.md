@@ -2,13 +2,33 @@
 
 Copy-paste values for App Store Connect. Fields marked **`<FILL>`** need your input.
 
+> **This file mirrors what is actually live in App Store Connect.** Metadata is
+> managed by hand in ASC (`deliver` runs with `skip_metadata: true`), so this doc
+> is a record, not a source that gets pushed. When you edit the listing in ASC,
+> edit this file in the same pass or it drifts — as it did between the 1.0
+> release and 1.2.0, when the live description diverged from the text here.
+>
+> Live description last verified against the store on 2026-08-06 via
+> `https://itunes.apple.com/lookup?bundleId=com.davissylvester.bjjopenmat`.
+
 ---
 
 ## Text fields
 
 ### Version
 ```
-1.0
+1.2.0
+```
+
+### What's New in This Version (max 4,000)
+```
+Gym owners and coaches can now manage who appears on their gym's member list.
+
+• Hide a member from the public roster while keeping their access to the gym forum, messages, and classes
+• Mark a member inactive when they've stopped training at the gym
+• Hidden and inactive members stay visible to owners and coaches, clearly labeled, so no one gets lost track of
+
+Also fixed: members who had hidden themselves from their gym's roster could lose access to that gym's forum. That's resolved.
 ```
 
 ### Promotional Text (max 170 — updatable without a new build)
@@ -17,35 +37,54 @@ Find BJJ open mats near you, see who's rolling, and tap "I'm going." Search by G
 ```
 
 ### Description (max 4,000)
+
+This is the text **currently live on the App Store**, with one bullet added for
+the 1.2.0 roster feature (marked below). The longer draft that used to live here
+was never published — it has been removed to stop the two diverging again.
+
 ```
-BJJ Open Mat is the fastest way to find a place to roll — wherever you are.
+BJJ Open Mat helps you find Brazilian Jiu-Jitsu open mats near you — anytime you want to roll.
 
-Open the app and it instantly shows open mats near you using your location. Filter by gi, no-gi, skill level, day, and distance (up to 100 miles), or search any city or ZIP.
+Search by location, day, and gi or no-gi, see who's going, and check in when you arrive. Gym owners and members can post their open mats so the whole community can find them.
 
-FIND A MAT
-• See open mats near you the moment you open the app
-• Search by GPS, city, or ZIP — your location shows as a tappable "City, ST" chip
-• Filter by Gi / No-Gi, free sessions, skill level, and when you want to train
-• View session details: time, day, fee, gym, and directions
+FEATURES
+• Discover open mats near you with live GPS search
+• Filter by day, distance, and gi / no-gi
+• RSVP "I'm going" and see other attendees and their belt ranks
+• Check in at the mat and keep a training log
+• Submit and manage your gym's open-mat sessions
+• Gym owners: manage your roster and control who appears publicly
+• Leave and read reviews
+• Sign in with Apple, Google, or email
 
-SEE WHO'S GOING
-• Tap "I'm going" to RSVP to a specific session
-• See how many people are coming and who they are
-• Check in when you arrive and log your training
+Whether you're traveling or just looking for an extra session this week, BJJ Open Mat connects you with the mats and the community. See you on the mats!
+```
 
-YOUR PROFILE
-• Track your belt and stripes
-• Set your IBJJF weight class (by gender and gi/no-gi)
-• Save your home city and gym
+> The new bullet is `Gym owners: manage your roster and control who appears publicly`.
+> Everything else is verbatim from the live listing.
 
-FOR GYM OWNERS
-• Post open mat sessions and keep them up to date
-• See expected attendance from RSVPs alongside real check-ins
-• Switch between practitioner and gym-owner views any time
+#### On the `precheck` "found: google" warning
 
-Community-driven: anyone can submit an open mat, and gym owners verify their sessions.
+`fastlane precheck` flags `description: (en-US) found: google` on every submit.
+**It is a false positive — do not "fix" it reflexively.** The match is the
+sign-in bullet:
 
-Grab your gi (or don't) and go find a roll.
+```
+• Sign in with Apple, Google, or email
+```
+
+Naming third-party sign-in providers is permitted; Apple's concern is listings
+that steer users to other platforms or stores. Sign in with Apple is offered and
+named first. Decisively: Apple approved this exact description for the 1.0
+release on 2026-07-28. `precheck` is a keyword scanner with no notion of context,
+and it reports the finding as non-blocking ("this won't prevent fastlane from
+completing").
+
+If you ever do want the warning silenced, this is the swap — at the cost of
+telling users less:
+
+```
+• Sign in with Apple, email, or your existing social account
 ```
 
 ### Keywords (max 100 chars total, comma-separated, no spaces after commas)
@@ -114,6 +153,31 @@ To see the gym-owner experience: Profile/Settings → "Switch to Gym Owner".
 
 ## App Store Version Release
 Recommended for a first release: **Manually release this version** (so you control the go-live moment after approval).
+
+For 1.2.0 the submit workflow was run with `auto_release:true`, which publishes
+as soon as Apple approves rather than waiting on a manual release.
+
+## Submitting a new version — the step that is easy to miss
+
+`deliver` runs with `skip_metadata: true`, so it **will not create the App Store
+version record for you**. If no version is in *Prepare for Submission*, the
+submit fails with:
+
+```
+[!] Cannot submit for review - could not find an editable version for 'IOS'
+```
+
+That is what happened on the first 1.2.0 attempt (run 31076192153). Before
+running `ios-appstore-submit.yml`:
+
+1. App Store Connect → the app → **+ Version or Platform** → enter the version.
+2. Paste **What's New** (required for a new version).
+3. Save, leaving it in *Prepare for Submission*.
+4. Then dispatch the workflow and approve the `appstore-production` gate.
+
+Also note the build's version string must match the version record — a build
+made with `--build-name=1.2.0` can only be attached to a 1.2.0 record, and Apple
+never allows reusing or going below an already-released version string.
 
 ---
 
