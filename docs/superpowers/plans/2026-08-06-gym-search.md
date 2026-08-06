@@ -1312,7 +1312,22 @@ git commit -m "feat(mobile): add gym search query, page model and repository"
       StateNotifierProvider<GymSearchController, GymSearchState>(...);
   ```
 
-**Why a StateNotifier:** a `FutureProvider` replaces its value on each fetch and cannot accumulate pages. Every other list in this app is single-shot, which is why this is the first controller of its kind here.
+**Why a stateful controller:** a `FutureProvider` replaces its value on each fetch and cannot accumulate pages. Every other list in this app is single-shot, which is why this is the first controller of its kind here.
+
+> **CORRECTION (applied during execution).** This task's code below was written
+> against `StateNotifier`. That symbol is exported only from
+> `package:flutter_riverpod/legacy.dart` in the pinned flutter_riverpod 3.3.1,
+> and this app uses the modern `Notifier` API in four places
+> (`main.dart:32`, `core/location/location_controller.dart:18`,
+> `core/auth/auth_service.dart:29`,
+> `features/admin/screens/owner_dashboard_screen.dart:14`) and `StateNotifier`
+> in none. **Use `Notifier` / `NotifierProvider`:** state initializes in
+> `build()`, the repository comes from `ref.read(gymSearchRepositoryProvider)`
+> rather than constructor injection, and the provider is
+> `NotifierProvider<GymSearchController, GymSearchState>(GymSearchController.new)`.
+> The `submit`/`loadMore` bodies are otherwise unchanged — `state = ...` behaves
+> identically. The controller also carries a request-generation counter so a
+> stale in-flight response cannot write over a newer query's results.
 
 - [ ] **Step 1: Write the failing test**
 
