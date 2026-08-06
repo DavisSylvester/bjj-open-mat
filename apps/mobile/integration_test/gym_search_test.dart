@@ -35,6 +35,24 @@ Future<void> tapText(WidgetTester tester, String text) async {
   await tester.pump(const Duration(milliseconds: 400));
 }
 
+// Poll until [finder] has no matches (the inverse of pumpUntilFound), so we
+// can prove a widget was removed (e.g. an open-mat-only chip after switching
+// to Gyms mode) without ever calling pumpAndSettle, which never quiesces on
+// the search screen while its loading spinner animates.
+Future<bool> pumpUntilGone(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 10),
+}) async {
+  final DateTime deadline = DateTime.now().add(timeout);
+  while (DateTime.now().isBefore(deadline)) {
+    await tester.pump(const Duration(milliseconds: 100));
+    if (finder.evaluate().isEmpty) return true;
+    await Future<void>.delayed(const Duration(milliseconds: 80));
+  }
+  return finder.evaluate().isEmpty;
+}
+
 void main() {
   final IntegrationTestWidgetsFlutterBinding binding =
       IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -49,10 +67,12 @@ void main() {
 
     // Navigate to the Find tab, then switch to Gyms mode.
     await tapText(tester, 'Find');
-    await tester.pumpAndSettle();
+    expect(await pumpUntilFound(tester, find.byKey(const Key('search-mode-toggle'))), isTrue,
+        reason: 'Search screen (with mode toggle) did not render after tapping Find');
 
-    await tester.tap(find.byKey(const Key('search-mode-toggle')).last);
-    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gyms'));
+    expect(await pumpUntilGone(tester, find.text('Gi')), isTrue,
+        reason: 'Gyms mode did not take effect (Gi chip still present)');
 
     // Open-mat-only chips must disappear in Gyms mode.
     expect(find.text('Gi'), findsNothing);
