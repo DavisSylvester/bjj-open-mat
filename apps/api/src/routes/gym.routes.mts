@@ -47,8 +47,23 @@ export function gymRoutes(container: Container) {
     .get(
       "/nearby",
       async ({ query }) => {
-        const gyms = await gymFacade.nearby(query.lat, query.lng, query.radiusKm ?? 25);
-        return list(gyms, { page: 1, limit: gyms.length, total: gyms.length });
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 20;
+        const result = await gymFacade.searchNearby({
+          lat: query.lat,
+          lng: query.lng,
+          zip: query.zip,
+          q: query.q,
+          radiusKm: query.radiusKm ?? 25,
+          page,
+          limit,
+        });
+        return list(result.items, {
+          page,
+          limit,
+          total: result.total,
+          effectiveRadiusKm: result.effectiveRadiusKm,
+        });
       },
       { query: NearbyQuery },
     )
