@@ -31,6 +31,13 @@ Gym owners and coaches can now manage who appears on their gym's member list.
 Also fixed: members who had hidden themselves from their gym's roster could lose access to that gym's forum. That's resolved.
 ```
 
+> **Paste this into "What's New in This Version", not "Description".** On the ASC
+> version page the field immediately above Keywords is *Description*; What's New
+> and Promotional Text sit above it, so it is easy to fill the wrong box. Quick
+> check: Description is ~766 chars and starts "BJJ Open Mat helps you find…";
+> this What's New copy is 489 chars and starts "Gym owners and coaches can now…".
+> The remaining-character counter tells them apart at a glance (3,234 vs 3,511).
+
 ### Promotional Text (max 170 — updatable without a new build)
 ```
 Find BJJ open mats near you, see who's rolling, and tap "I'm going." Search by GPS, city, or ZIP within 100 miles.
@@ -89,20 +96,23 @@ telling users less:
 
 ### Keywords (max 100 chars total, comma-separated, no spaces after commas)
 ```
-bjj,jiu-jitsu,open mat,grappling,gi,no-gi,rolling,gym,mat finder,submission,training,martial arts
+bjj,jiu jitsu,open mat,grappling,no gi,gi,gym finder,rolling,brazilian,mma,bjj gym
 ```
-> That string is 99 chars. Trim a term if ASC rejects it.
+> Live value, 82 chars — 18 to spare. An earlier draft here listed a different
+> set (`jiu-jitsu`, `submission`, `training`, `martial arts`) that was never used.
 
 ### Support URL
 ```
-https://bjj-open-mat.dsylvester.io/support
+https://davissylvester.github.io/bjj-open-mat-legal/support.html
 ```
-> **`<FILL>`** — must resolve. If you don't have a support page, point to a contact page or a GitHub issues URL.
 
 ### Marketing URL (optional)
 ```
-https://bjj-open-mat.dsylvester.io
+https://davissylvester.github.io/bjj-open-mat-legal/
 ```
+> Both URLs are served from the `bjj-open-mat-legal` GitHub Pages site, not from
+> `bjj-open-mat.dsylvester.io` as this doc previously claimed. `dsylvester.io` is
+> the API/app host; the legal + support pages live on Pages.
 
 ### Copyright
 ```
