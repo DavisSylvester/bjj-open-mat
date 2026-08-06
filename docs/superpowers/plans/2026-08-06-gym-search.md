@@ -920,27 +920,48 @@ jobs:
       - name: Gym search E2E
         working-directory: apps/api
         env:
-          MONGODB_URI: mongodb://localhost:27017
+          # test/setup.mts (preloaded via bunfig.toml) OVERWRITES MONGODB_URI
+          # with TEST_MONGODB_URI to keep tests off any ambient cluster. Setting
+          # MONGODB_URI here would be inert — this is the variable that lands.
+          TEST_MONGODB_URI: mongodb://localhost:27017
         run: bun test test/gym-search.e2e.test.mts
+```
+
+Also change `ci.yml`'s trigger to pull requests only — the push-to-main path is covered by the copy in `api-deploy.yml` added in Step 4:
+
+```yaml
+on:
+  pull_request:
 ```
 
 - [ ] **Step 4: Make the deploy depend on the gate**
 
-In `.github/workflows/api-deploy.yml`, add `needs` to the `deploy` job — without this the deploy runs in parallel with CI and ships on red:
+GitHub Actions has no cross-workflow `needs` — a `deploy` job cannot depend on a job defined in `ci.yml`. So the gate is duplicated into the deploy workflow.
+
+In `.github/workflows/api-deploy.yml`, add an `e2e` job **identical** to the one in Step 3 (same `services:` block, same steps, same `TEST_MONGODB_URI`) above the existing `deploy` job, and make `deploy` depend on it:
 
 ```yaml
 jobs:
+  # Duplicated from .github/workflows/ci.yml — GitHub Actions has no
+  # cross-workflow `needs`, so the gate must live in this file to block the
+  # deploy. Keep the two copies in sync.
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      # ... identical to ci.yml ...
+    steps:
+      # ... identical to ci.yml ...
+
   deploy:
     needs: [e2e]
     runs-on: ubuntu-latest
+    steps:
+      # ... existing deploy steps, unchanged ...
 ```
 
-Note: `needs` resolves within a single workflow file. Since `e2e` lives in `ci.yml`, this cross-file reference will **not** work. Instead, move the gate inline — add the same `e2e` job definition (steps from Step 3) into `api-deploy.yml` above `deploy`, and keep `ci.yml` for pull requests only:
+Add the matching comment in `ci.yml` pointing back at this file.
 
-- In `ci.yml`, change the trigger to `on: pull_request` only.
-- In `api-deploy.yml`, add the full `e2e` job (identical to Step 3's job, including the `mongo` service) and give `deploy` `needs: [e2e]`.
-
-This duplicates ~25 lines of YAML across two files. That is the accepted cost: GitHub Actions has no cross-workflow `needs`, and the alternatives (a reusable workflow via `workflow_call`, or `workflow_run` chaining) add indirection disproportionate to one job. Leave a comment in both files pointing at the other.
+This duplicates ~25 lines of YAML. That is the accepted cost: the alternatives (a reusable workflow via `workflow_call`, or `workflow_run` chaining) add indirection disproportionate to one job.
 
 - [ ] **Step 5: Validate the workflow YAML parses**
 
