@@ -17,6 +17,8 @@ class Gym {
   final bool isVerified;
   final double? rating;
   final double? distanceKm;
+  final int rankBoost;
+  final bool sponsored;
   final String? createdAt;
 
   const Gym({
@@ -38,6 +40,8 @@ class Gym {
     this.isVerified = false,
     this.rating,
     this.distanceKm,
+    this.rankBoost = 0,
+    this.sponsored = false,
     this.createdAt,
   });
 
@@ -67,6 +71,8 @@ class Gym {
       isVerified: json['isVerified'] as bool? ?? false,
       rating: (json['rating'] as num?)?.toDouble(),
       distanceKm: (json['distanceKm'] as num?)?.toDouble(),
+      rankBoost: (json['rankBoost'] as num?)?.toInt() ?? 0,
+      sponsored: json['sponsored'] as bool? ?? false,
       createdAt: json['createdAt'] as String?,
     );
   }
