@@ -50,11 +50,19 @@ export const LogoUploadUrlResponse = t.Object(
 );
 export type LogoUploadUrlResponse = Static<typeof LogoUploadUrlResponse>;
 
+// lat/lng are optional because `zip` is an alternative origin. The route
+// enforces that exactly one origin resolves; TypeBox cannot express "one of"
+// across sibling optionals without an awkward union, and a union here would
+// degrade the generated OpenAPI for a rule that is one line of code.
 export const NearbyQuery = t.Object(
   {
-    lat: t.Number(),
-    lng: t.Number(),
+    lat: t.Optional(t.Number()),
+    lng: t.Optional(t.Number()),
+    zip: t.Optional(t.String({ pattern: "^\\d{5}$" })),
+    q: t.Optional(t.String({ maxLength: 100 })),
     radiusKm: t.Optional(t.Number({ minimum: 1, maximum: 500, default: 25 })),
+    page: t.Optional(t.Number({ minimum: 1, default: 1 })),
+    limit: t.Optional(t.Number({ minimum: 1, maximum: 50, default: 20 })),
   },
   { $id: "NearbyQuery" },
 );
