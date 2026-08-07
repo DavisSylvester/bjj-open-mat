@@ -827,10 +827,13 @@ let memberBase: string;
 beforeAll(async () => {
   await client.connect();
   const db = client.db(TEST_DB);
+  // Seed both `id` and `_id`: UserRepository.insert writes `{ ...user, _id: user.id }`,
+  // and stripId only drops `_id` — it never derives `id`. A fixture with only `_id`
+  // does not match production and makes `userId` come back undefined.
   await db.collection("users").insertMany([
-    { _id: "u-admin", email: "admin@e.dev", displayName: "Admin", role: "admin", createdAt: "2026-08-01T00:00:00.000Z" },
-    { _id: "u-1", email: "u1@e.dev", displayName: "One", role: "practitioner", createdAt: "2026-08-01T00:00:00.000Z" },
-    { _id: "u-orphan", email: "orphan@e.dev", displayName: "Orphan", role: "practitioner", createdAt: "2026-08-02T00:00:00.000Z" },
+    { _id: "u-admin", id: "u-admin", email: "admin@e.dev", displayName: "Admin", role: "admin", createdAt: "2026-08-01T00:00:00.000Z" },
+    { _id: "u-1", id: "u-1", email: "u1@e.dev", displayName: "One", role: "practitioner", createdAt: "2026-08-01T00:00:00.000Z" },
+    { _id: "u-orphan", id: "u-orphan", email: "orphan@e.dev", displayName: "Orphan", role: "practitioner", createdAt: "2026-08-02T00:00:00.000Z" },
   ] as never);
   await db.collection("gyms").insertMany([
     { _id: "g-1", id: "g-1", name: "Renzo Dallas", address: "A", state: "TX", amenities: [], isVerified: true },
