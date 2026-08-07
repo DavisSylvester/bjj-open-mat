@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import type { Gym, GymMembership, User } from "@bjj/contract";
 import { AdminMembersFacade } from "../src/facades/admin-members.facade.mts";
+import type { GymRepo, MembershipRepo, UserRepo } from "../src/facades/admin-members.facade.mts";
 import type { GymMemberCounts } from "../src/repositories/membership.repository.mts";
 
 const GYMS: Gym[] = [
@@ -16,26 +17,30 @@ const COUNTS: GymMemberCounts[] = [
   { gymId: "g-3", memberCount: 1, pendingCount: 0 },
 ];
 
-function facade(overrides: Partial<{ memberships: unknown; users: unknown; gyms: unknown }> = {}): AdminMembersFacade {
-  const memberships = {
+interface FacadeOverrides {
+  memberships?: Partial<MembershipRepo>;
+  users?: Partial<UserRepo>;
+  gyms?: Partial<GymRepo>;
+}
+
+/// Stubs are typed against the facade's own dependency types, so renaming a
+/// repository method breaks compilation here instead of passing silently.
+function facade(overrides: FacadeOverrides = {}): AdminMembersFacade {
+  const memberships: MembershipRepo = {
     countsByGym: async (): Promise<GymMemberCounts[]> => COUNTS,
     listByGymForAdmin: async (): Promise<{ items: GymMembership[]; total: number }> => ({ items: [], total: 0 }),
-    ...(overrides.memberships as object ?? {}),
+    ...overrides.memberships,
   };
-  const users = {
+  const users: UserRepo = {
     findByIds: async (): Promise<User[]> => [],
     listWithoutMemberships: async (): Promise<{ items: User[]; total: number }> => ({ items: [], total: 0 }),
-    ...(overrides.users as object ?? {}),
+    ...overrides.users,
   };
-  const gyms = {
+  const gyms: GymRepo = {
     list: async (): Promise<{ items: Gym[]; total: number }> => ({ items: GYMS, total: GYMS.length }),
-    ...(overrides.gyms as object ?? {}),
+    ...overrides.gyms,
   };
-  return new AdminMembersFacade(
-    memberships as never,
-    users as never,
-    gyms as never,
-  );
+  return new AdminMembersFacade(memberships, users, gyms);
 }
 
 describe("AdminMembersFacade.tree", () => {
@@ -62,6 +67,23 @@ describe("AdminMembersFacade.tree", () => {
     expect(g1.memberCount).toBe(2);
     expect(g1.pendingCount).toBe(1);
     expect(g1.ownerId).toBe("u-9");
+  });
+
+  it("surfaces a counted gymId that has no gym document instead of dropping it", async () => {
+    const f = facade({
+      memberships: {
+        countsByGym: async (): Promise<GymMemberCounts[]> => [
+          ...COUNTS,
+          { gymId: "g-deleted", memberCount: 4, pendingCount: 2 },
+        ],
+      },
+    });
+    const tree = await f.tree();
+    const orphan = tree.noState.find((g) => g.id === "g-deleted");
+    expect(orphan).toBeDefined();
+    expect(orphan!.name).toBe("Unknown gym (g-deleted)");
+    expect(orphan!.memberCount).toBe(4);
+    expect(orphan!.pendingCount).toBe(2);
   });
 
   it("reports the gymless user count", async () => {

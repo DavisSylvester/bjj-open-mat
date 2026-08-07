@@ -5,13 +5,14 @@ import type {
   NoGymUserRow,
   StateGroup,
 } from "@bjj/contract";
+import { logger } from "../config/logger.mts";
 import type { GymMemberCounts, MembershipRepository } from "../repositories/membership.repository.mjs";
 import type { UserRepository } from "../repositories/user.repository.mjs";
 import type { GymFacade } from "./gym.facade.mjs";
 
-type MembershipRepo = Pick<MembershipRepository, "countsByGym" | "listByGymForAdmin">;
-type UserRepo = Pick<UserRepository, "findByIds" | "listWithoutMemberships">;
-type GymRepo = Pick<GymFacade, "list">;
+export type MembershipRepo = Pick<MembershipRepository, "countsByGym" | "listByGymForAdmin">;
+export type UserRepo = Pick<UserRepository, "findByIds" | "listWithoutMemberships">;
+export type GymRepo = Pick<GymFacade, "list">;
 
 /// Gyms are read in one page large enough to cover the directory. The tree is
 /// only as complete as this read, which is the documented limit in the spec:
@@ -33,15 +34,27 @@ export class AdminMembersFacade {
       this.users.listWithoutMemberships(0, 1),
     ]);
 
+    // The tree is only as complete as this single page of gyms. Past the limit
+    // a gym with members can only be reported as unknown, so say so out loud
+    // rather than truncating in silence.
+    if (gymPage.total > GYM_SCAN_LIMIT) {
+      logger.warn(
+        `Admin members tree scanned ${GYM_SCAN_LIMIT} of ${gymPage.total} gyms; gyms past the scan limit surface as unknown`,
+        { total: gymPage.total, limit: GYM_SCAN_LIMIT },
+      );
+    }
+
     const countByGymId = new Map<string, GymMemberCounts>(counts.map((c) => [c.gymId, c]));
 
     // Only gyms that actually have members belong here. Including all of them
     // would bury a handful of real rows under hundreds of empty ones.
     const summaries: GymSummary[] = [];
     const stateByGymId = new Map<string, string | undefined>();
+    const matchedGymIds = new Set<string>();
     for (const gym of gymPage.items) {
       const count = countByGymId.get(gym.id);
       if (!count) continue;
+      matchedGymIds.add(gym.id);
       summaries.push({
         id: gym.id,
         name: gym.name,
@@ -51,6 +64,20 @@ export class AdminMembersFacade {
         pendingCount: count.pendingCount,
       });
       stateByGymId.set(gym.id, gym.state);
+    }
+
+    // A counted gymId with no gym document is a data error (deleted gym, or a
+    // gym past the scan limit). Those memberships still exist, so surface them
+    // under `(No State)` with a name that names the problem instead of letting
+    // the rows disappear from every group.
+    for (const count of counts) {
+      if (matchedGymIds.has(count.gymId)) continue;
+      summaries.push({
+        id: count.gymId,
+        name: `Unknown gym (${count.gymId})`,
+        memberCount: count.memberCount,
+        pendingCount: count.pendingCount,
+      });
     }
 
     const byState = new Map<string, GymSummary[]>();
