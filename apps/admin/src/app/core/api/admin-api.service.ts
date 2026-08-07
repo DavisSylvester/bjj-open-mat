@@ -4,14 +4,17 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import type {
+  AdminMembersTree,
   AdminOverviewStats,
   AdminOpenMatsByState,
+  AdminRosterRow,
   CreateGymBody,
   DataEnvelope,
   Gym,
   GymMembership,
   ListEnvelope,
   MembershipStatus,
+  NoGymUserRow,
   OpenMat,
   User,
 } from '../models';
@@ -140,5 +143,38 @@ export class AdminApiService {
         body,
       ),
     ).then((res) => res.data);
+  }
+
+  public getMembersTree(): Promise<AdminMembersTree> {
+    return firstValueFrom(
+      this.http.get<DataEnvelope<AdminMembersTree>>(
+        `${this.base}/api/v1/admin/members/tree`,
+      ),
+    ).then((res) => res.data);
+  }
+
+  public listGymMembers(
+    gymId: string,
+    page: number = 1,
+    limit: number = 50,
+  ): Promise<ListEnvelope<AdminRosterRow>> {
+    return firstValueFrom(
+      this.http.get<ListEnvelope<AdminRosterRow>>(
+        `${this.base}/api/v1/admin/gyms/${gymId}/members`,
+        { params: { page: page.toString(), limit: limit.toString() } },
+      ),
+    ).then((res) => ({ data: res.data, meta: res.meta }));
+  }
+
+  public listNoGymUsers(
+    page: number = 1,
+    limit: number = 50,
+  ): Promise<ListEnvelope<NoGymUserRow>> {
+    return firstValueFrom(
+      this.http.get<ListEnvelope<NoGymUserRow>>(
+        `${this.base}/api/v1/admin/members/no-gym`,
+        { params: { page: page.toString(), limit: limit.toString() } },
+      ),
+    ).then((res) => ({ data: res.data, meta: res.meta }));
   }
 }

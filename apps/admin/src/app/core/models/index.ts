@@ -9,3 +9,10 @@ export type {
 } from './admin-stats';
 export type { DataEnvelope, ListEnvelope } from './envelopes';
 export type { GymMembership, MembershipStatus } from './gym-membership';
+export type {
+  GymSummary,
+  StateGroup,
+  AdminMembersTree,
+  AdminRosterRow,
+  NoGymUserRow,
+} from './admin-members';

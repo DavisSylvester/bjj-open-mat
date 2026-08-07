@@ -116,4 +116,36 @@ describe('AdminApiService', () => {
       expect(result).toEqual(mockGym);
     });
   });
+
+  describe('getMembersTree()', () => {
+    it('should GET the tree endpoint and unwrap data', async () => {
+      const tree = { states: [{ state: 'TX', gyms: [] }], noState: [], noGym: { userCount: 3 } };
+      const promise = service.getMembersTree();
+      const req = httpMock.expectOne(`${BASE}/api/v1/admin/members/tree`);
+      expect(req.request.method).toBe('GET');
+      req.flush({ data: tree });
+      await expect(promise).resolves.toEqual(tree);
+    });
+  });
+
+  describe('listGymMembers()', () => {
+    it('should GET a gym roster with paging params', async () => {
+      const promise = service.listGymMembers('g-1', 2, 25);
+      const req = httpMock.expectOne(
+        `${BASE}/api/v1/admin/gyms/g-1/members?page=2&limit=25`,
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush({ data: [], meta: { page: 2, limit: 25, total: 0 } });
+      await expect(promise).resolves.toEqual({ data: [], meta: { page: 2, limit: 25, total: 0 } });
+    });
+  });
+
+  describe('listNoGymUsers()', () => {
+    it('should GET the no-gym endpoint', async () => {
+      const promise = service.listNoGymUsers(1, 50);
+      const req = httpMock.expectOne(`${BASE}/api/v1/admin/members/no-gym?page=1&limit=50`);
+      req.flush({ data: [], meta: { page: 1, limit: 50, total: 0 } });
+      await expect(promise).resolves.toEqual({ data: [], meta: { page: 1, limit: 50, total: 0 } });
+    });
+  });
 });
