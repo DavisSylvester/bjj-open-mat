@@ -7,14 +7,23 @@ import {
   UpdateMembershipRequest,
   UpdateOpenMatRequest,
 } from "@bjj/contract";
+import { authPlugin } from "../auth/auth.middleware.mts";
 import type { Container } from "../container.mts";
 import { data, list } from "../http/envelope.mts";
 
+/// Every route here is admin-only, so the guard is declared once on the
+/// instance rather than repeated per route — a new route added below inherits
+/// it and cannot be published unprotected by omission. This router was mounted
+/// without authPlugin until 2026-08-06, leaving the full user list and every
+/// admin write reachable anonymously in production; `admin-routes.test.mts`
+/// pins the 401/403 behaviour so that cannot silently return.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function adminRoutes(container: Container) {
   const { adminFacade, gymFacade, openMatFacade } = container;
 
   return new Elysia({ prefix: "/api/v1/admin" })
+    .use(authPlugin(container.verifier, container.roleLookup))
+    .guard({ requireAdmin: true })
     .get("/stats/overview", async () => data(await adminFacade.overview(new Date())))
     .get("/stats/open-mats-by-state", async ({ query }) => {
       const limit = Math.min(50, Math.max(1, Number(query["limit"] ?? 10)));
