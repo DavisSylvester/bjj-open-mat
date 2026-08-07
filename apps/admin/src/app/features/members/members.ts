@@ -21,6 +21,10 @@ import { MemberStatusSwitcher, type SettableStatus } from './member-status-switc
 const PAGE_SIZE = 50;
 const DEFAULT_UPDATE_ERROR = 'Could not update that member. Please try again.';
 
+/** The `No Gym` group is keyed alongside real gym ids in the expansion, paging,
+ *  in-flight and error maps. A gym id can never collide with it. */
+const NO_GYM_KEY = '__no_gym__';
+
 function isHttpErrorResponse(err: unknown): err is HttpErrorResponse {
   return err instanceof HttpErrorResponse;
 }
@@ -68,14 +72,31 @@ export class Members implements OnInit {
   private readonly expandedGyms = signal<ReadonlySet<string>>(new Set<string>());
   private readonly rows = signal<ReadonlyMap<string, AdminRosterRow[]>>(new Map());
   private readonly pages = signal<ReadonlyMap<string, number>>(new Map());
+  /** Keys with a roster request in flight. Without it, two clicks on `Load
+   *  more` before the first response both compute the same next page and append
+   *  the same rows twice — duplicate track keys, and a loaded count that
+   *  overshoots `memberCount` so the control disappears unrecoverably. */
+  private readonly fetchingGyms = signal<ReadonlySet<string>>(new Set<string>());
   private readonly busyRows = signal<ReadonlySet<string>>(new Set<string>());
   private readonly rowErrors = signal<ReadonlyMap<string, string>>(new Map());
   private readonly groupErrors = signal<ReadonlyMap<string, string>>(new Map());
 
   public readonly noGymUsers = signal<NoGymUserRow[]>([]);
 
+  public readonly noGymKey: string = NO_GYM_KEY;
+
   public readonly noGymCount = computed<number>(() => this.tree()?.noGym.userCount ?? 0);
   public readonly noStateGyms = computed<GymSummary[]>(() => this.tree()?.noState ?? []);
+
+  /**
+   * A tree with no states, no stateless gyms and no gymless users is a genuinely
+   * empty database — the only case where the empty state is the truthful render.
+   */
+  public readonly isEmpty = computed<boolean>(() => {
+    const t: AdminMembersTree | null = this.tree();
+    if (t === null) return true;
+    return t.states.length === 0 && t.noState.length === 0 && t.noGym.userCount === 0;
+  });
 
   /**
    * Detected state first, everything else alphabetically. Detection only
@@ -148,17 +169,31 @@ export class Members implements OnInit {
     await this.fetchPage(gymId, 1);
   }
 
+  /**
+   * Also the retry for a failed page: `pages` only records pages that landed,
+   * so the next page after a failure is the page that failed.
+   */
   public async loadMore(gymId: string): Promise<void> {
-    const next: number = (this.pages().get(gymId) ?? 1) + 1;
+    const next: number = (this.pages().get(gymId) ?? 0) + 1;
     await this.fetchPage(gymId, next);
   }
 
   public async toggleNoGym(): Promise<void> {
-    const wasExpanded: boolean = this.isGymExpanded('__no_gym__');
-    this.expandedGyms.update((set) => toggle(set, '__no_gym__'));
+    const wasExpanded: boolean = this.isGymExpanded(NO_GYM_KEY);
+    this.expandedGyms.update((set) => toggle(set, NO_GYM_KEY));
     if (wasExpanded || this.noGymUsers().length > 0) return;
-    const envelope = await this.api.listNoGymUsers(1, PAGE_SIZE);
-    this.noGymUsers.set(envelope.data);
+    await this.fetchNoGymPage(1);
+  }
+
+  public async loadMoreNoGym(): Promise<void> {
+    const next: number = (this.pages().get(NO_GYM_KEY) ?? 0) + 1;
+    await this.fetchNoGymPage(next);
+  }
+
+  /** `No Gym` pages against its own endpoint exactly as a gym group does — it
+   *  has a total it must be able to reach. */
+  public hasMoreNoGym(): boolean {
+    return this.noGymUsers().length < this.noGymCount();
   }
 
   /**
@@ -214,6 +249,8 @@ export class Members implements OnInit {
   }
 
   private async fetchPage(gymId: string, page: number): Promise<void> {
+    if (this.fetchingGyms().has(gymId)) return;
+    this.fetchingGyms.update((s) => addToSet(s, gymId));
     this.groupErrors.update((map) => withoutEntry(map, gymId));
     try {
       const envelope = await this.api.listGymMembers(gymId, page, PAGE_SIZE);
@@ -225,6 +262,25 @@ export class Members implements OnInit {
       this.pages.update((map) => new Map(map).set(gymId, page));
     } catch (err) {
       this.groupErrors.update((map) => withEntry(map, gymId, extractErrorMessage(err)));
+    } finally {
+      this.fetchingGyms.update((s) => removeFromSet(s, gymId));
+    }
+  }
+
+  /** The `No Gym` twin of `fetchPage`: same in-flight guard, same append, same
+   *  group-scoped error — against the users endpoint rather than a roster. */
+  private async fetchNoGymPage(page: number): Promise<void> {
+    if (this.fetchingGyms().has(NO_GYM_KEY)) return;
+    this.fetchingGyms.update((s) => addToSet(s, NO_GYM_KEY));
+    this.groupErrors.update((map) => withoutEntry(map, NO_GYM_KEY));
+    try {
+      const envelope = await this.api.listNoGymUsers(page, PAGE_SIZE);
+      this.noGymUsers.update((current) => [...current, ...envelope.data]);
+      this.pages.update((map) => new Map(map).set(NO_GYM_KEY, page));
+    } catch (err) {
+      this.groupErrors.update((map) => withEntry(map, NO_GYM_KEY, extractErrorMessage(err)));
+    } finally {
+      this.fetchingGyms.update((s) => removeFromSet(s, NO_GYM_KEY));
     }
   }
 

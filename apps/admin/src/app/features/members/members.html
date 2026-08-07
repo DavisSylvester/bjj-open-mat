@@ -8,7 +8,7 @@
     <p class="members-error" data-testid="members-error">{{ error() }}</p>
     <button type="button" class="row-action" (click)="retryTree()">Retry</button>
   </div>
-} @else if (!tree()) {
+} @else if (isEmpty()) {
   <div class="members-empty-wrapper" data-testid="members-empty">
     <z-empty zIcon="lucideUsers" zTitle="No members found" zDescription="There are no memberships to display yet." />
   </div>
@@ -53,7 +53,11 @@
         <span>No Gym</span>
         <span class="muted">{{ noGymCount() }} users</span>
       </button>
-      @if (isGymExpanded('__no_gym__')) {
+      @if (isGymExpanded(noGymKey)) {
+        @if (groupError(noGymKey)) {
+          <p class="members-error" data-testid="no-gym-error">{{ groupError(noGymKey) }}</p>
+          <button type="button" class="row-action" data-testid="no-gym-retry" (click)="loadMoreNoGym()">Retry</button>
+        }
         <table class="roster">
           <tbody>
             @for (user of noGymUsers(); track user.userId) {
@@ -65,6 +69,12 @@
             }
           </tbody>
         </table>
+
+        @if (hasMoreNoGym() && !groupError(noGymKey)) {
+          <button type="button" class="row-action" data-testid="no-gym-load-more" (click)="loadMoreNoGym()">
+            Load more ({{ noGymUsers().length }} of {{ noGymCount() }})
+          </button>
+        }
       }
     </section>
   </div>
@@ -83,6 +93,7 @@
       @if (isGymExpanded(gym.id)) {
         @if (groupError(gym.id)) {
           <p class="members-error" data-testid="group-error">{{ groupError(gym.id) }}</p>
+          <button type="button" class="row-action" data-testid="group-retry" (click)="loadMore(gym.id)">Retry</button>
         }
         <table class="roster">
           <tbody>
@@ -118,7 +129,7 @@
           </tbody>
         </table>
 
-        @if (hasMore(gym.id, gym.memberCount)) {
+        @if (hasMore(gym.id, gym.memberCount) && !groupError(gym.id)) {
           <button type="button" class="row-action" data-testid="load-more" (click)="loadMore(gym.id)">
             Load more ({{ rowsFor(gym.id).length }} of {{ gym.memberCount }})
           </button>

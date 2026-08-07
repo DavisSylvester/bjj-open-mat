@@ -4,7 +4,22 @@ import { TestBed } from '@angular/core/testing';
 import { Members } from './members';
 import { AdminApiService } from '@/core/api/admin-api.service';
 import { GeoApiService } from '@/core/api/geo-api.service';
-import type { AdminMembersTree, AdminRosterRow } from '@/core/models';
+import type { AdminMembersTree, AdminRosterRow, ListEnvelope, NoGymUserRow } from '@/core/models';
+
+interface Deferred<T> {
+  promise: Promise<T>;
+  resolve: (value: T) => void;
+}
+
+function deferred<T>(): Deferred<T> {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((res) => { resolve = res; });
+  return { promise, resolve };
+}
+
+function noGymUser(userId: string): NoGymUserRow {
+  return { userId, displayName: userId, email: `${userId}@e.dev`, createdAt: '2026-08-01T00:00:00.000Z' };
+}
 
 const TREE: AdminMembersTree = {
   states: [
@@ -132,5 +147,138 @@ describe('Members page', () => {
     const fixture = setup({ state: 'TX' });
     await settle(fixture);
     expect(fixture.componentInstance.noGymCount()).toBe(3);
+  });
+
+  it('ignores a second load-more while the first is still in flight', async () => {
+    let calls = 0;
+    const gate = deferred<ListEnvelope<AdminRosterRow>>();
+    const fixture = setup({
+      state: 'TX',
+      api: {
+        listGymMembers: async () => {
+          calls += 1;
+          if (calls === 1) return { data: [row({ membershipId: 'm-1' })], meta: { page: 1, limit: 1, total: 3 } };
+          return gate.promise;
+        },
+      },
+    });
+    await settle(fixture);
+    await fixture.componentInstance.toggleGym('g-tx');
+    await settle(fixture);
+
+    const first = fixture.componentInstance.loadMore('g-tx');
+    const second = fixture.componentInstance.loadMore('g-tx');
+    gate.resolve({ data: [row({ membershipId: 'm-2', userId: 'u-2' })], meta: { page: 2, limit: 1, total: 3 } });
+    await Promise.all([first, second]);
+    await settle(fixture);
+
+    expect(calls).toBe(2);
+    expect(fixture.componentInstance.rowsFor('g-tx').map((r) => r.membershipId)).toEqual(['m-1', 'm-2']);
+  });
+
+  it('does not re-fetch page 1 when a gym is collapsed and re-expanded mid-flight', async () => {
+    let calls = 0;
+    const gate = deferred<ListEnvelope<AdminRosterRow>>();
+    const fixture = setup({
+      state: 'TX',
+      api: {
+        listGymMembers: async () => {
+          calls += 1;
+          return gate.promise;
+        },
+      },
+    });
+    await settle(fixture);
+
+    const first = fixture.componentInstance.toggleGym('g-tx');
+    await fixture.componentInstance.toggleGym('g-tx');
+    const third = fixture.componentInstance.toggleGym('g-tx');
+    gate.resolve({ data: [row({ membershipId: 'm-1' })], meta: { page: 1, limit: 50, total: 1 } });
+    await Promise.all([first, third]);
+    await settle(fixture);
+
+    expect(calls).toBe(1);
+    expect(fixture.componentInstance.rowsFor('g-tx').map((r) => r.membershipId)).toEqual(['m-1']);
+  });
+
+  it('records a group error instead of rejecting when the no-gym fetch fails', async () => {
+    const fixture = setup({
+      state: 'TX',
+      api: { listNoGymUsers: async () => { throw new Error('nope'); } },
+    });
+    await settle(fixture);
+
+    await fixture.componentInstance.toggleNoGym();
+    await settle(fixture);
+
+    expect(fixture.componentInstance.groupError('__no_gym__')).not.toBeNull();
+    expect(fixture.componentInstance.noGymUsers()).toEqual([]);
+  });
+
+  it('clears the no-gym error and loads on retry', async () => {
+    let calls = 0;
+    const fixture = setup({
+      state: 'TX',
+      api: {
+        listNoGymUsers: async () => {
+          calls += 1;
+          if (calls === 1) throw new Error('nope');
+          return { data: [noGymUser('u-1')], meta: { page: 1, limit: 50, total: 3 } };
+        },
+      },
+    });
+    await settle(fixture);
+    await fixture.componentInstance.toggleNoGym();
+    await settle(fixture);
+    expect(fixture.componentInstance.groupError('__no_gym__')).not.toBeNull();
+
+    await fixture.componentInstance.loadMoreNoGym();
+    await settle(fixture);
+
+    expect(fixture.componentInstance.groupError('__no_gym__')).toBeNull();
+    expect(fixture.componentInstance.noGymUsers().map((u) => u.userId)).toEqual(['u-1']);
+  });
+
+  it('pages the no-gym group until its total is reached', async () => {
+    let calls = 0;
+    const fixture = setup({
+      state: 'TX',
+      api: {
+        listNoGymUsers: async () => {
+          calls += 1;
+          return calls === 1
+            ? { data: [noGymUser('u-1'), noGymUser('u-2')], meta: { page: 1, limit: 2, total: 3 } }
+            : { data: [noGymUser('u-3')], meta: { page: 2, limit: 2, total: 3 } };
+        },
+      },
+    });
+    await settle(fixture);
+
+    await fixture.componentInstance.toggleNoGym();
+    await settle(fixture);
+    expect(fixture.componentInstance.hasMoreNoGym()).toBe(true);
+
+    await fixture.componentInstance.loadMoreNoGym();
+    await settle(fixture);
+
+    expect(fixture.componentInstance.noGymUsers().map((u) => u.userId)).toEqual(['u-1', 'u-2', 'u-3']);
+    expect(fixture.componentInstance.hasMoreNoGym()).toBe(false);
+  });
+
+  it('reports a genuinely empty tree as empty', async () => {
+    const fixture = setup({
+      api: { getMembersTree: async (): Promise<AdminMembersTree> => ({ states: [], noState: [], noGym: { userCount: 0 } }) },
+    });
+    await settle(fixture);
+    expect(fixture.componentInstance.isEmpty()).toBe(true);
+    expect(fixture.nativeElement.querySelector('[data-testid="members-empty"]')).not.toBeNull();
+  });
+
+  it('does not report a tree carrying only gymless users as empty', async () => {
+    const fixture = setup({
+      api: { getMembersTree: async (): Promise<AdminMembersTree> => ({ states: [], noState: [], noGym: { userCount: 4 } }) },
+    });
+    await settle(fixture);
+    expect(fixture.componentInstance.isEmpty()).toBe(false);
   });
 });
