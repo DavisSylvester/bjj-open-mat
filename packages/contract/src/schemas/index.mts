@@ -33,5 +33,6 @@ export * from "./message-report.mjs";
 export * from "./conversation-summary.mjs";
 export * from "./gym-claim.mjs";
 export * from "./admin-stats.mjs";
+export * from "./admin-members.mjs";
 export * from "./requests/index.mjs";
 export * from "./responses/index.mjs";
