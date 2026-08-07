@@ -19,7 +19,7 @@ import { data, list } from "../http/envelope.mts";
 /// pins the 401/403 behaviour so that cannot silently return.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function adminRoutes(container: Container) {
-  const { adminFacade, gymFacade, openMatFacade } = container;
+  const { adminFacade, adminMembersFacade, gymFacade, openMatFacade } = container;
 
   return new Elysia({ prefix: "/api/v1/admin" })
     .use(authPlugin(container.verifier, container.roleLookup))
@@ -51,6 +51,19 @@ export function adminRoutes(container: Container) {
       const page = Math.max(1, Number(query["page"] ?? 1));
       const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 50)));
       const { items, total } = await adminFacade.listMemberships((page - 1) * limit, limit);
+      return list(items, { page, limit, total });
+    })
+    .get("/members/tree", async () => data(await adminMembersFacade.tree()))
+    .get("/gyms/:gymId/members", async ({ params, query }) => {
+      const page = Math.max(1, Number(query["page"] ?? 1));
+      const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 50)));
+      const { items, total } = await adminMembersFacade.gymRoster(params.gymId, (page - 1) * limit, limit);
+      return list(items, { page, limit, total });
+    })
+    .get("/members/no-gym", async ({ query }) => {
+      const page = Math.max(1, Number(query["page"] ?? 1));
+      const limit = Math.min(100, Math.max(1, Number(query["limit"] ?? 50)));
+      const { items, total } = await adminMembersFacade.noGymUsers((page - 1) * limit, limit);
       return list(items, { page, limit, total });
     })
     .post("/gyms", async ({ body }) => data(await gymFacade.create("admin", body)), {
