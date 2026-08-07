@@ -1,0 +1,16 @@
+<div class="switcher" role="group" aria-label="Membership status">
+  @for (segment of segments; track segment.value) {
+    <button
+      type="button"
+      class="switcher__segment"
+      [class.switcher__segment--selected]="isSelected(segment.value)"
+      [attr.data-status]="segment.value"
+      [attr.aria-pressed]="isSelected(segment.value)"
+      [disabled]="isDisabled(segment.value)"
+      [attr.title]="isOwner() && segment.value !== 'active' ? 'A gym owner cannot be hidden or deactivated' : null"
+      (click)="select(segment.value)"
+    >
+      {{ segment.label }}
+    </button>
+  }
+</div>
