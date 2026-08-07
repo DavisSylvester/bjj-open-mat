@@ -62,8 +62,11 @@ does not by itself grant admin.
 
 The Angular admin portal sends no credential — it had no interceptor, because
 the API needed none. It now attaches `Authorization: Bearer <devToken>` via
-`apps/admin/src/app/core/api/auth.interceptor.ts`, scoped to
-`environment.apiBaseUrl` so the token cannot leak to another host.
+`apps/admin/src/app/core/api/auth.interceptor.ts`, scoped by comparing the
+request's parsed *origin* against the origin of `environment.apiBaseUrl`, so the
+token cannot leak to another host. Origin comparison, not a string prefix test:
+a prefix test would hand the token to a look-alike host such as
+`http://localhost:3100.attacker.example/`.
 
 `devToken` is empty in `environment.ts` (production) and empty in git for
 `environment.development.ts`; a developer fills in the local
