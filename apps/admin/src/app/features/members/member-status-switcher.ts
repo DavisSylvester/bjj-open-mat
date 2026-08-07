@@ -1,16 +1,27 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, input } from '@angular/core';
 
-import type { MembershipStatus } from '@/core/models';
+import type { MembershipStatus, SettableMembershipStatus } from '@/core/models';
 
 /** The statuses an admin may assign. Mirrors ManageableMembershipStatus in the
  *  contract: `pending` is owned by the join flow and the API rejects it. */
-export type SettableStatus = 'active' | 'hidden' | 'inactive';
+export type SettableStatus = SettableMembershipStatus;
 
-const SEGMENTS: readonly { value: SettableStatus; label: string }[] = [
+export interface StatusSegment {
+  value: SettableStatus;
+  label: string;
+}
+
+const SEGMENTS: readonly StatusSegment[] = [
   { value: 'active', label: 'Active' },
   { value: 'hidden', label: 'Hidden' },
   { value: 'inactive', label: 'Inactive' },
 ];
+
+/** Ids must be unique per instance — a roster renders one switcher per row and
+ *  `aria-describedby` points at this component's own hint, not another row's. */
+let nextHintId = 0;
+
+const OWNER_HINT = 'A gym owner cannot be hidden or deactivated';
 
 /**
  * Segmented status control for one membership.
@@ -35,7 +46,9 @@ export class MemberStatusSwitcher {
 
   @Output() public readonly statusChange = new EventEmitter<SettableStatus>();
 
-  public readonly segments = SEGMENTS;
+  public readonly segments: readonly StatusSegment[] = SEGMENTS;
+  public readonly ownerHint: string = OWNER_HINT;
+  public readonly ownerHintId: string = `owner-hint-${nextHintId++}`;
 
   public isSelected(value: SettableStatus): boolean {
     return this.status() === value;

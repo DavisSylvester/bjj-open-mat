@@ -9,8 +9,15 @@ const BASE = 'http://localhost:3100';
 describe('GeoApiService', () => {
   let service: GeoApiService;
   let httpMock: HttpTestingController;
+  /** Stubbing `navigator.geolocation` without restoring it leaves it undefined
+   *  for every later spec in the run. */
+  let originalGeolocation: PropertyDescriptor | undefined;
 
   beforeEach(() => {
+    originalGeolocation = Object.getOwnPropertyDescriptor(
+      globalThis.navigator,
+      'geolocation',
+    );
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting(), GeoApiService],
     });
@@ -18,7 +25,14 @@ describe('GeoApiService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => httpMock.verify());
+  afterEach(() => {
+    if (originalGeolocation === undefined) {
+      Reflect.deleteProperty(globalThis.navigator, 'geolocation');
+    } else {
+      Object.defineProperty(globalThis.navigator, 'geolocation', originalGeolocation);
+    }
+    httpMock.verify();
+  });
 
   it('reverse() unwraps city and state', async () => {
     const promise = service.reverse(33.1, -96.5);

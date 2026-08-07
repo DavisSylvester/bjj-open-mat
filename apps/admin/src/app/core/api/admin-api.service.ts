@@ -13,9 +13,9 @@ import type {
   Gym,
   GymMembership,
   ListEnvelope,
-  MembershipStatus,
   NoGymUserRow,
   OpenMat,
+  SettableMembershipStatus,
   User,
 } from '../models';
 
@@ -114,19 +114,10 @@ export class AdminApiService {
     ).then((res) => res.data);
   }
 
-  public listMembers(page: number = 1, limit: number = 50): Promise<ListEnvelope<GymMembership>> {
-    return firstValueFrom(
-      this.http.get<ListEnvelope<GymMembership>>(
-        `${this.base}/api/v1/admin/memberships`,
-        { params: { page: page.toString(), limit: limit.toString() } },
-      ),
-    ).then((res) => ({ data: res.data, meta: res.meta }));
-  }
-
   public updateMembership(
     gymId: string,
     userId: string,
-    body: { status: MembershipStatus },
+    body: { status: SettableMembershipStatus },
   ): Promise<GymMembership> {
     return firstValueFrom(
       this.http.patch<DataEnvelope<GymMembership>>(

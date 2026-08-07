@@ -7,10 +7,16 @@
       [attr.data-status]="segment.value"
       [attr.aria-pressed]="isSelected(segment.value)"
       [disabled]="isDisabled(segment.value)"
-      [attr.title]="isOwner() && segment.value !== 'active' ? 'A gym owner cannot be hidden or deactivated' : null"
+      [attr.title]="isOwner() && segment.value !== 'active' ? ownerHint : null"
+      [attr.aria-describedby]="isOwner() && segment.value !== 'active' ? ownerHintId : null"
       (click)="select(segment.value)"
     >
       {{ segment.label }}
     </button>
+  }
+  @if (isOwner()) {
+    <!-- `title` alone is announced inconsistently by screen readers, so the
+         same reason is carried by a visually-hidden description as well. -->
+    <span class="switcher__hint" [id]="ownerHintId">{{ ownerHint }}</span>
   }
 </div>

@@ -8,7 +8,11 @@ export type {
   AdminOpenMatsByState,
 } from './admin-stats';
 export type { DataEnvelope, ListEnvelope } from './envelopes';
-export type { GymMembership, MembershipStatus } from './gym-membership';
+export type {
+  GymMembership,
+  MembershipStatus,
+  SettableMembershipStatus,
+} from './gym-membership';
 export type {
   GymSummary,
   StateGroup,
