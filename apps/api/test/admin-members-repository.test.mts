@@ -22,10 +22,10 @@ beforeAll(async () => {
   await client.connect();
   const db = client.db(TEST_DB);
   await db.collection("users").insertMany([
-    { _id: "u-1", email: "u1@e.dev", displayName: "One", role: "practitioner", createdAt: "2026-08-01T00:00:00.000Z" },
-    { _id: "u-2", email: "u2@e.dev", displayName: "Two", role: "practitioner", createdAt: "2026-08-02T00:00:00.000Z" },
-    { _id: "u-3", email: "u3@e.dev", displayName: "Three", role: "practitioner", createdAt: "2026-08-03T00:00:00.000Z" },
-    { _id: "u-orphan", email: "orphan@e.dev", displayName: "Orphan", role: "practitioner", createdAt: "2026-08-04T00:00:00.000Z" },
+    { _id: "u-1", id: "u-1", email: "u1@e.dev", displayName: "One", role: "practitioner", createdAt: "2026-08-01T00:00:00.000Z" },
+    { _id: "u-2", id: "u-2", email: "u2@e.dev", displayName: "Two", role: "practitioner", createdAt: "2026-08-02T00:00:00.000Z" },
+    { _id: "u-3", id: "u-3", email: "u3@e.dev", displayName: "Three", role: "practitioner", createdAt: "2026-08-03T00:00:00.000Z" },
+    { _id: "u-orphan", id: "u-orphan", email: "orphan@e.dev", displayName: "Orphan", role: "practitioner", createdAt: "2026-08-04T00:00:00.000Z" },
   ] as never);
   await db.collection("gymMemberships").insertMany([
     membership("m-1", "g-1", "u-1", "active"),

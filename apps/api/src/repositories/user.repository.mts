@@ -112,9 +112,6 @@ export class UserRepository extends BaseRepository {
       col
         .aggregate<UserDoc>([
           ...pipeline,
-          // Legacy docs predate the separate `id` field and only carry `_id`;
-          // backfill it here so `stripId` still yields a populated `id`.
-          { $addFields: { id: { $ifNull: ["$id", "$_id"] } } },
           { $project: { memberships: 0 } },
           { $sort: { createdAt: -1, _id: 1 } },
           { $skip: skip },
