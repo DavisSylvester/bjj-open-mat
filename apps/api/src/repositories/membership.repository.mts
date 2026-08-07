@@ -8,6 +8,12 @@ interface MembershipDoc extends GymMembership {
   _id: string;
 }
 
+export interface GymMemberCounts {
+  gymId: string;
+  memberCount: number;
+  pendingCount: number;
+}
+
 export class MembershipRepository extends BaseRepository {
 
   public constructor(db: Db) {
@@ -74,6 +80,48 @@ export class MembershipRepository extends BaseRepository {
     const [docs, total] = await Promise.all([
       col.find({}).skip(skip).limit(limit).toArray(),
       col.countDocuments({}),
+    ]);
+    return { items: docs.map((d) => stripId<GymMembership>(d) as GymMembership), total };
+  }
+
+  /// Counts every membership per gym, in Mongo rather than in memory — the
+  /// page needs group totals without loading every row, which is the defect
+  /// this replaces. Gyms with no memberships are absent, not zero-valued.
+  public async countsByGym(): Promise<GymMemberCounts[]> {
+    const col = this.collection<MembershipDoc>(COLLECTIONS.gymMemberships);
+    const docs = await col
+      .aggregate<{ _id: string; memberCount: number; pendingCount: number }>([
+        {
+          $group: {
+            _id: "$gymId",
+            memberCount: { $sum: 1 },
+            pendingCount: { $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] } },
+          },
+        },
+      ])
+      .toArray();
+    return docs.map((d) => ({
+      gymId: d._id,
+      memberCount: d.memberCount,
+      pendingCount: d.pendingCount,
+    }));
+  }
+
+  /// Every membership for a gym, all statuses, paged.
+  ///
+  /// `listByGym` cannot serve the admin view: it excludes `pending` in both
+  /// branches and is unpaged. Reusing it would hide pending members from the
+  /// page that approves them, and its count would never reach `memberCount`,
+  /// leaving the UI's "Load more" permanently visible.
+  public async listByGymForAdmin(
+    gymId: string,
+    skip: number,
+    limit: number,
+  ): Promise<{ items: GymMembership[]; total: number }> {
+    const col = this.collection<MembershipDoc>(COLLECTIONS.gymMemberships);
+    const [docs, total] = await Promise.all([
+      col.find({ gymId }).sort({ joinedAt: 1, _id: 1 }).skip(skip).limit(limit).toArray(),
+      col.countDocuments({ gymId }),
     ]);
     return { items: docs.map((d) => stripId<GymMembership>(d) as GymMembership), total };
   }

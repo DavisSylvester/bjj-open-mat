@@ -88,4 +88,44 @@ export class UserRepository extends BaseRepository {
     ]);
     return { items: docs.map((d) => stripId<UserType>(d)!), total };
   }
+
+  /// Users with no membership in any gym. The set difference runs in Mongo;
+  /// computing it client-side would require fetching every user and every
+  /// membership just to subtract them.
+  public async listWithoutMemberships(
+    skip: number,
+    limit: number,
+  ): Promise<{ items: UserType[]; total: number }> {
+    const col = this.collection<UserDoc>(COLLECTIONS.users);
+    const pipeline = [
+      {
+        $lookup: {
+          from: COLLECTIONS.gymMemberships,
+          localField: "_id",
+          foreignField: "userId",
+          as: "memberships",
+        },
+      },
+      { $match: { memberships: { $size: 0 } } },
+    ];
+    const [docs, counted] = await Promise.all([
+      col
+        .aggregate<UserDoc>([
+          ...pipeline,
+          // Legacy docs predate the separate `id` field and only carry `_id`;
+          // backfill it here so `stripId` still yields a populated `id`.
+          { $addFields: { id: { $ifNull: ["$id", "$_id"] } } },
+          { $project: { memberships: 0 } },
+          { $sort: { createdAt: -1, _id: 1 } },
+          { $skip: skip },
+          { $limit: limit },
+        ])
+        .toArray(),
+      col.aggregate<{ total: number }>([...pipeline, { $count: "total" }]).toArray(),
+    ]);
+    return {
+      items: docs.map((d) => stripId<UserType>(d) as UserType),
+      total: counted[0]?.total ?? 0,
+    };
+  }
 }
