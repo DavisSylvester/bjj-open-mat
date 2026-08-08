@@ -1,0 +1,22 @@
+<div class="switcher" role="group" aria-label="Membership status">
+  @for (segment of segments; track segment.value) {
+    <button
+      type="button"
+      class="switcher__segment"
+      [class.switcher__segment--selected]="isSelected(segment.value)"
+      [attr.data-status]="segment.value"
+      [attr.aria-pressed]="isSelected(segment.value)"
+      [disabled]="isDisabled(segment.value)"
+      [attr.title]="isOwner() && segment.value !== 'active' ? ownerHint : null"
+      [attr.aria-describedby]="isOwner() && segment.value !== 'active' ? ownerHintId : null"
+      (click)="select(segment.value)"
+    >
+      {{ segment.label }}
+    </button>
+  }
+  @if (isOwner()) {
+    <!-- `title` alone is announced inconsistently by screen readers, so the
+         same reason is carried by a visually-hidden description as well. -->
+    <span class="switcher__hint" [id]="ownerHintId">{{ ownerHint }}</span>
+  }
+</div>

@@ -1,15 +1,17 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import type { ApplicationConfig} from '@angular/core';
+import { provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
+import { authInterceptor } from '@/core/api/auth.interceptor';
 import { provideZard } from '@/shared/core/provider/providezard';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideZard(),
   ],
 };

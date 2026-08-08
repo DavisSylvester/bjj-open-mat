@@ -74,6 +74,7 @@ import { logger } from "./config/logger.mts";
 import { GoogleAuth } from "google-auth-library";
 import { AdminAnalyticsRepository } from "./repositories/admin-analytics.repository.mjs";
 import { AdminFacade } from "./facades/admin.facade.mjs";
+import { AdminMembersFacade } from "./facades/admin-members.facade.mjs";
 
 export interface Container {
   readonly db: Db;
@@ -102,6 +103,7 @@ export interface Container {
   readonly audioStorage: AudioStorage;
   readonly placesClient: PlacesClient;
   readonly adminFacade: AdminFacade;
+  readonly adminMembersFacade: AdminMembersFacade;
   ensureIndexes(): Promise<void>;
 }
 
@@ -190,6 +192,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
   const openMatFacade = new OpenMatFacade(openMatRepo, gymRepo, rsvpRepo, id, geocoder);
   const adminAnalyticsRepo = new AdminAnalyticsRepository(db);
   const adminFacade = new AdminFacade(adminAnalyticsRepo, userRepo, gymFacade, openMatFacade, membershipFacade, emailService);
+  const adminMembersFacade = new AdminMembersFacade(membershipRepo, userRepo, gymFacade);
 
   return {
     db,
@@ -234,6 +237,7 @@ export function createContainer(db: Db, env: AppEnv): Container {
     audioStorage,
     placesClient,
     adminFacade,
+    adminMembersFacade,
     async ensureIndexes(): Promise<void> {
       await Promise.all([
         userRepo.ensureIndexes(),
